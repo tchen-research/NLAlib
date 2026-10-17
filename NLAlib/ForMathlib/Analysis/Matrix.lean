@@ -1,5 +1,7 @@
+import NLAlib.ForMathlib.Analysis.Matrix.Charpoly
 import NLAlib.ForMathlib.Analysis.Matrix.Order
 import NLAlib.ForMathlib.Analysis.Matrix.QuadraticForm
+import NLAlib.ForMathlib.Analysis.Matrix.RootCluster
 
 /-! # `ForMathlib/Analysis/Matrix`
 

@@ -49102,11 +49102,10 @@
    ],
    "tags": [
     "foundation",
-    "matrix-functions",
-    "proof-prerequisites-needed"
+    "matrix-functions"
    ],
-   "notes": "Partial development checked on 2026-10-17: analytic implicit eigenvalue branches and their reciprocal-coordinate expansions; simultaneous distinct exterior branches; exterior-circle Cauchy, contour/interval Fubini, and the real fixed-circle atom-plus-contour transform identity for every real parameter in a distinct real diagonal direction, and the complex-density version for an arbitrary Hermitian coefficient with simple spectrum; the real integration-by-parts sign calculation on finite smooth chains; closure of positive representations on a common compact interval under pointwise limits; the commuting Hermitian case; and all scalar derivative/even-derivative consequences once a representing measure is supplied. The general noncommuting positive-measure existence theorem is NOT proved. Remaining core: construct/normalize the algebraic spectral surface, prove finite compatible boundary charts and orientations, pair conjugate arcs, and verify the sign hypotheses for that boundary. The real sign lemma alone is not a proof of density positivity. Do not mark the card proved from these partial formalizations or replace it by trace-exponential convexity.",
-   "status": "candidate",
+   "notes": "Proved on 2026-10-17 by the planar root-sum reorganization of Stahl's contour argument. The actual upper characteristic-root sum retains algebraic multiplicities and is holomorphic through collisions, using a root-free fixed-circle logarithmic derivative and spectral upper hemicontinuity. Constructed inverse branches have the proved half-plane labels and Schwarz symmetry. Actual free-loop contour changes identify the original density with its exponential moment; smooth thin ellipses prove nonnegativity without real-axis root limits or a global spectral surface. The checked atom-plus-density identity constructs a finite positive measure. Strict-spectrum approximants stay in the exact original spectral interval, and compactness removes repeated eigenvalues; scalar directions and empty dimension are included. NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives proves the full card: all-real representation, total mass, every tilted-moment derivative identity, and the spectral-endpoint bounds for even derivatives. Generic contour/measure facts live in ForMathlib; eigenvalue-pencil construction in Matrix/Perturbation; trace representation and positivity in Matrix/Functions.",
+   "status": "proved",
    "formalizations": [
     {
      "library": "nlalib",
@@ -49115,6 +49114,30 @@
      "status": "proved",
      "partial": true,
      "usage": "Prove the real positivity calculation for a finite chain from nonnegative heights and phase derivatives, with corner endpoint terms cancelling; this does not construct the spectral boundary."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.im_pos_iff_slope_pos_of_tendsto_affine",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.ExteriorHalfPlane",
+     "status": "proved",
+     "partial": true,
+     "usage": "A continuous exterior branch avoiding the real axis in the upper half-plane has positive imaginary part exactly when its nonzero real affine asymptotic slope is positive."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Polynomial.analyticAt_sum_roots_in_circle",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+     "status": "proved",
+     "partial": true,
+     "usage": "For a finite family of fixed polynomials with analytic scalar coefficients, the sum of roots inside any root-free fixed circle depends analytically on the parameter."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Polynomial.analyticAt_sum_filter_roots_upper_of_upperHemicontinuous",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+     "status": "proved",
+     "partial": true,
+     "usage": "An upper hemicontinuous polynomial root family avoiding the real axis has an analytic sum of upper-half-plane roots when its coefficients are analytic."
     },
     {
      "library": "nlalib",
@@ -49182,6 +49205,22 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.traceExponentialCircleDensity_re_nonneg_of_exterior_branches",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialContourPositivity",
+     "status": "proved",
+     "partial": true,
+     "usage": "The exact fixed-circle density is nonnegative away from the finitely many slopes."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_diagonal_of_injective",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialContourPositivity",
+     "status": "proved",
+     "partial": true,
+     "usage": "A Hermitian pencil with distinct real diagonal slopes has a positive finite exponential representing measure on every closed interval containing those slopes."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.exists_exterior_eigenvalue_branches_real_circle_density",
      "module": "NLAlib.Matrix.Functions.TraceExponentialContourReal",
      "status": "proved",
@@ -49198,6 +49237,30 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_branches_isCompactExpRepresentation_of_circleDensity_nonneg",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialDensityMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "A Hermitian pencil with distinct diagonal slopes supplies actual exterior branches such that nonnegativity of their real circle density almost everywhere on the chosen spectral interval constructs a positive finite measure there."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eventually_circleDensity_eq_neg_circleIntegral_of_exterior_inverse_branches",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialInverseContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Stahl's circle density equals the negative exponential moment of any inverse branch family with the actual pencil spectrum and affine asymptotes."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_branches_circleDensity_eq_neg_circleIntegral",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialInverseContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Constructing the inverse pencil branches gives the common-circle inverse-moment formula for any established exterior family of the original pencil."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_of_commute",
      "module": "NLAlib.Matrix.Functions.TraceExponentialMeasure",
      "status": "proved",
@@ -49211,6 +49274,28 @@
      "status": "proved",
      "partial": true,
      "usage": "Pass positive representations on a common compact interval to limits of both matrices in a pencil; the approximating representations remain an explicit prerequisite."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialRepresentation",
+     "status": "proved",
+     "usage": "Apply to arbitrary finite Hermitian A,H to construct a positive finite measure on the exact spectral interval of H representing traceExp(A+tH) for every real t."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialRepresentation",
+     "status": "proved",
+     "usage": "Obtain the positive measure, its total mass, all tilted-moment derivative identities, and both spectral-endpoint bounds on even derivatives directly from Hermitian A,H."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isCompactExpRepresentation_traceExp_of_diagonal_simple",
+     "module": "NLAlib.Matrix.Functions.TraceExponentialSimpleSpectrumLimit",
+     "status": "proved",
+     "partial": true,
+     "usage": "A positive-measure representation for every simple real diagonal direction implies the representation for arbitrary Hermitian directions."
     },
     {
      "library": "nlalib",
@@ -49246,6 +49331,46 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_eigenvalue_branches",
+     "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueBranches",
+     "status": "proved",
+     "partial": true,
+     "usage": "Distinct real slopes, away from `s`, give all exterior inverse branches."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff",
+     "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueHalfPlane",
+     "status": "proved",
+     "partial": true,
+     "usage": "For Hermitian `A`, the constructed exterior inverse branches are in the upper half-plane precisely for indices with `bᵢ < s`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff_conj_eq",
+     "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueReflection",
+     "status": "proved",
+     "partial": true,
+     "usage": "Constructed inverse branches of a Hermitian pencil have both the correct upper-half-plane labels and Schwarz reflection on one common exterior domain."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_exterior_inverse_eigenvalue_branches_root_sum",
+     "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueRootSum",
+     "status": "proved",
+     "partial": true,
+     "usage": "One constructed family of exterior inverse branches supplies holomorphy, the complete spectral list, the strict-sublevel labels, Schwarz reflection, and the identity with the actual upper-root sum throughout the exterior upper half-plane."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.analyticAt_inversePencilUpperRootSum",
+     "module": "NLAlib.Matrix.Perturbation.PencilRootSum",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual upper-root sum of a Hermitian pencil is analytic throughout both nonreal half-planes."
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.exists_exterior_eigenvalue_branch_of_diagonal",
      "module": "NLAlib.Matrix.Perturbation.SimpleEigenvalueAnalyticBranch",
      "status": "proved",
@@ -49255,6 +49380,8 @@
    ],
    "uses_defs": [
     "NLAlib.IsCompactExpRepresentation",
+    "NLAlib.exponentialAtomicMeasure",
+    "NLAlib.inversePencilUpperRootSum",
     "NLAlib.lambdaMax",
     "NLAlib.lambdaMin",
     "NLAlib.matrixExp",

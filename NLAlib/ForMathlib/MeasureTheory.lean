@@ -3,6 +3,7 @@ import NLAlib.ForMathlib.MeasureTheory.AffineDifferentiation
 import NLAlib.ForMathlib.MeasureTheory.AffineSeries
 import NLAlib.ForMathlib.MeasureTheory.CircleIntegralFubini
 import NLAlib.ForMathlib.MeasureTheory.CircleIntegralReflection
+import NLAlib.ForMathlib.MeasureTheory.CirclePath
 import NLAlib.ForMathlib.MeasureTheory.CompactExponential
 import NLAlib.ForMathlib.MeasureTheory.CompactLaplaceLimit
 import NLAlib.ForMathlib.MeasureTheory.CompactSupportDifferentiation
@@ -18,6 +19,7 @@ import NLAlib.ForMathlib.MeasureTheory.IntegralConvergence
 import NLAlib.ForMathlib.MeasureTheory.IntegralMeanValue
 import NLAlib.ForMathlib.MeasureTheory.IntegralSqrt
 import NLAlib.ForMathlib.MeasureTheory.IntegralUpdate
+import NLAlib.ForMathlib.MeasureTheory.IntervalDensity
 import NLAlib.ForMathlib.MeasureTheory.MapProd
 import NLAlib.ForMathlib.MeasureTheory.Matrix
 import NLAlib.ForMathlib.MeasureTheory.MatrixConditionalExpectation

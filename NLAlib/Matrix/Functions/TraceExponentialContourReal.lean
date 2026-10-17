@@ -82,33 +82,28 @@ theorem exists_exterior_eigenvalue_branches_real_circle_density
     (hR.trans hr).le hr href b s
 
 open scoped Matrix.Norms.L2Operator in
-/-- A Hermitian pencil with distinct real diagonal slopes has Stahl's real circle density, integrable against every real Laplace weight on each
-compact interval containing the slopes. One fixed exterior circle represents
-the continuous transform for every real parameter; the missing positivity of
-the density is not assumed. Source: Stahl (2013), Theorem 2.
-atlas: trace-exponential-stahl (partial) -/
-theorem exists_exterior_branches_integral_real_circleDensity_eq_traceExp_sub_atoms
+/-- Every actual complete exterior branch family gives the real atom-plus-density
+transform identity on one fixed circle for every real parameter. This reusable
+form keeps the branch family available for the separate positivity argument.
+Source: Stahl (2013), Theorem 2, transform verification. -/
+theorem integral_exp_mul_re_traceExponentialCircleDensity_eq_traceExp_sub_atoms
     {n : Type*} [Fintype n] [DecidableEq n]
-    {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) :
-    ∃ R : ℝ, 0 < R ∧ ∃ branch : n → ℂ → ℂ,
-      (∀ i, DifferentiableOn ℂ (branch i) {z | R < ‖z‖} ∧
+    {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ)
+    {R : ℝ} (hR : 0 < R) {branch : n → ℂ → ℂ}
+    (hbranch : ∀ i, DifferentiableOn ℂ (branch i) {z | R < ‖z‖} ∧
         Tendsto (fun z => branch i z + (b i : ℂ) * z)
-          (Bornology.cobounded ℂ) (𝓝 (A i i))) ∧
-      ∀ r : ℝ, R < r →
-        (∀ s : ℝ, (traceExponentialCircleDensity branch b r s).im = 0) ∧
-        ∀ l u : ℝ, l ≤ u → (∀ i, b i ∈ Icc l u) → ∀ t : ℝ,
+          (Bornology.cobounded ℂ) (𝓝 (A i i)))
+    (hspec : ∀ z, R < ‖z‖ →
+      (∀ i, branch i z ∈ spectrum ℂ (A - z • Matrix.diagonal (fun i => (b i : ℂ)))) ∧
+        Function.Injective (fun i => branch i z))
+    {r : ℝ} (hRr : R < r) {l u : ℝ} (hlu : l ≤ u)
+    (hbu : ∀ i, b i ∈ Icc l u) (t : ℝ) :
           IntervalIntegrable (fun s => Real.exp (-t * s) *
             (traceExponentialCircleDensity branch b r s).re) volume l u ∧
           (∫ s in l..u, Real.exp (-t * s) *
             (traceExponentialCircleDensity branch b r s).re) =
             traceExp (A - (t : ℂ) • Matrix.diagonal (fun i => (b i : ℂ))) -
               ∑ i, Real.exp ((A i i).re - t * b i) := by
-  obtain ⟨R, hR, branch, hbranch, hspec, hreal⟩ :=
-    exists_exterior_eigenvalue_branches_real_circle_density hA b hb
-  refine ⟨R, hR, branch, hbranch, ?_⟩
-  intro r hRr
-  refine ⟨fun s => hreal r hRr s, ?_⟩
-  intro l u hlu hbu t
   have hcont (i : n) : ContinuousOn (branch i) (sphere 0 r) := by
     apply (hbranch i).1.continuousOn.mono
     intro z hz
@@ -168,5 +163,34 @@ theorem exists_exterior_branches_integral_real_circleDensity_eq_traceExp_sub_ato
     rw [← hdiag]
     simpa using Complex.exp_ofReal_re ((A i i).re - t * b i)
   simpa only [hweight, Complex.sub_re, Complex.re_sum, hatom, traceExp_complex] using hres
+
+open scoped Matrix.Norms.L2Operator in
+/-- A Hermitian pencil with distinct real diagonal slopes has Stahl's real circle
+density, integrable against every real Laplace weight on each compact interval
+containing the slopes. One fixed exterior circle works for every real parameter.
+The missing positivity of the density is not assumed.
+Source: Stahl (2013), Theorem 2.
+atlas: trace-exponential-stahl (partial) -/
+theorem exists_exterior_branches_integral_real_circleDensity_eq_traceExp_sub_atoms
+    {n : Type*} [Fintype n] [DecidableEq n]
+    {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) :
+    ∃ R : ℝ, 0 < R ∧ ∃ branch : n → ℂ → ℂ,
+      (∀ i, DifferentiableOn ℂ (branch i) {z | R < ‖z‖} ∧
+        Tendsto (fun z => branch i z + (b i : ℂ) * z)
+          (Bornology.cobounded ℂ) (𝓝 (A i i))) ∧
+      ∀ r : ℝ, R < r →
+        (∀ s : ℝ, (traceExponentialCircleDensity branch b r s).im = 0) ∧
+        ∀ l u : ℝ, l ≤ u → (∀ i, b i ∈ Icc l u) → ∀ t : ℝ,
+          IntervalIntegrable (fun s => Real.exp (-t * s) *
+            (traceExponentialCircleDensity branch b r s).re) volume l u ∧
+          (∫ s in l..u, Real.exp (-t * s) *
+            (traceExponentialCircleDensity branch b r s).re) =
+            traceExp (A - (t : ℂ) • Matrix.diagonal (fun i => (b i : ℂ))) -
+              ∑ i, Real.exp ((A i i).re - t * b i) := by
+  obtain ⟨R, hR, branch, hbranch, hspec, hreal⟩ :=
+    exists_exterior_eigenvalue_branches_real_circle_density hA b hb
+  exact ⟨R, hR, branch, hbranch, fun r hr => ⟨hreal r hr,
+    fun _ _ hlu hbu t => integral_exp_mul_re_traceExponentialCircleDensity_eq_traceExp_sub_atoms
+      hA b hR hbranch hspec hr hlu hbu t⟩⟩
 
 end NLAlib

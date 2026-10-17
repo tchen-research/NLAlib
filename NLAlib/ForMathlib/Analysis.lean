@@ -80,6 +80,7 @@ import NLAlib.ForMathlib.Analysis.SchurTriangularization
 import NLAlib.ForMathlib.Analysis.SecondDerivativeBound
 import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
 import NLAlib.ForMathlib.Analysis.SpecialFunctions
+import NLAlib.ForMathlib.Analysis.SpecificLimits
 import NLAlib.ForMathlib.Analysis.SupportFunction
 import NLAlib.ForMathlib.Analysis.TriangularBasis
 import NLAlib.ForMathlib.Analysis.WeightedPowerProducts

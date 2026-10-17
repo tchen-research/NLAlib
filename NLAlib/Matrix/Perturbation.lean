@@ -19,7 +19,12 @@ import NLAlib.Matrix.Perturbation.ExteriorEigenvalueBranches
 import NLAlib.Matrix.Perturbation.ExteriorEigenvalueReflection
 import NLAlib.Matrix.Perturbation.GoldenRatioBlock
 import NLAlib.Matrix.Perturbation.GramSingularBounds
+import NLAlib.Matrix.Perturbation.HermitianPencilRoots
 import NLAlib.Matrix.Perturbation.HoffmanWielandtNormal
+import NLAlib.Matrix.Perturbation.InverseEigenvalueBranches
+import NLAlib.Matrix.Perturbation.InverseEigenvalueHalfPlane
+import NLAlib.Matrix.Perturbation.InverseEigenvalueReflection
+import NLAlib.Matrix.Perturbation.InverseEigenvalueRootSum
 import NLAlib.Matrix.Perturbation.InversePerturbation
 import NLAlib.Matrix.Perturbation.InversePerturbationBounds
 import NLAlib.Matrix.Perturbation.LeastSquaresAngle
@@ -32,6 +37,8 @@ import NLAlib.Matrix.Perturbation.LeastSquaresPurePerturbation
 import NLAlib.Matrix.Perturbation.LeastSquaresScalar
 import NLAlib.Matrix.Perturbation.MapConditioning
 import NLAlib.Matrix.Perturbation.OptimalErrorContinuity
+import NLAlib.Matrix.Perturbation.PencilRootSum
+import NLAlib.Matrix.Perturbation.PencilRootSumExtension
 import NLAlib.Matrix.Perturbation.PopulationTraceGap
 import NLAlib.Matrix.Perturbation.PseudoinverseBlocks
 import NLAlib.Matrix.Perturbation.PseudoinverseDifference

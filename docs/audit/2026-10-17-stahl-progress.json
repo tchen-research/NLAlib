@@ -1,8 +1,8 @@
 {
   "date": "2026-10-17",
   "target": "trace-exponential-stahl",
-  "status": "partial",
-  "full_positive_measure_theorem_proved": false,
+  "status": "proved",
+  "full_positive_measure_theorem_proved": true,
   "branch": "codex/stahl-trace-representation",
   "baseline_commit": "6231e9b1cc9e4c8010ec09f3aab82e6e0af4ef4c",
   "sources": [
@@ -44,275 +44,713 @@
       "scope": "Mass and derivative consequences once a positive measure is constructed",
       "declaration": "NLAlib.IsCompactExpRepresentation.iteratedDeriv_eq_integral",
       "read_back": "Compact support supplies real analyticity, total mass F(0), all tilted-moment derivative identities, even-derivative nonnegativity and the sharp endpoint exponential bounds."
+    },
+    {
+      "scope": "Separated root-sum holomorphy with multiplicities",
+      "declaration": "Polynomial.analyticAt_sum_filter_roots_upper_of_upperHemicontinuous",
+      "read_back": "A root-free circle and analytic polynomial coefficients give the actual enclosed-root sum analytically, retaining collisions and algebraic multiplicities. Spectral upper hemicontinuity and a tangent circle select the upper roots locally."
+    },
+    {
+      "scope": "Actual inverse-contour bridge",
+      "declaration": "NLAlib.eventually_circleDensity_eq_neg_circleIntegral_of_exterior_inverse_branches",
+      "read_back": "For the same actual forward and inverse branches, the fixed-circle density equals the negative normalized exponential moment on one common large inverse circle. Same-label inversion, pullback, free-loop homotopy, orientations, and integration by parts are proved."
+    },
+    {
+      "scope": "Nonnegative density for noncommuting Hermitian pencils",
+      "declaration": "NLAlib.traceExponentialCircleDensity_re_nonneg_of_exterior_branches",
+      "read_back": "The exact density is nonnegative for every real s away from the finite slope set. The proof constructs the upper-root sum, proves its imaginary part nonnegative and its uniform bounds, and deforms through smooth thin ellipses."
+    },
+    {
+      "scope": "Full positive-measure theorem and derivative consequences",
+      "declaration": "NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives",
+      "read_back": "For arbitrary finite Hermitian A,H, construct one finite positive Borel measure concentrated on [lambdaMin H,lambdaMax H] representing traceExp(A+t H) for every real t, with mass traceExp A, all tilted-moment derivatives and both spectral-endpoint bounds on even derivatives. Repeated eigenvalues, scalar directions, and dimension zero are covered."
     }
   ],
-  "open_obligations": [
-    "Construct or normalize the global characteristic spectral surface, including reducible or singular curves.",
-    "Construct the finite level-set boundary with compatible local differential expressions and orientations; prove internal-edge cancellation and exterior-contour identification.",
-    "Prove conjugate arc pairing, endpoint behavior, and the height/phase sign conditions for the constructed boundary.",
-    "Deduce nonnegativity of the constructed contour density for general noncommuting Hermitian pencils.",
-    "Construct the positive measure from atoms and density, then combine the proved compactness API with a checked approximation preserving a common spectral interval to remove simple-spectrum restrictions.",
-    "Complete the final all-dimension, all-real-parameter positive-measure theorem after proving the density sign and the required approximation."
-  ],
+  "open_obligations": [],
   "library_design": [
     "General contour, finite-measure and scalar-calculus facts live under ForMathlib.",
     "Matrix eigenvalue-branch construction lives under Matrix/Perturbation.",
     "Trace representation and its commuting specialization live under Matrix/Functions.",
     "The previously private diagonal exponential helper is shared publicly in UnitaryCalculus and reused by GoldenThompson.",
-    "The full atlas item remains candidate; all recorded formalizations are explicitly partial."
+    "Root-cluster holomorphy, native path/circle bridges, free-loop homotopy, reflection, and scalar thin-contour positivity are reusable ForMathlib modules.",
+    "The original real fixed-circle transform is exposed for an arbitrary established branch family, so positivity and measure assembly use exactly the same branches.",
+    "The full atlas item is proved; conditional preparatory declarations remain explicitly partial."
   ],
   "validation": {
-    "leaf_compilation": "passed with autoImplicit=false",
-    "independent_statement_readback": "passed for the 16 new source leaves and moved helpers",
-    "representative_axiom_checks": "only propext, Classical.choice, Quot.sound",
-    "full_build": "passed (6036 jobs)",
-    "atlas_index": "passed: 10894 public declarations; 80 added, all sorry-free",
-    "complete_experimental_build": "passed (6048 jobs)",
-    "default_axiom_audit": "passed: 20566 reachable declarations, no sorry or unsupported axioms",
-    "experimental_sorry_inventory": "unchanged: 23 pre-existing declarations",
+    "status": "passed",
+    "full_build": "passed (6094 jobs)",
+    "trusted_audit": "audited 20814 declarations reachable through import NLAlib",
+    "full_representation_axioms": "'NLAlib.exists_isCompactExpRepresentation_traceExp' depends on axioms: [propext, Classical.choice, Quot.sound]\n'NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]",
+    "experimental_sorry_inventory": "unchanged: 23 pre-existing declarations, excluded from the default import",
+    "new_public_declarations": 212,
     "new_public_declarations_by_kind": {
-      "inductive": 1,
-      "theorem": 76,
-      "constructor": 1,
-      "def": 2
+      "constructor": 2,
+      "def": 19,
+      "inductive": 2,
+      "theorem": 189
     },
-    "schema_validation": "passed independently with PowerShell Test-Json, JSON Schema draft 2020-12",
+    "all_new_public_declarations_sorry_free": true,
+    "independent_mathematical_reviews": "passed: multiplicities, half-plane labels, Schwarz symmetry, free-loop contour orientation, actual density identity, thin-ellipse positivity, measure assembly, exact support under limits, full card read-back",
     "integration_checks": [
       {
-        "check": "experimental-build",
+        "check": "build",
         "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\experimental-build.log"
-      },
-      {
-        "check": "axiom-inventory",
-        "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\axiom-inventory.log"
-      },
-      {
-        "check": "trusted-audit",
-        "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\trusted-audit.log"
-      },
-      {
-        "check": "declaration-index",
-        "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\declaration-index.log"
-      },
-      {
-        "check": "atlas-sync",
-        "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\atlas-sync.log"
-      },
-      {
-        "check": "layers",
-        "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\layers.log"
-      },
-      {
-        "check": "names",
-        "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\names.log"
-      },
-      {
-        "check": "atlas",
-        "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\atlas.log"
+        "log": "verification/stahl/completion/build.log"
       },
       {
         "check": "import-surface",
         "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\import-surface.log"
+        "log": "verification/stahl/completion/import-surface.log"
       },
       {
-        "check": "card-audit",
+        "check": "trusted-audit",
         "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\card-audit.log"
+        "log": "verification/stahl/completion/trusted-audit.log"
       },
       {
         "check": "linters",
         "exit_code": 0,
-        "log": "C:\\Users\\ASUS\\.codex\\worktrees\\operator-items-audit\\NLAlib\\verification\\stahl\\linters.log"
+        "log": "verification/stahl/completion/linters.log"
+      },
+      {
+        "check": "axiom-inventory",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/axiom-inventory.log"
+      },
+      {
+        "check": "downstream-example",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/downstream-example.log"
+      },
+      {
+        "check": "probability-example",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/probability-example.log"
+      },
+      {
+        "check": "layers",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/layers.log"
+      },
+      {
+        "check": "names",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/names.log"
+      },
+      {
+        "check": "full-representation-trust",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/full-representation-trust.log"
+      },
+      {
+        "check": "declaration-index",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/declaration-index.log"
+      },
+      {
+        "check": "atlas-sync",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/atlas-sync.log"
+      },
+      {
+        "check": "final-build",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/final-build.log"
+      },
+      {
+        "check": "script-tests",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/script-tests.log"
+      },
+      {
+        "check": "polynomial-example",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/polynomial-example.log"
+      },
+      {
+        "check": "khatri-rao-example",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/khatri-rao-example.log"
+      },
+      {
+        "check": "ritz-audit",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/ritz-audit.log"
+      },
+      {
+        "check": "subspaces-audit",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/subspaces-audit.log"
+      },
+      {
+        "check": "gaussian-inverse-audit",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/gaussian-inverse-audit.log"
+      },
+      {
+        "check": "new-proofs-audit",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/new-proofs-audit.log"
+      },
+      {
+        "check": "khatri-rao-audit",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/khatri-rao-audit.log"
+      },
+      {
+        "check": "layers-current-index",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/layers-current-index.log"
+      },
+      {
+        "check": "names-current-index",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/names-current-index.log"
+      },
+      {
+        "check": "atlas",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/atlas.log"
+      },
+      {
+        "check": "polynomial-matrix-scope",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/polynomial-matrix-scope.log"
+      },
+      {
+        "check": "card-audit",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/card-audit.log"
+      },
+      {
+        "check": "coverage",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/coverage.log"
+      },
+      {
+        "check": "site",
+        "exit_code": 0,
+        "log": "verification/stahl/completion/site.log"
       }
     ],
-    "partial_formalizations": 18,
-    "all_new_declarations_sorry_free": true,
-    "native_prerequisite_signatures": "375 external declarations; all three newly recorded Mathlib prerequisites present",
-    "final_whitespace_cleanup": "Three source leaves and their dependency recompiled; six declaration docstrings regenerated with the standard record function; all non-doc index fields unchanged."
+    "schema_validation": "passed: PowerShell Test-Json against atlas/schema.json (JSON Schema draft 2020-12)"
   },
   "new_sources": [
     {
-      "path": "NLAlib/ForMathlib/Analysis/Calculus/ExponentialBoundarySign.lean",
-      "lines": 174,
-      "theorems": [
-        "integral_exp_mul_deriv_eq_sub",
-        "neg_integral_exp_mul_deriv_eq_of_endpoints_eq_zero",
-        "neg_integral_exp_mul_deriv_nonneg",
-        "neg_sum_integral_exp_mul_deriv_eq_of_endpoints_eq_zero",
-        "neg_sum_integral_exp_mul_deriv_nonneg",
-        "neg_inv_pi_mul_integral_exp_mul_deriv_eq_and_nonneg"
+      "file": "NLAlib/ForMathlib/Algebra/FiniteGridBoundary.lean",
+      "module": "NLAlib.ForMathlib.Algebra.FiniteGridBoundary",
+      "declarations": [
+        "Finset.sum_grid_boundary_eq",
+        "Finset.sum_range_sub_of_adjacent"
       ]
     },
     {
-      "path": "NLAlib/ForMathlib/Analysis/Complex/ExteriorCircleCauchy.lean",
-      "lines": 191,
-      "theorems": [
-        "circleIntegral_eq_of_differentiableOn_exterior",
-        "circleIntegral_inv_mul_eq_of_differentiableOn_exterior",
-        "two_pi_i_inv_mul_circleIntegral_inv_mul_eq_zero_of_tendsto",
-        "two_pi_i_inv_mul_circleIntegral_inv_mul_eq_of_tendsto",
-        "two_pi_i_inv_mul_circleIntegral_div_sub_eq_of_tendsto"
+      "file": "NLAlib/ForMathlib/Analysis/Calculus/ExponentialBoundarySign.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Calculus.ExponentialBoundarySign",
+      "declarations": [
+        "NLAlib.integral_exp_mul_deriv_eq_sub",
+        "NLAlib.neg_integral_exp_mul_deriv_eq_of_endpoints_eq_zero",
+        "NLAlib.neg_integral_exp_mul_deriv_nonneg",
+        "NLAlib.neg_inv_pi_mul_integral_exp_mul_deriv_eq_and_nonneg",
+        "NLAlib.neg_sum_integral_exp_mul_deriv_eq_of_endpoints_eq_zero",
+        "NLAlib.neg_sum_integral_exp_mul_deriv_nonneg"
       ]
     },
     {
-      "path": "NLAlib/ForMathlib/MeasureTheory/CircleIntegralFubini.lean",
-      "lines": 75,
-      "theorems": [
-        "intervalIntegrable_circleIntegral_and_integral_circleIntegral_eq",
-        "integral_circleIntegral_eq_circleIntegral_integral"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/CircleIntegralAnalytic.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.CircleIntegralAnalytic",
+      "declarations": [
+        "circleIntegral.analyticAt_integral_div",
+        "circleIntegral.continuousMapIntegral",
+        "circleIntegral.continuousMapIntegral_eq"
       ]
     },
     {
-      "path": "NLAlib/ForMathlib/MeasureTheory/CircleIntegralReflection.lean",
-      "lines": 59,
-      "theorems": [
-        "conj_eq_neg_of_conj_eq",
-        "normalized_im_eq_zero_of_conj_eq"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/CircleIntegrationByParts.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.CircleIntegrationByParts",
+      "declarations": [
+        "circleIntegral.integral_exp_mul_deriv_eq_neg_integral_exp_mul",
+        "circleIntegral.integral_mul_deriv_eq_neg_integral_deriv_mul"
       ]
     },
     {
-      "path": "NLAlib/ForMathlib/MeasureTheory/CompactExponential.lean",
-      "lines": 165,
-      "theorems": [
-        "integrable_exp",
-        "mem_interior_integrableExpSet",
-        "measureReal_univ_eq",
-        "iteratedDeriv_eq_integral",
-        "integrable_pow_mul_exp",
-        "iteratedDeriv_even_nonneg",
-        "exp_mul_iteratedDeriv_even_zero_le",
-        "iteratedDeriv_even_le_exp_mul_zero",
-        "analyticAt",
-        "mono",
-        "exists_isCompactExpRepresentation_of_tendsto"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/CircleMomentPositivity.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.CircleMomentPositivity",
+      "declarations": [
+        "Complex.neg_normalized_exp_circleIntegral_re_nonneg"
       ]
     },
     {
-      "path": "NLAlib/ForMathlib/MeasureTheory/CompactLaplaceLimit.lean",
-      "lines": 135,
-      "theorems": [
-        "exists_finiteMeasure_integral_eq_of_tendsto",
-        "exists_finiteMeasure_exp_mul_eq_of_tendsto_of_mass_le",
-        "exists_finiteMeasure_exp_mul_eq_of_tendsto"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/EllipseHomotopy.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.EllipseHomotopy",
+      "declarations": [
+        "Complex.circleIntegral_eq_ellipseIntegral_of_differentiableOn_off_real_or_exterior",
+        "Complex.contDiffOn_ellipsePath_extend",
+        "Complex.curveIntegral_ellipsePath_eq_ellipseIntegral",
+        "Complex.ellipseMap_mem_off_real_or_exterior",
+        "Complex.ellipsePath",
+        "Complex.ellipsePath_extend_apply"
       ]
     },
     {
-      "path": "NLAlib/ForMathlib/MeasureTheory/ExponentialAtomic.lean",
-      "lines": 59,
-      "theorems": [
-        "exponentialAtomicMeasure_toMeasure",
-        "integral_exponentialAtomicMeasure",
-        "isCompactExpRepresentation_exponentialAtomicMeasure"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/ExteriorCircleCauchy.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.ExteriorCircleCauchy",
+      "declarations": [
+        "NLAlib.circleIntegral_eq_of_differentiableOn_exterior",
+        "NLAlib.circleIntegral_inv_mul_eq_of_differentiableOn_exterior",
+        "NLAlib.two_pi_i_inv_mul_circleIntegral_div_sub_eq_of_tendsto",
+        "NLAlib.two_pi_i_inv_mul_circleIntegral_inv_mul_eq_of_tendsto",
+        "NLAlib.two_pi_i_inv_mul_circleIntegral_inv_mul_eq_zero_of_tendsto"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Functions/TraceExponentialBranchRepresentation.lean",
-      "lines": 136,
-      "theorems": [
-        "exists_exterior_branches_sum_integral_eq_trace_matrixExp_sub_atoms",
-        "exists_exterior_branches_sum_integral_eq_trace_matrixExp_sub_atoms_fixed_circle",
-        "exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/ExteriorCircleChangeVariables.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.ExteriorCircleChangeVariables",
+      "declarations": [
+        "Complex.circleIntegral_comp_mul_deriv_eq_of_close_to_real_mul",
+        "Complex.eventually_circleIntegral_comp_mul_deriv_eq_of_tendsto_affine",
+        "Complex.eventually_circleIntegral_exp_eq_neg_circleIntegral_exp_mul_of_inverse"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Functions/TraceExponentialContour.lean",
-      "lines": 451,
-      "theorems": [
-        "circleIntegral_exp_add_mul_eq_of_differentiableOn_exterior",
-        "traceExponentialCircleDensity_eq_of_differentiableOn_exterior",
-        "two_pi_i_inv_mul_circleIntegral_exp_add_mul_div_sub_eq",
-        "intervalIntegrable_exp_mul_circleIntegral_exp_add_mul",
-        "intervalIntegrable_exp_mul_traceExponentialCircleDensity",
-        "integral_exp_mul_traceExponentialCircleDensity_eq_sum_integral",
-        "integral_exp_mul_circleIntegral_exp_add_mul",
-        "integral_exp_mul_circleIntegral_exp_add_mul_eq_sub_atom",
-        "sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_sub_atoms",
-        "sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_of_trace",
-        "differentiable_trace_matrixExp_sub_smul",
-        "sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_trace_matrixExp_sub_atoms",
-        "integral_exp_mul_traceExponentialCircleDensity_eq_trace_matrixExp_sub_atoms"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/ExteriorHalfPlane.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.ExteriorHalfPlane",
+      "declarations": [
+        "Complex.im_pos_iff_slope_pos_of_tendsto_affine"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Functions/TraceExponentialContourReal.lean",
-      "lines": 172,
-      "theorems": [
-        "normalized_circleIntegral_exp_add_mul_im_eq_zero",
-        "sum_ite_normalized_circleIntegral_exp_add_mul_im_eq_zero",
-        "exists_exterior_eigenvalue_branches_real_circle_density",
-        "exists_exterior_branches_integral_real_circleDensity_eq_traceExp_sub_atoms"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/ExteriorReflection.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.ExteriorReflection",
+      "declarations": [
+        "Complex.eventually_conj_eq_of_tendsto_affine_of_finite_matching"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Functions/TraceExponentialMeasure.lean",
-      "lines": 89,
-      "theorems": [
-        "traceExp_add_smul_eq_sum_of_diagonalization",
-        "exists_isCompactExpRepresentation_traceExp_of_commute",
-        "exists_isCompactExpRepresentation_traceExp_of_tendsto"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/FreeLoopHomotopy.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.FreeLoopHomotopy",
+      "declarations": [
+        "Complex.curveIntegral_eq_of_differentiableOn_of_freeHomotopy"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Functions/TraceExponentialSpectralRepresentation.lean",
-      "lines": 68,
-      "theorems": [
-        "exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms_of_isHermitian"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/Polynomial/RootCluster.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+      "declarations": [
+        "Polynomial.analyticAt_sum_filter_roots_upper_of_upperHemicontinuous",
+        "Polynomial.analyticAt_sum_roots_in_circle",
+        "Polynomial.circleIntegral_mul_derivative_div_eq_sum_roots",
+        "Polynomial.im_sum_filter_roots_upper_nonneg",
+        "Polynomial.two_pi_i_inv_mul_circleIntegral_mul_derivative_div_eq_sum_roots"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Functions/TraceExponentialSpectrum.lean",
-      "lines": 106,
-      "theorems": [
-        "exists_eigenbasis_of_injective_mem_spectrum",
-        "spectrum_eq_range_of_injective_mem_spectrum",
-        "trace_matrixExp_eq_sum_exp_of_eigenbasis",
-        "trace_matrixExp_eq_sum_exp_of_injective_mem_spectrum"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/PrimitiveHomotopyGrid.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+      "declarations": [
+        "Complex.PrimitiveHomotopyGrid",
+        "Complex.PrimitiveHomotopyGrid.bottom",
+        "Complex.PrimitiveHomotopyGrid.bottom_succ_eq_top",
+        "Complex.PrimitiveHomotopyGrid.chart",
+        "Complex.PrimitiveHomotopyGrid.continuousOn",
+        "Complex.PrimitiveHomotopyGrid.hasDerivAt_primitive",
+        "Complex.PrimitiveHomotopyGrid.isOpen_chart",
+        "Complex.PrimitiveHomotopyGrid.left",
+        "Complex.PrimitiveHomotopyGrid.left_succ_eq_right",
+        "Complex.PrimitiveHomotopyGrid.mapsTo_chart",
+        "Complex.PrimitiveHomotopyGrid.mk",
+        "Complex.PrimitiveHomotopyGrid.primitive",
+        "Complex.PrimitiveHomotopyGrid.right",
+        "Complex.PrimitiveHomotopyGrid.size",
+        "Complex.PrimitiveHomotopyGrid.size_pos",
+        "Complex.PrimitiveHomotopyGrid.sum_right_sub_sum_left_eq_sum_top_sub_sum_bottom",
+        "Complex.PrimitiveHomotopyGrid.top",
+        "Complex.nonempty_primitiveHomotopyGrid_of_differentiableOn"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Perturbation/ExteriorEigenvalueBranches.lean",
-      "lines": 128,
-      "theorems": [
-        "exists_exterior_eigenvalue_branches_of_diagonal",
-        "exists_exterior_eigenvalue_branches_sub_real_diagonal"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/PrimitiveTransport.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport",
+      "declarations": [
+        "Complex.exists_primitive_subdivision_of_differentiableOn",
+        "Complex.primitiveSubdivisionTransport",
+        "Complex.primitiveSubdivisionTransport_eq_curveIntegral_of_hasDerivAt",
+        "Complex.primitiveSubdivisionTransport_eq_of_hasDerivAt",
+        "Complex.primitiveSubdivisionTransport_eq_sub_of_hasDerivAt",
+        "Complex.sub_eq_sub_of_hasDerivAt_of_continuous",
+        "Complex.sub_eq_sub_of_hasDerivAt_of_path"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Perturbation/ExteriorEigenvalueReflection.lean",
-      "lines": 137,
-      "theorems": [
-        "conj_mem_spectrum_conjTranspose",
-        "eventually_exterior_eigenvalue_branches_conj_eq",
-        "exists_exterior_eigenvalue_branches_sub_real_diagonal_conj_eq"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/SchwarzExtension.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension",
+      "declarations": [
+        "Complex.differentiableOn_schwarzHalfPlaneExtension",
+        "Complex.differentiableOn_schwarzHalfPlaneExtension_union_exterior",
+        "Complex.norm_schwarzHalfPlaneExtension_le",
+        "Complex.schwarzHalfPlaneExtension",
+        "Complex.schwarzHalfPlaneExtension_conj",
+        "Complex.schwarzHalfPlaneExtension_conj_of_conj_eq_axis",
+        "Complex.schwarzHalfPlaneExtension_eq_of_conj_eq"
       ]
     },
     {
-      "path": "NLAlib/Matrix/Perturbation/SimpleEigenvalueAnalyticBranch.lean",
-      "lines": 250,
-      "theorems": [
-        "analyticAt_simpleEigenvalueSchurFunction",
-        "exists_analytic_simpleEigenvalueSchurFunction_branch",
-        "exists_analytic_eigenvalue_branch_of_scalar_block",
-        "exists_analytic_eigenvalue_branch_of_diagonal",
-        "exists_analytic_eigenvalue_branch_diagonal_expansion",
-        "exists_exterior_eigenvalue_branch_of_diagonal"
+      "file": "NLAlib/ForMathlib/Analysis/Complex/ThinEllipsePositivity.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity",
+      "declarations": [
+        "Complex.ellipseIntegral",
+        "Complex.ellipseMap",
+        "Complex.hasDerivAt_ellipseMap",
+        "Complex.neg_normalized_ellipseIntegral_re_eq",
+        "Complex.neg_normalized_exp_ellipseIntegral_re_ge",
+        "Complex.nonneg_of_neg_normalized_exp_ellipseIntegral_re_eq",
+        "Complex.norm_ellipseMap_le"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/Analysis/Complex/ThinRectanglePositivity.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity",
+      "declarations": [
+        "Complex.neg_abs_sin_mul_norm_le_im_exp_mul",
+        "Complex.neg_normalized_exp_rectangleBoundaryIntegral_re_ge",
+        "Complex.neg_normalized_exp_rectangleBoundaryIntegral_re_nonneg",
+        "Complex.neg_normalized_rectangleBoundaryIntegral_re_eq",
+        "Complex.nonneg_of_neg_normalized_exp_rectangleBoundaryIntegral_re_eq",
+        "Complex.rectangleBoundaryIntegral",
+        "Complex.rectangleBoundaryIntegral_eq_of_differentiableOn_off_real"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/Analysis/Complex/UpperHalfPlaneCircle.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Complex.UpperHalfPlaneCircle",
+      "declarations": [
+        "Complex.dist_mul_I_lt_iff",
+        "Complex.exists_pos_dist_mul_I_lt_iff_im_pos",
+        "Complex.exists_tangent_circle_eventually_mem_iff_im_pos",
+        "Complex.im_pos_of_dist_mul_I_lt"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/Analysis/Matrix/Charpoly.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Matrix.Charpoly",
+      "declarations": [
+        "Matrix.analyticAt_charpoly_coeff_affine",
+        "Matrix.exists_polynomial_charpoly_coeff_affine"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/Analysis/Matrix/RootCluster.lean",
+      "module": "NLAlib.ForMathlib.Analysis.Matrix.RootCluster",
+      "declarations": [
+        "Matrix.analyticAt_sum_filter_roots_charpoly_affine_upper",
+        "Matrix.roots_charpoly_eq_map_of_injective_mem_spectrum",
+        "Matrix.sum_filter_roots_charpoly_eq_sum_ite_of_injective_mem_spectrum"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/Analysis/SpecificLimits/StrictAntiApproximation.lean",
+      "module": "NLAlib.ForMathlib.Analysis.SpecificLimits.StrictAntiApproximation",
+      "declarations": [
+        "Fin.exists_strictAnti_tendsto_mem_Icc"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/MeasureTheory/CircleIntegralFubini.lean",
+      "module": "NLAlib.ForMathlib.MeasureTheory.CircleIntegralFubini",
+      "declarations": [
+        "NLAlib.integral_circleIntegral_eq_circleIntegral_integral",
+        "NLAlib.intervalIntegrable_circleIntegral_and_integral_circleIntegral_eq"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/MeasureTheory/CircleIntegralReflection.lean",
+      "module": "NLAlib.ForMathlib.MeasureTheory.CircleIntegralReflection",
+      "declarations": [
+        "circleIntegral.conj_eq_neg_of_conj_eq",
+        "circleIntegral.normalized_im_eq_zero_of_conj_eq"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/MeasureTheory/CirclePath.lean",
+      "module": "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+      "declarations": [
+        "Complex.circlePath",
+        "Complex.circlePath_extend_apply",
+        "Complex.contDiffOn_circlePath_extend",
+        "Complex.contDiffOn_circlePath_map_extend",
+        "Complex.curveIntegral_circlePath_eq_circleIntegral",
+        "Complex.curveIntegral_circlePath_map_eq_circleIntegral_mul_deriv",
+        "Path.curveIntegral_ofLine_eq_intervalIntegral",
+        "circleIntegral.integral_neg_radius_eq"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/MeasureTheory/CompactExponential.lean",
+      "module": "NLAlib.ForMathlib.MeasureTheory.CompactExponential",
+      "declarations": [
+        "NLAlib.IsCompactExpRepresentation",
+        "NLAlib.IsCompactExpRepresentation.ae_mem_Icc",
+        "NLAlib.IsCompactExpRepresentation.analyticAt",
+        "NLAlib.IsCompactExpRepresentation.exp_mul_iteratedDeriv_even_zero_le",
+        "NLAlib.IsCompactExpRepresentation.integrable_exp",
+        "NLAlib.IsCompactExpRepresentation.integrable_pow_mul_exp",
+        "NLAlib.IsCompactExpRepresentation.integral_exp",
+        "NLAlib.IsCompactExpRepresentation.iteratedDeriv_eq_integral",
+        "NLAlib.IsCompactExpRepresentation.iteratedDeriv_even_le_exp_mul_zero",
+        "NLAlib.IsCompactExpRepresentation.iteratedDeriv_even_nonneg",
+        "NLAlib.IsCompactExpRepresentation.measureReal_univ_eq",
+        "NLAlib.IsCompactExpRepresentation.mem_interior_integrableExpSet",
+        "NLAlib.IsCompactExpRepresentation.mk",
+        "NLAlib.IsCompactExpRepresentation.mono",
+        "NLAlib.exists_isCompactExpRepresentation_of_tendsto"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/MeasureTheory/CompactLaplaceLimit.lean",
+      "module": "NLAlib.ForMathlib.MeasureTheory.CompactLaplaceLimit",
+      "declarations": [
+        "NLAlib.exists_finiteMeasure_exp_mul_eq_of_tendsto",
+        "NLAlib.exists_finiteMeasure_exp_mul_eq_of_tendsto_of_mass_le",
+        "NLAlib.exists_finiteMeasure_integral_eq_of_tendsto"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/MeasureTheory/ExponentialAtomic.lean",
+      "module": "NLAlib.ForMathlib.MeasureTheory.ExponentialAtomic",
+      "declarations": [
+        "NLAlib.exponentialAtomicMeasure",
+        "NLAlib.exponentialAtomicMeasure_toMeasure",
+        "NLAlib.integral_exponentialAtomicMeasure",
+        "NLAlib.isCompactExpRepresentation_exponentialAtomicMeasure"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/MeasureTheory/IntervalDensity.lean",
+      "module": "NLAlib.ForMathlib.MeasureTheory.IntervalDensity",
+      "declarations": [
+        "NLAlib.IsCompactExpRepresentation.add",
+        "NLAlib.ae_mem_Icc_intervalDensityMeasure",
+        "NLAlib.integral_intervalDensityMeasure",
+        "NLAlib.intervalDensityMeasure",
+        "NLAlib.intervalDensityMeasure_toMeasure",
+        "NLAlib.isCompactExpRepresentation_intervalDensityMeasure"
+      ]
+    },
+    {
+      "file": "NLAlib/ForMathlib/Topology/PathSubdivision.lean",
+      "module": "NLAlib.ForMathlib.Topology.PathSubdivision",
+      "declarations": [
+        "exists_uniform_grid_subordinate_open_cover",
+        "exists_uniform_subdivision_subordinate_open_cover"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialBranchRepresentation.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialBranchRepresentation",
+      "declarations": [
+        "NLAlib.exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms",
+        "NLAlib.exists_exterior_branches_sum_integral_eq_trace_matrixExp_sub_atoms",
+        "NLAlib.exists_exterior_branches_sum_integral_eq_trace_matrixExp_sub_atoms_fixed_circle"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialContour.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialContour",
+      "declarations": [
+        "NLAlib.circleIntegral_exp_add_mul_eq_of_differentiableOn_exterior",
+        "NLAlib.differentiable_trace_matrixExp_sub_smul",
+        "NLAlib.integral_exp_mul_circleIntegral_exp_add_mul",
+        "NLAlib.integral_exp_mul_circleIntegral_exp_add_mul_eq_sub_atom",
+        "NLAlib.integral_exp_mul_traceExponentialCircleDensity_eq_sum_integral",
+        "NLAlib.integral_exp_mul_traceExponentialCircleDensity_eq_trace_matrixExp_sub_atoms",
+        "NLAlib.intervalIntegrable_exp_mul_circleIntegral_exp_add_mul",
+        "NLAlib.intervalIntegrable_exp_mul_traceExponentialCircleDensity",
+        "NLAlib.sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_of_trace",
+        "NLAlib.sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_sub_atoms",
+        "NLAlib.sum_integral_exp_mul_circleIntegral_exp_add_mul_eq_trace_matrixExp_sub_atoms",
+        "NLAlib.traceExponentialCircleDensity",
+        "NLAlib.traceExponentialCircleDensity_eq_of_differentiableOn_exterior",
+        "NLAlib.two_pi_i_inv_mul_circleIntegral_exp_add_mul_div_sub_eq"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialContourPositivity.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialContourPositivity",
+      "declarations": [
+        "NLAlib.exists_isCompactExpRepresentation_traceExp_diagonal_of_injective",
+        "NLAlib.traceExponentialCircleDensity_re_nonneg_of_exterior_branches"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialContourReal.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialContourReal",
+      "declarations": [
+        "NLAlib.exists_exterior_branches_integral_real_circleDensity_eq_traceExp_sub_atoms",
+        "NLAlib.exists_exterior_eigenvalue_branches_real_circle_density",
+        "NLAlib.integral_exp_mul_re_traceExponentialCircleDensity_eq_traceExp_sub_atoms",
+        "NLAlib.normalized_circleIntegral_exp_add_mul_im_eq_zero",
+        "NLAlib.sum_ite_normalized_circleIntegral_exp_add_mul_im_eq_zero"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialDensityMeasure.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialDensityMeasure",
+      "declarations": [
+        "NLAlib.exists_exterior_branches_isCompactExpRepresentation_of_circleDensity_nonneg",
+        "NLAlib.exists_isCompactExpRepresentation_traceExp_of_circleDensity_nonneg",
+        "NLAlib.exists_isCompactExpRepresentation_traceExp_of_circleDensity_nonneg_off_slopes"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialInverseContour.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialInverseContour",
+      "declarations": [
+        "NLAlib.eventually_circleDensity_eq_neg_circleIntegral_of_exterior_inverse_branches",
+        "NLAlib.exists_exterior_inverse_branches_circleDensity_eq_neg_circleIntegral"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialMeasure.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialMeasure",
+      "declarations": [
+        "NLAlib.exists_isCompactExpRepresentation_traceExp_of_commute",
+        "NLAlib.exists_isCompactExpRepresentation_traceExp_of_tendsto",
+        "NLAlib.traceExp_add_smul_eq_sum_of_diagonalization"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialRepresentation.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialRepresentation",
+      "declarations": [
+        "NLAlib.exists_isCompactExpRepresentation_traceExp",
+        "NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialSimpleSpectrumLimit.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialSimpleSpectrumLimit",
+      "declarations": [
+        "NLAlib.exists_isCompactExpRepresentation_traceExp_of_diagonal_simple"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialSpectralRepresentation.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialSpectralRepresentation",
+      "declarations": [
+        "NLAlib.exists_exterior_branches_integral_circleDensity_eq_trace_matrixExp_sub_atoms_of_isHermitian"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Functions/TraceExponentialSpectrum.lean",
+      "module": "NLAlib.Matrix.Functions.TraceExponentialSpectrum",
+      "declarations": [
+        "NLAlib.exists_eigenbasis_of_injective_mem_spectrum",
+        "NLAlib.spectrum_eq_range_of_injective_mem_spectrum",
+        "NLAlib.trace_matrixExp_eq_sum_exp_of_eigenbasis",
+        "NLAlib.trace_matrixExp_eq_sum_exp_of_injective_mem_spectrum"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/ExteriorEigenvalueBranches.lean",
+      "module": "NLAlib.Matrix.Perturbation.ExteriorEigenvalueBranches",
+      "declarations": [
+        "NLAlib.exists_exterior_eigenvalue_branches_of_diagonal",
+        "NLAlib.exists_exterior_eigenvalue_branches_sub_real_diagonal"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/ExteriorEigenvalueReflection.lean",
+      "module": "NLAlib.Matrix.Perturbation.ExteriorEigenvalueReflection",
+      "declarations": [
+        "NLAlib.conj_mem_spectrum_conjTranspose",
+        "NLAlib.eventually_exterior_eigenvalue_branches_conj_eq",
+        "NLAlib.exists_exterior_eigenvalue_branches_sub_real_diagonal_conj_eq"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/HermitianPencilRoots.lean",
+      "module": "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+      "declarations": [
+        "NLAlib.det_smul_one_sub_add_smul_eq_zero_iff_mem_spectrum",
+        "NLAlib.det_smul_one_sub_add_smul_eq_zero_iff_mem_spectrum_inv_mul",
+        "NLAlib.im_ne_zero_of_det_hermitian_pencil_eq_zero",
+        "NLAlib.im_ne_zero_of_mem_roots_charpoly_inv_mul",
+        "NLAlib.norm_le_specNorm_inv_mul_of_det_pencil_eq_zero",
+        "NLAlib.norm_le_specNorm_inv_mul_of_mem_roots_charpoly",
+        "NLAlib.norm_sum_ite_le_card_mul_specNorm_inv_of_det_pencil_eq_zero",
+        "NLAlib.norm_sum_le_card_mul_specNorm_inv_of_le_roots_charpoly"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/InverseEigenvalueBranches.lean",
+      "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueBranches",
+      "declarations": [
+        "NLAlib.eventually_exterior_inverse_eigenvalue_branches_eq",
+        "NLAlib.exists_exterior_inverse_eigenvalue_branches",
+        "NLAlib.mem_spectrum_inverse_diagonal_pencil_iff"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/InverseEigenvalueHalfPlane.lean",
+      "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueHalfPlane",
+      "declarations": [
+        "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/InverseEigenvalueReflection.lean",
+      "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueReflection",
+      "declarations": [
+        "NLAlib.eventually_exterior_inverse_eigenvalue_branches_conj_eq",
+        "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff_conj_eq"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/InverseEigenvalueRootSum.lean",
+      "module": "NLAlib.Matrix.Perturbation.InverseEigenvalueRootSum",
+      "declarations": [
+        "NLAlib.exists_exterior_inverse_eigenvalue_branches_root_sum",
+        "NLAlib.inv_mul_sub_smul_one_diagonal_eq",
+        "NLAlib.inversePencilUpperRootSum_eq_sum_ite_of_inverse_branches",
+        "NLAlib.isUnit_diagonal_sub_of_ne"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/PencilRootSum.lean",
+      "module": "NLAlib.Matrix.Perturbation.PencilRootSum",
+      "declarations": [
+        "NLAlib.analyticAt_inversePencilUpperRootSum",
+        "NLAlib.inversePencilUpperRootSum",
+        "NLAlib.inversePencilUpperRootSum_im_nonneg",
+        "NLAlib.norm_inversePencilUpperRootSum_le",
+        "NLAlib.norm_inversePencilUpperRootSum_le_of_norm_le"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/PencilRootSumExtension.lean",
+      "module": "NLAlib.Matrix.Perturbation.PencilRootSumExtension",
+      "declarations": [
+        "NLAlib.exists_inversePencilUpperRootSum_extension"
+      ]
+    },
+    {
+      "file": "NLAlib/Matrix/Perturbation/SimpleEigenvalueAnalyticBranch.lean",
+      "module": "NLAlib.Matrix.Perturbation.SimpleEigenvalueAnalyticBranch",
+      "declarations": [
+        "NLAlib.analyticAt_simpleEigenvalueSchurFunction",
+        "NLAlib.exists_analytic_eigenvalue_branch_diagonal_expansion",
+        "NLAlib.exists_analytic_eigenvalue_branch_of_diagonal",
+        "NLAlib.exists_analytic_eigenvalue_branch_of_scalar_block",
+        "NLAlib.exists_analytic_simpleEigenvalueSchurFunction_branch",
+        "NLAlib.exists_exterior_eigenvalue_branch_of_diagonal"
       ]
     }
   ],
-  "optional_support_api": "An explicit upper-support-vanishing theorem for the untruncated contour density is not exposed. The target measure can instead be constructed by restricting its density to the compact spectral interval, using the proved interval transform identity.",
+  "optional_support_api": "The positive density measure is restricted to the exact closed spectral interval, using the proved interval transform identity. No upper-support-vanishing theorem for the untruncated density is needed.",
   "atlas_counts": {
-    "proved": 390,
-    "candidate": 116,
     "assumed": 1,
+    "candidate": 115,
+    "proved": 391,
     "scaffold": 6
   }
 }

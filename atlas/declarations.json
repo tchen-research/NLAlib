@@ -103,6 +103,749 @@
   "sorry":
   false,
   "signature":
+  "Complex.PrimitiveHomotopyGrid (g : ℂ → ℂ) (ψ : ℝ × ℝ → ℂ) : Type",
+  "name":
+  "Complex.PrimitiveHomotopyGrid",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  20,
+  "kind":
+  "inductive",
+  "doc":
+  "An actual finite primitive chart grid for a continuous square map.\nEach chart contains the image of its entire closed cell. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.bottom {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (D : Complex.PrimitiveHomotopyGrid g ψ) (i j : ℕ) : ℂ",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.bottom",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  37,
+  "kind":
+  "def",
+  "doc":
+  "The bottom edge increment of the actual primitive in a cell. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid",
+   "Complex.PrimitiveHomotopyGrid.bottom",
+   "Complex.PrimitiveHomotopyGrid.size",
+   "Complex.PrimitiveHomotopyGrid.top"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.bottom_succ_eq_top {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (D : Complex.PrimitiveHomotopyGrid g ψ)\n  (hψ : Continuous ψ) {i j : ℕ} (hi : i < D.size) (hj : j + 1 < D.size) : D.bottom i (j + 1) = D.top i j",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.bottom_succ_eq_top",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  62,
+  "kind":
+  "theorem",
+  "doc":
+  "Two adjacent horizontal edges agree because their different primitives\nhave the same derivative along the actual continuous shared edge. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.chart {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (self : Complex.PrimitiveHomotopyGrid g ψ) :\n  ℕ → ℕ → Set ℂ",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.chart",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  25,
+  "kind":
+  "def",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid",
+   "Complex.PrimitiveHomotopyGrid.chart",
+   "Complex.PrimitiveHomotopyGrid.size"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.continuousOn {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (self : Complex.PrimitiveHomotopyGrid g ψ)\n  (i : ℕ) : i < self.size → ∀ j < self.size, ContinuousOn g (self.chart i j)",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.continuousOn",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  30,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid",
+   "Complex.PrimitiveHomotopyGrid.chart",
+   "Complex.PrimitiveHomotopyGrid.primitive",
+   "Complex.PrimitiveHomotopyGrid.size"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.hasDerivAt_primitive {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ}\n  (self : Complex.PrimitiveHomotopyGrid g ψ) (i : ℕ) :\n  i < self.size → ∀ j < self.size, ∀ z ∈ self.chart i j, HasDerivAt (self.primitive i j) (g z) z",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.hasDerivAt_primitive",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  28,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid",
+   "Complex.PrimitiveHomotopyGrid.chart",
+   "Complex.PrimitiveHomotopyGrid.size"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.isOpen_chart {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (self : Complex.PrimitiveHomotopyGrid g ψ)\n  (i : ℕ) : i < self.size → ∀ j < self.size, IsOpen (self.chart i j)",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.isOpen_chart",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  27,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.left {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (D : Complex.PrimitiveHomotopyGrid g ψ) (i j : ℕ) : ℂ",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.left",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  47,
+  "kind":
+  "def",
+  "doc":
+  "The left edge increment of the actual primitive in a cell. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid",
+   "Complex.PrimitiveHomotopyGrid.left",
+   "Complex.PrimitiveHomotopyGrid.right",
+   "Complex.PrimitiveHomotopyGrid.size"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.left_succ_eq_right {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (D : Complex.PrimitiveHomotopyGrid g ψ)\n  (hψ : Continuous ψ) {i j : ℕ} (hi : i + 1 < D.size) (hj : j < D.size) : D.left (i + 1) j = D.right i j",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.left_succ_eq_right",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  78,
+  "kind":
+  "theorem",
+  "doc":
+  "Two adjacent vertical edges agree for the same continuous-path primitive\nreason, without any differentiability of the square map. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid",
+   "Complex.PrimitiveHomotopyGrid.chart",
+   "Complex.PrimitiveHomotopyGrid.size"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.mapsTo_chart {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (self : Complex.PrimitiveHomotopyGrid g ψ)\n  (i : ℕ) :\n  i < self.size →\n    ∀ j < self.size,\n      ∀ t ∈ Set.Icc (↑i / ↑self.size, ↑j / ↑self.size) ((↑i + 1) / ↑self.size, (↑j + 1) / ↑self.size),\n        ψ t ∈ self.chart i j",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.mapsTo_chart",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.mk {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (size : ℕ) (size_pos : 0 < size) (chart : ℕ → ℕ → Set ℂ)\n  (primitive : ℕ → ℕ → ℂ → ℂ) (isOpen_chart : ∀ i < size, ∀ j < size, IsOpen (chart i j))\n  (hasDerivAt_primitive : ∀ i < size, ∀ j < size, ∀ z ∈ chart i j, HasDerivAt (primitive i j) (g z) z)\n  (continuousOn : ∀ i < size, ∀ j < size, ContinuousOn g (chart i j))\n  (mapsTo_chart :\n    ∀ i < size,\n      ∀ j < size, ∀ t ∈ Set.Icc (↑i / ↑size, ↑j / ↑size) ((↑i + 1) / ↑size, (↑j + 1) / ↑size), ψ t ∈ chart i j) :\n  Complex.PrimitiveHomotopyGrid g ψ",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.mk",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  22,
+  "kind":
+  "constructor",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.primitive {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (self : Complex.PrimitiveHomotopyGrid g ψ) :\n  ℕ → ℕ → ℂ → ℂ",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.primitive",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  26,
+  "kind":
+  "def",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.right {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (D : Complex.PrimitiveHomotopyGrid g ψ) (i j : ℕ) : ℂ",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.right",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  52,
+  "kind":
+  "def",
+  "doc":
+  "The right edge increment of the actual primitive in a cell. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.size {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (self : Complex.PrimitiveHomotopyGrid g ψ) : ℕ",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.size",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  23,
+  "kind":
+  "def",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid",
+   "Complex.PrimitiveHomotopyGrid.size"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.size_pos {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (self : Complex.PrimitiveHomotopyGrid g ψ) :\n  0 < self.size",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.size_pos",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid",
+   "Complex.PrimitiveHomotopyGrid.bottom",
+   "Complex.PrimitiveHomotopyGrid.left",
+   "Complex.PrimitiveHomotopyGrid.right",
+   "Complex.PrimitiveHomotopyGrid.size",
+   "Complex.PrimitiveHomotopyGrid.top"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.sum_right_sub_sum_left_eq_sum_top_sub_sum_bottom {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ}\n  (D : Complex.PrimitiveHomotopyGrid g ψ) (hψ : Continuous ψ) :\n  ∑ j ∈ Finset.range D.size, D.right (D.size - 1) j - ∑ j ∈ Finset.range D.size, D.left 0 j =\n    ∑ i ∈ Finset.range D.size, D.top i (D.size - 1) - ∑ i ∈ Finset.range D.size, D.bottom i 0",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.sum_right_sub_sum_left_eq_sum_top_sub_sum_bottom",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "All actual interior edge increments cancel, leaving precisely the outer\nboundary transport of a continuous primitive-charted square. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.PrimitiveHomotopyGrid.top {g : ℂ → ℂ} {ψ : ℝ × ℝ → ℂ} (D : Complex.PrimitiveHomotopyGrid g ψ) (i j : ℕ) : ℂ",
+  "name":
+  "Complex.PrimitiveHomotopyGrid.top",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  42,
+  "kind":
+  "def",
+  "doc":
+  "The top edge increment of the actual primitive in a cell. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.circleIntegral_comp_mul_deriv_eq_of_close_to_real_mul {f g : ℂ → ℂ} {R S r a : ℝ} (hr : 0 < r)\n  (hf : DifferentiableOn ℂ f {z | R < ‖z‖}) (hg : DifferentiableOn ℂ g {z | S < ‖z‖}) (hSr : S < r)\n  (hclose : ∀ u ∈ Metric.sphere 0 r, ‖g u - ↑a * u‖ < |a| * r - R) :\n  ∮ (u : ℂ) in C(0, r), f (g u) * deriv g u = ∮ (z : ℂ) in C(0, |a| * r), f z",
+  "name":
+  "Complex.circleIntegral_comp_mul_deriv_eq_of_close_to_real_mul",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ExteriorCircleChangeVariables",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "A circle image sufficiently close to a real dilation can be replaced by\nthe dilated circle in an exterior holomorphy domain. Negative dilation still\npreserves counterclockwise orientation. The strict closeness estimate keeps\nthe entire straight free homotopy outside the forbidden disk. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipseIntegral"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.circleIntegral_eq_ellipseIntegral_of_differentiableOn_off_real_or_exterior {f : ℂ → ℂ} {R M ε : ℝ} (hM : 0 < M)\n  (hε : 0 < ε) (hRM : R < M) (hf : DifferentiableOn ℂ f {z | z.im ≠ 0 ∨ R < ‖z‖}) :\n  ∮ (z : ℂ) in C(0, M), f z = Complex.ellipseIntegral f M ε",
+  "name":
+  "Complex.circleIntegral_eq_ellipseIntegral_of_differentiableOn_off_real_or_exterior",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.EllipseHomotopy",
+  "line":
+  91,
+  "kind":
+  "theorem",
+  "doc":
+  "A circle of radius `M` deforms through smooth ellipses to any positive\nvertical semiaxis inside the union of the nonreal plane and the exterior of a\nsmaller disk. Holomorphy on that actual domain identifies the contour integrals.\nNo real-axis boundary values inside the disk are assumed. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.circlePath (c : ℂ) (r : ℝ) : Path (c + ↑r) (c + ↑r)",
+  "name":
+  "Complex.circlePath",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+  "line":
+  49,
+  "kind":
+  "def",
+  "doc":
+  "The positively oriented circle, parametrized once on the unit interval.\nFor a negative signed radius the starting point is rotated by half a turn;\nthe traversal still has the same counterclockwise orientation. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.circlePath"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.circlePath_extend_apply {c : ℂ} {r t : ℝ} (ht : t ∈ unitInterval) :\n  (c.circlePath r).extend t = circleMap c r (2 * Real.pi * t)",
+  "name":
+  "Complex.circlePath_extend_apply",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+  "line":
+  58,
+  "kind":
+  "theorem",
+  "doc":
+  "The native circle path agrees with the usual angular parametrization\nthrough angle `2πt` on its entire closed parameter interval. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.circlePath"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.contDiffOn_circlePath_extend (c : ℂ) (r : ℝ) : ContDiffOn ℝ 1 (⇑(c.circlePath r).extend) unitInterval",
+  "name":
+  "Complex.contDiffOn_circlePath_extend",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+  "line":
+  65,
+  "kind":
+  "theorem",
+  "doc":
+  "The native circle path is continuously differentiable up to both\nendpoints of the unit interval. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.circlePath"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.contDiffOn_circlePath_map_extend {g : ℂ → ℂ} {U : Set ℂ} {c : ℂ} {r : ℝ} (hU : IsOpen U)\n  (hg : DifferentiableOn ℂ g U) (hc : Metric.sphere c |r| ⊆ U) (hgc : ContinuousOn g (Set.range ⇑(c.circlePath r))) :\n  ContDiffOn ℝ 1 (⇑((c.circlePath r).map' hgc).extend) unitInterval",
+  "name":
+  "Complex.contDiffOn_circlePath_map_extend",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "A holomorphic image of the circle path is continuously differentiable\nup to both endpoints of its parameter interval. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipsePath"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.contDiffOn_ellipsePath_extend (M ε : ℝ) : ContDiffOn ℝ 1 (⇑(Complex.ellipsePath M ε).extend) unitInterval",
+  "name":
+  "Complex.contDiffOn_ellipsePath_extend",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.EllipseHomotopy",
+  "line":
+  41,
+  "kind":
+  "theorem",
+  "doc":
+  "Native ellipse paths are continuously differentiable at both endpoints. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.circlePath"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.curveIntegral_circlePath_eq_circleIntegral (f : ℂ → ℂ) (c : ℂ) (r : ℝ) :\n  ∫ᶜ (z : ℂ) in c.circlePath r, f z • ContinuousLinearMap.id ℂ ℂ = ∮ (z : ℂ) in C(c, r), f z",
+  "name":
+  "Complex.curveIntegral_circlePath_eq_circleIntegral",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "The native circle path integral is exactly the existing circle integral,\nincluding its normalization and orientation. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.circlePath"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.curveIntegral_circlePath_map_eq_circleIntegral_mul_deriv (f : ℂ → ℂ) {g : ℂ → ℂ} {U : Set ℂ} {c : ℂ} {r : ℝ}\n  (hU : IsOpen U) (hg : DifferentiableOn ℂ g U) (hc : Metric.sphere c |r| ⊆ U)\n  (hgc : ContinuousOn g (Set.range ⇑(c.circlePath r))) :\n  ∫ᶜ (z : ℂ) in (c.circlePath r).map' hgc, f z • ContinuousLinearMap.id ℂ ℂ = ∮ (z : ℂ) in C(c, r), f (g z) * deriv g z",
+  "name":
+  "Complex.curveIntegral_circlePath_map_eq_circleIntegral_mul_deriv",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+  "line":
+  111,
+  "kind":
+  "theorem",
+  "doc":
+  "Integrating over a holomorphic image of a circle gives the circle\nintegral of the ordinary derivative pullback. This is an actual change of\nparametrization, without an assumed contour-integral identity. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipseIntegral",
+   "Complex.ellipsePath"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.curveIntegral_ellipsePath_eq_ellipseIntegral (f : ℂ → ℂ) (M ε : ℝ) :\n  ∫ᶜ (z : ℂ) in Complex.ellipsePath M ε, f z • ContinuousLinearMap.id ℂ ℂ = Complex.ellipseIntegral f M ε",
+  "name":
+  "Complex.curveIntegral_ellipsePath_eq_ellipseIntegral",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.EllipseHomotopy",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  "The native ellipse path integral is its angular ellipse integral, with\ncounterclockwise orientation and no change in its normalization. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.curveIntegral_eq_of_differentiableOn_of_freeHomotopy {a b : ℂ} (γ₀ : Path a a) (γ₁ : Path b b) {ψ : ℝ × ℝ → ℂ}\n  (hψ : Continuous ψ) {Ω : Set ℂ} {g : ℂ → ℂ} (hΩ : IsOpen Ω) (hg : DifferentiableOn ℂ g Ω)\n  (hψΩ : ∀ t ∈ Set.Icc 0 1, ψ t ∈ Ω) (hleft : ∀ t ∈ Set.Icc 0 1, γ₀.extend t = ψ (0, t))\n  (hright : ∀ t ∈ Set.Icc 0 1, γ₁.extend t = ψ (1, t)) (hloop : ∀ t ∈ Set.Icc 0 1, ψ (t, 0) = ψ (t, 1))\n  (hγ₀ : ContDiffOn ℝ 1 (⇑γ₀.extend) unitInterval) (hγ₁ : ContDiffOn ℝ 1 (⇑γ₁.extend) unitInterval) :\n  ∫ᶜ (z : ℂ) in γ₀, g z • ContinuousLinearMap.id ℂ ℂ = ∫ᶜ (z : ℂ) in γ₁, g z • ContinuousLinearMap.id ℂ ℂ",
+  "name":
+  "Complex.curveIntegral_eq_of_differentiableOn_of_freeHomotopy",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.FreeLoopHomotopy",
+  "line":
+  27,
+  "kind":
+  "theorem",
+  "doc":
+  "A continuous free homotopy of loops in an open holomorphy domain preserves\ntheir native contour integrals. Opposite boundary sides are the same path;\ntheir primitive transports cancel even though the charts may differ. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.schwarzHalfPlaneExtension"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.differentiableOn_schwarzHalfPlaneExtension (f axis : ℂ → ℂ)\n  (hf : ∀ (z : ℂ), 0 < z.im → DifferentiableAt ℂ f z) :\n  DifferentiableOn ℂ (Complex.schwarzHalfPlaneExtension f axis) {z | z.im ≠ 0}",
+  "name":
+  "Complex.differentiableOn_schwarzHalfPlaneExtension",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension",
+  "line":
+  45,
+  "kind":
+  "theorem",
+  "doc":
+  "Reflection preserves complex differentiability off the real axis. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.schwarzHalfPlaneExtension"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.differentiableOn_schwarzHalfPlaneExtension_union_exterior (f g : ℂ → ℂ) {R : ℝ}\n  (hf : ∀ (z : ℂ), 0 < z.im → DifferentiableAt ℂ f z) (hg : DifferentiableOn ℂ g {z | R < ‖z‖})\n  (hupper : ∀ (z : ℂ), R < ‖z‖ → 0 < z.im → f z = g z)\n  (href : ∀ (z : ℂ), R < ‖z‖ → g ((starRingEnd ℂ) z) = (starRingEnd ℂ) (g z)) :\n  DifferentiableOn ℂ (Complex.schwarzHalfPlaneExtension f g) ({z | z.im ≠ 0} ∪ {z | R < ‖z‖})",
+  "name":
+  "Complex.differentiableOn_schwarzHalfPlaneExtension_union_exterior",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension",
+  "line":
+  78,
+  "kind":
+  "theorem",
+  "doc":
+  "The reflected function is holomorphic on the union of the two open\nhalf-planes and any exterior domain on which the supplied analytic extension\nagrees. This is an actual open domain across the exterior real rays. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.dist_mul_I_lt_iff {z : ℂ} {r : ℝ} (hr : 0 < r) : dist z (↑r * Complex.I) < r ↔ ‖z‖ ^ 2 < 2 * r * z.im",
+  "name":
+  "Complex.dist_mul_I_lt_iff",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.UpperHalfPlaneCircle",
+  "line":
+  22,
+  "kind":
+  "theorem",
+  "doc":
+  "A circle tangent to the real axis lies entirely in the open upper\nhalf-plane. The squared-norm criterion also gives an explicit enclosure test. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.ellipseIntegral (f : ℂ → ℂ) (M ε : ℝ) : ℂ",
+  "name":
+  "Complex.ellipseIntegral",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity",
+  "line":
+  49,
+  "kind":
+  "def",
+  "doc":
+  "The contour integral on the standard ellipse, using its actual derivative.\nIntegrability and positive semiaxes are supplied by theorems using this total\ndefinition. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.ellipseMap (M ε θ : ℝ) : ℂ",
+  "name":
+  "Complex.ellipseMap",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity",
+  "line":
+  22,
+  "kind":
+  "def",
+  "doc":
+  "The standard counterclockwise ellipse with horizontal semiaxis `M` and\nvertical semiaxis `ε`; it degenerates to a segment when `ε = 0`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipseMap"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.ellipseMap_mem_off_real_or_exterior {M ε R θ : ℝ} (hM : 0 < M) (hε : 0 < ε) (hRM : R < M) :\n  (Complex.ellipseMap M ε θ).im ≠ 0 ∨ R < ‖Complex.ellipseMap M ε θ‖",
+  "name":
+  "Complex.ellipseMap_mem_off_real_or_exterior",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.EllipseHomotopy",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "Every point of a nondegenerate ellipse with real semiaxis outside a disk\nis either nonreal or outside that disk. Thus its flattening avoids every branch\ncut contained in the smaller real segment. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.ellipsePath (M ε : ℝ) : Path ↑M ↑M",
+  "name":
+  "Complex.ellipsePath",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.EllipseHomotopy",
+  "line":
+  21,
+  "kind":
+  "def",
+  "doc":
+  "The standard ellipse as a native closed path on the unit interval. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipseMap",
+   "Complex.ellipsePath"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.ellipsePath_extend_apply {M ε t : ℝ} (ht : t ∈ unitInterval) :\n  (Complex.ellipsePath M ε).extend t = Complex.ellipseMap M ε (2 * Real.pi * t)",
+  "name":
+  "Complex.ellipsePath_extend_apply",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.EllipseHomotopy",
+  "line":
+  27,
+  "kind":
+  "theorem",
+  "doc":
+  "The ellipse path agrees with its angular parametrization through angle\n`2πt` on the full closed unit interval. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Complex.eq_average_of_norm_average_eq_bound.{u_1} {ι : Type u_1} [Fintype ι] (w : ι → ℝ) (z : ι → ℂ)\n  (hw : ∀ (i : ι), 0 < w i) (hws : ∑ i, w i = 1) {M : ℝ} (hM : 0 ≤ M) (hz : ∀ (i : ι), ‖z i‖ ≤ M)\n  (ha : ‖∑ i, ↑(w i) * z i‖ = M) (j : ι) : z j = ∑ i, ↑(w i) * z i",
   "name":
   "Complex.eq_average_of_norm_average_eq_bound",
@@ -143,6 +886,106 @@
   "sorry":
   false,
   "signature":
+  "Complex.eventually_circleIntegral_comp_mul_deriv_eq_of_tendsto_affine {f g : ℂ → ℂ} {R S ρ a : ℝ} {q : ℂ}\n  (hf : DifferentiableOn ℂ f {z | R < ‖z‖}) (hg : DifferentiableOn ℂ g {z | S < ‖z‖}) (ha : a ≠ 0)\n  (hlim : Filter.Tendsto (fun u => g u - ↑a * u) (Bornology.cobounded ℂ) (nhds q)) (hρ : 0 < ρ) (hRρ : R < ρ) :\n  ∀ᶠ (r : ℝ) in Filter.atTop, ∮ (u : ℂ) in C(0, r), f (g u) * deriv g u = ∮ (z : ℂ) in C(0, ρ), f z",
+  "name":
+  "Complex.eventually_circleIntegral_comp_mul_deriv_eq_of_tendsto_affine",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ExteriorCircleChangeVariables",
+  "line":
+  108,
+  "kind":
+  "theorem",
+  "doc":
+  "An affine asymptote with nonzero real slope suffices to replace every\nsufficiently large image circle by any fixed circle in an exterior\nholomorphy domain. This derives the geometric homotopy bound from the limit\nat infinity. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.eventually_circleIntegral_exp_eq_neg_circleIntegral_exp_mul_of_inverse {F g : ℂ → ℂ} {R S ρ a : ℝ} {q : ℂ}\n  (hF : DifferentiableOn ℂ F {z | R < ‖z‖}) (hg : DifferentiableOn ℂ g {z | S < ‖z‖}) (ha : a ≠ 0)\n  (hlim : Filter.Tendsto (fun u => g u - ↑a * u) (Bornology.cobounded ℂ) (nhds q))\n  (hinverse : ∀ᶠ (u : ℂ) in Bornology.cobounded ℂ, F (g u) = u) (hρ : 0 < ρ) (hRρ : R < ρ) :\n  ∀ᶠ (r : ℝ) in Filter.atTop, ∮ (z : ℂ) in C(0, ρ), Complex.exp (F z) = -∮ (u : ℂ) in C(0, r), Complex.exp u * g u",
+  "name":
+  "Complex.eventually_circleIntegral_exp_eq_neg_circleIntegral_exp_mul_of_inverse",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ExteriorCircleChangeVariables",
+  "line":
+  139,
+  "kind":
+  "theorem",
+  "doc":
+  "An exterior holomorphic inverse coordinate changes the exponential\ncircle moment into the negative exponential moment of the inverse. Both\nthe common-contour replacement and integration by parts are proved; the\nonly inverse premise is the pointwise identity near infinity. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.eventually_conj_eq_of_tendsto_affine_of_finite_matching.{u_1} {ι : Type u_1} [Finite ι] (f : ι → ℂ → ℂ)\n  (d : ι → ℝ) (c : ι → ℂ) (hd : Function.Injective d)\n  (hlim : ∀ (i : ι), Filter.Tendsto (fun u => f i u - ↑(d i) * u) (Bornology.cobounded ℂ) (nhds (c i)))\n  (hmatch : ∀ᶠ (u : ℂ) in Bornology.cobounded ℂ, ∀ (i : ι), ∃ j, (starRingEnd ℂ) (f i ((starRingEnd ℂ) u)) = f j u) :\n  ∀ᶠ (u : ℂ) in Bornology.cobounded ℂ, ∀ (i : ι), f i ((starRingEnd ℂ) u) = (starRingEnd ℂ) (f i u)",
+  "name":
+  "Complex.eventually_conj_eq_of_tendsto_affine_of_finite_matching",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ExteriorReflection",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "A finite exterior family preserved as an unlabelled family by conjugation\nis eventually Schwarz-symmetric label by label when its affine slopes are real\nand pairwise distinct. The constant terms may initially be arbitrary complex numbers. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.exists_pos_dist_mul_I_lt_iff_im_pos (s : Finset ℂ) :\n  ∃ r, 0 < r ∧ ∀ z ∈ s, dist z (↑r * Complex.I) < r ↔ 0 < z.im",
+  "name":
+  "Complex.exists_pos_dist_mul_I_lt_iff_im_pos",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.UpperHalfPlaneCircle",
+  "line":
+  42,
+  "kind":
+  "theorem",
+  "doc":
+  "One tangent circle selects exactly the upper-half-plane points of any\nfinite set. The real-axis points, if present, lie outside the open circle. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.exists_primitive_subdivision_of_differentiableOn {a b : ℂ} (γ : Path a b) {Ω : Set ℂ} {g : ℂ → ℂ}\n  (hΩ : IsOpen Ω) (hg : DifferentiableOn ℂ g Ω) (hγΩ : ∀ (t : ↑unitInterval), γ t ∈ Ω) :\n  ∃ n,\n    0 < n ∧\n      ∃ U G,\n        ∀ i < n,\n          IsOpen (U i) ∧\n            (∀ z ∈ U i, HasDerivAt (G i) (g z) z) ∧\n              ContinuousOn g (U i) ∧ ∀ t ∈ Set.Icc (↑i / ↑n) ((↑i + 1) / ↑n), γ.extend t ∈ U i",
+  "name":
+  "Complex.exists_primitive_subdivision_of_differentiableOn",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport",
+  "line":
+  181,
+  "kind":
+  "theorem",
+  "doc":
+  "Every continuous path inside an open holomorphy domain admits a finite\nuniform subdivision into actual open primitive charts. Both the subdivision\nand the primitive functions are derived; a scalar Cauchy formula is not assumed. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Complex.exists_sin_eq_of_norm_le_half {z : ℂ} (hz : ‖z‖ ≤ 1 / 2) :\n  ∃ u, Complex.sin u = z ∧ ‖u‖ ≤ 2 * ‖z‖ ∧ |u.im| ≤ |z.im| / √(1 - ‖z‖ ^ 2)",
   "name":
   "Complex.exists_sin_eq_of_norm_le_half",
@@ -154,6 +997,289 @@
   "theorem",
   "doc":
   "A complex point in the disk of radius one half has a sine preimage of norm\nat most twice its norm, whose imaginary part is controlled by the point's\nimaginary part. The construction uses real inverse functions.\nSource: the focused polynomial Bernstein reroute, sine-coordinate lemma. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.exists_tangent_circle_eventually_mem_iff_im_pos.{u_1} {α : Type u_1} [TopologicalSpace α] {F : α → Set ℂ}\n  {a : α} (hF : UpperHemicontinuousAt F a) (hfin : (F a).Finite) (hreal : ∀ z ∈ F a, z.im ≠ 0) :\n  ∃ r, 0 < r ∧ ∀ᶠ (x : α) in nhds a, ∀ z ∈ F x, (dist z (↑r * Complex.I) < r ↔ 0 < z.im) ∧ dist z (↑r * Complex.I) ≠ r",
+  "name":
+  "Complex.exists_tangent_circle_eventually_mem_iff_im_pos",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.UpperHalfPlaneCircle",
+  "line":
+  62,
+  "kind":
+  "theorem",
+  "doc":
+  "An upper hemicontinuous finite cluster avoiding the real axis has one\nlocally valid circle selecting precisely its upper points. The same circle\nalso avoids every nearby cluster point, including repeated spectral roots. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipseMap"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.hasDerivAt_ellipseMap (M ε θ : ℝ) :\n  HasDerivAt (Complex.ellipseMap M ε) (↑(-M * Real.sin θ) + ↑(ε * Real.cos θ) * Complex.I) θ",
+  "name":
+  "Complex.hasDerivAt_ellipseMap",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity",
+  "line":
+  27,
+  "kind":
+  "theorem",
+  "doc":
+  "The ellipse's actual tangent vector is the derivative of its standard\ntrigonometric parametrization. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.im_pos_iff_slope_pos_of_tendsto_affine {f : ℂ → ℂ} {R d : ℝ} {c z : ℂ} (hcont : ContinuousOn f {u | R < ‖u‖})\n  (hreal : ∀ (u : ℂ), R < ‖u‖ → 0 < u.im → (f u).im ≠ 0)\n  (hlim : Filter.Tendsto (fun u => f u - ↑d * u) (Bornology.cobounded ℂ) (nhds c)) (hd : d ≠ 0) (hzR : R < ‖z‖)\n  (hzim : 0 < z.im) : 0 < (f z).im ↔ 0 < d",
+  "name":
+  "Complex.im_pos_iff_slope_pos_of_tendsto_affine",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ExteriorHalfPlane",
+  "line":
+  68,
+  "kind":
+  "theorem",
+  "doc":
+  "A continuous exterior branch avoiding the real axis in the upper half-plane\nhas positive imaginary part exactly when its nonzero real affine asymptotic slope\nis positive. The conclusion holds on the whole exterior upper half-plane, including\npoints arbitrarily close to the real axis.\n\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.im_pos_of_dist_mul_I_lt {z : ℂ} {r : ℝ} (hr : 0 < r) (hz : dist z (↑r * Complex.I) < r) : 0 < z.im",
+  "name":
+  "Complex.im_pos_of_dist_mul_I_lt",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.UpperHalfPlaneCircle",
+  "line":
+  36,
+  "kind":
+  "theorem",
+  "doc":
+  "Every point of a circle tangent from above has positive imaginary part. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.neg_abs_sin_mul_norm_le_im_exp_mul {θ : ℝ} {z : ℂ} (hcos : 0 ≤ Real.cos θ) (hz : 0 ≤ z.im) :\n  -(|Real.sin θ| * ‖z‖) ≤ (Complex.exp (↑θ * Complex.I) * z).im",
+  "name":
+  "Complex.neg_abs_sin_mul_norm_le_im_exp_mul",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity",
+  "line":
+  33,
+  "kind":
+  "theorem",
+  "doc":
+  "Rotating a complex number with nonnegative imaginary part through an\nangle whose cosine is nonnegative gives an imaginary part bounded below by\n`-|sin θ|` times its norm. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipseIntegral",
+   "Complex.ellipseMap"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.neg_normalized_ellipseIntegral_re_eq {f : ℂ → ℂ} {M ε : ℝ}\n  (hc : ContinuousOn (fun θ => f (Complex.ellipseMap M ε θ)) (Set.Icc 0 (2 * Real.pi)))\n  (hconj :\n    ∀ θ ∈ Set.Icc 0 Real.pi,\n      f ((starRingEnd ℂ) (Complex.ellipseMap M ε θ)) = (starRingEnd ℂ) (f (Complex.ellipseMap M ε θ))) :\n  (-((2 * ↑Real.pi * Complex.I)⁻¹ * Complex.ellipseIntegral f M ε)).re =\n    (∫ (θ : ℝ) in 0..Real.pi,\n        M * Real.sin θ * (f (Complex.ellipseMap M ε θ)).im - ε * Real.cos θ * (f (Complex.ellipseMap M ε θ)).re) /\n      Real.pi",
+  "name":
+  "Complex.neg_normalized_ellipseIntegral_re_eq",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity",
+  "line":
+  77,
+  "kind":
+  "theorem",
+  "doc":
+  "Schwarz reflection pairs the two halves of a counterclockwise ellipse.\nThe real part of the negatively normalized contour integral is an ordinary\nupper-half integral with the orientation signs displayed explicitly. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.neg_normalized_exp_circleIntegral_re_nonneg {h : ℂ → ℂ} {R M C : ℝ} (hM : 0 < M) (hRM : R < M)\n  (hh : DifferentiableOn ℂ h {z | z.im ≠ 0 ∨ R < ‖z‖}) (href : ∀ (z : ℂ), h ((starRingEnd ℂ) z) = (starRingEnd ℂ) (h z))\n  (him : ∀ (z : ℂ), 0 < z.im → 0 ≤ (h z).im) (hbound : ∀ (z : ℂ), ‖z‖ ≤ M + 1 → ‖h z‖ ≤ C) :\n  0 ≤ (-((2 * ↑Real.pi * Complex.I)⁻¹ * ∮ (z : ℂ) in C(0, M), Complex.exp z * h z)).re",
+  "name":
+  "Complex.neg_normalized_exp_circleIntegral_re_nonneg",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.CircleMomentPositivity",
+  "line":
+  20,
+  "kind":
+  "theorem",
+  "doc":
+  "A Schwarz-symmetric holomorphic function off a compact real segment, with\nnonnegative upper-half-plane imaginary part and a uniform bound, has a\nnonnegative exponential circle moment. All contour deformations and the thin\nlimit are proved; neither a positive measure nor real-axis limits are assumed. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipseIntegral",
+   "Complex.ellipseMap"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.neg_normalized_exp_ellipseIntegral_re_ge {h : ℂ → ℂ} {M ε C : ℝ} (hM : 0 ≤ M) (hε : 0 ≤ ε) (hε' : ε ≤ 1)\n  (hc : ContinuousOn (fun θ => h (Complex.ellipseMap M ε θ)) (Set.Icc 0 (2 * Real.pi)))\n  (hconj :\n    ∀ θ ∈ Set.Icc 0 Real.pi,\n      h ((starRingEnd ℂ) (Complex.ellipseMap M ε θ)) = (starRingEnd ℂ) (h (Complex.ellipseMap M ε θ)))\n  (him : ∀ θ ∈ Set.Ioo 0 Real.pi, 0 ≤ (h (Complex.ellipseMap M ε θ)).im)\n  (hbound : ∀ θ ∈ Set.Icc 0 Real.pi, ‖h (Complex.ellipseMap M ε θ)‖ ≤ C) :\n  -((M + 1) * Real.exp M * C) * ε ≤\n    (-((2 * ↑Real.pi * Complex.I)⁻¹ * Complex.ellipseIntegral (fun z => Complex.exp z * h z) M ε)).re",
+  "name":
+  "Complex.neg_normalized_exp_ellipseIntegral_re_ge",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity",
+  "line":
+  171,
+  "kind":
+  "theorem",
+  "doc":
+  "For a bounded Schwarz-symmetric function with nonnegative imaginary part\nalong the upper ellipse, the negatively normalized exponential moment is\nbounded below by `-(M+1) exp(M) C ε`. Its possible negative part therefore\nvanishes with the vertical semiaxis, without boundary limits on the real segment. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.rectangleBoundaryIntegral"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.neg_normalized_exp_rectangleBoundaryIntegral_re_ge {h : ℂ → ℂ} {a b ε C : ℝ} (hab : a ≤ b) (hε : 0 ≤ ε)\n  (hε' : ε ≤ 1)\n  (hint :\n    IntervalIntegrable (fun x => Complex.exp (↑x + ↑ε * Complex.I) * h (↑x + ↑ε * Complex.I)) MeasureTheory.volume a b)\n  (hconj : ∀ x ∈ Set.Icc a b, h (↑x + -↑ε * Complex.I) = (starRingEnd ℂ) (h (↑x + ↑ε * Complex.I)))\n  (him : ∀ x ∈ Set.Icc a b, 0 ≤ (h (↑x + ↑ε * Complex.I)).im)\n  (hupper : ∀ x ∈ Set.Icc a b, ‖h (↑x + ↑ε * Complex.I)‖ ≤ C)\n  (hleft : ∀ y ∈ Set.Icc (-ε) ε, ‖h (↑a + ↑y * Complex.I)‖ ≤ C)\n  (hright : ∀ y ∈ Set.Icc (-ε) ε, ‖h (↑b + ↑y * Complex.I)‖ ≤ C) :\n  -((b - a + 2) * Real.exp b * C / Real.pi) * ε ≤\n    (-((2 * ↑Real.pi * Complex.I)⁻¹ * Complex.rectangleBoundaryIntegral (fun z => Complex.exp z * h z) a b (-ε) ε)).re",
+  "name":
+  "Complex.neg_normalized_exp_rectangleBoundaryIntegral_re_ge",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity",
+  "line":
+  111,
+  "kind":
+  "theorem",
+  "doc":
+  "A uniformly bounded Schwarz-symmetric function with nonnegative imaginary\npart on the upper edge has a negatively normalized exponential contour moment\nbounded below by an explicit quantity tending to zero with the rectangle's\nheight. The vertical estimate uses actual edge integrals and no boundary limits.\nThis is the scalar error bound in the planar route to `trace-exponential-stahl`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.rectangleBoundaryIntegral"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.neg_normalized_exp_rectangleBoundaryIntegral_re_nonneg {h : ℂ → ℂ} {a b C δ : ℝ} (hab : a ≤ b) (hδ : 0 < δ)\n  (hh : DifferentiableOn ℂ h {z | z.im ≠ 0}) (hleft : ContinuousOn (fun y => h (↑a + ↑y * Complex.I)) (Set.Icc (-δ) δ))\n  (hright : ContinuousOn (fun y => h (↑b + ↑y * Complex.I)) (Set.Icc (-δ) δ))\n  (hconj : ∀ (z : ℂ), z.im ≠ 0 → h ((starRingEnd ℂ) z) = (starRingEnd ℂ) (h z))\n  (him : ∀ (z : ℂ), 0 < z.im → 0 ≤ (h z).im)\n  (hbound : ∀ x ∈ Set.Icc a b, ∀ y ∈ Set.Icc (-δ) δ, ‖h (↑x + ↑y * Complex.I)‖ ≤ C) :\n  0 ≤ (-((2 * ↑Real.pi * Complex.I)⁻¹ * Complex.rectangleBoundaryIntegral (fun z => Complex.exp z * h z) a b (-δ) δ)).re",
+  "name":
+  "Complex.neg_normalized_exp_rectangleBoundaryIntegral_re_nonneg",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity",
+  "line":
+  281,
+  "kind":
+  "theorem",
+  "doc":
+  "A Schwarz-symmetric function holomorphic off the real axis, with\nnonnegative imaginary part in the upper half-plane and a uniform bound in a\nrectangle, has a nonnegative negatively normalized exponential boundary moment.\nOnly the vertical sides need continuity across the real axis. Cauchy deformation\nto thin rectangles and the vanishing quantitative error are proved here.\nThis supplies the complete scalar thin-rectangle positivity step for the planar\nroot-sum route to atlas `trace-exponential-stahl`; the matrix-to-contour bridge\nremains independent. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.rectangleBoundaryIntegral"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.neg_normalized_rectangleBoundaryIntegral_re_eq {f : ℂ → ℂ} {a b ε : ℝ}\n  (hf : IntervalIntegrable (fun x => f (↑x + ↑ε * Complex.I)) MeasureTheory.volume a b)\n  (hconj : ∀ x ∈ Set.Icc a b, f (↑x + -↑ε * Complex.I) = (starRingEnd ℂ) (f (↑x + ↑ε * Complex.I))) (hab : a ≤ b) :\n  (-((2 * ↑Real.pi * Complex.I)⁻¹ * Complex.rectangleBoundaryIntegral f a b (-ε) ε)).re =\n    (∫ (x : ℝ) in a..b, (f (↑x + ↑ε * Complex.I)).im) / Real.pi -\n      ((∫ (y : ℝ) in -ε..ε, f (↑b + ↑y * Complex.I)).re - (∫ (y : ℝ) in -ε..ε, f (↑a + ↑y * Complex.I)).re) /\n        (2 * Real.pi)",
+  "name":
+  "Complex.neg_normalized_rectangleBoundaryIntegral_re_eq",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "Schwarz symmetry pairs the horizontal edges of a thin rectangle.\nThe real part of the negatively normalized boundary integral is the upper\nhorizontal imaginary integral, divided by `π`, minus the vertical real error. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.PrimitiveHomotopyGrid"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.nonempty_primitiveHomotopyGrid_of_differentiableOn {ψ : ℝ × ℝ → ℂ} (hψ : Continuous ψ) {Ω : Set ℂ} {g : ℂ → ℂ}\n  (hΩ : IsOpen Ω) (hg : DifferentiableOn ℂ g Ω) (hψΩ : ∀ t ∈ Set.Icc 0 1, ψ t ∈ Ω) :\n  Nonempty (Complex.PrimitiveHomotopyGrid g ψ)",
+  "name":
+  "Complex.nonempty_primitiveHomotopyGrid_of_differentiableOn",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveHomotopyGrid",
+  "line":
+  109,
+  "kind":
+  "theorem",
+  "doc":
+  "Every compact continuous square inside an open holomorphy domain has an\nactual finite primitive grid. Its mesh and primitives are derived by compact\nLebesgue subdivision and local convex primitives. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.ellipseIntegral",
+   "Complex.ellipseMap"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.nonneg_of_neg_normalized_exp_ellipseIntegral_re_eq {h : ℂ → ℂ} {M C δ w : ℝ} (hM : 0 ≤ M) (hδ : 0 < δ)\n  (hc : ∀ ε ∈ Set.Ioo 0 δ, ContinuousOn (fun θ => h (Complex.ellipseMap M ε θ)) (Set.Icc 0 (2 * Real.pi)))\n  (hconj :\n    ∀ ε ∈ Set.Ioo 0 δ,\n      ∀ θ ∈ Set.Icc 0 Real.pi,\n        h ((starRingEnd ℂ) (Complex.ellipseMap M ε θ)) = (starRingEnd ℂ) (h (Complex.ellipseMap M ε θ)))\n  (him : ∀ (z : ℂ), 0 < z.im → 0 ≤ (h z).im)\n  (hbound : ∀ ε ∈ Set.Ioo 0 δ, ∀ θ ∈ Set.Icc 0 Real.pi, ‖h (Complex.ellipseMap M ε θ)‖ ≤ C)\n  (hw :\n    ∀ ε ∈ Set.Ioo 0 δ,\n      (-((2 * ↑Real.pi * Complex.I)⁻¹ * Complex.ellipseIntegral (fun z => Complex.exp z * h z) M ε)).re = w) :\n  0 ≤ w",
+  "name":
+  "Complex.nonneg_of_neg_normalized_exp_ellipseIntegral_re_eq",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity",
+  "line":
+  249,
+  "kind":
+  "theorem",
+  "doc":
+  "A fixed moment represented by all sufficiently thin exponential ellipse\nintegrals is nonnegative. The representation premise can be supplied by a smooth\nfree-loop homotopy from one fixed exterior circle. Only upper-half-plane values\nand bounds on the ellipses occur, with no real-axis limiting values required. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.rectangleBoundaryIntegral"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.nonneg_of_neg_normalized_exp_rectangleBoundaryIntegral_re_eq {h : ℂ → ℂ} {a b C δ w : ℝ} (hab : a ≤ b)\n  (hδ : 0 < δ) (hcont : ∀ ε ∈ Set.Ioo 0 δ, ContinuousOn (fun x => h (↑x + ↑ε * Complex.I)) (Set.Icc a b))\n  (hconj : ∀ ε ∈ Set.Ioo 0 δ, ∀ x ∈ Set.Icc a b, h (↑x + -↑ε * Complex.I) = (starRingEnd ℂ) (h (↑x + ↑ε * Complex.I)))\n  (him : ∀ (z : ℂ), 0 < z.im → 0 ≤ (h z).im)\n  (hbound : ∀ x ∈ Set.Icc a b, ∀ y ∈ Set.Icc (-δ) δ, ‖h (↑x + ↑y * Complex.I)‖ ≤ C)\n  (hw :\n    ∀ ε ∈ Set.Ioo 0 δ,\n      (-((2 * ↑Real.pi * Complex.I)⁻¹ *\n              Complex.rectangleBoundaryIntegral (fun z => Complex.exp z * h z) a b (-ε) ε)).re =\n        w) :\n  0 ≤ w",
+  "name":
+  "Complex.nonneg_of_neg_normalized_exp_rectangleBoundaryIntegral_re_eq",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity",
+  "line":
+  172,
+  "kind":
+  "theorem",
+  "doc":
+  "A fixed contour moment represented by all sufficiently thin rectangles is\nnonnegative when the upper-half-plane function has nonnegative imaginary part,\nis uniformly bounded near the real segment, and satisfies Schwarz reflection\non the horizontal edges. The contour-identification premise is explicit: this\ntheorem supplies the scalar positivity step, independently of its matrix bridge.\nNo real-axis root limits or boundary value theorem are required. ",
   "atlas_partial":
   [],
   "atlas":
@@ -179,6 +1305,26 @@
   "atlas":
   []},
  {"uses":
+  ["Complex.ellipseMap"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.norm_ellipseMap_le {M ε : ℝ} (hM : 0 ≤ M) (hε : 0 ≤ ε) (θ : ℝ) : ‖Complex.ellipseMap M ε θ‖ ≤ M + ε",
+  "name":
+  "Complex.norm_ellipseMap_le",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity",
+  "line":
+  36,
+  "kind":
+  "theorem",
+  "doc":
+  "Every point of an ellipse is bounded in norm by the sum of its\nnonnegative semiaxes, uniformly in the angle. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -199,6 +1345,26 @@
   "atlas":
   []},
  {"uses":
+  ["Complex.schwarzHalfPlaneExtension"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.norm_schwarzHalfPlaneExtension_le (f axis : ℂ → ℂ) {M C : ℝ} (hf : ∀ (z : ℂ), ‖z‖ ≤ M → 0 < z.im → ‖f z‖ ≤ C)\n  (haxis : ∀ (z : ℂ), ‖z‖ ≤ M → z.im = 0 → ‖axis z‖ ≤ C) {z : ℂ} (hz : ‖z‖ ≤ M) :\n  ‖Complex.schwarzHalfPlaneExtension f axis z‖ ≤ C",
+  "name":
+  "Complex.norm_schwarzHalfPlaneExtension_le",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension",
+  "line":
+  97,
+  "kind":
+  "theorem",
+  "doc":
+  "A common norm bound for the upper function and the supplied axis values\nalso bounds its reflected extension on a symmetric parameter ball. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -214,6 +1380,86 @@
   "theorem",
   "doc":
   "Complex sine is bounded by its argument norm times the exponential of the\nabsolute imaginary coordinate. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.primitiveSubdivisionTransport (γ : ℝ → ℂ) (p : ℕ → ℝ) (G : ℕ → ℂ → ℂ) (n : ℕ) : ℂ",
+  "name":
+  "Complex.primitiveSubdivisionTransport",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport",
+  "line":
+  73,
+  "kind":
+  "def",
+  "doc":
+  "The sum of local primitive increments on a finite parameter subdivision.\nThe accompanying theorems give its chart-choice and refinement invariance\nunder the actual primitive and path-containment hypotheses. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.primitiveSubdivisionTransport"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.primitiveSubdivisionTransport_eq_curveIntegral_of_hasDerivAt {a b : ℂ} (γ : Path a b)\n  (hγ : ContDiffOn ℝ 1 (⇑γ.extend) unitInterval) {p : ℕ → ℝ} {n : ℕ} {G : ℕ → ℂ → ℂ} {U : ℕ → Set ℂ} {g : ℂ → ℂ}\n  (hp : ∀ i < n, p i ≤ p (i + 1)) (hp0 : p 0 = 0) (hpn : p n = 1) (hpI : ∀ i ≤ n, p i ∈ unitInterval)\n  (hG : ∀ i < n, ∀ z ∈ U i, HasDerivAt (G i) (g z) z) (hg : ∀ i < n, ContinuousOn g (U i))\n  (hγU : ∀ i < n, ∀ t ∈ Set.Icc (p i) (p (i + 1)), γ.extend t ∈ U i) :\n  Complex.primitiveSubdivisionTransport (⇑γ.extend) p G n = ∫ᶜ (z : ℂ) in γ, g z • ContinuousLinearMap.id ℂ ℂ",
+  "name":
+  "Complex.primitiveSubdivisionTransport_eq_curveIntegral_of_hasDerivAt",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport",
+  "line":
+  117,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual finite local-primitive transport equals Mathlib's native curve\nintegral on a C¹ path. The integrability and fundamental-theorem hypotheses\nare derived interval by interval from the primitive charts and path regularity. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.primitiveSubdivisionTransport"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.primitiveSubdivisionTransport_eq_of_hasDerivAt {γ : ℝ → ℂ} (hγ : Continuous γ) {p : ℕ → ℝ} {n : ℕ}\n  {G H : ℕ → ℂ → ℂ} {U V : ℕ → Set ℂ} {g : ℂ → ℂ} (hp : ∀ i < n, p i ≤ p (i + 1)) (hU : ∀ i < n, IsOpen (U i))\n  (hV : ∀ i < n, IsOpen (V i)) (hG : ∀ i < n, ∀ z ∈ U i, HasDerivAt (G i) (g z) z)\n  (hH : ∀ i < n, ∀ z ∈ V i, HasDerivAt (H i) (g z) z) (hγU : ∀ i < n, ∀ t ∈ Set.Icc (p i) (p (i + 1)), γ t ∈ U i)\n  (hγV : ∀ i < n, ∀ t ∈ Set.Icc (p i) (p (i + 1)), γ t ∈ V i) :\n  Complex.primitiveSubdivisionTransport γ p G n = Complex.primitiveSubdivisionTransport γ p H n",
+  "name":
+  "Complex.primitiveSubdivisionTransport_eq_of_hasDerivAt",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport",
+  "line":
+  80,
+  "kind":
+  "theorem",
+  "doc":
+  "On a fixed finite subdivision, the transport sum does not depend on the\nchoice of primitive or chart. Both chart families are required to contain the\nactual continuous path on their respective subdivision intervals. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.primitiveSubdivisionTransport"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.primitiveSubdivisionTransport_eq_sub_of_hasDerivAt {γ : ℝ → ℂ} (hγ : Continuous γ) {p : ℕ → ℝ} {n : ℕ}\n  {G : ℂ → ℂ} {H : ℕ → ℂ → ℂ} {U : Set ℂ} {V : ℕ → Set ℂ} {g : ℂ → ℂ} (hp : ∀ i < n, p i ≤ p (i + 1)) (hU : IsOpen U)\n  (hV : ∀ i < n, IsOpen (V i)) (hG : ∀ z ∈ U, HasDerivAt G (g z) z) (hH : ∀ i < n, ∀ z ∈ V i, HasDerivAt (H i) (g z) z)\n  (hγU : ∀ i < n, ∀ t ∈ Set.Icc (p i) (p (i + 1)), γ t ∈ U)\n  (hγV : ∀ i < n, ∀ t ∈ Set.Icc (p i) (p (i + 1)), γ t ∈ V i) :\n  Complex.primitiveSubdivisionTransport γ p H n = G (γ (p n)) - G (γ (p 0))",
+  "name":
+  "Complex.primitiveSubdivisionTransport_eq_sub_of_hasDerivAt",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport",
+  "line":
+  100,
+  "kind":
+  "theorem",
+  "doc":
+  "Refining a path portion lying in one primitive chart does not change its\ntransport, even when each refined interval uses its own primitive chart. The\nfinite increments telescope after genuine chart independence is applied. ",
   "atlas_partial":
   [],
   "atlas":
@@ -294,6 +1540,166 @@
   "theorem",
   "doc":
   "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.rectangleBoundaryIntegral (f : ℂ → ℂ) (a b c d : ℝ) : ℂ",
+  "name":
+  "Complex.rectangleBoundaryIntegral",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity",
+  "line":
+  26,
+  "kind":
+  "def",
+  "doc":
+  "The counterclockwise integral around the rectangle with real interval\n`[a,b]` and imaginary interval `[c,d]`, parametrized along its four edges.\nThe definition is total; actual edge integrability is supplied by applications. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.rectangleBoundaryIntegral"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.rectangleBoundaryIntegral_eq_of_differentiableOn_off_real {f : ℂ → ℂ} {a b ε η : ℝ} (hε : 0 < ε) (hεη : ε ≤ η)\n  (hf : DifferentiableOn ℂ f {z | z.im ≠ 0}) (hleft : ContinuousOn (fun y => f (↑a + ↑y * Complex.I)) (Set.Icc (-η) η))\n  (hright : ContinuousOn (fun y => f (↑b + ↑y * Complex.I)) (Set.Icc (-η) η)) :\n  Complex.rectangleBoundaryIntegral f a b (-ε) ε = Complex.rectangleBoundaryIntegral f a b (-η) η",
+  "name":
+  "Complex.rectangleBoundaryIntegral_eq_of_differentiableOn_off_real",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity",
+  "line":
+  216,
+  "kind":
+  "theorem",
+  "doc":
+  "Thin rectangular contour integrals are independent of their height when\nthe integrand is holomorphic off the real axis and continuous along the two\nvertical edges. The real segment inside the rectangle may contain a jump or\nbranch cut. This is a direct planar Cauchy deformation, with no boundary values\non that segment assumed. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.schwarzHalfPlaneExtension (f axis : ℂ → ℂ) (z : ℂ) : ℂ",
+  "name":
+  "Complex.schwarzHalfPlaneExtension",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension",
+  "line":
+  21,
+  "kind":
+  "def",
+  "doc":
+  "Reflect an upper-half-plane function below the real axis, retaining the\nspecified values on the axis itself. No regularity across the axis is implicit. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.schwarzHalfPlaneExtension"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.schwarzHalfPlaneExtension_conj (f axis : ℂ → ℂ) {z : ℂ} (hz : z.im ≠ 0) :\n  Complex.schwarzHalfPlaneExtension f axis ((starRingEnd ℂ) z) =\n    (starRingEnd ℂ) (Complex.schwarzHalfPlaneExtension f axis z)",
+  "name":
+  "Complex.schwarzHalfPlaneExtension_conj",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension",
+  "line":
+  26,
+  "kind":
+  "theorem",
+  "doc":
+  "The reflected extension has Schwarz symmetry away from the real axis. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.schwarzHalfPlaneExtension"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.schwarzHalfPlaneExtension_conj_of_conj_eq_axis (f axis : ℂ → ℂ)\n  (haxis : ∀ (z : ℂ), axis ((starRingEnd ℂ) z) = (starRingEnd ℂ) (axis z)) (z : ℂ) :\n  Complex.schwarzHalfPlaneExtension f axis ((starRingEnd ℂ) z) =\n    (starRingEnd ℂ) (Complex.schwarzHalfPlaneExtension f axis z)",
+  "name":
+  "Complex.schwarzHalfPlaneExtension_conj_of_conj_eq_axis",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension",
+  "line":
+  35,
+  "kind":
+  "theorem",
+  "doc":
+  "Schwarz-symmetric axis values make the reflected extension symmetric also\nat real points. Regularity on the real axis is still a separate property. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Complex.schwarzHalfPlaneExtension"],
+  "sorry":
+  false,
+  "signature":
+  "Complex.schwarzHalfPlaneExtension_eq_of_conj_eq (f g : ℂ → ℂ) {R : ℝ}\n  (hupper : ∀ (z : ℂ), R < ‖z‖ → 0 < z.im → f z = g z)\n  (href : ∀ (z : ℂ), R < ‖z‖ → g ((starRingEnd ℂ) z) = (starRingEnd ℂ) (g z)) {z : ℂ} (hz : R < ‖z‖) :\n  Complex.schwarzHalfPlaneExtension f g z = g z",
+  "name":
+  "Complex.schwarzHalfPlaneExtension_eq_of_conj_eq",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension",
+  "line":
+  62,
+  "kind":
+  "theorem",
+  "doc":
+  "Exterior agreement above the real axis and Schwarz symmetry determine the\nsame extension below, while the supplied axis values handle the real points. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.sub_eq_sub_of_hasDerivAt_of_continuous {γ : ℝ → ℂ} (hγ : Continuous γ) {u v : ℝ} (huv : u ≤ v) {U V : Set ℂ}\n  {G H g : ℂ → ℂ} (hU : IsOpen U) (hV : IsOpen V) (hG : ∀ z ∈ U, HasDerivAt G (g z) z)\n  (hH : ∀ z ∈ V, HasDerivAt H (g z) z) (hγU : ∀ t ∈ Set.Icc u v, γ t ∈ U) (hγV : ∀ t ∈ Set.Icc u v, γ t ∈ V) :\n  G (γ v) - G (γ u) = H (γ v) - H (γ u)",
+  "name":
+  "Complex.sub_eq_sub_of_hasDerivAt_of_continuous",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport",
+  "line":
+  56,
+  "kind":
+  "theorem",
+  "doc":
+  "The preceding chart independence applied to any closed parameter interval\nof a continuous parameterization. It is valid for repeated subdivision points. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Complex.sub_eq_sub_of_hasDerivAt_of_path {a b : ℂ} (γ : Path a b) {U V : Set ℂ} {G H g : ℂ → ℂ} (hU : IsOpen U)\n  (hV : IsOpen V) (hG : ∀ z ∈ U, HasDerivAt G (g z) z) (hH : ∀ z ∈ V, HasDerivAt H (g z) z)\n  (hγU : ∀ (t : ↑unitInterval), γ t ∈ U) (hγV : ∀ (t : ↑unitInterval), γ t ∈ V) : G b - G a = H b - H a",
+  "name":
+  "Complex.sub_eq_sub_of_hasDerivAt_of_path",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport",
+  "line":
+  28,
+  "kind":
+  "theorem",
+  "doc":
+  "Two complex primitives of the same function have equal increments along\nany continuous path contained in both of their open domains. The path requires\nno differentiability. The domains' intersection need not be connected. ",
   "atlas_partial":
   [],
   "atlas":
@@ -703,6 +2109,26 @@
   "sorry":
   false,
   "signature":
+  "Fin.exists_strictAnti_tendsto_mem_Icc {n : ℕ} {b : Fin n → ℝ} (hb : Antitone b) {l u : ℝ} (hlu : l < u)\n  (hmem : ∀ (i : Fin n), b i ∈ Set.Icc l u) :\n  ∃ v,\n    (∀ (k : ℕ), StrictAnti (v k)) ∧\n      (∀ (k : ℕ) (i : Fin n), v k i ∈ Set.Icc l u) ∧ Filter.Tendsto v Filter.atTop (nhds b)",
+  "name":
+  "Fin.exists_strictAnti_tendsto_mem_Icc",
+  "module":
+  "NLAlib.ForMathlib.Analysis.SpecificLimits.StrictAntiApproximation",
+  "line":
+  19,
+  "kind":
+  "theorem",
+  "doc":
+  "A finite antitone list in a nondegenerate compact interval is the limit of\nstrictly antitone lists in that same interval. No separation assumption is imposed\non the original list, and the empty list is included. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Finset.sum_coloring_indicator.{u_1, u_2} {τ : Type u_1} {ι : Type u_2} [Fintype τ] [Fintype ι] [DecidableEq τ]\n  [DecidableEq ι] (z : τ → ι) (hz : Function.Injective z) :\n  (∑ c, if ∀ (t : τ), c (z t) = t then 1 else 0) = Fintype.card ({ i // i ∉ Set.range z } → τ)",
   "name":
   "Finset.sum_coloring_indicator",
@@ -734,6 +2160,46 @@
   "theorem",
   "doc":
   "The retained-color count multiplied by `q^q` is the total number of\ncolorings. This form avoids division and includes the empty tuple. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Finset.sum_grid_boundary_eq.{u_1} {G : Type u_1} [AddCommGroup G] (bottom top left right : ℕ → ℕ → G) {n : ℕ}\n  (hn : 0 < n) (hc : ∀ i < n, ∀ j < n, bottom i j + right i j = top i j + left i j)\n  (hh : ∀ i < n, ∀ (j : ℕ), j + 1 < n → bottom i (j + 1) = top i j)\n  (hv : ∀ (i : ℕ), i + 1 < n → ∀ j < n, left (i + 1) j = right i j) :\n  ∑ j ∈ Finset.range n, right (n - 1) j - ∑ j ∈ Finset.range n, left 0 j =\n    ∑ i ∈ Finset.range n, top i (n - 1) - ∑ i ∈ Finset.range n, bottom i 0",
+  "name":
+  "Finset.sum_grid_boundary_eq",
+  "module":
+  "NLAlib.ForMathlib.Algebra.FiniteGridBoundary",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "Summing zero cell boundaries and cancelling actual shared edges leaves\nexactly the outer boundary of a finite square grid. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Finset.sum_range_sub_of_adjacent.{u_1} {G : Type u_1} [AddCommGroup G] (f g : ℕ → G) {n : ℕ} (hn : 0 < n)\n  (h : ∀ (i : ℕ), i + 1 < n → f (i + 1) = g i) : ∑ i ∈ Finset.range n, (f i - g i) = f 0 - g (n - 1)",
+  "name":
+  "Finset.sum_range_sub_of_adjacent",
+  "module":
+  "NLAlib.ForMathlib.Algebra.FiniteGridBoundary",
+  "line":
+  15,
+  "kind":
+  "theorem",
+  "doc":
+  "Adjacent end and start increments telescope even when the successive\nvalues were originally given by different functions. ",
   "atlas_partial":
   [],
   "atlas":
@@ -3050,6 +4516,46 @@
   "sorry":
   false,
   "signature":
+  "Matrix.analyticAt_charpoly_coeff_affine.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A E : Matrix n n ℂ) (k : ℕ)\n  (t : ℂ) : AnalyticAt ℂ (fun u => (A + u • E).charpoly.coeff k) t",
+  "name":
+  "Matrix.analyticAt_charpoly_coeff_affine",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Matrix.Charpoly",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "Characteristic coefficients of an affine complex matrix pencil are\nanalytic even at multiple roots. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.analyticAt_sum_filter_roots_charpoly_affine_upper.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A E : Matrix n n ℂ) (u : ℂ) (hreal : ∀ z ∈ spectrum ℂ (A + u • E), z.im ≠ 0) :\n  AnalyticAt ℂ (fun v => (Multiset.filter (fun z => 0 < z.im) (A + v • E).charpoly.roots).sum) u",
+  "name":
+  "Matrix.analyticAt_sum_filter_roots_charpoly_affine_upper",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Matrix.RootCluster",
+  "line":
+  54,
+  "kind":
+  "theorem",
+  "doc":
+  "An affine complex matrix pencil has an analytic sum of its upper\ncharacteristic roots wherever its spectrum is disjoint from the real axis.\nNo normality, eigenvalue labelling, or simplicity assumption is required. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.bicommutantAlgebra.{u_1, u_2} {K : Type u_1} {n : Type u_2} [Field K] [Fintype n] [DecidableEq n]\n  (A : Matrix n n K) : Subalgebra K (Matrix n n K)",
   "name":
   "Matrix.bicommutantAlgebra",
@@ -3387,6 +4893,26 @@
   ["nonnegative-perron-eigenpair"],
   "atlas":
   ["nonnegative-perron-eigenpair"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.exists_polynomial_charpoly_coeff_affine.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A E : Matrix n n ℂ)\n  (k : ℕ) : ∃ p, ∀ (t : ℂ), Polynomial.eval t p = (A + t • E).charpoly.coeff k",
+  "name":
+  "Matrix.exists_polynomial_charpoly_coeff_affine",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Matrix.Charpoly",
+  "line":
+  22,
+  "kind":
+  "theorem",
+  "doc":
+  "Each characteristic coefficient of an affine pencil is the evaluation of\none fixed polynomial in the pencil parameter. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -4513,6 +6039,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.roots_charpoly_eq_map_of_injective_mem_spectrum.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (M : Matrix n n ℂ) (ev : n → ℂ) (hev : Function.Injective ev) (hmem : ∀ (i : n), ev i ∈ spectrum ℂ M) :\n  M.charpoly.roots = Multiset.map ev Finset.univ.val",
+  "name":
+  "Matrix.roots_charpoly_eq_map_of_injective_mem_spectrum",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Matrix.RootCluster",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "A full indexed family of distinct spectral points gives exactly the\ncharacteristic-root multiset, with no further roots or hidden multiplicities. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["Matrix.bicommutantAlgebra"],
   "sorry":
   false,
@@ -4632,6 +6178,26 @@
   ["collatz-wielandt-certificates"],
   "atlas":
   ["collatz-wielandt-certificates"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.sum_filter_roots_charpoly_eq_sum_ite_of_injective_mem_spectrum.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (M : Matrix n n ℂ) (ev : n → ℂ) (hev : Function.Injective ev) (hmem : ∀ (i : n), ev i ∈ spectrum ℂ M) (p : ℂ → Prop)\n  [DecidablePred p] : (Multiset.filter p M.charpoly.roots).sum = ∑ i, if p (ev i) then ev i else 0",
+  "name":
+  "Matrix.sum_filter_roots_charpoly_eq_sum_ite_of_injective_mem_spectrum",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Matrix.RootCluster",
+  "line":
+  42,
+  "kind":
+  "theorem",
+  "doc":
+  "Selecting characteristic roots by a predicate agrees with selecting a\ncomplete indexed list of distinct eigenvalues. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -11890,6 +13456,26 @@
   "inductive",
   "doc":
   "An finite positive measure represents `F` by exponentials and is\nconcentrated on `[a,b]`. This records a representation, not its existence.\nSource: Stahl, Theorems 1–2; atlas `trace-exponential-stahl` (interface). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsCompactExpRepresentation.add {ν₁ ν₂ : MeasureTheory.FiniteMeasure ℝ} {F₁ F₂ : ℝ → ℝ} {a b : ℝ}\n  (h₁ : NLAlib.IsCompactExpRepresentation ν₁ F₁ a b) (h₂ : NLAlib.IsCompactExpRepresentation ν₂ F₂ a b) :\n  NLAlib.IsCompactExpRepresentation (ν₁ + ν₂) (fun t => F₁ t + F₂ t) a b",
+  "name":
+  "NLAlib.IsCompactExpRepresentation.add",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.IntervalDensity",
+  "line":
+  80,
+  "kind":
+  "theorem",
+  "doc":
+  "Adding two compactly supported positive exponential measures adds their\nrepresented functions while preserving the common support interval. ",
   "atlas_partial":
   [],
   "atlas":
@@ -69781,6 +71367,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.intervalDensityMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ae_mem_Icc_intervalDensityMeasure (ρ : ℝ → ℝ) (a b : ℝ)\n  (hρ : MeasureTheory.IntegrableOn ρ (Set.Icc a b) MeasureTheory.volume) :\n  ∀ᵐ (x : ℝ) ∂↑(NLAlib.intervalDensityMeasure ρ a b hρ), x ∈ Set.Icc a b",
+  "name":
+  "NLAlib.ae_mem_Icc_intervalDensityMeasure",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.IntervalDensity",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "A measure constructed from an interval density is concentrated on that\ninterval, including a degenerate or empty interval. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.rademacherMeasure"],
   "sorry":
   false,
@@ -70392,6 +71998,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.inversePencilUpperRootSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.analyticAt_inversePencilUpperRootSum.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A D : Matrix n n ℂ}\n  (hA : A.IsHermitian) (hD : D.IsHermitian) (hDu : IsUnit D) {u : ℂ} (hu : u.im ≠ 0) :\n  AnalyticAt ℂ (NLAlib.inversePencilUpperRootSum A D) u",
+  "name":
+  "NLAlib.analyticAt_inversePencilUpperRootSum",
+  "module":
+  "NLAlib.Matrix.Perturbation.PencilRootSum",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual upper-root sum of a Hermitian pencil is analytic throughout\nboth nonreal half-planes. The proof localizes the upper cluster by a fixed\ncircle and permits arbitrary collisions within the selected cluster.\nSource: planar root-sum reorganization of Stahl's contour argument.\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
  {"uses":
   ["NLAlib.simpleEigenvalueSchurFunction"],
   "sorry":
@@ -89771,6 +91397,46 @@
   "atlas":
   ["log-det-concavity"]},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.det_smul_one_sub_add_smul_eq_zero_iff_mem_spectrum.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A D : Matrix n n ℂ) (u z : ℂ) : (u • 1 - A + z • D).det = 0 ↔ u ∈ spectrum ℂ (A - z • D)",
+  "name":
+  "NLAlib.det_smul_one_sub_add_smul_eq_zero_iff_mem_spectrum",
+  "module":
+  "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+  "line":
+  26,
+  "kind":
+  "theorem",
+  "doc":
+  "The pencil equation is precisely spectral membership in the forward pencil.\nThis formulation does not require invertibility of the slope matrix. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.det_smul_one_sub_add_smul_eq_zero_iff_mem_spectrum_inv_mul.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A D : Matrix n n ℂ) (hD : IsUnit D) (u z : ℂ) : (u • 1 - A + z • D).det = 0 ↔ z ∈ spectrum ℂ (D⁻¹ * (A - u • 1))",
+  "name":
+  "NLAlib.det_smul_one_sub_add_smul_eq_zero_iff_mem_spectrum_inv_mul",
+  "module":
+  "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+  "line":
+  55,
+  "kind":
+  "theorem",
+  "doc":
+  "For an invertible slope matrix, a root of the pencil is an eigenvalue of\nthe inverse pencil. This retains algebraic multiplicities when used through\nthe characteristic polynomial. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.jacobiMatrix"],
   "sorry":
   false,
@@ -97137,6 +98803,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.traceExponentialCircleDensity"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eventually_circleDensity_eq_neg_circleIntegral_of_exterior_inverse_branches.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] (A : Matrix n n ℂ) (b : n → ℝ) (hb : Function.Injective b) (s : ℝ) (hs : ∀ (i : n), s ≠ b i)\n  {R S ρ : ℝ} {forward inverse : n → ℂ → ℂ}\n  (hforward :\n    ∀ (i : n),\n      DifferentiableOn ℂ (forward i) {z | R < ‖z‖} ∧\n        Filter.Tendsto (fun z => forward i z + ↑(b i) * z) (Bornology.cobounded ℂ) (nhds (A i i)))\n  (hforwardSpec :\n    ∀ (z : ℂ),\n      R < ‖z‖ →\n        (∀ (i : n), forward i z ∈ spectrum ℂ (A - z • Matrix.diagonal fun i => ↑(b i))) ∧\n          Function.Injective fun i => forward i z)\n  (hinverse :\n    ∀ (i : n),\n      DifferentiableOn ℂ (inverse i) {u | S < ‖u‖} ∧\n        Filter.Tendsto (fun u => inverse i u - u / ↑(s - b i)) (Bornology.cobounded ℂ) (nhds (-A i i / ↑(s - b i))))\n  (hinverseSpec :\n    ∀ (u : ℂ),\n      S < ‖u‖ → ∀ (i : n), u - ↑s * inverse i u ∈ spectrum ℂ (A - inverse i u • Matrix.diagonal fun i => ↑(b i)))\n  (hρ : 0 < ρ) (hRρ : R < ρ) :\n  ∀ᶠ (r : ℝ) in Filter.atTop,\n    NLAlib.traceExponentialCircleDensity forward b ρ s =\n      -(2 * ↑Real.pi * Complex.I)⁻¹ * ∮ (u : ℂ) in C(0, r), Complex.exp u * ∑ i, if b i < s then inverse i u else 0",
+  "name":
+  "NLAlib.eventually_circleDensity_eq_neg_circleIntegral_of_exterior_inverse_branches",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialInverseContour",
+  "line":
+  25,
+  "kind":
+  "theorem",
+  "doc":
+  "Stahl's circle density equals the negative exponential moment of any\ninverse branch family with the actual pencil spectrum and affine asymptotes.\nThe same-label inverse relation, contour changes, and orientation are derived\nfrom these spectral data. This form permits the same inverse branches to be\nused in the upper-root holomorphy and positivity arguments.\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -97172,6 +98858,46 @@
   "theorem",
   "doc":
   "A complete exterior branch family of a Hermitian pencil is\nSchwarz-symmetric outside a possibly larger disk. Distinct real asymptotic\nslopes determine the branch label, so no branch symmetry is assumed.\nSource: Stahl (2013), §§3–4.\nSource: Stahl (2013), Theorem 2 (supporting analysis).\nAtlas: `trace-exponential-stahl` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eventually_exterior_inverse_eigenvalue_branches_conj_eq.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) (s : ℝ) (hs : ∀ (i : n), s ≠ b i)\n  {R : ℝ} {branch : n → ℂ → ℂ}\n  (hlim :\n    ∀ (i : n),\n      Filter.Tendsto (fun u => branch i u - u / ↑(s - b i)) (Bornology.cobounded ℂ) (nhds (-A i i / ↑(s - b i))))\n  (hspec :\n    ∀ (u : ℂ),\n      R < ‖u‖ →\n        (∀ (i : n), u - ↑s * branch i u ∈ spectrum ℂ (A - branch i u • Matrix.diagonal fun i => ↑(b i))) ∧\n          Function.Injective fun i => branch i u) :\n  ∀ᶠ (u : ℂ) in Bornology.cobounded ℂ, ∀ (i : n), branch i ((starRingEnd ℂ) u) = (starRingEnd ℂ) (branch i u)",
+  "name":
+  "NLAlib.eventually_exterior_inverse_eigenvalue_branches_conj_eq",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueReflection",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "A complete inverse branch family of a Hermitian diagonal pencil eventually\nsatisfies Schwarz reflection label by label. Its inverse matrix itself need not\nbe Hermitian: the proof uses the equivalent forward spectral equation. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eventually_exterior_inverse_eigenvalue_branches_eq.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A : Matrix n n ℂ) (b : n → ℝ) (hb : Function.Injective b) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) {R S : ℝ}\n  {forward inverse : n → ℂ → ℂ}\n  (hforward : ∀ (i : n), Filter.Tendsto (fun z => forward i z + ↑(b i) * z) (Bornology.cobounded ℂ) (nhds (A i i)))\n  (hforwardSpec :\n    ∀ (z : ℂ),\n      R < ‖z‖ →\n        (∀ (i : n), forward i z ∈ spectrum ℂ (A - z • Matrix.diagonal fun i => ↑(b i))) ∧\n          Function.Injective fun i => forward i z)\n  (hinverse :\n    ∀ (i : n),\n      Filter.Tendsto (fun u => inverse i u - u / ↑(s - b i)) (Bornology.cobounded ℂ) (nhds (-A i i / ↑(s - b i))))\n  (hinverseSpec :\n    ∀ (u : ℂ),\n      S < ‖u‖ → ∀ (i : n), u - ↑s * inverse i u ∈ spectrum ℂ (A - inverse i u • Matrix.diagonal fun i => ↑(b i))) :\n  ∀ᶠ (u : ℂ) in Bornology.cobounded ℂ, ∀ (i : n), forward i (inverse i u) + ↑s * inverse i u = u",
+  "name":
+  "NLAlib.eventually_exterior_inverse_eigenvalue_branches_eq",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueBranches",
+  "line":
+  139,
+  "kind":
+  "theorem",
+  "doc":
+  "The affine asymptotes match an inverse branch to its original exterior\neigenvalue branch. In particular, the index is determined by the distinct\nslopes, not by making an arbitrary spectral choice at each parameter. ",
   "atlas_partial":
   [],
   "atlas":
@@ -99909,11 +101635,34 @@
   "module":
   "NLAlib.Matrix.Functions.TraceExponentialContourReal",
   "line":
-  85,
+  168,
   "kind":
   "theorem",
   "doc":
-  "A Hermitian pencil with distinct real diagonal slopes has Stahl's real circle density, integrable against every real Laplace weight on each\ncompact interval containing the slopes. One fixed exterior circle represents\nthe continuous transform for every real parameter; the missing positivity of\nthe density is not assumed. Source: Stahl (2013), Theorem 2.\natlas: trace-exponential-stahl (partial) ",
+  "A Hermitian pencil with distinct real diagonal slopes has Stahl's real circle\ndensity, integrable against every real Laplace weight on each compact interval\ncontaining the slopes. One fixed exterior circle works for every real parameter.\nThe missing positivity of the density is not assumed.\nSource: Stahl (2013), Theorem 2.\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation",
+   "NLAlib.exponentialAtomicMeasure",
+   "NLAlib.traceExp",
+   "NLAlib.traceExponentialCircleDensity"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_exterior_branches_isCompactExpRepresentation_of_circleDensity_nonneg.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) :\n  ∃ R,\n    0 < R ∧\n      ∃ branch,\n        (∀ (i : n),\n            DifferentiableOn ℂ (branch i) {z | R < ‖z‖} ∧\n              Filter.Tendsto (fun z => branch i z + ↑(b i) * z) (Bornology.cobounded ℂ) (nhds (A i i))) ∧\n          ∀ (r : ℝ),\n            R < r →\n              (∀ (s : ℝ), (NLAlib.traceExponentialCircleDensity branch b r s).im = 0) ∧\n                ∀ (l u : ℝ),\n                  l ≤ u →\n                    (∀ (i : n), b i ∈ Set.Icc l u) →\n                      (∀ᵐ (s : ℝ) ∂MeasureTheory.volume.restrict (Set.Icc l u),\n                          0 ≤ (NLAlib.traceExponentialCircleDensity branch b r s).re) →\n                        ∃ ν,\n                          NLAlib.IsCompactExpRepresentation ν\n                              (fun t => NLAlib.traceExp (A + ↑t • Matrix.diagonal fun i => ↑(b i))) l u ∧\n                            ↑ν =\n                              ((MeasureTheory.volume.restrict (Set.Icc l u)).withDensity fun s =>\n                                  ENNReal.ofReal (NLAlib.traceExponentialCircleDensity branch b r s).re) +\n                                ↑(NLAlib.exponentialAtomicMeasure (fun i => (A i i).re) b)",
+  "name":
+  "NLAlib.exists_exterior_branches_isCompactExpRepresentation_of_circleDensity_nonneg",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialDensityMeasure",
+  "line":
+  70,
+  "kind":
+  "theorem",
+  "doc":
+  "A Hermitian pencil with distinct diagonal slopes supplies actual exterior\nbranches such that nonnegativity of their real circle density almost everywhere\non the chosen spectral interval constructs a positive finite measure there.\nThe branch existence, real density and transform identity are proved; only the\npositivity condition is left for the planar root-sum argument.\nSource: Stahl (2013), Theorem 2 (conditional measure assembly).\natlas: trace-exponential-stahl (partial) ",
   "atlas_partial":
   ["trace-exponential-stahl"],
   "atlas":
@@ -100054,6 +101803,106 @@
   "theorem",
   "doc":
   "Hermitian pencils with distinct real diagonal slopes admit exterior branches satisfying Schwarz reflection on one common exterior\ndomain. The branches and their symmetry are both constructed, not assumed.\nSource: Stahl (2013), §§3–4; realness step toward the contour representation.\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  ["NLAlib.traceExponentialCircleDensity"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_exterior_inverse_branches_circleDensity_eq_neg_circleIntegral.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] (A : Matrix n n ℂ) (b : n → ℝ) (hb : Function.Injective b) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) {R ρ : ℝ}\n  {forward : n → ℂ → ℂ}\n  (hforward :\n    ∀ (i : n),\n      DifferentiableOn ℂ (forward i) {z | R < ‖z‖} ∧\n        Filter.Tendsto (fun z => forward i z + ↑(b i) * z) (Bornology.cobounded ℂ) (nhds (A i i)))\n  (hforwardSpec :\n    ∀ (z : ℂ),\n      R < ‖z‖ →\n        (∀ (i : n), forward i z ∈ spectrum ℂ (A - z • Matrix.diagonal fun i => ↑(b i))) ∧\n          Function.Injective fun i => forward i z)\n  (hρ : 0 < ρ) (hRρ : R < ρ) :\n  ∃ S,\n    0 < S ∧\n      ∃ inverse,\n        (∀ (i : n),\n            DifferentiableOn ℂ (inverse i) {u | S < ‖u‖} ∧\n              Filter.Tendsto (fun u => inverse i u - u / ↑(s - b i)) (Bornology.cobounded ℂ)\n                (nhds (-A i i / ↑(s - b i)))) ∧\n          (∀ (u : ℂ),\n              S < ‖u‖ →\n                (∀ (i : n), u - ↑s * inverse i u ∈ spectrum ℂ (A - inverse i u • Matrix.diagonal fun i => ↑(b i))) ∧\n                  Function.Injective fun i => inverse i u) ∧\n            ∀ᶠ (r : ℝ) in Filter.atTop,\n              NLAlib.traceExponentialCircleDensity forward b ρ s =\n                -(2 * ↑Real.pi * Complex.I)⁻¹ *\n                  ∮ (u : ℂ) in C(0, r), Complex.exp u * ∑ i, if b i < s then inverse i u else 0",
+  "name":
+  "NLAlib.exists_exterior_inverse_branches_circleDensity_eq_neg_circleIntegral",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialInverseContour",
+  "line":
+  102,
+  "kind":
+  "theorem",
+  "doc":
+  "Constructing the inverse pencil branches gives the common-circle\ninverse-moment formula for any established exterior family of the original\npencil. No inverse spectral family or contour identity is assumed.\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_exterior_inverse_eigenvalue_branches.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℂ)\n  (b : n → ℝ) (hb : Function.Injective b) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) :\n  ∃ R,\n    0 < R ∧\n      ∃ branch,\n        (∀ (i : n),\n            DifferentiableOn ℂ (branch i) {u | R < ‖u‖} ∧\n              Filter.Tendsto (fun u => branch i u - u / ↑(s - b i)) (Bornology.cobounded ℂ)\n                (nhds (-A i i / ↑(s - b i)))) ∧\n          ∀ (u : ℂ),\n            R < ‖u‖ →\n              (∀ (i : n), u - ↑s * branch i u ∈ spectrum ℂ (A - branch i u • Matrix.diagonal fun i => ↑(b i))) ∧\n                Function.Injective fun i => branch i u",
+  "name":
+  "NLAlib.exists_exterior_inverse_eigenvalue_branches",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueBranches",
+  "line":
+  104,
+  "kind":
+  "theorem",
+  "doc":
+  "Distinct real slopes, away from `s`, give all exterior inverse branches.\nThe affine asymptote is `(u - Aᵢᵢ) / (s - bᵢ)`, with the diagonal entry of\n`A` interpreted as a complex number. These branches are constructed from the\nactual matrix pencil, rather than postulated as local inverses.\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) :\n  ∃ R,\n    0 < R ∧\n      ∃ branch,\n        (∀ (i : n),\n            DifferentiableOn ℂ (branch i) {u | R < ‖u‖} ∧\n              Filter.Tendsto (fun u => branch i u - u / ↑(s - b i)) (Bornology.cobounded ℂ)\n                (nhds (-A i i / ↑(s - b i)))) ∧\n          (∀ (u : ℂ),\n              R < ‖u‖ →\n                (∀ (i : n), u - ↑s * branch i u ∈ spectrum ℂ (A - branch i u • Matrix.diagonal fun i => ↑(b i))) ∧\n                  Function.Injective fun i => branch i u) ∧\n            ∀ (u : ℂ), R < ‖u‖ → 0 < u.im → ∀ (i : n), 0 < (branch i u).im ↔ b i < s",
+  "name":
+  "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueHalfPlane",
+  "line":
+  42,
+  "kind":
+  "theorem",
+  "doc":
+  "For Hermitian `A`, the constructed exterior inverse branches are in the upper\nhalf-plane precisely for indices with `bᵢ < s`. This proves the label selection at\nevery exterior parameter above the real axis, without assuming global simple roots.\n\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff_conj_eq.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) :\n  ∃ R,\n    0 < R ∧\n      ∃ branch,\n        (∀ (i : n),\n            DifferentiableOn ℂ (branch i) {u | R < ‖u‖} ∧\n              Filter.Tendsto (fun u => branch i u - u / ↑(s - b i)) (Bornology.cobounded ℂ)\n                (nhds (-A i i / ↑(s - b i)))) ∧\n          (∀ (u : ℂ),\n              R < ‖u‖ →\n                (∀ (i : n), u - ↑s * branch i u ∈ spectrum ℂ (A - branch i u • Matrix.diagonal fun i => ↑(b i))) ∧\n                  Function.Injective fun i => branch i u) ∧\n            (∀ (u : ℂ), R < ‖u‖ → 0 < u.im → ∀ (i : n), 0 < (branch i u).im ↔ b i < s) ∧\n              ∀ (i : n) (u : ℂ), R < ‖u‖ → branch i ((starRingEnd ℂ) u) = (starRingEnd ℂ) (branch i u)",
+  "name":
+  "NLAlib.exists_exterior_inverse_eigenvalue_branches_im_pos_iff_conj_eq",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueReflection",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "Constructed inverse branches of a Hermitian pencil have both the correct\nupper-half-plane labels and Schwarz reflection on one common exterior domain.\n\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  ["NLAlib.inversePencilUpperRootSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_exterior_inverse_eigenvalue_branches_root_sum.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) :\n  ∃ R,\n    0 < R ∧\n      ∃ branch,\n        (∀ (i : n),\n            DifferentiableOn ℂ (branch i) {u | R < ‖u‖} ∧\n              Filter.Tendsto (fun u => branch i u - u / ↑(s - b i)) (Bornology.cobounded ℂ)\n                (nhds (-A i i / ↑(s - b i)))) ∧\n          (∀ (u : ℂ),\n              R < ‖u‖ →\n                (∀ (i : n), u - ↑s * branch i u ∈ spectrum ℂ (A - branch i u • Matrix.diagonal fun i => ↑(b i))) ∧\n                  Function.Injective fun i => branch i u) ∧\n            (∀ (u : ℂ), R < ‖u‖ → 0 < u.im → ∀ (i : n), 0 < (branch i u).im ↔ b i < s) ∧\n              (∀ (i : n) (u : ℂ), R < ‖u‖ → branch i ((starRingEnd ℂ) u) = (starRingEnd ℂ) (branch i u)) ∧\n                ∀ (u : ℂ),\n                  R < ‖u‖ →\n                    0 < u.im →\n                      NLAlib.inversePencilUpperRootSum A (Matrix.diagonal fun i => ↑(b i - s)) u =\n                        ∑ i, if b i < s then branch i u else 0",
+  "name":
+  "NLAlib.exists_exterior_inverse_eigenvalue_branches_root_sum",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueRootSum",
+  "line":
+  89,
+  "kind":
+  "theorem",
+  "doc":
+  "One constructed family of exterior inverse branches supplies holomorphy,\nthe complete spectral list, the strict-sublevel labels, Schwarz reflection, and\nthe identity with the actual upper-root sum throughout the exterior upper half-plane.\n\natlas: trace-exponential-stahl (partial) ",
   "atlas_partial":
   ["trace-exponential-stahl"],
   "atlas":
@@ -101036,6 +102885,27 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.inversePencilUpperRootSum",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_inversePencilUpperRootSum_extension.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℂ}\n  (hA : A.IsHermitian) (b : n → ℝ) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) {R : ℝ} (branch : n → ℂ → ℂ)\n  (hdiff : ∀ (i : n), DifferentiableOn ℂ (branch i) {u | R < ‖u‖})\n  (hspec :\n    ∀ (u : ℂ), R < ‖u‖ → ∀ (i : n), u - ↑s * branch i u ∈ spectrum ℂ (A - branch i u • Matrix.diagonal fun i => ↑(b i)))\n  (hroot :\n    ∀ (u : ℂ),\n      R < ‖u‖ →\n        0 < u.im →\n          NLAlib.inversePencilUpperRootSum A (Matrix.diagonal fun i => ↑(b i - s)) u =\n            ∑ i, if b i < s then branch i u else 0)\n  (href : ∀ (i : n) (u : ℂ), R < ‖u‖ → branch i ((starRingEnd ℂ) u) = (starRingEnd ℂ) (branch i u)) :\n  ∃ h,\n    DifferentiableOn ℂ h ({u | u.im ≠ 0} ∪ {u | R < ‖u‖}) ∧\n      (∀ (u : ℂ), R < ‖u‖ → h u = ∑ i, if b i < s then branch i u else 0) ∧\n        (∀ (u : ℂ), 0 < u.im → h u = NLAlib.inversePencilUpperRootSum A (Matrix.diagonal fun i => ↑(b i - s)) u) ∧\n          (∀ (u : ℂ), h ((starRingEnd ℂ) u) = (starRingEnd ℂ) (h u)) ∧\n            (∀ (u : ℂ), 0 < u.im → 0 ≤ (h u).im) ∧\n              ∀ (u : ℂ),\n                ‖h u‖ ≤\n                  ↑(Fintype.card n) * NLAlib.specNorm (Matrix.diagonal fun i => ↑(b i - s))⁻¹ *\n                    (NLAlib.specNorm A + ‖u‖)",
+  "name":
+  "NLAlib.exists_inversePencilUpperRootSum_extension",
+  "module":
+  "NLAlib.Matrix.Perturbation.PencilRootSumExtension",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "Actual upper characteristic roots glue to a Schwarz-symmetric exterior\ninverse family on an open slit-plane domain. The global bound includes the\nreal points and therefore controls every thin contour uniformly. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -101143,6 +103013,96 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A H : Matrix n n ℂ)\n  (hA : A.IsHermitian) (hH : H.IsHermitian) :\n  ∃ ν,\n    NLAlib.IsCompactExpRepresentation ν (fun t => NLAlib.traceExp (A + t • H)) (NLAlib.lambdaMin H) (NLAlib.lambdaMax H)",
+  "name":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialRepresentation",
+  "line":
+  23,
+  "kind":
+  "theorem",
+  "doc":
+  "Every finite Hermitian pencil has a finite positive representing measure\nsupported on the direction's exact spectral interval, with the trace-exponential\nidentity valid for every real parameter. No commutation, simple-spectrum, or\npositive-definiteness hypothesis is required. Empty dimension gives the zero\nmeasure through the commuting specialization.\nSource: Stahl (2013), Theorems 1 and 2, via the planar root-sum proof.\natlas: trace-exponential-stahl ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_diagonal_of_injective.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) {l u : ℝ} (hlu : l ≤ u)\n  (hbu : ∀ (i : n), b i ∈ Set.Icc l u) :\n  ∃ ν, NLAlib.IsCompactExpRepresentation ν (fun t => NLAlib.traceExp (A + ↑t • Matrix.diagonal fun i => ↑(b i))) l u",
+  "name":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_diagonal_of_injective",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialContourPositivity",
+  "line":
+  76,
+  "kind":
+  "theorem",
+  "doc":
+  "A Hermitian pencil with distinct real diagonal slopes has a positive finite\nexponential representing measure on every closed interval containing those\nslopes. Density positivity is proved by the planar root-sum argument, and the\natoms and density give the actual measure.\nSource: Stahl (2013), Theorem 2, simple diagonal case.\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation",
+   "NLAlib.exponentialAtomicMeasure",
+   "NLAlib.traceExp",
+   "NLAlib.traceExponentialCircleDensity"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_of_circleDensity_nonneg.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] (A : Matrix n n ℂ) (b : n → ℝ) (branch : n → ℂ → ℂ) (r l u : ℝ) (hlu : l ≤ u)\n  (hbu : ∀ (i : n), b i ∈ Set.Icc l u)\n  (htransform :\n    ∀ (t : ℝ),\n      IntervalIntegrable (fun s => Real.exp (-t * s) * (NLAlib.traceExponentialCircleDensity branch b r s).re)\n          MeasureTheory.volume l u ∧\n        ∫ (s : ℝ) in l..u, Real.exp (-t * s) * (NLAlib.traceExponentialCircleDensity branch b r s).re =\n          NLAlib.traceExp (A - ↑t • Matrix.diagonal fun i => ↑(b i)) - ∑ i, Real.exp ((A i i).re - t * b i))\n  (hpos :\n    ∀ᵐ (s : ℝ) ∂MeasureTheory.volume.restrict (Set.Icc l u),\n      0 ≤ (NLAlib.traceExponentialCircleDensity branch b r s).re) :\n  ∃ ν,\n    NLAlib.IsCompactExpRepresentation ν (fun t => NLAlib.traceExp (A + ↑t • Matrix.diagonal fun i => ↑(b i))) l u ∧\n      ↑ν =\n        ((MeasureTheory.volume.restrict (Set.Icc l u)).withDensity fun s =>\n            ENNReal.ofReal (NLAlib.traceExponentialCircleDensity branch b r s).re) +\n          ↑(NLAlib.exponentialAtomicMeasure (fun i => (A i i).re) b)",
+  "name":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_of_circleDensity_nonneg",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialDensityMeasure",
+  "line":
+  26,
+  "kind":
+  "theorem",
+  "doc":
+  "The real atom-plus-density identity and almost everywhere nonnegativity\nof its exact circle density construct a finite positive representing measure.\nThe underlying measure is displayed explicitly, so no measure-existence or\nLaplace-transform conclusion is assumed. Positive exponential parameters here\nare equivalent to the Laplace convention by substituting `-t`.\nSource: Stahl (2013), Theorem 2 (measure assembly). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation",
+   "NLAlib.exponentialAtomicMeasure",
+   "NLAlib.traceExp",
+   "NLAlib.traceExponentialCircleDensity"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_of_circleDensity_nonneg_off_slopes.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] (A : Matrix n n ℂ) (b : n → ℝ) (branch : n → ℂ → ℂ) (r l u : ℝ) (hlu : l ≤ u)\n  (hbu : ∀ (i : n), b i ∈ Set.Icc l u)\n  (htransform :\n    ∀ (t : ℝ),\n      IntervalIntegrable (fun s => Real.exp (-t * s) * (NLAlib.traceExponentialCircleDensity branch b r s).re)\n          MeasureTheory.volume l u ∧\n        ∫ (s : ℝ) in l..u, Real.exp (-t * s) * (NLAlib.traceExponentialCircleDensity branch b r s).re =\n          NLAlib.traceExp (A - ↑t • Matrix.diagonal fun i => ↑(b i)) - ∑ i, Real.exp ((A i i).re - t * b i))\n  (hpos : ∀ s ∈ Set.Icc l u, s ∉ Set.range b → 0 ≤ (NLAlib.traceExponentialCircleDensity branch b r s).re) :\n  ∃ ν,\n    NLAlib.IsCompactExpRepresentation ν (fun t => NLAlib.traceExp (A + ↑t • Matrix.diagonal fun i => ↑(b i))) l u ∧\n      ↑ν =\n        ((MeasureTheory.volume.restrict (Set.Icc l u)).withDensity fun s =>\n            ENNReal.ofReal (NLAlib.traceExponentialCircleDensity branch b r s).re) +\n          ↑(NLAlib.exponentialAtomicMeasure (fun i => (A i i).re) b)",
+  "name":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_of_circleDensity_nonneg_off_slopes",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialDensityMeasure",
+  "line":
+  107,
+  "kind":
+  "theorem",
+  "doc":
+  "Nonnegativity away from the finitely many slope values already suffices\nfor assembling the positive measure; values at those exceptional points do not\nchange the density measure. The transform premise is the previously proved\nreal atom-plus-density formula for these exact branches.\nSource: Stahl (2013), Theorem 2 (finite exceptional set). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation",
+   "NLAlib.lambdaMax",
+   "NLAlib.lambdaMin",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.exists_isCompactExpRepresentation_traceExp_of_commute.{u_1} {ι : Type u_1} [Fintype ι] [DecidableEq ι]\n  (A H : Matrix ι ι ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian) (hAH : Commute A H) :\n  ∃ ν,\n    NLAlib.IsCompactExpRepresentation ν (fun t => NLAlib.traceExp (A + t • H)) (NLAlib.lambdaMin H) (NLAlib.lambdaMax H)",
   "name":
   "NLAlib.exists_isCompactExpRepresentation_traceExp_of_commute",
@@ -101154,6 +103114,29 @@
   "theorem",
   "doc":
   "A commuting Hermitian pencil admits a finite positive Borel measure on the\ndirection's spectral interval representing its trace exponential at every real\nparameter. Includes repeated eigenvalues and the empty matrix, whose measure is\nzero. This theorem does not cover noncommuting matrices.\nSource: Stahl, §1.3.1, formula (1.3); atlas `trace-exponential-stahl` (partial).\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation",
+   "NLAlib.lambdaMax",
+   "NLAlib.lambdaMin",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_of_diagonal_simple.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A H : Matrix n n ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian)\n  (hsimple :\n    ∀ (C : Matrix n n ℂ),\n      C.IsHermitian →\n        ∀ (b : n → ℝ),\n          Function.Injective b →\n            ∀ (l u : ℝ),\n              l ≤ u →\n                (∀ (i : n), b i ∈ Set.Icc l u) →\n                  ∃ ν,\n                    NLAlib.IsCompactExpRepresentation ν\n                      (fun t => NLAlib.traceExp (C + t • Matrix.diagonal fun i => ↑(b i))) l u) :\n  ∃ ν,\n    NLAlib.IsCompactExpRepresentation ν (fun t => NLAlib.traceExp (A + t • H)) (NLAlib.lambdaMin H) (NLAlib.lambdaMax H)",
+  "name":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_of_diagonal_simple",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialSimpleSpectrumLimit",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "A positive-measure representation for every simple real diagonal direction\nimplies the representation for arbitrary Hermitian directions. The approximation\nstays in the limiting direction's exact spectral interval; repeated eigenvalues,\nscalar directions, and empty dimension are all included. The simple diagonal\ncase is the explicit remaining premise of this reduction theorem.\n\natlas: trace-exponential-stahl (partial) ",
   "atlas_partial":
   ["trace-exponential-stahl"],
   "atlas":
@@ -101177,6 +103160,29 @@
   "Positive representations on a common compact interval pass to limits of\nboth matrices in a pencil. The positivity of approximating measures is retained\nby compactness; no positivity or representation hypothesis is imposed on the\nlimiting pencil. Source: Stahl's approximation reduction; atlas\n`trace-exponential-stahl` (partial).\natlas: trace-exponential-stahl (partial) ",
   "atlas_partial":
   ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation",
+   "NLAlib.lambdaMax",
+   "NLAlib.lambdaMin",
+   "NLAlib.traceExp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A H : Matrix n n ℂ) (hA : A.IsHermitian) (hH : H.IsHermitian) :\n  ∃ ν,\n    NLAlib.IsCompactExpRepresentation ν (fun t => NLAlib.traceExp (A + t • H)) (NLAlib.lambdaMin H)\n        (NLAlib.lambdaMax H) ∧\n      (↑ν).real Set.univ = NLAlib.traceExp A ∧\n        (∀ (k : ℕ) (t : ℝ),\n            iteratedDeriv k (fun x => NLAlib.traceExp (A + x • H)) t = ∫ (x : ℝ), x ^ k * Real.exp (t * x) ∂↑ν) ∧\n          ∀ (r : ℕ) (t : ℝ),\n            0 ≤ t →\n              0 ≤ Real.exp (t * NLAlib.lambdaMin H) * iteratedDeriv (2 * r) (fun x => NLAlib.traceExp (A + x • H)) 0 ∧\n                Real.exp (t * NLAlib.lambdaMin H) * iteratedDeriv (2 * r) (fun x => NLAlib.traceExp (A + x • H)) 0 ≤\n                    iteratedDeriv (2 * r) (fun x => NLAlib.traceExp (A + x • H)) t ∧\n                  iteratedDeriv (2 * r) (fun x => NLAlib.traceExp (A + x • H)) t ≤\n                    Real.exp (t * NLAlib.lambdaMax H) * iteratedDeriv (2 * r) (fun x => NLAlib.traceExp (A + x • H)) 0",
+  "name":
+  "NLAlib.exists_isCompactExpRepresentation_traceExp_with_derivatives",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialRepresentation",
+  "line":
+  43,
+  "kind":
+  "theorem",
+  "doc":
+  "Stahl's representation together with its total mass, every tilted-moment\nderivative identity, and both spectral-endpoint bounds on even derivatives.\nThis is the full statement of the library card, with no representation premise.\nSource: Stahl (2013), Theorems 1 and 2; Tropp (2026), Proposition 4.4.\natlas: trace-exponential-stahl ",
+  "atlas_partial":
+  [],
   "atlas":
   ["trace-exponential-stahl"]},
  {"uses":
@@ -128112,6 +130118,46 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.im_ne_zero_of_det_hermitian_pencil_eq_zero.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A D : Matrix n n ℂ}\n  (hA : A.IsHermitian) (hD : D.IsHermitian) {u z : ℂ} (hu : u.im ≠ 0) (hz : (u • 1 - A + z • D).det = 0) : z.im ≠ 0",
+  "name":
+  "NLAlib.im_ne_zero_of_det_hermitian_pencil_eq_zero",
+  "module":
+  "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "A Hermitian pencil cannot have a real root in its slope variable at a\nnonreal spectral parameter. In particular this applies throughout the open\nupper half-plane, without any simplicity assumption on either matrix. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.im_ne_zero_of_mem_roots_charpoly_inv_mul.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A D : Matrix n n ℂ}\n  (hA : A.IsHermitian) (hD : D.IsHermitian) (hDu : IsUnit D) {u z : ℂ} (hu : u.im ≠ 0)\n  (hz : z ∈ (D⁻¹ * (A - u • 1)).charpoly.roots) : z.im ≠ 0",
+  "name":
+  "NLAlib.im_ne_zero_of_mem_roots_charpoly_inv_mul",
+  "module":
+  "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+  "line":
+  97,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual roots of the inverse characteristic polynomial avoid the real\naxis at every nonreal parameter of a Hermitian pencil. Algebraic\nmultiplicities are retained in `Polynomial.roots`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.sequenceSupportExtension"],
   "sorry":
   false,
@@ -136481,6 +138527,27 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.traceExp",
+   "NLAlib.traceExponentialCircleDensity"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_exp_mul_re_traceExponentialCircleDensity_eq_traceExp_sub_atoms.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) {R : ℝ} (hR : 0 < R) {branch : n → ℂ → ℂ}\n  (hbranch :\n    ∀ (i : n),\n      DifferentiableOn ℂ (branch i) {z | R < ‖z‖} ∧\n        Filter.Tendsto (fun z => branch i z + ↑(b i) * z) (Bornology.cobounded ℂ) (nhds (A i i)))\n  (hspec :\n    ∀ (z : ℂ),\n      R < ‖z‖ →\n        (∀ (i : n), branch i z ∈ spectrum ℂ (A - z • Matrix.diagonal fun i => ↑(b i))) ∧\n          Function.Injective fun i => branch i z)\n  {r : ℝ} (hRr : R < r) {l u : ℝ} (hlu : l ≤ u) (hbu : ∀ (i : n), b i ∈ Set.Icc l u) (t : ℝ) :\n  IntervalIntegrable (fun s => Real.exp (-t * s) * (NLAlib.traceExponentialCircleDensity branch b r s).re)\n      MeasureTheory.volume l u ∧\n    ∫ (s : ℝ) in l..u, Real.exp (-t * s) * (NLAlib.traceExponentialCircleDensity branch b r s).re =\n      NLAlib.traceExp (A - ↑t • Matrix.diagonal fun i => ↑(b i)) - ∑ i, Real.exp ((A i i).re - t * b i)",
+  "name":
+  "NLAlib.integral_exp_mul_re_traceExponentialCircleDensity_eq_traceExp_sub_atoms",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialContourReal",
+  "line":
+  85,
+  "kind":
+  "theorem",
+  "doc":
+  "Every actual complete exterior branch family gives the real atom-plus-density\ntransform identity on one fixed circle for every real parameter. This reusable\nform keeps the branch family available for the separate positivity argument.\nSource: Stahl (2013), Theorem 2, transform verification. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -138163,6 +140230,26 @@
   [],
   "atlas":
   ["spectral-measure"]},
+ {"uses":
+  ["NLAlib.intervalDensityMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_intervalDensityMeasure {ρ : ℝ → ℝ} {a b : ℝ}\n  (hρ : MeasureTheory.IntegrableOn ρ (Set.Icc a b) MeasureTheory.volume)\n  (hpos : ∀ᵐ (x : ℝ) ∂MeasureTheory.volume.restrict (Set.Icc a b), 0 ≤ ρ x) (f : ℝ → ℝ) :\n  ∫ (x : ℝ), f x ∂↑(NLAlib.intervalDensityMeasure ρ a b hρ) = ∫ (x : ℝ) in Set.Icc a b, ρ x * f x",
+  "name":
+  "NLAlib.integral_intervalDensityMeasure",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.IntervalDensity",
+  "line":
+  45,
+  "kind":
+  "theorem",
+  "doc":
+  "Integrating against an almost everywhere nonnegative interval density is\nits ordinary weighted integral. The test function is arbitrary, with Bochner\nintegrals interpreted using Mathlib's total integral convention. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["Matrix.instMeasurableSpace",
    "NLAlib.gaussianMatrix"],
@@ -144147,6 +146234,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.intervalDensityMeasure (ρ : ℝ → ℝ) (a b : ℝ)\n  (hρ : MeasureTheory.IntegrableOn ρ (Set.Icc a b) MeasureTheory.volume) : MeasureTheory.FiniteMeasure ℝ",
+  "name":
+  "NLAlib.intervalDensityMeasure",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.IntervalDensity",
+  "line":
+  22,
+  "kind":
+  "def",
+  "doc":
+  "The finite positive measure with density `max ρ 0` on `[a,b]` and zero\noutside. Almost everywhere nonnegative densities retain their original values.\nThe integrability argument is used only to certify finite mass. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.intervalDensityMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.intervalDensityMeasure_toMeasure (ρ : ℝ → ℝ) (a b : ℝ)\n  (hρ : MeasureTheory.IntegrableOn ρ (Set.Icc a b) MeasureTheory.volume) :\n  ↑(NLAlib.intervalDensityMeasure ρ a b hρ) =\n    (MeasureTheory.volume.restrict (Set.Icc a b)).withDensity fun x => ENNReal.ofReal (ρ x)",
+  "name":
+  "NLAlib.intervalDensityMeasure_toMeasure",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.IntervalDensity",
+  "line":
+  30,
+  "kind":
+  "theorem",
+  "doc":
+  "The underlying measure is restricted Lebesgue measure weighted by the\nnonnegative part of the density. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.intervalIntegrable_bv_cosine {v : ℝ → ℝ} (hv : BoundedVariationOn v (Set.Icc (-1) 1)) (j : ℕ) :\n  IntervalIntegrable (fun θ => v (Real.cos θ) * Real.cos (↑j * θ)) MeasureTheory.volume 0 Real.pi",
   "name":
   "NLAlib.intervalIntegrable_bv_cosine",
@@ -144869,6 +146996,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.inv_mul_sub_smul_one_diagonal_eq.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℂ) (b : n → ℝ)\n  (s : ℝ) (hs : ∀ (i : n), s ≠ b i) (u : ℂ) :\n  (Matrix.diagonal fun i => ↑(b i - s))⁻¹ * (A - u • 1) =\n    -((Matrix.diagonal fun i => (↑(s - b i))⁻¹) * A) + u • Matrix.diagonal fun i => (↑(s - b i))⁻¹",
+  "name":
+  "NLAlib.inv_mul_sub_smul_one_diagonal_eq",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueRootSum",
+  "line":
+  33,
+  "kind":
+  "theorem",
+  "doc":
+  "The inverse matrix of a diagonal Hermitian pencil is exactly the affine\npencil used to construct its exterior inverse branches. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.inv_norm_smul_smul.{u_1} {n : Type u_1} [Fintype n] (w : n → ℝ) {c : ℝ} (hc : 0 < c) :\n  ‖WithLp.toLp 2 (c • w)‖⁻¹ • c • w = ‖WithLp.toLp 2 w‖⁻¹ • w",
   "name":
   "NLAlib.inv_norm_smul_smul",
@@ -145437,6 +147584,66 @@
   "def",
   "doc":
   "The `k`-th (unnormalised) inverse-iteration iterate with shift `μ`: power iteration on the\nresolvent, `(A − μI)^{-k} x₀`. Junk (Mathlib's inverse `0`) when `μ` is an eigenvalue.\nSource: Trefethen–Bau (1997) [`tb97`], Alg. 27.2; Golub–Van Loan (2013) [`gvl13`], §8.2.2.\nHelper for `inverse-iteration`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.inversePencilUpperRootSum.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A D : Matrix n n ℂ) (u : ℂ) : ℂ",
+  "name":
+  "NLAlib.inversePencilUpperRootSum",
+  "module":
+  "NLAlib.Matrix.Perturbation.PencilRootSum",
+  "line":
+  23,
+  "kind":
+  "def",
+  "doc":
+  "Sum of all upper-half-plane roots of `det (u I - A + z D)`, counted with\ntheir algebraic multiplicities through the inverse characteristic polynomial.\nThe root interpretation requires `D` invertible; the expression is total. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.inversePencilUpperRootSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.inversePencilUpperRootSum_eq_sum_ite_of_inverse_branches.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A : Matrix n n ℂ) (b : n → ℝ) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) (branch : n → ℂ → ℂ) (u : ℂ)\n  (hspec : ∀ (i : n), u - ↑s * branch i u ∈ spectrum ℂ (A - branch i u • Matrix.diagonal fun i => ↑(b i)))\n  (hinj : Function.Injective fun i => branch i u) (hlabel : ∀ (i : n), 0 < (branch i u).im ↔ b i < s) :\n  NLAlib.inversePencilUpperRootSum A (Matrix.diagonal fun i => ↑(b i - s)) u = ∑ i, if b i < s then branch i u else 0",
+  "name":
+  "NLAlib.inversePencilUpperRootSum_eq_sum_ite_of_inverse_branches",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueRootSum",
+  "line":
+  63,
+  "kind":
+  "theorem",
+  "doc":
+  "A complete exterior inverse branch family with the proved upper labels\ncomputes the actual upper-root sum of the inverse characteristic polynomial. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.inversePencilUpperRootSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.inversePencilUpperRootSum_im_nonneg.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A D : Matrix n n ℂ)\n  (u : ℂ) : 0 ≤ (NLAlib.inversePencilUpperRootSum A D u).im",
+  "name":
+  "NLAlib.inversePencilUpperRootSum_im_nonneg",
+  "module":
+  "NLAlib.Matrix.Perturbation.PencilRootSum",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "Selecting upper roots gives a nonnegative imaginary part, including at\ncollisions and without a choice of individual roots. ",
   "atlas_partial":
   [],
   "atlas":
@@ -146264,6 +148471,27 @@
   "theorem",
   "doc":
   "Atoms inside `[l,u]` give a compactly supported exponential representation.\nSource: Stahl, formula (1.3); atlas `trace-exponential-stahl` (commuting case). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.IsCompactExpRepresentation",
+   "NLAlib.intervalDensityMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isCompactExpRepresentation_intervalDensityMeasure {ρ : ℝ → ℝ} {a b : ℝ} (hab : a ≤ b)\n  (hρ : MeasureTheory.IntegrableOn ρ (Set.Icc a b) MeasureTheory.volume)\n  (hpos : ∀ᵐ (x : ℝ) ∂MeasureTheory.volume.restrict (Set.Icc a b), 0 ≤ ρ x) :\n  NLAlib.IsCompactExpRepresentation (NLAlib.intervalDensityMeasure ρ a b hρ)\n    (fun t => ∫ (x : ℝ) in a..b, Real.exp (t * x) * ρ x) a b",
+  "name":
+  "NLAlib.isCompactExpRepresentation_intervalDensityMeasure",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.IntervalDensity",
+  "line":
+  61,
+  "kind":
+  "theorem",
+  "doc":
+  "An almost everywhere nonnegative integrable interval density gives a\ncompact positive exponential representation of its weighted interval integrals. ",
   "atlas_partial":
   [],
   "atlas":
@@ -150337,6 +152565,26 @@
   [],
   "atlas":
   ["triangular-matrices-def"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isUnit_diagonal_sub_of_ne.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (b : n → ℝ) (s : ℝ)\n  (hs : ∀ (i : n), s ≠ b i) : IsUnit (Matrix.diagonal fun i => ↑(b i - s))",
+  "name":
+  "NLAlib.isUnit_diagonal_sub_of_ne",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueRootSum",
+  "line":
+  22,
+  "kind":
+  "theorem",
+  "doc":
+  "The diagonal slope matrix `diag (bᵢ - s)` is invertible when `s` avoids its\nfinitely many diagonal values. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -167401,6 +169649,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.mem_spectrum_inverse_diagonal_pencil_iff.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℂ)\n  (b : n → ℝ) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) (u z : ℂ) :\n  z ∈ spectrum ℂ (-((Matrix.diagonal fun i => (↑(s - b i))⁻¹) * A) + u • Matrix.diagonal fun i => (↑(s - b i))⁻¹) ↔\n    u - ↑s * z ∈ spectrum ℂ (A - z • Matrix.diagonal fun i => ↑(b i))",
+  "name":
+  "NLAlib.mem_spectrum_inverse_diagonal_pencil_iff",
+  "module":
+  "NLAlib.Matrix.Perturbation.InverseEigenvalueBranches",
+  "line":
+  60,
+  "kind":
+  "theorem",
+  "doc":
+  "The inverse spectral pencil exchanges `z` with `λ + s z`. Multiplication\nby the invertible diagonal matrix preserves singularity, so this equivalence\ndoes not require a choice of eigenvectors or eigenvalue branches. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.mem_spectrum_nonsing_inv_mul_mul_iff.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2}\n  [Field K] (A S : Matrix n n K) (hS : IsUnit S) (μ : K) : μ ∈ spectrum K (S⁻¹ * A * S) ↔ μ ∈ spectrum K A",
   "name":
   "NLAlib.mem_spectrum_nonsing_inv_mul_mul_iff",
@@ -175302,6 +177570,48 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.inversePencilUpperRootSum",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_inversePencilUpperRootSum_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A D : Matrix n n ℂ)\n  (hD : IsUnit D) (u : ℂ) :\n  ‖NLAlib.inversePencilUpperRootSum A D u‖ ≤ ↑(Fintype.card n) * NLAlib.specNorm D⁻¹ * (NLAlib.specNorm A + ‖u‖)",
+  "name":
+  "NLAlib.norm_inversePencilUpperRootSum_le",
+  "module":
+  "NLAlib.Matrix.Perturbation.PencilRootSum",
+  "line":
+  59,
+  "kind":
+  "theorem",
+  "doc":
+  "The inverse-pencil upper-root sum is bounded uniformly on bounded\nparameter sets, with the dimension recording all algebraic multiplicities. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.inversePencilUpperRootSum",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_inversePencilUpperRootSum_le_of_norm_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A D : Matrix n n ℂ) (hD : IsUnit D) {u : ℂ} {M : ℝ} (hu : ‖u‖ ≤ M) :\n  ‖NLAlib.inversePencilUpperRootSum A D u‖ ≤ ↑(Fintype.card n) * NLAlib.specNorm D⁻¹ * (NLAlib.specNorm A + M)",
+  "name":
+  "NLAlib.norm_inversePencilUpperRootSum_le_of_norm_le",
+  "module":
+  "NLAlib.Matrix.Perturbation.PencilRootSum",
+  "line":
+  69,
+  "kind":
+  "theorem",
+  "doc":
+  "On each closed parameter ball the upper-root sum has one bound,\nindependently of proximity to the real axis. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.joukowski"],
   "sorry":
   false,
@@ -175457,6 +177767,46 @@
   "theorem",
   "doc":
   "The identity-diagonal block criterion holds over complex matrices too. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_le_specNorm_inv_mul_of_det_pencil_eq_zero.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A D : Matrix n n ℂ) (hD : IsUnit D) {u z : ℂ} (hz : (u • 1 - A + z • D).det = 0) :\n  ‖z‖ ≤ NLAlib.specNorm D⁻¹ * (NLAlib.specNorm A + ‖u‖)",
+  "name":
+  "NLAlib.norm_le_specNorm_inv_mul_of_det_pencil_eq_zero",
+  "module":
+  "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "Every root of an invertible matrix pencil is bounded by\n`‖D⁻¹‖₂ (‖A‖₂ + |u|)`. The bound is uniform even when roots collide. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_le_specNorm_inv_mul_of_mem_roots_charpoly.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A D : Matrix n n ℂ) (hD : IsUnit D) {u z : ℂ} (hz : z ∈ (D⁻¹ * (A - u • 1)).charpoly.roots) :\n  ‖z‖ ≤ NLAlib.specNorm D⁻¹ * (NLAlib.specNorm A + ‖u‖)",
+  "name":
+  "NLAlib.norm_le_specNorm_inv_mul_of_mem_roots_charpoly",
+  "module":
+  "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+  "line":
+  110,
+  "kind":
+  "theorem",
+  "doc":
+  "The inverse characteristic roots have a common bound, independently of\ntheir multiplicities and without requiring a Hermitian pencil. ",
   "atlas_partial":
   [],
   "atlas":
@@ -176815,6 +179165,46 @@
   "theorem",
   "doc":
   "The displayed projection form of TeX equation (typed-block-CS).  The six\nhypotheses say exactly that `E`, `F`, and `G` are orthogonal projections:\nself-adjoint idempotents on their respective Hilbert spaces.\n\nSource: ported from `SparseFockFormal.TypedBlockCS`,\nb9da2b5d96e5fd70252e9c6551aefc92643e7d0b; supports `sparse-ose`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_sum_ite_le_card_mul_specNorm_inv_of_det_pencil_eq_zero.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A D : Matrix n n ℂ) (hD : IsUnit D) (u : ℂ) (ev : n → ℂ) (hev : ∀ (i : n), (u • 1 - A + ev i • D).det = 0)\n  (p : n → Prop) [DecidablePred p] :\n  ‖∑ i, if p i then ev i else 0‖ ≤ ↑(Fintype.card n) * NLAlib.specNorm D⁻¹ * (NLAlib.specNorm A + ‖u‖)",
+  "name":
+  "NLAlib.norm_sum_ite_le_card_mul_specNorm_inv_of_det_pencil_eq_zero",
+  "module":
+  "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+  "line":
+  147,
+  "kind":
+  "theorem",
+  "doc":
+  "A selected finite list of pencil roots has the same uniform bound.\nThis form applies to exterior branches at real parameter values as well as\nto the upper-root multiset at nonreal parameters. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_sum_le_card_mul_specNorm_inv_of_le_roots_charpoly.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A D : Matrix n n ℂ) (hD : IsUnit D) (u : ℂ) (roots : Multiset ℂ)\n  (hroots : roots ≤ (D⁻¹ * (A - u • 1)).charpoly.roots) :\n  ‖roots.sum‖ ≤ ↑(Fintype.card n) * NLAlib.specNorm D⁻¹ * (NLAlib.specNorm A + ‖u‖)",
+  "name":
+  "NLAlib.norm_sum_le_card_mul_specNorm_inv_of_le_roots_charpoly",
+  "module":
+  "NLAlib.Matrix.Perturbation.HermitianPencilRoots",
+  "line":
+  121,
+  "kind":
+  "theorem",
+  "doc":
+  "Any submultiset of inverse characteristic roots has a dimension-times-root\nbound. In particular this supplies the uniform bound for the sum of all upper\nhalf-plane roots, including collisions. ",
   "atlas_partial":
   [],
   "atlas":
@@ -222696,6 +225086,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.traceExponentialCircleDensity"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.traceExponentialCircleDensity_re_nonneg_of_exterior_branches.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℂ} (hA : A.IsHermitian) (b : n → ℝ) (hb : Function.Injective b) {R ρ : ℝ} {forward : n → ℂ → ℂ}\n  (hforward :\n    ∀ (i : n),\n      DifferentiableOn ℂ (forward i) {z | R < ‖z‖} ∧\n        Filter.Tendsto (fun z => forward i z + ↑(b i) * z) (Bornology.cobounded ℂ) (nhds (A i i)))\n  (hforwardSpec :\n    ∀ (z : ℂ),\n      R < ‖z‖ →\n        (∀ (i : n), forward i z ∈ spectrum ℂ (A - z • Matrix.diagonal fun i => ↑(b i))) ∧\n          Function.Injective fun i => forward i z)\n  (hρ : 0 < ρ) (hRρ : R < ρ) (s : ℝ) (hs : ∀ (i : n), s ≠ b i) :\n  0 ≤ (NLAlib.traceExponentialCircleDensity forward b ρ s).re",
+  "name":
+  "NLAlib.traceExponentialCircleDensity_re_nonneg_of_exterior_branches",
+  "module":
+  "NLAlib.Matrix.Functions.TraceExponentialContourPositivity",
+  "line":
+  28,
+  "kind":
+  "theorem",
+  "doc":
+  "The exact fixed-circle density is nonnegative away from the finitely many\nslopes. The proof constructs the inverse branches and actual upper-root sum;\nneither a positive-density assumption nor a representing measure is used.\nSource: Stahl (2013), Theorem 2, planar root-sum proof.\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -228062,6 +230472,26 @@
   "sorry":
   false,
   "signature":
+  "Path.curveIntegral_ofLine_eq_intervalIntegral {γ : ℝ → ℂ} (hγ : ContDiff ℝ 1 γ) {a b : ℂ} (h₀ : γ 0 = a) (h₁ : γ 1 = b)\n  (f : ℂ → ℂ) :\n  ∫ᶜ (z : ℂ) in Path.ofLine ⋯ h₀ h₁, f z • ContinuousLinearMap.id ℂ ℂ = ∫ (t : ℝ) in 0..1, deriv γ t * f (γ t)",
+  "name":
+  "Path.curveIntegral_ofLine_eq_intervalIntegral",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+  "line":
+  21,
+  "kind":
+  "theorem",
+  "doc":
+  "Restricting a globally continuously differentiable parametrization to the\nunit interval computes its native curve integral by the ordinary derivative. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Polynomial.HasCoeffDerivAt (p : ℝ → Polynomial ℝ) (p' : Polynomial ℝ) (x : ℝ) : Prop",
   "name":
   "Polynomial.HasCoeffDerivAt",
@@ -228133,6 +230563,66 @@
   "theorem",
   "doc":
   "Multiplication by the argument difference recovers the numerator. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.analyticAt_sum_filter_roots_upper_of_upperHemicontinuous.{u_1} {ι : Type u_1} [Fintype ι]\n  (q : ι → Polynomial ℂ) (a : ι → ℂ → ℂ) {u : ℂ} (ha : ∀ (i : ι), AnalyticAt ℂ (a i) u) (hp : ∑ i, a i u • q i ≠ 0)\n  (hroots : UpperHemicontinuousAt (fun v => {z | z ∈ (∑ i, a i v • q i).roots}) u)\n  (hreal : ∀ z ∈ (∑ i, a i u • q i).roots, z.im ≠ 0) :\n  AnalyticAt ℂ (fun v => (Multiset.filter (fun z => 0 < z.im) (∑ i, a i v • q i).roots).sum) u",
+  "name":
+  "Polynomial.analyticAt_sum_filter_roots_upper_of_upperHemicontinuous",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+  "line":
+  179,
+  "kind":
+  "theorem",
+  "doc":
+  "An upper hemicontinuous polynomial root family avoiding the real axis has an\nanalytic sum of upper-half-plane roots when its coefficients are analytic. Algebraic\nmultiplicities are retained, and collisions within either half-plane are allowed.\nThe root-continuity assumption is available for characteristic polynomials from\nupper hemicontinuity of the spectrum in a Banach algebra.\n\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.analyticAt_sum_roots_in_circle.{u_1} {ι : Type u_1} [Fintype ι] (q : ι → Polynomial ℂ) (a : ι → ℂ → ℂ)\n  {u c : ℂ} {r : ℝ} (hr : 0 ≤ r) (ha : ∀ (i : ι), AnalyticAt ℂ (a i) u)\n  (hzero : ∀ z ∈ Metric.sphere c r, Polynomial.eval z (∑ i, a i u • q i) ≠ 0) :\n  AnalyticAt ℂ (fun v => (Multiset.map (fun w => if dist w c < r then w else 0) (∑ i, a i v • q i).roots).sum) u",
+  "name":
+  "Polynomial.analyticAt_sum_roots_in_circle",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+  "line":
+  127,
+  "kind":
+  "theorem",
+  "doc":
+  "For a finite family of fixed polynomials with analytic scalar coefficients,\nthe sum of roots inside any root-free fixed circle depends analytically on the\nparameter. No simplicity or distinctness of roots inside the circle is required.\nThis is the separated-cluster holomorphy step in the planar route to Stahl's theorem.\n\natlas: trace-exponential-stahl (partial) ",
+  "atlas_partial":
+  ["trace-exponential-stahl"],
+  "atlas":
+  ["trace-exponential-stahl"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.circleIntegral_mul_derivative_div_eq_sum_roots (p : Polynomial ℂ) (c : ℂ) {r : ℝ} (hr : 0 ≤ r)\n  (hp : ∀ z ∈ Metric.sphere c r, Polynomial.eval z p ≠ 0) :\n  ∮ (z : ℂ) in C(c, r), z * (Polynomial.eval z (Polynomial.derivative p) / Polynomial.eval z p) =\n    (Multiset.map (fun w => if dist w c < r then 2 * ↑Real.pi * Complex.I * w else 0) p.roots).sum",
+  "name":
+  "Polynomial.circleIntegral_mul_derivative_div_eq_sum_roots",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+  "line":
+  76,
+  "kind":
+  "theorem",
+  "doc":
+  "Integrating a polynomial's weighted logarithmic derivative around a root-free circle\ngives the sum of its enclosed roots, retaining algebraic multiplicities. The polynomial\nneed not be squarefree; roots within the selected cluster may collide. ",
   "atlas_partial":
   [],
   "atlas":
@@ -229060,6 +231550,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.im_sum_filter_roots_upper_nonneg (p : Polynomial ℂ) :\n  0 ≤ (Multiset.filter (fun z => 0 < z.im) p.roots).sum.im",
+  "name":
+  "Polynomial.im_sum_filter_roots_upper_nonneg",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+  "line":
+  210,
+  "kind":
+  "theorem",
+  "doc":
+  "The sum of the roots strictly in the upper half-plane has nonnegative\nimaginary part, with algebraic multiplicities retained. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["Polynomial.geometricResolventPolynomial"],
   "sorry":
   false,
@@ -229295,6 +231805,26 @@
   "theorem",
   "doc":
   "The finite resolvent is an exact right inverse of `a I-D`.\nNo characteristic-zero or infinite-series assumption is needed. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Polynomial.two_pi_i_inv_mul_circleIntegral_mul_derivative_div_eq_sum_roots (p : Polynomial ℂ) (c : ℂ) {r : ℝ}\n  (hr : 0 ≤ r) (hp : ∀ z ∈ Metric.sphere c r, Polynomial.eval z p ≠ 0) :\n  (2 * ↑Real.pi * Complex.I)⁻¹ *\n      ∮ (z : ℂ) in C(c, r), z * (Polynomial.eval z (Polynomial.derivative p) / Polynomial.eval z p) =\n    (Multiset.map (fun w => if dist w c < r then w else 0) p.roots).sum",
+  "name":
+  "Polynomial.two_pi_i_inv_mul_circleIntegral_mul_derivative_div_eq_sum_roots",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.Polynomial.RootCluster",
+  "line":
+  97,
+  "kind":
+  "theorem",
+  "doc":
+  "The normalized weighted logarithmic derivative gives the enclosed root sum,\nwith algebraic multiplicities. ",
   "atlas_partial":
   [],
   "atlas":
@@ -230308,6 +232838,26 @@
   "sorry":
   false,
   "signature":
+  "circleIntegral.analyticAt_integral_div {c : ℂ} {r : ℝ} (hr : 0 ≤ r) {F G : ℂ → C(↑(Metric.sphere c r), ℂ)} {u : ℂ}\n  (hF : AnalyticAt ℂ F u) (hG : AnalyticAt ℂ G u) (hzero : ∀ (z : ↑(Metric.sphere c r)), (F u) z ≠ 0) :\n  AnalyticAt ℂ (fun v => ∮ (z : ℂ) in C(c, r), if hz : z ∈ Metric.sphere c r then (G v) ⟨z, hz⟩ / (F v) ⟨z, hz⟩ else 0)\n    u",
+  "name":
+  "circleIntegral.analyticAt_integral_div",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.CircleIntegralAnalytic",
+  "line":
+  78,
+  "kind":
+  "theorem",
+  "doc":
+  "A contour quotient depends analytically on the parameter whenever its two\ncontinuous-function-valued factors do and the denominator has no zero on the fixed\ncircle. The proof constructs a common nonvanishing neighborhood using openness of units. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "circleIntegral.conj_eq_neg_of_conj_eq {f : ℂ → ℂ} {r : ℝ}\n  (hf : ∀ z ∈ Metric.sphere 0 |r|, f ((starRingEnd ℂ) z) = (starRingEnd ℂ) (f z)) :\n  (starRingEnd ℂ) (∮ (z : ℂ) in C(0, r), f z) = -∮ (z : ℂ) in C(0, r), f z",
   "name":
   "circleIntegral.conj_eq_neg_of_conj_eq",
@@ -230319,6 +232869,106 @@
   "theorem",
   "doc":
   "Schwarz symmetry on the integration circle makes its unnormalized\ncontour integral purely imaginary. No differentiability assumption is needed:\nthe identity follows from the circle parametrization and orientation reversal.\nSource: Stahl (2013), Theorem 2 (supporting analysis).\nAtlas: `trace-exponential-stahl` (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "circleIntegral.continuousMapIntegral (c : ℂ) (r : ℝ) (hr : 0 ≤ r) : C(↑(Metric.sphere c r), ℂ) →L[ℂ] ℂ",
+  "name":
+  "circleIntegral.continuousMapIntegral",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.CircleIntegralAnalytic",
+  "line":
+  33,
+  "kind":
+  "def",
+  "doc":
+  "Integration along a fixed counterclockwise circle is a continuous complex-linear\nfunctional on its continuous functions. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["circleIntegral.continuousMapIntegral"],
+  "sorry":
+  false,
+  "signature":
+  "circleIntegral.continuousMapIntegral_eq {c : ℂ} {r : ℝ} (hr : 0 ≤ r) (f : C(↑(Metric.sphere c r), ℂ)) (g : ℂ → ℂ)\n  (hg : ∀ (z : ℂ) (hz : z ∈ Metric.sphere c r), f ⟨z, hz⟩ = g z) :\n  (circleIntegral.continuousMapIntegral c r hr) f = ∮ (z : ℂ) in C(c, r), g z",
+  "name":
+  "circleIntegral.continuousMapIntegral_eq",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.CircleIntegralAnalytic",
+  "line":
+  62,
+  "kind":
+  "theorem",
+  "doc":
+  "The continuous linear circle integral agrees with the ordinary circle integral\nof any function whose restriction supplies the bundled continuous map. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "circleIntegral.integral_exp_mul_deriv_eq_neg_integral_exp_mul {h : ℂ → ℂ} {U : Set ℂ} {c : ℂ} {r : ℝ} (hr : 0 ≤ r)\n  (hU : IsOpen U) (hc : Metric.sphere c r ⊆ U) (hh : DifferentiableOn ℂ h U) :\n  ∮ (z : ℂ) in C(c, r), Complex.exp z * deriv h z = -∮ (z : ℂ) in C(c, r), Complex.exp z * h z",
+  "name":
+  "circleIntegral.integral_exp_mul_deriv_eq_neg_integral_exp_mul",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.CircleIntegrationByParts",
+  "line":
+  42,
+  "kind":
+  "theorem",
+  "doc":
+  "Moving the derivative from a holomorphic factor to the exponential\nchanges the sign of the circle integral. This applies on exterior domains\nand therefore does not assume holomorphy inside the circle. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "circleIntegral.integral_mul_deriv_eq_neg_integral_deriv_mul {f g : ℂ → ℂ} {U : Set ℂ} {c : ℂ} {r : ℝ} (hr : 0 ≤ r)\n  (hU : IsOpen U) (hc : Metric.sphere c r ⊆ U) (hf : DifferentiableOn ℂ f U) (hg : DifferentiableOn ℂ g U) :\n  ∮ (z : ℂ) in C(c, r), f z * deriv g z = -∮ (z : ℂ) in C(c, r), deriv f z * g z",
+  "name":
+  "circleIntegral.integral_mul_deriv_eq_neg_integral_deriv_mul",
+  "module":
+  "NLAlib.ForMathlib.Analysis.Complex.CircleIntegrationByParts",
+  "line":
+  19,
+  "kind":
+  "theorem",
+  "doc":
+  "Contour integration by parts on a circle follows from the product\nprimitive. Both functions need only be holomorphic on a neighborhood of the\ncircle; the disk interior need not belong to their domain. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "circleIntegral.integral_neg_radius_eq (f : ℂ → ℂ) (c : ℂ) (r : ℝ) :\n  ∮ (z : ℂ) in C(c, -r), f z = ∮ (z : ℂ) in C(c, r), f z",
+  "name":
+  "circleIntegral.integral_neg_radius_eq",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.CirclePath",
+  "line":
+  157,
+  "kind":
+  "theorem",
+  "doc":
+  "Negating the signed radius rotates the circle's starting point by half a\nturn and preserves its integral and counterclockwise orientation. ",
   "atlas_partial":
   [],
   "atlas":
@@ -230379,6 +233029,46 @@
   "theorem",
   "doc":
   "Finite multiplicity Rolle: if zeros counted in a multiset have total multiplicity\n`q+2`, every required derivative below each multiplicity vanishes, and at least two\ndistinct zeros occur, then the `(q+1)`st derivative vanishes in the outer open interval.\nOnly repeated zeros must be interior. This directly accepts the doubled Gauss nodes\nplus a simple evaluation point, or simple prescribed Radau/Lobatto endpoints.\nSource: operator derivations, finite multiplicity Rolle argument following (AQ4). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "exists_uniform_grid_subordinate_open_cover.{u_1, u_2} {X : Type u_1} [TopologicalSpace X] {ι : Sort u_2} (ψ : ℝ × ℝ → X)\n  (hψ : Continuous ψ) (U : ι → Set X) (hU : ∀ (j : ι), IsOpen (U j)) (hcover : ψ '' Set.Icc 0 1 ⊆ ⋃ j, U j) :\n  ∃ n, 0 < n ∧ ∀ i < n, ∀ k < n, ∃ j, ∀ t ∈ Set.Icc (↑i / ↑n, ↑k / ↑n) ((↑i + 1) / ↑n, (↑k + 1) / ↑n), ψ t ∈ U j",
+  "name":
+  "exists_uniform_grid_subordinate_open_cover",
+  "module":
+  "NLAlib.ForMathlib.Topology.PathSubdivision",
+  "line":
+  58,
+  "kind":
+  "theorem",
+  "doc":
+  "A compact continuous homotopy square has a uniform finite grid whose actual\nclosed cells each lie in one open chart of the image cover. This is the mesh\ninput for a local primitive telescoping argument, with no C² hypothesis. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "exists_uniform_subdivision_subordinate_open_cover.{u_1, u_2} {X : Type u_1} [TopologicalSpace X] {ι : Sort u_2}\n  (γ : ℝ → X) (hγ : Continuous γ) (U : ι → Set X) (hU : ∀ (j : ι), IsOpen (U j))\n  (hcover : γ '' Set.Icc 0 1 ⊆ ⋃ j, U j) : ∃ n, 0 < n ∧ ∀ i < n, ∃ j, ∀ t ∈ Set.Icc (↑i / ↑n) ((↑i + 1) / ↑n), γ t ∈ U j",
+  "name":
+  "exists_uniform_subdivision_subordinate_open_cover",
+  "module":
+  "NLAlib.ForMathlib.Topology.PathSubdivision",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "Every open cover of a compact continuous path image admits a finite uniform\nsubdivision whose actual closed parameter cells map into individual charts. ",
   "atlas_partial":
   [],
   "atlas":

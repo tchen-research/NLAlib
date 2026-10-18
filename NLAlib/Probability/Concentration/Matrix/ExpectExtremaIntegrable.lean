@@ -1,4 +1,5 @@
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
+import NLAlib.Matrix.Spectral.ExtremePerturbation
 
 /-!
 # Integrability of extreme eigenvalues
@@ -92,3 +93,40 @@ theorem NLAlib.integrable_lambdaMax_and_lambdaMin {Ω : Type*} [MeasurableSpace 
         (heq.mono fun ω hω => congrArg lambdaMin hω)
     · filter_upwards [hHerm] with ω hω
       exact spectrum.norm_le_norm_of_mem (extrema_mem (Y ω) hω).2
+
+namespace NLAlib
+variable {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+local notation "M" => Matrix n n ℂ
+open scoped Matrix.Norms.L2Operator in
+/-- The maximum eigenvalue of a measurable almost surely Hermitian random
+matrix plus a fixed Hermitian matrix is almost everywhere measurable. -/
+theorem aemeasurable_lambdaMax_add_of_ae_isHermitian
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {X : Ω → M}
+    (D : M) (hD : D.IsHermitian) (hX : AEMeasurable X μ)
+    (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian) :
+    AEMeasurable (fun ω => lambdaMax (D + X ω)) μ := by
+  have hc : Continuous (fun Z : M => lambdaMax (selfAdjointPart ℝ (D + Z) : M)) :=
+    continuous_lambdaMax_selfAdjointPart.comp (continuous_const.add continuous_id)
+  apply (hc.measurable.comp_aemeasurable hX).congr
+  filter_upwards [hHerm] with ω hω
+  exact congrArg lambdaMax ((hD.add hω).isSelfAdjoint.coe_selfAdjointPart_apply ℝ)
+
+open scoped Matrix.Norms.L2Operator in
+/-- An integrable almost surely Hermitian matrix on any finite nonempty
+index type has an integrable maximum eigenvalue. Almost everywhere
+measurability follows from integrability; no separate measurability input is
+needed. -/
+theorem integrable_lambdaMax_of_integrable
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {X : Ω → M}
+    (hX : Integrable X μ) (hHerm : ∀ᵐ ω ∂μ, (X ω).IsHermitian) :
+    Integrable (fun ω => lambdaMax (X ω)) μ := by
+  have hm : AEMeasurable (fun ω => lambdaMax (X ω)) μ := by
+    simpa only [zero_add] using aemeasurable_lambdaMax_add_of_ae_isHermitian
+      0 Matrix.isHermitian_zero hX.aemeasurable hHerm
+  refine hX.norm.mono' hm.aestronglyMeasurable ?_
+  filter_upwards [hHerm] with ω hω
+  have hb := abs_lambdaMax_sub_le_specNorm_sub (X ω) 0 hω Matrix.isHermitian_zero
+  have hzero : lambdaMax (0 : M) = 0 := by simp [lambdaMax, spectrum.zero_eq]
+  simpa only [hzero, sub_zero, specNorm_eq_norm, Real.norm_eq_abs] using hb
+
+end NLAlib

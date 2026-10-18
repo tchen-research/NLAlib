@@ -4,11 +4,11 @@ and checks that every formalization marked `proved` or `stated` in one of this r
 names a declaration that exists in the Lean sources."""
 import json, pathlib, re, sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-atlas = json.load(open(ROOT / "atlas/atlas.json"))
+atlas = json.loads((ROOT / "atlas/atlas.json").read_text(encoding="utf-8"))
 errors = []
 try:
     import jsonschema
-    jsonschema.validate(atlas, json.load(open(ROOT / "atlas/schema.json")))
+    jsonschema.validate(atlas, json.loads((ROOT / "atlas/schema.json").read_text(encoding="utf-8")))
 except ImportError:
     print("note: jsonschema not installed, skipping schema validation")
 except Exception as e:
@@ -21,7 +21,7 @@ LOCAL = {l["id"] for l in atlas["libraries"] if l.get("repo_dir")}
 decls = set()
 for f in ROOT.glob("NLAlib/**/*.lean"):
     ns = []
-    for line in f.read_text().splitlines():
+    for line in f.read_text(encoding="utf-8").splitlines():
         m = re.match(r"\s*namespace\s+([\w.]+)", line)
         if m: ns.append(m.group(1)); continue
         m = re.match(r"\s*end\s+([\w.]+)\s*$", line)
@@ -34,7 +34,7 @@ for f in ROOT.glob("NLAlib/**/*.lean"):
 index_file = ROOT / "atlas/declarations.json"
 index = {}
 if index_file.exists():
-    index = {x["name"]: x for x in json.load(open(index_file))}
+    index = {x["name"]: x for x in json.loads(index_file.read_text(encoding="utf-8"))}
     decls |= set(index)   # exact names from the generated index take precedence
 else:
     errors.append("atlas/declarations.json is missing: run ExtractDecls.lean")
@@ -62,7 +62,7 @@ for r in atlas["results"]:
 surface_file = ROOT / "atlas/import_surface.json"
 excluded = set()
 if surface_file.exists():
-    excluded = set(json.load(open(surface_file))["excluded_modules"])
+    excluded = set(json.loads(surface_file.read_text(encoding="utf-8"))["excluded_modules"])
 else:
     errors.append("atlas/import_surface.json is missing: regenerate aggregators")
 for name, declaration in index.items():
@@ -71,7 +71,7 @@ for name, declaration in index.items():
 # An audit is required; a missing output cannot silently disable the trust check.
 sorry_file = ROOT / ".lake/sorries.txt"
 if sorry_file.exists():
-    sorried = {l.strip() for l in sorry_file.read_text().splitlines() if l.strip()}
+    sorried = {l.strip() for l in sorry_file.read_text(encoding="utf-8").splitlines() if l.strip()}
     scaffold_decls = {f["decl"] for r in atlas["results"] for f in r["formalizations"]
                       if f["library"] in LOCAL and f["status"] == "scaffold" and f.get("decl")}
     proved_decls = {f["decl"] for r in atlas["results"] for f in r["formalizations"]
@@ -93,7 +93,7 @@ if sorry_file.exists():
             errors.append(f"{name}: direct scaffold has no atlas scaffold entry")
     direct_file = ROOT / ".lake/direct-sorries.txt"
     if direct_file.exists():
-        for name in direct_file.read_text().splitlines():
+        for name in direct_file.read_text(encoding="utf-8").splitlines():
             if name and name not in scaffold_decls:
                 errors.append(f"{name}: direct sorry must be a named, catalogued scaffold")
     else:
@@ -106,7 +106,10 @@ if errors:
     print("Atlas problems:\n  " + "\n  ".join(errors)); sys.exit(1)
 # the Lean side of every result must agree with the `atlas:` tags in the sources
 import subprocess
-sync = subprocess.run([sys.executable, str(ROOT / "scripts/sync_atlas.py"), "--check"], capture_output=True, text=True)
+sync = subprocess.run([sys.executable, str(ROOT / "scripts/sync_atlas.py"), "--check"],
+                      capture_output=True, text=True, encoding="utf-8")
 if sync.returncode != 0:
-    print(sync.stdout.strip()); sys.exit(1)
+    print(sync.stdout.strip())
+    if sync.stderr.strip(): print(sync.stderr.strip(), file=sys.stderr)
+    sys.exit(1)
 print(f"atlas OK: {len(atlas['results'])} results, {len(decls)} declarations scanned; {sync.stdout.strip()}")

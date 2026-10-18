@@ -33,8 +33,13 @@ import NLAlib.Polynomial.Quadrature.FoldedCoefficientBounds
 import NLAlib.Polynomial.Quadrature.FoldedMomentBounds
 import NLAlib.Polynomial.Quadrature.GaussContinuity
 import NLAlib.Polynomial.Quadrature.GaussContinuousConvergence
+import NLAlib.Polynomial.Quadrature.GaussCubicalContour
+import NLAlib.Polynomial.Quadrature.GaussCubicalNorm
 import NLAlib.Polynomial.Quadrature.GaussDerivativeRemainder
 import NLAlib.Polynomial.Quadrature.GaussError
+import NLAlib.Polynomial.Quadrature.GaussFilledContour
+import NLAlib.Polynomial.Quadrature.GaussGeneralContour
+import NLAlib.Polynomial.Quadrature.GaussKernelContinuity
 import NLAlib.Polynomial.Quadrature.GaussLebesgue
 import NLAlib.Polynomial.Quadrature.GaussMeasure
 import NLAlib.Polynomial.Quadrature.GaussMeasureRemainder

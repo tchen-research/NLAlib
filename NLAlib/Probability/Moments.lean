@@ -1,12 +1,16 @@
 import NLAlib.Probability.Moments.Comparison
 import NLAlib.Probability.Moments.Euclidean
+import NLAlib.Probability.Moments.ExpectedResolventRemainder
 import NLAlib.Probability.Moments.FiniteWeighted
 import NLAlib.Probability.Moments.GaussianRadialization
 import NLAlib.Probability.Moments.MatrixDifference
 import NLAlib.Probability.Moments.MatrixDifferenceBound
 import NLAlib.Probability.Moments.MatrixDifferenceTransport
+import NLAlib.Probability.Moments.MatrixZeroCovariance
 import NLAlib.Probability.Moments.ResolventRemainder
 import NLAlib.Probability.Moments.Schatten
+import NLAlib.Probability.Moments.SquareMass
+import NLAlib.Probability.Moments.ThirdCopySquareMass
 
 /-! # `Probability/Moments`
 

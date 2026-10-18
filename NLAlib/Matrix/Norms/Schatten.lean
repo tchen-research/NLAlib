@@ -12,8 +12,8 @@ The main scalar interface is `schattenNorm A (p : ℝ≥0∞)`. The finite real 
 `schattenNormReal A (p : ℝ)`, connected by `schattenNorm_eq_of_ne_top` and
 `schattenNorm_ofReal`. The endpoints are `schattenNorm_one` (nuclear),
 `schattenNorm_two` (real Frobenius) and `schattenNorm_top` (spectral).
-Finite unitary invariance is available over either scalar field; the current Frobenius and
-transpose bridges are real-specialized.
+Finite unitary and conjugate-transpose invariance hold over either scalar field;
+the current Frobenius endpoint remains real-specialized.
 
 Source: Bhatia (1997), §IV.2; Horn–Johnson (1991), §3.3–3.4.
 Atlas: `schatten-norms-def`.
@@ -164,11 +164,21 @@ theorem schattenNormReal_mul_orthogonal (A : Matrix m n 𝕜) {V : Matrix n n �
   simp only [schattenNormReal, hσ]
 
 open scoped Matrix.Norms.L2Operator in
-/-- Transposition preserves every finite Schatten power sum of a real matrix. Real-only until
-`singularValues_transpose` has a `conjTranspose` form. -/
-theorem schattenNormReal_transpose (A : Matrix m n ℝ) (p : ℝ) :
-    schattenNormReal Aᵀ p = schattenNormReal A p := by
-  simp only [schattenNormReal, singularValues_transpose, min_comm]
+/-- Conjugate transposition preserves every finite Schatten power sum over
+both real and complex scalars, including empty rectangular shapes. -/
+theorem schattenNormReal_conjTranspose (A : Matrix m n 𝕜) (p : ℝ) :
+    schattenNormReal Aᴴ p = schattenNormReal A p := by
+  simp only [schattenNormReal, singularValues_conjTranspose, min_comm]
+
+open scoped Matrix.Norms.L2Operator in
+/-- Conjugate transposition preserves every extended Schatten norm over
+real or complex scalars. -/
+theorem schattenNorm_conjTranspose (A : Matrix m n 𝕜) (p : ℝ≥0∞) :
+    schattenNorm Aᴴ p = schattenNorm A p := by
+  by_cases hp : p = ∞
+  · simp only [hp, schattenNorm_top, specNorm_conjTranspose]
+  · rw [schattenNorm_eq_of_ne_top _ hp, schattenNorm_eq_of_ne_top _ hp,
+      schattenNormReal_conjTranspose]
 
 end FiniteIndex
 

@@ -94,7 +94,8 @@ theorem schattenNormReal_smul (A : Matrix m n ℝ) (c : ℝ) {p : ℝ} (hp : 0 <
 open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- At every positive exponent, the Schatten norm vanishes on the zero matrix. -/
-theorem schattenNormReal_zero {p : ℝ} (hp : 0 < p) : schattenNormReal (0 : Matrix m n ℝ) p = 0 := by
+theorem schattenNormReal_zero {𝕜 : Type*} [RCLike 𝕜] {p : ℝ} (hp : 0 < p) :
+    schattenNormReal (0 : Matrix m n 𝕜) p = 0 := by
   simp [schattenNormReal, singularValues_eq_linearMap, Real.zero_rpow hp.ne',
     Real.zero_rpow (show p⁻¹ ≠ 0 from inv_ne_zero hp.ne')]
 
@@ -102,7 +103,8 @@ open scoped Matrix.Norms.L2Operator in
 omit [DecidableEq m] in
 /-- At every positive exponent, the finite Schatten power sum separates zero,
 including empty matrix spaces. -/
-theorem schattenNormReal_eq_zero_iff (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p) :
+theorem schattenNormReal_eq_zero_iff {𝕜 : Type*} [RCLike 𝕜]
+    (A : Matrix m n 𝕜) {p : ℝ} (hp : 0 < p) :
     schattenNormReal A p = 0 ↔ A = 0 := by
   constructor
   · intro h
@@ -116,9 +118,14 @@ theorem schattenNormReal_eq_zero_iff (A : Matrix m n ℝ) {p : ℝ} (hp : 0 < p)
         (Finset.sum_eq_zero_iff_of_nonneg (fun j _ =>
           Real.rpow_nonneg (singularValues_nonneg _ j) p)).mp hsum0 i hi
       exact (Real.rpow_eq_zero (singularValues_nonneg _ i) hp.ne').mp hpw
-    apply (nuclearNorm_eq_zero_iff A).mp
-    rw [nuclearNorm_eq_sum_range]
-    exact Finset.sum_eq_zero hi
+    apply Matrix.toEuclideanLin.injective
+    rw [map_zero]
+    apply (LinearMap.singularValues_eq_zero_iff (Matrix.toEuclideanLin A)).mp
+    ext i
+    change singularValues A i = 0
+    by_cases him : i < min (Fintype.card m) (Fintype.card n)
+    · exact hi i (Finset.mem_range.mpr him)
+    · exact singularValues_eq_zero_of_min_le A (not_lt.mp him)
   · rintro rfl
     exact schattenNormReal_zero hp
 

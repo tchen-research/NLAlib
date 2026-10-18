@@ -110,6 +110,24 @@ theorem exp_mul_lambdaMax_lambdaMin_le_traceExp_smul {d : Type*} [Fintype d] [De
     rw [← hi]
     exact Finset.single_le_sum (fun j _ => (Real.exp_pos (θ * hA.eigenvalues j)).le) (Finset.mem_univ i)
 
+/-- The trace exponential is bounded by the matrix dimension times the
+exponential of the largest eigenvalue. Empty dimension gives zero on both
+sides; no matrix norm or positivity of the largest eigenvalue is needed. -/
+theorem traceExp_le_card_mul_exp_lambdaMax (A : Matrix n n ℂ) (hA : A.IsHermitian) :
+    traceExp A ≤ (Fintype.card n : ℝ) * Real.exp (lambdaMax A) := by
+  have he := traceExp_smul_eq_sum A hA 1
+  rw [one_smul] at he
+  rw [he]
+  simp only [one_mul]
+  calc
+    _ ≤ ∑ _i : n, Real.exp (lambdaMax A) := by
+      apply Finset.sum_le_sum
+      intro i _
+      apply Real.exp_le_exp.mpr
+      exact le_of_mem_spectrum_of_lambdaMax_le A hA le_rfl _
+        (hA.eigenvalues_mem_spectrum_real i)
+    _ = _ := by simp
+
 /-- The trace exponential of a Hermitian matrix on a nonempty index type is positive.
 Tropp 2015, §3.1. Atlas: `matrix-laplace` (helper). -/
 theorem traceExp_pos_of_isHermitian {d : Type*} [Fintype d] [DecidableEq d] [Nonempty d]

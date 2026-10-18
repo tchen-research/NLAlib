@@ -1,13 +1,18 @@
 import NLAlib.ForMathlib.Analysis.BernsteinParameter
 import NLAlib.ForMathlib.Analysis.BinomialRootComparison
+import NLAlib.ForMathlib.Analysis.Bisection
 import NLAlib.ForMathlib.Analysis.BoundedVariationIntegral
+import NLAlib.ForMathlib.Analysis.CStarAlgebra
 import NLAlib.ForMathlib.Analysis.Calculus
+import NLAlib.ForMathlib.Analysis.ChebyshevMeasure
 import NLAlib.ForMathlib.Analysis.Complex
 import NLAlib.ForMathlib.Analysis.ComplexCoordinates
 import NLAlib.ForMathlib.Analysis.ComplexWeightedAverage
 import NLAlib.ForMathlib.Analysis.ConeRayleigh
+import NLAlib.ForMathlib.Analysis.ContinuousNormBarrier
 import NLAlib.ForMathlib.Analysis.ContinuousSecant
 import NLAlib.ForMathlib.Analysis.Convex
+import NLAlib.ForMathlib.Analysis.CoordinateModulus
 import NLAlib.ForMathlib.Analysis.CotangentBounds
 import NLAlib.ForMathlib.Analysis.CotangentIntegral
 import NLAlib.ForMathlib.Analysis.CotangentLogLower
@@ -34,6 +39,7 @@ import NLAlib.ForMathlib.Analysis.FinitePairNorm
 import NLAlib.ForMathlib.Analysis.FinitePowerSums
 import NLAlib.ForMathlib.Analysis.FiniteProductBounds
 import NLAlib.ForMathlib.Analysis.FiniteWeightedHolder
+import NLAlib.ForMathlib.Analysis.FourierAutocorrelation
 import NLAlib.ForMathlib.Analysis.FourierBoundedVariation
 import NLAlib.ForMathlib.Analysis.FourierCircle
 import NLAlib.ForMathlib.Analysis.FourierConvolution
@@ -55,6 +61,7 @@ import NLAlib.ForMathlib.Analysis.LogPowerMean
 import NLAlib.ForMathlib.Analysis.LogRationalBound
 import NLAlib.ForMathlib.Analysis.LogarithmicMomentOptimization
 import NLAlib.ForMathlib.Analysis.Matrix
+import NLAlib.ForMathlib.Analysis.MetricInfTransform
 import NLAlib.ForMathlib.Analysis.NormSumSq
 import NLAlib.ForMathlib.Analysis.Normed
 import NLAlib.ForMathlib.Analysis.OddSineSeries
@@ -70,6 +77,7 @@ import NLAlib.ForMathlib.Analysis.PencilTriangularization
 import NLAlib.ForMathlib.Analysis.PolarNewtonScalar
 import NLAlib.ForMathlib.Analysis.PolarSchulzScalar
 import NLAlib.ForMathlib.Analysis.PolynomialDifferential
+import NLAlib.ForMathlib.Analysis.PositiveExtension
 import NLAlib.ForMathlib.Analysis.PowerBoundedEigen
 import NLAlib.ForMathlib.Analysis.PowerInequalities
 import NLAlib.ForMathlib.Analysis.ProperInverse
@@ -79,6 +87,7 @@ import NLAlib.ForMathlib.Analysis.RealRootedPeaks
 import NLAlib.ForMathlib.Analysis.SchurTriangularization
 import NLAlib.ForMathlib.Analysis.SecondDerivativeBound
 import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
+import NLAlib.ForMathlib.Analysis.SineBessel
 import NLAlib.ForMathlib.Analysis.SpecialFunctions
 import NLAlib.ForMathlib.Analysis.SpecificLimits
 import NLAlib.ForMathlib.Analysis.SupportFunction

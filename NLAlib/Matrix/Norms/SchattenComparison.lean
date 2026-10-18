@@ -102,6 +102,18 @@ theorem schattenNormReal_le_rank_rpow_mul_specNorm (A : Matrix m n 𝕜) {p : �
   simpa only [one_div] using h
 
 open scoped Matrix.Norms.L2Operator in
+omit [Fintype m] [DecidableEq m] in
+/-- A finite Schatten norm is bounded by the matrix dimension factor times
+the spectral norm, including zero rank and empty square matrix spaces. -/
+theorem schattenNormReal_le_card_rpow_mul_specNorm (A : Matrix n n 𝕜)
+    {p : ℝ} (hp : 0 < p) :
+    schattenNormReal A p ≤ (Fintype.card n : ℝ) ^ (1 / p) * specNorm A := by
+  apply (schattenNormReal_le_rank_rpow_mul_specNorm A hp).trans
+  apply mul_le_mul_of_nonneg_right _ (specNorm_nonneg A)
+  exact Real.rpow_le_rpow (Nat.cast_nonneg _) (by exact_mod_cast Matrix.rank_le_card_width A)
+    (one_div_nonneg.mpr hp.le)
+
+open scoped Matrix.Norms.L2Operator in
 /-- Extended Schatten norms decrease for `1 ≤ p ≤ q ≤ ∞`.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12).
 atlas: schatten-norms-def -/

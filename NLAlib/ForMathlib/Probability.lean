@@ -1,13 +1,19 @@
 import NLAlib.ForMathlib.Probability.BoundedDifferences
 import NLAlib.ForMathlib.Probability.ExponentialTailMoments
 import NLAlib.ForMathlib.Probability.FiniteProductEvents
+import NLAlib.ForMathlib.Probability.GaussianCoordinates
+import NLAlib.ForMathlib.Probability.GaussianExponentialMoments
 import NLAlib.ForMathlib.Probability.HasLaw
 import NLAlib.ForMathlib.Probability.IndepExpSum
 import NLAlib.ForMathlib.Probability.Independence
 import NLAlib.ForMathlib.Probability.IndependentQuadratic
+import NLAlib.ForMathlib.Probability.KernelDensity
 import NLAlib.ForMathlib.Probability.NonnegativeSupermartingale
 import NLAlib.ForMathlib.Probability.PMF
+import NLAlib.ForMathlib.Probability.QuadraticCovariance
 import NLAlib.ForMathlib.Probability.SampleAverage
+import NLAlib.ForMathlib.Probability.SubGammaOptimization
+import NLAlib.ForMathlib.Probability.VarianceBounds
 
 /-! # `ForMathlib/Probability`
 

@@ -72,15 +72,6 @@ theorem schattenNorm_mul_orthogonal (A : Matrix m n ℝ) {V : Matrix n n ℝ}
   · rw [schattenNorm_eq_of_ne_top _ hpt, schattenNorm_eq_of_ne_top _ hpt]
     exact schattenNormReal_mul_orthogonal A hV _
 
-/-- Transposition preserves every extended Schatten norm. -/
-theorem schattenNorm_transpose (A : Matrix m n ℝ) (p : ℝ≥0∞) :
-    schattenNorm Aᵀ p = schattenNorm A p := by
-  by_cases hpt : p = ∞
-  · simp only [hpt, schattenNorm_top]
-    exact specNorm_transpose A
-  · rw [schattenNorm_eq_of_ne_top _ hpt, schattenNorm_eq_of_ne_top _ hpt]
-    exact schattenNormReal_transpose A _
-
 open scoped Matrix.Norms.L2Operator in
 /-- Every Schatten exponent at least one yields a bundled invariant
 matrix norm, including the spectral infinity endpoint. All norm axioms and

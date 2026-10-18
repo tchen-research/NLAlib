@@ -1,6 +1,13 @@
 import NLAlib.ForMathlib.Analysis.Matrix.Charpoly
+import NLAlib.ForMathlib.Analysis.Matrix.ComplexParts
+import NLAlib.ForMathlib.Analysis.Matrix.HerglotzRepresentation
+import NLAlib.ForMathlib.Analysis.Matrix.HerglotzScalar
+import NLAlib.ForMathlib.Analysis.Matrix.HermitianSpanning
+import NLAlib.ForMathlib.Analysis.Matrix.ImaginaryCoercivity
+import NLAlib.ForMathlib.Analysis.Matrix.ImaginaryInvertibility
 import NLAlib.ForMathlib.Analysis.Matrix.Order
 import NLAlib.ForMathlib.Analysis.Matrix.QuadraticForm
+import NLAlib.ForMathlib.Analysis.Matrix.QuadraticPositiveMap
 import NLAlib.ForMathlib.Analysis.Matrix.RootCluster
 
 /-! # `ForMathlib/Analysis/Matrix`

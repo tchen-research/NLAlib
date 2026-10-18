@@ -1,8 +1,13 @@
 import NLAlib.Probability.Gaussian.Basic.CircularComplex
 import NLAlib.Probability.Gaussian.Basic.ComplexUnitary
+import NLAlib.Probability.Gaussian.Basic.CovarianceProxy
 import NLAlib.Probability.Gaussian.Basic.CovarianceRepresentation
 import NLAlib.Probability.Gaussian.Basic.GaussianWidth
+import NLAlib.Probability.Gaussian.Basic.IndependentProxy
+import NLAlib.Probability.Gaussian.Basic.MatrixSeriesRepresentation
+import NLAlib.Probability.Gaussian.Basic.MatrixSumCovariance
 import NLAlib.Probability.Gaussian.Basic.OrthogonalVector
+import NLAlib.Probability.Gaussian.Basic.RealMatrixSupport
 import NLAlib.Probability.Gaussian.Basic.StandardGaussian
 import NLAlib.Probability.Gaussian.Basic.StandardVector
 

@@ -30,6 +30,7 @@ import NLAlib.Matrix.Spectral.EigenvectorDeflationConverse
 import NLAlib.Matrix.Spectral.EigenvectorDeflationSpectrum
 import NLAlib.Matrix.Spectral.EigenvectorPairing
 import NLAlib.Matrix.Spectral.EigenvectorSpectrum
+import NLAlib.Matrix.Spectral.ExtremePerturbation
 import NLAlib.Matrix.Spectral.GeneralizedEigenDecay
 import NLAlib.Matrix.Spectral.GeneralizedEigenPairing
 import NLAlib.Matrix.Spectral.GeneralizedSchur
@@ -42,6 +43,7 @@ import NLAlib.Matrix.Spectral.HaynsworthInertia
 import NLAlib.Matrix.Spectral.HermitianExtremaNorm
 import NLAlib.Matrix.Spectral.HermitianMinimum
 import NLAlib.Matrix.Spectral.HurwitzCayley
+import NLAlib.Matrix.Spectral.IdentityDefect
 import NLAlib.Matrix.Spectral.IndefiniteCongruence
 import NLAlib.Matrix.Spectral.Inertia
 import NLAlib.Matrix.Spectral.InertiaSturm

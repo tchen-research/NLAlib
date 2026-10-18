@@ -4051,6 +4051,28 @@
   "sorry":
   false,
   "signature":
+  "curveIntegral.{u_4, u_5, u_6} {𝕜 : Type u_4} {E : Type u_5} {F : Type u_6} [RCLike 𝕜] [NormedAddCommGroup E]\n  [NormedSpace 𝕜 E] [NormedAddCommGroup F] [NormedSpace 𝕜 F] {a b : E} (ω : E → E →L[𝕜] F) (γ : Path a b) : F",
+  "name":
+  "curveIntegral",
+  "module":
+  "Mathlib.MeasureTheory.Integral.CurveIntegral.Basic",
+  "line":
+  116,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "Integral of a 1-form `ω : E → E →L[𝕜] F` along a path `γ`,\ndefined as $\\int_0^1 \\omega(\\gamma(t))(\\gamma'(t))$.\n\nThe actual definition uses `curveIntegralFun` which uses `Path.extend γ`\nand `derivWithin (Path.extend γ) (Set.Icc 0 1) t`,\nbecause calculus-related definitions in Mathlib expect globally defined functions as arguments. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "fderiv.{u_4, u_5, u_6} (𝕜 : Type u_4) [NontriviallyNormedField 𝕜] {E : Type u_5} [AddCommGroup E] [_root_.Module 𝕜 E]\n  [TopologicalSpace E] {F : Type u_6} [AddCommGroup F] [_root_.Module 𝕜 F] [TopologicalSpace F] (f : E → F) (x : E) :\n  E →L[𝕜] F",
   "name":
   "fderiv",

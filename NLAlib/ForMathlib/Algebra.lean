@@ -1,5 +1,6 @@
 import NLAlib.ForMathlib.Algebra.BoundedPartialFractions
 import NLAlib.ForMathlib.Algebra.DiagonalSums
+import NLAlib.ForMathlib.Algebra.FiniteBlockSum
 import NLAlib.ForMathlib.Algebra.FiniteGridBoundary
 import NLAlib.ForMathlib.Algebra.InsertionWords
 import NLAlib.ForMathlib.Algebra.InterlacingInterpolation
@@ -16,6 +17,7 @@ import NLAlib.ForMathlib.Algebra.PolynomialGeometricResolvent
 import NLAlib.ForMathlib.Algebra.PolynomialRootPartition
 import NLAlib.ForMathlib.Algebra.PositiveCardinalWronskian
 import NLAlib.ForMathlib.Algebra.Reciprocal
+import NLAlib.ForMathlib.Algebra.RectangularChain
 import NLAlib.ForMathlib.Algebra.SignedCoefficients
 
 /-! # `ForMathlib/Algebra`

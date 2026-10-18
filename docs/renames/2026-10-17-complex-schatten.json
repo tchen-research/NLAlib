@@ -1,0 +1,7 @@
+{
+  "NLAlib.frobInner_mul_transpose_right_of_orthonormal": "NLAlib.frobInner_mul_conjTranspose_right_of_orthonormal",
+  "NLAlib.schattenNormReal_mul_rectDiag_mul_transpose": "NLAlib.schattenNormReal_mul_rectDiag_mul_conjTranspose",
+  "NLAlib.IsSVD.frobInner_mul_rectDiag_mul_transpose": "NLAlib.IsSVD.frobInner_mul_rectDiag_mul_conjTranspose",
+  "NLAlib.schattenNormReal_transpose": "NLAlib.schattenNormReal_conjTranspose",
+  "NLAlib.schattenNorm_transpose": "NLAlib.schattenNorm_conjTranspose"
+}

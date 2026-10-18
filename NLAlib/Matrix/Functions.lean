@@ -1,8 +1,10 @@
+import NLAlib.Matrix.Functions.AggregateResolvent
 import NLAlib.Matrix.Functions.Basic
 import NLAlib.Matrix.Functions.CFCFlatRemainder
 import NLAlib.Matrix.Functions.CFCQuadratic
 import NLAlib.Matrix.Functions.CFCTrace
 import NLAlib.Matrix.Functions.CenteredWordBounds
+import NLAlib.Matrix.Functions.ComplexCalculus
 import NLAlib.Matrix.Functions.ComplexResolvent
 import NLAlib.Matrix.Functions.ContractionUnitaries
 import NLAlib.Matrix.Functions.CoordinatePinching
@@ -68,12 +70,23 @@ import NLAlib.Matrix.Functions.LyapunovIntegral
 import NLAlib.Matrix.Functions.LyapunovReal
 import NLAlib.Matrix.Functions.LyapunovRealControllability
 import NLAlib.Matrix.Functions.LyapunovStability
+import NLAlib.Matrix.Functions.MatrixDysonBounds
+import NLAlib.Matrix.Functions.MatrixDysonExterior
+import NLAlib.Matrix.Functions.MatrixDysonNormalization
+import NLAlib.Matrix.Functions.MatrixDysonStieltjes
 import NLAlib.Matrix.Functions.MonotoneConcavity
 import NLAlib.Matrix.Functions.MonotoneModulus
 import NLAlib.Matrix.Functions.Monotonicity
+import NLAlib.Matrix.Functions.MultivariateArakiLiebThirring
+import NLAlib.Matrix.Functions.MultivariateGoldenThompson
 import NLAlib.Matrix.Functions.NearestPSD
 import NLAlib.Matrix.Functions.OddPolarIteration
 import NLAlib.Matrix.Functions.OperatorJensen
+import NLAlib.Matrix.Functions.OrderedComplexPowers
+import NLAlib.Matrix.Functions.OrderedExponential
+import NLAlib.Matrix.Functions.OrderedExponentialBounds
+import NLAlib.Matrix.Functions.OrderedExponentialInterpolation
+import NLAlib.Matrix.Functions.OrderedExponentialModulus
 import NLAlib.Matrix.Functions.PerspectiveConvex
 import NLAlib.Matrix.Functions.PerspectiveSqrtNormalization
 import NLAlib.Matrix.Functions.PolarMinimax
@@ -104,12 +117,18 @@ import NLAlib.Matrix.Functions.RationalBlocks
 import NLAlib.Matrix.Functions.RationalCalculus
 import NLAlib.Matrix.Functions.RationalDerivatives
 import NLAlib.Matrix.Functions.ReciprocalExponential
+import NLAlib.Matrix.Functions.ResolventCancellation
+import NLAlib.Matrix.Functions.ResolventCoefficientFields
 import NLAlib.Matrix.Functions.ResolventCoordinateBounds
 import NLAlib.Matrix.Functions.ResolventCoordinateDifferences
+import NLAlib.Matrix.Functions.ResolventCoordinateOperator
 import NLAlib.Matrix.Functions.ResolventDerivatives
 import NLAlib.Matrix.Functions.ResolventDifferences
 import NLAlib.Matrix.Functions.ResolventMeasurability
 import NLAlib.Matrix.Functions.ResolventWordBounds
+import NLAlib.Matrix.Functions.SchattenDualTest
+import NLAlib.Matrix.Functions.SchattenDualTestMatrix
+import NLAlib.Matrix.Functions.SchattenInterpolation
 import NLAlib.Matrix.Functions.SignCharacterization
 import NLAlib.Matrix.Functions.SignExistence
 import NLAlib.Matrix.Functions.SignNewton
@@ -135,12 +154,14 @@ import NLAlib.Matrix.Functions.TraceExponentialContour
 import NLAlib.Matrix.Functions.TraceExponentialContourPositivity
 import NLAlib.Matrix.Functions.TraceExponentialContourReal
 import NLAlib.Matrix.Functions.TraceExponentialDensityMeasure
+import NLAlib.Matrix.Functions.TraceExponentialDerivatives
 import NLAlib.Matrix.Functions.TraceExponentialInverseContour
 import NLAlib.Matrix.Functions.TraceExponentialMeasure
 import NLAlib.Matrix.Functions.TraceExponentialRepresentation
 import NLAlib.Matrix.Functions.TraceExponentialSimpleSpectrumLimit
 import NLAlib.Matrix.Functions.TraceExponentialSpectralRepresentation
 import NLAlib.Matrix.Functions.TraceExponentialSpectrum
+import NLAlib.Matrix.Functions.TraceExponentialTaylor
 import NLAlib.Matrix.Functions.TraceInverseConvexity
 import NLAlib.Matrix.Functions.TraceMeanValue
 import NLAlib.Matrix.Functions.TracePowerBounds
@@ -151,6 +172,7 @@ import NLAlib.Matrix.Functions.TraceYoung
 import NLAlib.Matrix.Functions.UnitaryCalculus
 import NLAlib.Matrix.Functions.VariationalTrace
 import NLAlib.Matrix.Functions.VariationalTraceExp
+import NLAlib.Matrix.Functions.Whitening
 
 /-! # `Matrix/Functions`
 

@@ -3,6 +3,7 @@ import NLAlib.Probability.Exchangeable.IndependentSum
 import NLAlib.Probability.Exchangeable.MatrixCovariance
 import NLAlib.Probability.Exchangeable.Resampling
 import NLAlib.Probability.Exchangeable.ThirdCopy
+import NLAlib.Probability.Exchangeable.ThirdCopyArrays
 import NLAlib.Probability.Exchangeable.ThirdCopyBilinear
 import NLAlib.Probability.Exchangeable.ThirdCopyLaws
 import NLAlib.Probability.Exchangeable.ThirdCopyMoments

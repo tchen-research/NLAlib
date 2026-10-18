@@ -1,4 +1,13 @@
+import NLAlib.RandomMatrix.Covariance.FourthMomentAggregate
+import NLAlib.RandomMatrix.Covariance.FourthMomentLower
+import NLAlib.RandomMatrix.Covariance.FourthMomentProxy
+import NLAlib.RandomMatrix.Covariance.FourthMomentSampleSize
+import NLAlib.RandomMatrix.Covariance.FourthMomentSuccess
+import NLAlib.RandomMatrix.Covariance.FourthMomentSummands
 import NLAlib.RandomMatrix.Covariance.KhatriRaoMoments
+import NLAlib.RandomMatrix.Covariance.SampleCovariance
+import NLAlib.RandomMatrix.Covariance.SampleCovarianceMoments
+import NLAlib.RandomMatrix.Covariance.WhiteningMoments
 
 /-! # `RandomMatrix/Covariance`
 

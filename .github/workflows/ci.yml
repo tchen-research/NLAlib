@@ -57,4 +57,7 @@ jobs:
       - name: Book coverage references and proof status
         run: python3 scripts/coverage.py
       - name: Site builds
-        run: python3 scripts/build_site.py
+        run: |
+          npm install --prefix "$RUNNER_TEMP/atlas-math" --no-package-lock --no-save katex@0.16.11
+          node scripts/check_site_math.cjs "$RUNNER_TEMP/atlas-math/node_modules/katex"
+          python3 scripts/build_site.py

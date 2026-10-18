@@ -3,6 +3,9 @@ import NLAlib.Probability.Gaussian.Comparison.GordonMinimax
 import NLAlib.Probability.Gaussian.Comparison.Interpolation
 import NLAlib.Probability.Gaussian.Comparison.MatrixCauchyEndpoints
 import NLAlib.Probability.Gaussian.Comparison.MatrixCoordinateLaws
+import NLAlib.Probability.Gaussian.Comparison.MatrixCoordinateSquareMass
+import NLAlib.Probability.Gaussian.Comparison.MatrixResamplingInterpolation
+import NLAlib.Probability.Gaussian.Comparison.MatrixResolventEndpoints
 import NLAlib.Probability.Gaussian.Comparison.ResamplingAffine
 import NLAlib.Probability.Gaussian.Comparison.ResamplingInterpolation
 import NLAlib.Probability.Gaussian.Comparison.ResamplingQuadratic

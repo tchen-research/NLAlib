@@ -11,7 +11,9 @@ import NLAlib.Polynomial.FunctionApproximation.BernsteinWalsh
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevBoundedVariation
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevCoefficientBounds
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevCoefficients
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevCube
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevDifferentiable
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevEnergy
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevFourier
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevIntegrationByParts
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevLipschitz
@@ -19,6 +21,7 @@ import NLAlib.Polynomial.FunctionApproximation.ChebyshevPrimitive
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevProjection
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevSeries
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevSeriesUniqueness
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevTensor
 import NLAlib.Polynomial.FunctionApproximation.Clenshaw
 import NLAlib.Polynomial.FunctionApproximation.EllipseCompact
 import NLAlib.Polynomial.FunctionApproximation.EllipseGeometry
@@ -27,6 +30,13 @@ import NLAlib.Polynomial.FunctionApproximation.Exponential
 import NLAlib.Polynomial.FunctionApproximation.ExponentialChebyshevSeries
 import NLAlib.Polynomial.FunctionApproximation.FejerChebyshev
 import NLAlib.Polynomial.FunctionApproximation.HalfPlane
+import NLAlib.Polynomial.FunctionApproximation.JacksonApproximation
+import NLAlib.Polynomial.FunctionApproximation.JacksonDamping
+import NLAlib.Polynomial.FunctionApproximation.JacksonKernel
+import NLAlib.Polynomial.FunctionApproximation.JacksonTensorApproximation
+import NLAlib.Polynomial.FunctionApproximation.JacksonTensorCoordinate
+import NLAlib.Polynomial.FunctionApproximation.JacksonTensorKernel
+import NLAlib.Polynomial.FunctionApproximation.JacksonTensorOperator
 import NLAlib.Polynomial.FunctionApproximation.LowerBounds
 import NLAlib.Polynomial.FunctionApproximation.Monomial
 import NLAlib.Polynomial.FunctionApproximation.Sign

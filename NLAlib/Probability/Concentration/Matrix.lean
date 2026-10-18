@@ -3,10 +3,23 @@ import NLAlib.Probability.Concentration.Matrix.CgfIndependentReplacement
 import NLAlib.Probability.Concentration.Matrix.ChernoffMgfCgf
 import NLAlib.Probability.Concentration.Matrix.DilationVariance
 import NLAlib.Probability.Concentration.Matrix.ExpectExtremaIntegrable
+import NLAlib.Probability.Concentration.Matrix.ExtremeIntegrability
+import NLAlib.Probability.Concentration.Matrix.GaussianMaximum
+import NLAlib.Probability.Concentration.Matrix.GaussianMaximumLaw
+import NLAlib.Probability.Concentration.Matrix.GaussianMaximumMean
 import NLAlib.Probability.Concentration.Matrix.GaussianMgfCgf
+import NLAlib.Probability.Concentration.Matrix.GaussianProxy
+import NLAlib.Probability.Concentration.Matrix.GaussianProxyExistence
+import NLAlib.Probability.Concentration.Matrix.GaussianProxyMgf
+import NLAlib.Probability.Concentration.Matrix.GaussianProxyMinimum
+import NLAlib.Probability.Concentration.Matrix.GaussianTraceExponential
+import NLAlib.Probability.Concentration.Matrix.GaussianTraceInflation
+import NLAlib.Probability.Concentration.Matrix.GaussianTraceReplacement
+import NLAlib.Probability.Concentration.Matrix.GaussianTraceSumReplacement
 import NLAlib.Probability.Concentration.Matrix.GeneralizedLaplace
 import NLAlib.Probability.Concentration.Matrix.HermitianBernstein
 import NLAlib.Probability.Concentration.Matrix.HermitianSeries
+import NLAlib.Probability.Concentration.Matrix.IndependentSquareSum
 import NLAlib.Probability.Concentration.Matrix.IndependentSumSecondMoment
 import NLAlib.Probability.Concentration.Matrix.InsertionMomentExpansion
 import NLAlib.Probability.Concentration.Matrix.IntrinsicBernstein
@@ -24,18 +37,23 @@ import NLAlib.Probability.Concentration.Matrix.MatrixChernoff
 import NLAlib.Probability.Concentration.Matrix.MatrixSeries
 import NLAlib.Probability.Concentration.Matrix.PolynomialMoment
 import NLAlib.Probability.Concentration.Matrix.ProbabilisticLieb
+import NLAlib.Probability.Concentration.Matrix.QuadraticNet
 import NLAlib.Probability.Concentration.Matrix.RademacherKhintchine
 import NLAlib.Probability.Concentration.Matrix.RademacherMgfCgf
 import NLAlib.Probability.Concentration.Matrix.RademacherPolynomialMoments
 import NLAlib.Probability.Concentration.Matrix.RankOneCovariance
 import NLAlib.Probability.Concentration.Matrix.RankOneMomentTrace
 import NLAlib.Probability.Concentration.Matrix.RankOneStep
+import NLAlib.Probability.Concentration.Matrix.RealWeakVariance
 import NLAlib.Probability.Concentration.Matrix.Sampling
 import NLAlib.Probability.Concentration.Matrix.SubgaussianMgfCgf
 import NLAlib.Probability.Concentration.Matrix.SubgaussianRectangularSeries
 import NLAlib.Probability.Concentration.Matrix.TraceCgfSubadditivity
+import NLAlib.Probability.Concentration.Matrix.TraceExponentialCovariance
+import NLAlib.Probability.Concentration.Matrix.TraceExponentialOneSided
 import NLAlib.Probability.Concentration.Matrix.TraceIntegrability
 import NLAlib.Probability.Concentration.Matrix.VarianceAdditivity
+import NLAlib.Probability.Concentration.Matrix.WeakVariance
 
 /-! # `Probability/Concentration/Matrix`
 

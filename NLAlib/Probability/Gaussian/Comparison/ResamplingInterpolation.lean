@@ -4,7 +4,8 @@ import NLAlib.ForMathlib.MeasureTheory.AffineDifferentiation
 /-!
 # The actual square-root resampling interpolation
 
-Bounded C¹ primitive tests have a continuous actual expectation, including
+Bounded C¹ tests with values in a complete real normed space have a continuous
+actual expectation, including
 both endpoints. Interior differentiation under the integral and the two
 proved Stein cancellations give the exact source derivative formula.
 -/
@@ -18,14 +19,17 @@ variable {ι κ F : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
   [MeasurableSpace ι] [MeasurableSingletonClass ι]
   [Fintype κ] [DecidableEq κ] [NormedAddCommGroup F] [NormedSpace ℝ F]
 
+variable {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] [CompleteSpace K]
+
 /-- The actual expected primitive along the centered-sum/centered-Gaussian
 square-root interpolation, on the genuine triple times independent noise law. -/
 def resamplingInterpolation (ν : ι → Measure (κ → ℝ)) (γ : Measure (κ → ℝ))
-    (Φ : (κ → ℝ) → ℂ) (t : ℝ) : ℂ :=
+    (Φ : (κ → ℝ) → K) (t : ℝ) : K :=
   let μ := ∫ p, resamplingTripleOriginal p ∂resamplingTripleMeasure ν
   ∫ q, Φ (resamplingAffinePoint μ (Real.sqrt t) (Real.sqrt (1 - t))
     (resamplingTripleOriginal q.1) q.2) ∂(resamplingTripleMeasure ν).prod γ
 
+omit [DecidableEq κ] in
 /-- A bounded continuous primitive gives a continuous interpolation on all
 real times, in particular at both endpoints of the unit interval.
 atlas: cauchy-transform-gaussian-universality (partial) -/
@@ -33,7 +37,7 @@ theorem continuous_resamplingInterpolation
     (ν : ι → Measure (κ → ℝ)) [∀ i, IsProbabilityMeasure (ν i)]
     (hν : ∀ i, MemLp (id : (κ → ℝ) → κ → ℝ) 2 (ν i))
     (γ : Measure (κ → ℝ)) [IsProbabilityMeasure γ]
-    (Φ : (κ → ℝ) → ℂ) (hΦc : Continuous Φ) (CΦ : ℝ) (hΦb : ∀ y, ‖Φ y‖ ≤ CΦ) :
+    (Φ : (κ → ℝ) → K) (hΦc : Continuous Φ) (CΦ : ℝ) (hΦb : ∀ y, ‖Φ y‖ ≤ CΦ) :
     Continuous (resamplingInterpolation ν γ Φ) := by
   let μ := ∫ p, resamplingTripleOriginal p ∂resamplingTripleMeasure ν
   let P := resamplingTripleMeasure ν
@@ -48,13 +52,14 @@ theorem continuous_resamplingInterpolation
     (Real.continuous_sqrt.comp (continuous_const.sub continuous_id)) Φ hΦc CΦ hΦb
   exact h
 
+omit [DecidableEq ι] [MeasurableSingletonClass ι] [DecidableEq κ] [CompleteSpace K] in
 /-- At time zero the actual interpolation is the centered Gaussian law
 translated by the original sum's mean.
 atlas: cauchy-transform-gaussian-universality (partial) -/
 theorem resamplingInterpolation_zero
     (ν : ι → Measure (κ → ℝ)) [∀ i, IsProbabilityMeasure (ν i)]
     (γ : Measure (κ → ℝ)) [IsProbabilityMeasure γ]
-    (Φ : (κ → ℝ) → ℂ) (hΦc : Continuous Φ) :
+    (Φ : (κ → ℝ) → K) (hΦc : Continuous Φ) :
     resamplingInterpolation ν γ Φ 0 =
       ∫ z, Φ ((∫ p, resamplingTripleOriginal p ∂resamplingTripleMeasure ν) + z) ∂γ := by
   let μ := ∫ p, resamplingTripleOriginal p ∂resamplingTripleMeasure ν
@@ -66,12 +71,13 @@ theorem resamplingInterpolation_zero
     (measurePreserving_snd (μ := P) (ν := γ)).hasLaw.integral_comp
       hf0.aestronglyMeasurable
 
+omit [DecidableEq ι] [MeasurableSingletonClass ι] [DecidableEq κ] [CompleteSpace K] in
 /-- At time one the actual interpolation is precisely the original sum law.
 atlas: cauchy-transform-gaussian-universality (partial) -/
 theorem resamplingInterpolation_one
     (ν : ι → Measure (κ → ℝ)) [∀ i, IsProbabilityMeasure (ν i)]
     (γ : Measure (κ → ℝ)) [IsProbabilityMeasure γ]
-    (Φ : (κ → ℝ) → ℂ) (hΦc : Continuous Φ) :
+    (Φ : (κ → ℝ) → K) (hΦc : Continuous Φ) :
     resamplingInterpolation ν γ Φ 1 =
       ∫ p, Φ (resamplingTripleOriginal p) ∂resamplingTripleMeasure ν := by
   let μ := ∫ p, resamplingTripleOriginal p ∂resamplingTripleMeasure ν
@@ -88,7 +94,7 @@ theorem resamplingInterpolation_one
     unfold resamplingTripleOriginal
     fun_prop
   exact (measurePreserving_fst (μ := P) (ν := γ)).hasLaw.integral_comp
-    (hΦc.measurable.comp hXm).aestronglyMeasurable
+    (hΦc.comp_aestronglyMeasurable hXm.stronglyMeasurable.aestronglyMeasurable)
 
 /-- The actual interpolation derivative follows from differentiation under the
 integral, genuine discrete resampling, and genuine Gaussian integration by
@@ -125,7 +131,7 @@ theorem hasDerivAt_resamplingInterpolation
             (df (resamplingAffinePoint μ a b (resamplingTripleSecond q.1) q.2)
               (resamplingTripleOriginal q.1 - resamplingTripleFirst q.1))
             ∂(resamplingTripleMeasure ν).prod γ) t := by
-  haveI := hγ.isProbabilityMeasure
+  have := hγ.isProbabilityMeasure
   dsimp only
   let μ := ∫ p, resamplingTripleOriginal p ∂resamplingTripleMeasure ν
   let P := resamplingTripleMeasure ν

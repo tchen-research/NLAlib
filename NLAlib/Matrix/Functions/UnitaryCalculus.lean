@@ -238,7 +238,8 @@ theorem traceExp_add_matrixLog_reflection_conj_of_conj_eq (R H A : Matrix ι ι 
     traceExp_add_matrixLog_unitary_conj_of_conj_eq
       ⟨R, reflection_mem_unitary R hR hR2⟩ H A hA (by simpa only [hR] using hH)
 
-private def diagonalStarAlgHom : (ι → ℂ) →⋆ₐ[ℂ] Matrix ι ι ℂ :=
+/-- The diagonal embedding of a finite complex coordinate algebra as a star algebra homomorphism. -/
+def diagonalStarAlgHom : (ι → ℂ) →⋆ₐ[ℂ] Matrix ι ι ℂ :=
   { (Matrix.diagonalAlgHom ℂ : (ι → ℂ) →ₐ[ℂ] Matrix ι ι ℂ) with
     map_star' := by intro x; simp [Matrix.star_eq_conjTranspose, Matrix.diagonal_conjTranspose] }
 

@@ -40,6 +40,15 @@ theorem lambdaMax_smul_of_pos (A : Matrix d d 𝕜) {c : ℝ} (hc : 0 < c) :
   rw [lambdaMax, h, Units.smul_def, Units.val_mk0, Real.sSup_smul_of_nonneg hc.le, smul_eq_mul,
     lambdaMax]
 
+/-- Nonnegative scalar multiplication, including zero, commutes with the
+largest eigenvalue in nonempty dimension. -/
+theorem lambdaMax_smul_of_nonneg [Nonempty d] (A : Matrix d d 𝕜) {c : ℝ} (hc : 0 ≤ c) :
+    lambdaMax (c • A) = c * lambdaMax A := by
+  rcases eq_or_lt_of_le hc with hzero | hpos
+  · rw [← hzero]
+    simp [lambdaMax, spectrum.zero_eq]
+  · exact lambdaMax_smul_of_pos A hpos
+
 /-- `λmin(c A) = c λmin(A)` for `c > 0`. Tropp 2015, §2.1; atlas `matrix-chernoff-sampling`
 (helper). -/
 theorem lambdaMin_smul_of_pos (A : Matrix d d 𝕜) {c : ℝ} (hc : 0 < c) :
@@ -48,6 +57,16 @@ theorem lambdaMin_smul_of_pos (A : Matrix d d 𝕜) {c : ℝ} (hc : 0 < c) :
   rw [Units.smul_def, Units.val_mk0] at h
   rw [lambdaMin, h, Units.smul_def, Units.val_mk0, Real.sInf_smul_of_nonneg hc.le, smul_eq_mul,
     lambdaMin]
+
+/-- Negation exchanges the largest and smallest real spectral values.
+The total identity also includes empty dimension. -/
+@[simp] theorem lambdaMax_neg (A : Matrix d d 𝕜) : lambdaMax (-A) = -lambdaMin A := by
+  rw [lambdaMax, ← spectrum.neg_eq, Real.sSup_neg, lambdaMin]
+
+/-- Negation exchanges the smallest and largest real spectral values.
+The total identity also includes empty dimension. -/
+@[simp] theorem lambdaMin_neg (A : Matrix d d 𝕜) : lambdaMin (-A) = -lambdaMax A := by
+  rw [lambdaMin, ← spectrum.neg_eq, Real.sInf_neg, lambdaMax]
 
 /-- `λmax(I) = 1` for a nonempty index type. Tropp 2015, §2.1; atlas
 `matrix-chernoff-sampling` (helper). -/

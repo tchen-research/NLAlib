@@ -11,6 +11,44 @@ noncomputable section
 open MeasureTheory ProbabilityTheory
 namespace MeasureTheory
 
+/-- The integral of a nonempty iid sample average is the original Bochner
+integral. The underlying sample space need not be finite or discrete. -/
+theorem integral_inv_card_smul_sum_pi
+    {Ω ι E : Type*} [MeasurableSpace Ω] [Fintype ι] [Nonempty ι]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {f : Ω → E} (hf : Integrable f μ) :
+    (∫ ω : ι → Ω, (Fintype.card ι : ℝ)⁻¹ • ∑ i, f (ω i)
+      ∂Measure.pi (fun _ => μ)) = ∫ x, f x ∂μ := by
+  have hi (i : ι) : Integrable (fun ω : ι → Ω => f (ω i)) (Measure.pi (fun _ => μ)) :=
+    (measurePreserving_eval (fun _ : ι => μ) i).integrable_comp_of_integrable hf
+  rw [integral_smul, integral_finsetSum _ (fun i _ => hi i)]
+  have he (i : ι) : (∫ ω : ι → Ω, f (ω i) ∂Measure.pi (fun _ => μ)) = ∫ x, f x ∂μ :=
+    integral_comp_eval (μ := fun _ : ι => μ) (i := i) hf.aestronglyMeasurable
+  simp only [he, Finset.sum_const,
+    Finset.card_univ, ← Nat.cast_smul_eq_nsmul ℝ, smul_smul]
+  rw [inv_mul_cancel₀ (by exact_mod_cast Fintype.card_ne_zero (α := ι)), one_smul]
+
+/-- The variance of an iid real sample average is the one-sample variance
+divided by its sample count. This also includes the empty sample family,
+where both sides are zero by the inverse-at-zero convention. -/
+theorem variance_inv_card_mul_sum_pi
+    {Ω ι : Type*} [MeasurableSpace Ω] [Fintype ι]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {f : Ω → ℝ} (hf : MemLp f 2 μ) :
+    Var[fun ω : ι → Ω => (Fintype.card ι : ℝ)⁻¹ * ∑ i, f (ω i);
+      Measure.pi (fun _ => μ)] = (Fintype.card ι : ℝ)⁻¹ * Var[f; μ] := by
+  rw [variance_const_mul]
+  have hs := variance_sum_pi (fun _ : ι => hf)
+  have he : (∑ i : ι, (fun ω : ι → Ω => f (ω i))) =
+      (fun ω : ι → Ω => ∑ i, f (ω i)) := by
+    funext ω
+    simp only [Finset.sum_apply]
+  rw [he] at hs
+  rw [hs]
+  simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+  by_cases h : (Fintype.card ι : ℝ) = 0
+  · simp [h]
+  · field_simp
+
 /-- The centered squared error of an average of independent real samples is
 the one-sample variance divided by the sample count. No moment hypotheses are
 needed for the finite probability space.

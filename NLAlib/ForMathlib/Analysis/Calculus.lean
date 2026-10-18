@@ -1,12 +1,16 @@
 import NLAlib.ForMathlib.Analysis.Calculus.CompactTestSupport
 import NLAlib.ForMathlib.Analysis.Calculus.Conditioning
 import NLAlib.ForMathlib.Analysis.Calculus.ExponentialBoundarySign
+import NLAlib.ForMathlib.Analysis.Calculus.InteriorDerivativeBound
 import NLAlib.ForMathlib.Analysis.Calculus.IteratedDeriv
 import NLAlib.ForMathlib.Analysis.Calculus.LagrangeContinuity
+import NLAlib.ForMathlib.Analysis.Calculus.LipschitzComposition
 import NLAlib.ForMathlib.Analysis.Calculus.MatrixInverse
 import NLAlib.ForMathlib.Analysis.Calculus.MeanValue
+import NLAlib.ForMathlib.Analysis.Calculus.Path
 import NLAlib.ForMathlib.Analysis.Calculus.PolynomialCoefficients
 import NLAlib.ForMathlib.Analysis.Calculus.RolleMultiplicity
+import NLAlib.ForMathlib.Analysis.Calculus.SecondOrderIntegral
 
 /-! # `ForMathlib/Analysis/Calculus`
 

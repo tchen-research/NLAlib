@@ -1,6 +1,6 @@
 {
  "schema_version": "0.2",
- "updated_at": "2026-10-17",
+ "updated_at": "2026-10-18",
  "areas": [
   {
    "id": "matrix",
@@ -27158,7 +27158,7 @@
    "area": "krylov-linear-systems",
    "kind": "identity",
    "status": "proved",
-   "informal": "For an `ArnoldiDecomp` of $(A, r_0)$ of order $q+1$ with $H̲_q \\in \\mathbb{R}^{(q+1)\\times q}$: $x = x_0 + Q_q y$ is the GMRES iterate iff $y$ minimises $\\|\\,\\|r_0\\| e_1 - \\underline{H}_q y\\|_2$, and then $\\|r_q\\| = \\min_y \\|\\,\\|r_0\\|e_1 - \\underline{H}_q y\\|$; FOM is the square system $H_q y = \\|r_0\\| e_1$.",
+   "informal": "For an `ArnoldiDecomp` of $(A, r_0)$ of order $q+1$ with $\\underline{H}_q \\in \\mathbb{R}^{(q+1)\\times q}$: $x = x_0 + Q_q y$ is the GMRES iterate iff $y$ minimises $\\|\\,\\|r_0\\| e_1 - \\underline{H}_q y\\|_2$, and then $\\|r_q\\| = \\min_y \\|\\,\\|r_0\\|e_1 - \\underline{H}_q y\\|$; FOM is the square system $H_q y = \\|r_0\\| e_1$.",
    "hypotheses": [
     "$q <$ grade of $(A, r_0)$ (so the decomposition of order $q+1$ exists)"
    ],
@@ -31837,11 +31837,16 @@
    "aliases": [
     "remainder kernel K_n = ρ_n/π_n",
     "Gauss quadrature error for analytic functions",
-    "Cauchy integral of orthogonal polynomials"
+    "Cauchy integral of orthogonal polynomials",
+    "piecewise C1 general contour Gauss remainder",
+    "actual finite cubical filling of a planar cycle",
+    "bounded-complement filled contour",
+    "one-point native positive orientation",
+    "cornered native path Gauss integral"
    ],
    "area": "krylov-orthogonal-polynomials",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For a finite positive measure supported in $[a,b]$, a Gauss rule of order $n$, and $f$ holomorphic on a neighborhood of a positively oriented Jordan contour $\\Gamma$ and its closed interior containing $[a,b]$, $R_n^G(f)=(2\\pi i)^{-1}\\oint_\\Gamma K_n(z)f(z)\\,dz$, where $K_n=\\rho_n/\\pi_n$ and $\\rho_n(z)=\\int\\pi_n(t)/(z-t)\\,d\\mu(t)$. Consequently $|R_n^G(f)|\\le\\ell(\\Gamma)\\max_\\Gamma|K_n|\\max_\\Gamma|f|/(2\\pi)$. A null-homologous cycle with winding one on the support is an alternative domain hypothesis.",
    "hypotheses": [
     "$\\mu$ is a finite positive measure supported in $[a,b]$, and the canonical $n$-node Gauss rule exists up to its support termination threshold.",
@@ -31862,9 +31867,9 @@
    ],
    "mathlib_prereqs": [
     {
-     "decl": "circleIntegral",
+     "decl": "curveIntegral",
      "present": true,
-     "note": "Cauchy integral formula machinery for circles; general contours/ellipses need more"
+     "note": "Native curve integrals of the actual finite concatenation; Cauchy, finite cubical filling, winding, exact length, and compact-support Fubini bridges are proved in NLAlib.ForMathlib."
     }
    ],
    "difficulty": 3,
@@ -31874,9 +31879,81 @@
     "error-bound",
     "analytic"
    ],
-   "notes": "Deferred by the user on 2026-10-14. The new contour-specialization and topological prerequisite files are preserved locally at E:/NLAlib-local/DeferredJordanContour-2026-10-14 and are excluded from this integration. Shared Stieltjes/second-kind kernel cancellation remains partial evidence; it does not establish a contour integral formula. The general Jordan and null-homologous-cycle clauses remain unformalized.",
-   "updated_at": "2026-10-14",
+   "notes": "The full general-contour formula and exact length/max-norm estimate are formalized. A contour is represented by an actual closed finite family of native C1 paths, allowing arbitrary corners, stationary derivatives and degenerate pieces. The standard closed interior is represented explicitly by Set.boundedComplementFill of the actual compact trace: the trace together with all bounded complementary components. The theorem is stronger than the Jordan specialization: it works for every finite C1 cycle whose filled trace has a holomorphy neighborhood. A single actual native normalized inverse integral at a chosen point of [a,b] specifies positive orientation; connectedness derives winding one at every support point, and nonzero winding derives support containment in the filled region. Actual finite normalized cubical filling is constructed using continuous fan subdivision, a specified floor-grid quantizer, actual small-ball fillings, endpoint cancellation, native winding local constancy and decay, and exact rectangle coefficient isolation. Neither homology, a Cauchy formula, contour-support bounds nor the desired Gauss equality is supplied in the geometric theorem. The alternative explicitly null-homologous-cycle statement also remains available for multiply connected domains. Finite measure plus compact support derives all polynomial moments; order zero and equality at the support termination threshold are included. No separate Jordan separation/classification theorem or identification with a singular simplicial homology API is claimed. Those are distinct topological results, unnecessary when the source closed interior is represented directly by the bounded-complement fill. The 2026-10-14 archive was reused as proof source; no external Lean dependency or bulk Schoenflies source was adopted.",
+   "updated_at": "2026-10-18",
    "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "Complex.cubicalCurveIntegral_eq_zero_of_isNullHomologous",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.CubicalCauchy",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an actual finite normalized cubical null-homology filling of a finite C1 contour chain in any open holomorphy domain to derive zero native integral, including multiply connected domains."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.two_pi_i_inv_mul_cubicalCurveIntegral_div_sub_eq_of_isNullHomologous",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.CubicalCauchyFormula",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the actual normalized cubical filling, smooth contour pieces, target avoidance and actual winding one to derive the normalized scalar Cauchy value without a Cauchy premise."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.isNullHomologous_of_boundedComplementFill_cubicalTrace_subset",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.CubicalFilledTrace",
+     "status": "proved",
+     "partial": true,
+     "usage": "For any actual finite C1 cycle in an open domain containing its trace and all bounded complementary components, construct an actual finite normalized cubical filling by fine-grid approximation and exact winding coefficient isolation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.cubicalCurveIntegral_pathChain_eq_of_contDiffOn",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.CubicalPathChainIntegral",
+     "status": "proved",
+     "partial": true,
+     "usage": "For a continuous form and actual finite C1 native path pieces, the chain integral equals the native integral of their cornered concatenation; actual integrability is derived."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.cubicalWindingIntegral_eq_of_mem_real_interval",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.CubicalWindingInterval",
+     "status": "proved",
+     "partial": true,
+     "usage": "One actual winding value propagates to every point of an avoided real interval by connectedness and native local constancy, including singleton intervals."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.isLocallyConstant_cubicalWindingIntegral",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.CubicalWindingVariation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the actual native endpoint cycle and C1 active pieces to obtain local constancy of the actual normalized inverse integral off the compact contour trace."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.cubicalWindingIntegral_eq_zero_of_unbounded_component",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.CubicalWindingVariation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an actual unbounded complementary component to derive zero winding from native contour-length decay and local constancy, without a Jordan theorem."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.curveIntegral_inv_sub_rectangle_eq_two_pi_I",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.RectangularCellWinding",
+     "status": "proved",
+     "partial": true,
+     "usage": "For a target strictly inside a rectangle, the four canonical native edge inverse integrals equal two pi i, proved using actual principal-log primitives."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Complex.cubicalWindingIntegral_rectangularGrid_eq_cellCoefficients",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.RectangularGridWinding",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass strictly ordered actual rectangular-grid coordinates and its native coefficient conservation law to identify each explicit prefix coefficient with the actual winding at its cell center."
+    },
     {
      "library": "nlalib",
      "decl": "NLAlib.stieltjesTransform_sub_secondKind_div_eq_integral",
@@ -31900,17 +31977,124 @@
      "status": "proved",
      "partial": true,
      "usage": "Apply `NLAlib.norm_stieltjesTransform_sub_secondKind_div_le` with its displayed hypotheses: The exact native Stieltjes error is bounded by the squared monic norm divided by a positive support distance and the squared denominator value."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_sub_gauss_eq_cubicalCurveIntegral_gaussRemainderKernel",
+     "module": "NLAlib.Polynomial.Quadrature.GaussCubicalContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass finite mass, compact real support, the canonical Gauss support threshold, a holomorphic integrand, and an actual finite null-homologous C1 contour with winding one on the interval to obtain the native rho_n/pi_n Gauss remainder formula; polynomial moments and all analytic interchanges are proved."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_integral_sub_gauss_le_cubicalLength_mul_bounds",
+     "module": "NLAlib.Polynomial.Quadrature.GaussCubicalContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Under the same actual contour hypotheses, pass uniform kernel and integrand bounds (the integrand bound nonnegative) to obtain the exact total-length/(2pi) times their product Gauss error bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_integral_sub_gauss_le_cubicalLength_mul_maxNorm",
+     "module": "NLAlib.Polynomial.Quadrature.GaussCubicalNorm",
+     "status": "proved",
+     "partial": true,
+     "usage": "Under the actual finite-measure, support, holomorphy, normalized cubical filling and winding-one hypotheses, conclude the exact contour-length/(2pi) times the two actual contour maximum norms error bound; compact trace and kernel continuity are discharged."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_sub_gauss_eq_cubicalCurveIntegral_of_boundedComplementFill_subset",
+     "module": "NLAlib.Polynomial.Quadrature.GaussFilledContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass actual finite support, the canonical Gauss support threshold, a finite C1 cycle and its geometric filled-trace neighborhood to obtain the rho/pi remainder identity; the cubical filling is constructed."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_integral_sub_gauss_le_cubicalLength_mul_maxNorm_of_boundedComplementFill_subset",
+     "module": "NLAlib.Polynomial.Quadrature.GaussFilledContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Under the geometric filled-trace hypotheses, obtain the exact native total contour length over two pi times the two actual contour maxima; filling and kernel continuity are derived."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_sub_gauss_eq_curveIntegral_concat_of_boundedComplementFill_subset",
+     "module": "NLAlib.Polynomial.Quadrature.GaussFilledContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual rho/pi formula uses the native integral of a closed finite concatenation of C1 pieces; actual form integrability is proved on every piece and no smoothness at joins is required."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_sub_gauss_eq_curveIntegral_concat_of_positive_orientation",
+     "module": "NLAlib.Polynomial.Quadrature.GaussGeneralContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the actual closed native C1 pieces, a holomorphy neighborhood of their bounded-complement filled trace, avoidance of the support interval and one native normalized inverse integral equal to one to get the complete native rho/pi Gauss formula; all support-wise winding values and support inclusion are derived."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_integral_sub_gauss_le_length_mul_maxNorm_of_positive_orientation",
+     "module": "NLAlib.Polynomial.Quadrature.GaussGeneralContour",
+     "status": "proved",
+     "partial": true,
+     "usage": "Under the same closed-region and one-point positive-orientation data, obtain the exact sum of actual piece-speed integrals over two pi times the two actual contour maxima Gauss error bound, including corners, repeated pieces and zero velocities."
     }
    ],
    "uses_defs": [
+    "Complex.cubicalCurveIntegral",
+    "Complex.cubicalLength",
+    "Complex.cubicalMaxNorm",
+    "Complex.cubicalPath",
+    "Complex.cubicalTrace",
+    "Complex.cubicalWindingIntegral",
+    "Cubical.Grid.edgeChain",
+    "Cubical.IsNullHomologous",
+    "Cubical.OneChain",
+    "Cubical.RectangularGrid.center",
+    "Cubical.RectangularGrid.vertex",
+    "Cubical.boundaryOne",
+    "Cubical.mapOne",
+    "Cubical.pathChain",
     "NLAlib.HasPolynomialMoments",
+    "NLAlib.gaussNodes",
+    "NLAlib.gaussRemainderKernel",
+    "NLAlib.gaussWeights",
     "NLAlib.monicOrthogonalPolynomial",
     "NLAlib.orthogonalPolynomialNorm",
     "NLAlib.polynomialIntegral",
     "NLAlib.secondKindPolynomial",
-    "NLAlib.stieltjesTransform"
+    "NLAlib.stieltjesTransform",
+    "RectangularChain.IsCycle",
+    "RectangularChain.cellCoefficients",
+    "Set.boundedComplementFill"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For a positively oriented finite piecewise C1 contour and a holomorphy neighborhood of its explicit closed filled region, the canonical Gauss remainder equals the native contour integral of the actual rho_n/pi_n kernel times f; positive orientation is a single native normalized inverse integral at one point of the avoided real support interval, and all support-wise winding values and an actual filling are derived.",
+      "decls": [
+       "NLAlib.integral_sub_gauss_eq_curveIntegral_concat_of_positive_orientation"
+      ]
+     },
+     {
+      "statement": "The actual Gauss remainder norm is at most the exact sum of the actual piece-speed integrals times the two actual contour maximum norms, divided by two pi.",
+      "decls": [
+       "NLAlib.norm_integral_sub_gauss_le_length_mul_maxNorm_of_positive_orientation"
+      ]
+     },
+     {
+      "statement": "Alternatively an actual normalized null-homologous finite C1 cycle in an arbitrary open planar holomorphy domain, with winding one on the real support interval, has the same actual rho_n/pi_n remainder formula and exact actual maximum-norm bound.",
+      "decls": [
+       "NLAlib.integral_sub_gauss_eq_cubicalCurveIntegral_gaussRemainderKernel",
+       "NLAlib.norm_integral_sub_gauss_le_cubicalLength_mul_maxNorm"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "recurrence-coefficient-moment-sensitivity",
@@ -49425,7 +49609,7 @@
    "sources": [
     {
      "source": "tropp26-eigenvalue-comparison",
-     "label": "Propositions 4.5–4.8, especially one-step comparison (4.6) and sum comparison (4.8)"
+     "label": "Propositions 4.5-4.8, especially one-step comparison (4.6) and sum comparison (4.8)"
     }
    ],
    "depends_on": [
@@ -49434,20 +49618,145 @@
    "aliases": [
     "matrix Lindeberg Gaussian replacement",
     "trace MGF covariance comparison",
-    "one-sided Gaussian proxy"
+    "one-sided Gaussian proxy",
+    "actual-law trace Gaussian comparison",
+    "full entry covariance replacement",
+    "BMV independent summand replacement"
    ],
    "tags": [
     "foundation",
     "random-matrix",
-    "concentration"
+    "concentration",
+    "done"
    ],
-   "notes": "Audit: for a single W, pointwise Taylor expansion through first order and Stahl's F''(t) <= exp(tR)F''(0) give Tr exp A + g_R(1)^2 E F''(0)/2. For the Gaussian replacement, Taylor expansion through second order gives the opposite inequality because F''' is increasing and its expectation at zero is zero by Gaussian symmetry. Covariance matching identifies the quadratic derivatives. Conditioning on all other summands and telescoping completes replacement. Only finite second moments and an upper spectral bound are needed on W; do not assume negative exponential moments to define E Tr exp(A+tW) for negative t. The proof can take Taylor remainders pointwise on t in [0,1], then integrate using the one-sided bound. The integral definition of g handles R=0 and theta=0 exactly. Matching E[Y^2] alone is insufficient.",
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Formalization: deterministic BMV Taylor bounds use the exact integral coefficient, the second Frechet derivative is an actual quadratic form in every real and imaginary matrix entry, and covariance contraction identifies its expectation. Actual centered Gaussian exponential integrability and negation symmetry prove the opposite second-order estimate. Positive Tonelli integrals then implement independent replacement at random offsets. The full HasLaw capstone uses actual independent original summands and an actual Gaussian random matrix with all full entry covariances matching; it assumes only finite second moments and the upper Loewner bound on the original summands. Neither lower bounds nor negative exponential moments are introduced. The continuous integral definition of g includes R=0 and theta=0, as do the checked theorems. Empty summand families and empty matrix dimensions are included. Matching E[Y^2] alone is insufficient.",
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.traceExp_add_half_integral_iteratedDeriv_two_le_integral_gaussian",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianTraceExponential",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an actual centered Hermitian Gaussian law and Hermitian offset to obtain the lower trace-exponential expectation bound with half the expected second derivative; Gaussian integrability and symmetry are discharged."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.traceExp_add_sq_div_two_mul_integral_iteratedDeriv_two_le_integral_gaussian",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianTraceExponential",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an actual centered Hermitian Gaussian law, Hermitian offset and any real scale to obtain the corresponding scale-squared second-derivative lower bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_traceExp_add_le_integral_traceExp_add_smul_gaussian",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianTraceReplacement",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass a centered full-coordinate L2 Hermitian random matrix with its one-sided upper bound and an actual centered Hermitian Gaussian law matching all entry covariances to obtain the one-summand trace comparison."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_traceExp_add_smul_le_integral_traceExp_add_gaussianTraceInflation",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianTraceReplacement",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the same one-sided and full-covariance hypotheses and a nonnegative time parameter to obtain exact one-summand replacement at gaussianTraceInflation R theta."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lintegral_traceExp_add_smul_sum_le_gaussianTraceInflation_sum",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianTraceSumReplacement",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass finite independent product laws, centered Hermitian summands with one-sided upper bounds, and covariance-matched Gaussian marginals to obtain replacement under nonnegative integrals at every Hermitian offset."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_traceExp_add_smul_sum_pi_le_gaussianTraceInflation",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianTraceSumReplacement",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the original product-law moments and one-sided bounds plus any actual centered Hermitian Gaussian law matching the sum of all marginal entry covariances; individual Gaussian proxies are constructed internally."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_traceExp_smul_sum_add_le_gaussianTraceInflation_of_hasLaw",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianTraceSumReplacement",
+     "status": "proved",
+     "usage": "Pass independent actual random summands with HasLaw marginals, full-coordinate L2, zero matrix means, Hermitian support and upper bounds, then an actual Gaussian random matrix whose full covariance matches the sum; conclude the trace-MGF inequality for every Hermitian shift and nonnegative time."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_iteratedDeriv_two_traceExp_add_smul_eq_of_mean_covariance_eq",
+     "module": "NLAlib.Probability.Concentration.Matrix.TraceExponentialCovariance",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the two full-coordinate L2 hypotheses, equal coordinate-vector means and equality of every mixed coordinate covariance to identify the expected actual second directional trace-exponential derivatives."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_iteratedDeriv_two_traceExp_add_smul_eq_of_centered_covariance_eq",
+     "module": "NLAlib.Probability.Concentration.Matrix.TraceExponentialCovariance",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass full-coordinate L2, zero coordinate-vector means and equality of every mixed coordinate covariance to identify the expected second directional derivatives."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_traceExp_add_le_traceExp_add_integral_iteratedDeriv_two_mul_coefficient",
+     "module": "NLAlib.Probability.Concentration.Matrix.TraceExponentialOneSided",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass full-coordinate L2, centered coordinates, almost-sure Hermitian support and the one-sided upper bound to bound the actual trace-exponential expectation by its value plus the expected second derivative times the exact integral coefficient."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isGaussian_hermitian_integral_eq_zero_covariance_eq",
+     "module": "NLAlib.Probability.Gaussian.Basic.CovarianceProxy",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an actual probability law with full real/imaginary-entry L2 coordinates, zero matrix mean and almost-sure Hermitian support to construct an actual centered Hermitian Gaussian law with every mixed entry covariance equal."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.expSecondRemainderCoefficient",
+    "NLAlib.gaussianTraceInflation",
+    "NLAlib.matrixRealCoordinates",
+    "NLAlib.traceExp"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-18",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For actual independent centered Hermitian finite-second-moment summands with a one-sided upper bound, every deterministic Hermitian shift and nonnegative time satisfy the full trace-MGF comparison with an actual centered Gaussian random matrix matching the entire entry covariance of the sum.",
+      "decls": [
+       "NLAlib.integral_traceExp_smul_sum_add_le_gaussianTraceInflation_of_hasLaw"
+      ]
+     },
+     {
+      "statement": "The one-summand replacement holds at every Hermitian offset and nonnegative time, using the exact continuous Gaussian inflation coefficient and full covariance matching.",
+      "decls": [
+       "NLAlib.integral_traceExp_add_smul_le_integral_traceExp_add_gaussianTraceInflation"
+      ]
+     },
+     {
+      "statement": "The actual expected second directional derivative of the trace exponential is determined by the full real/imaginary coordinate means and covariances.",
+      "decls": [
+       "NLAlib.integral_iteratedDeriv_two_traceExp_add_smul_eq_of_mean_covariance_eq"
+      ]
+     },
+     {
+      "statement": "Independent product-law replacement constructs individual Gaussian proxies and identifies their sum with any centered Gaussian law having the same total full covariance; no intermediate exponential integrability premise is assumed.",
+      "decls": [
+       "NLAlib.integral_traceExp_add_smul_sum_pi_le_gaussianTraceInflation"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "gaussian-proxy-eigenvalue-comparison",
@@ -49466,7 +49775,7 @@
    "sources": [
     {
      "source": "tropp26-eigenvalue-comparison",
-     "label": "Theorems 1.1 and 4.1, Proposition 4.9, §4.9; lower-tail Corollary 1.3"
+     "label": "Theorems 1.1 and 4.1, Proposition 4.9, Section 4.9; lower-tail Corollary 1.3"
     }
    ],
    "depends_on": [
@@ -49477,20 +49786,161 @@
    "aliases": [
     "Gaussian proxy maximum eigenvalue",
     "one-sided matrix Bernstein comparison",
-    "weak variance eigenvalue tail"
+    "weak variance eigenvalue tail",
+    "native quadratic weak variance comparison",
+    "Gaussian proxy expected minimum eigenvalue",
+    "strict degenerate Gaussian proxy tail",
+    "constructed Gaussian covariance proxy"
    ],
    "tags": [
     "random-matrix",
     "concentration",
-    "covariance"
+    "covariance",
+    "done"
    ],
-   "notes": "Audit: the Rayleigh variational formula makes lambda_max(Z+Delta) Lipschitz with constant s_* in the Gaussian coordinates. Gaussian exponential concentration and trace <= d*exp(lambda_max) bound the log trace-MGF by log d + E lambda_max(gZ+theta Delta) + g^2 s_*^2/2. Weyl gives E lambda_max(gZ+theta Delta) <= theta mu + (g-theta)phi. For 0<=theta R<3, factorial comparison gives g^2<=theta^2/(1-R theta/3) and g-theta<=(R theta^2/6)/(1-R theta/3). The centered log-MGF is therefore <=log d+V theta^2/(2(1-R theta/3)); optimizing it gives both assertions. R=0 forces every centered W_i=0; the strict tail avoids the source's false degenerate equality event at the deterministic mean. V=0, s=0 and d=1 are treated separately before division in the optimizing parameter. This quadratic-form weak variance differs from the bilinear weak variance sometimes used in sharp Gaussian norm bounds.",
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Formalization: the full actual-law capstone derives trace replacement, trace integrability, original extreme-eigenvalue integrability, Gaussian series representation, and the native weak-variance bound internally from the displayed summand and actual Gaussian-law hypotheses. quadraticWeakVariance is exactly the supremum of actual variances of real Hermitian quadratic forms over complex Euclidean unit vectors. gaussianProxyVariance is exactly R*E(lambdaMax Z)/3 plus that supremum. Gaussian concentration and the exact inflation inequalities give the scalar sub-gamma MGF, followed by sharp expectation and tail optimization. The full statements include R=0, zero weak variance, d=1, zero deviation and empty summand families. The strict upper/lower events retain the deterministic endpoint; non-strict events require the displayed positive summand-bound parameter. A separate lower-bound theorem negates the original summands and uses actual centered Gaussian symmetry to obtain the expected-minimum and lower-tail bounds with the same weak-variance budget. An existential capstone constructs the actual Gaussian proxy and proves full covariance equality with the actual sum. This quadratic-form weak variance is distinct from bilinear weak variance.",
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasSubgaussianMGF_lambdaMax_affineSeries_of_quadratic_energy",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianMaximum",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass Hermitian coefficients, a Hermitian shift and a uniform bound on the coefficient-square energy of all complex unit quadratic probes to obtain the centered maximum-eigenvalue sub-Gaussian MGF under the actual standard Gaussian product law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasSubgaussianMGF_lambdaMax_affineSeries_of_quadratic_variance",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianMaximum",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass a uniform bound on the actual quadratic-form variances of the Hermitian Gaussian series to obtain its centered maximum-eigenvalue sub-Gaussian MGF."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_exp_mul_lambdaMax_affineSeries_le_of_quadratic_energy",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianMaximum",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass Hermitian Gaussian-series coefficients, the unit quadratic energy bound and any real exponential parameter to bound the actual uncentered MGF by the actual mean and weak variance."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasSubgaussianMGF_lambdaMax_add_gaussian",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianMaximumLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass any actual centered Hermitian Gaussian law and a bound on its actual unit quadratic-form variances to obtain maximum-eigenvalue sub-Gaussian concentration at every Hermitian shift, including singular covariance."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_exp_mul_lambdaMax_add_gaussian_le",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianMaximumLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the actual centered Hermitian Gaussian law, Hermitian shift and unit quadratic variance bound to obtain the uncentered MGF inequality for every real exponential parameter."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_lambdaMax_smul_add_smul_gaussian_le",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianMaximumMean",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an actual centered Hermitian Gaussian law, Hermitian shift, weak quadratic variance bound and scales 0 <= a <= b to bound the shifted expected maximum by a times its base mean plus (b-a) times its unshifted mean."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_exp_mul_lambdaMax_sum_pi_sub_and_integral_le_gaussian_proxy",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianProxy",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the original product-law hypotheses and an actual centered Hermitian full-covariance Gaussian proxy to obtain exponential integrability and the scalar MGF bound with native quadraticWeakVariance, without an extra trace-comparison premise."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_lambdaMax_sum_pi_le_and_measure_gt_le_gaussian_proxy",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianProxy",
+     "status": "proved",
+     "usage": "Pass the finite product-law moments, centered Hermitian one-sided hypotheses and actual full-covariance Gaussian proxy; the conjunction returns the expected-maximum bound, every strict upper tail and the non-strict tail when R is positive."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_lambdaMax_sum_le_and_measure_gt_le_gaussian_proxy_of_hasLaw",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianProxy",
+     "status": "proved",
+     "usage": "Pass independent actual HasLaw summands satisfying the card hypotheses and any actual centered Hermitian Gaussian proxy with matching full covariance; project the conjunction for the expectation, strict upper tails, or non-strict upper tails when R > 0."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_isGaussian_integral_lambdaMax_sum_le_and_measure_gt_le_of_hasLaw",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianProxyExistence",
+     "status": "proved",
+     "usage": "Pass only the original independent centered Hermitian summand laws, their full-coordinate L2 hypotheses and one-sided upper bound to construct an actual Gaussian proxy with the covariance of the actual sum and all upper expectation/tail comparisons for every Hermitian shift."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_exp_mul_lambdaMax_sub_and_integral_le_of_trace_comparison",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianProxyMgf",
+     "status": "proved",
+     "partial": true,
+     "usage": "Supply the displayed actual trace integrability and fixed-time replacement inequality to obtain the precise scalar sub-gamma MGF budget; this intermediate interface records these premises explicitly."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_lambdaMin_sum_ge_and_measure_lt_le_gaussian_proxy_of_hasLaw",
+     "module": "NLAlib.Probability.Concentration.Matrix.GaussianProxyMinimum",
+     "status": "proved",
+     "usage": "Pass the independent centered Hermitian HasLaw summands with the separate lower bound -R I <= W and matching actual Gaussian covariance; project the conjunction for the expected-minimum lower bound, strict lower tails, or non-strict lower tails when R > 0."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.gaussianProxyVariance",
+    "NLAlib.gaussianTraceInflation",
+    "NLAlib.gaussianVector",
+    "NLAlib.lambdaMax",
+    "NLAlib.lambdaMin",
+    "NLAlib.matrixRealCoordinates",
+    "NLAlib.quadForm",
+    "NLAlib.traceExp"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
-   "updated_at": "2026-10-15"
+   "updated_at": "2026-10-18",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The expected maximum eigenvalue of the actual independent sum plus any Hermitian shift is at most the actual shifted Gaussian mean plus sqrt(2 V log d)+(R/3) log d, with V defined by the native quadratic weak-variance supremum.",
+      "decls": [
+       "NLAlib.integral_lambdaMax_sum_le_and_measure_gt_le_gaussian_proxy_of_hasLaw"
+      ]
+     },
+     {
+      "statement": "For every s >= 0, the strict upper-tail event beyond the actual shifted Gaussian mean plus sqrt(2 V s)+(R/3)s has probability at most d exp(-s), including R=0, V=0 and d=1.",
+      "decls": [
+       "NLAlib.integral_lambdaMax_sum_le_and_measure_gt_le_gaussian_proxy_of_hasLaw"
+      ]
+     },
+     {
+      "statement": "When R > 0, the same bound holds for the non-strict upper-tail event for every s >= 0.",
+      "decls": [
+       "NLAlib.integral_lambdaMax_sum_le_and_measure_gt_le_gaussian_proxy_of_hasLaw"
+      ]
+     },
+     {
+      "statement": "Under a separate lower-summand bound -R I <= W_i with R >= 0, the corresponding expected-minimum lower bound and strict lower-tail bounds hold; R > 0 also allows non-strict lower tails.",
+      "decls": [
+       "NLAlib.integral_lambdaMin_sum_ge_and_measure_lt_le_gaussian_proxy_of_hasLaw"
+      ]
+     },
+     {
+      "statement": "The actual centered Hermitian Gaussian proxy may be constructed from the original summand laws, with all covariances matching the actual independent sum; one such proxy gives all upper expectation and tail bounds for every deterministic Hermitian shift.",
+      "decls": [
+       "NLAlib.exists_isGaussian_integral_lambdaMax_sum_le_and_measure_gt_le_of_hasLaw"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "exchangeable-matrix-covariance",
@@ -50139,20 +50589,117 @@
    "aliases": [
     "fourth moment sample covariance",
     "unbounded covariance lower tail",
-    "one-sided covariance estimation"
+    "one-sided covariance estimation",
+    "relative sample covariance lower bound",
+    "finite fourth moment covariance estimation",
+    "iid covariance lower guarantee",
+    "covariance sample size constant 26"
    ],
    "tags": [
     "random-matrix",
     "covariance",
-    "subspace-embedding"
+    "subspace-embedding",
+    "done"
    ],
-   "notes": "Audit: whiten by K^(-1/2), which explains the explicit positive-definiteness hypothesis from the section's standing setup. The centered rank-one summands have lower eigenvalue at least -1/n regardless of ||w||. Their Gaussian proxy has quadratic-form weak variance <=beta^2/n. A sphere-net argument bounds E||Z|| <=sqrt(12 beta^2 d/n): use a 1/8-net of size <=17^d and the 4/3 quadratic-form norm factor. Apply the lower comparison to obtain error a+sqrt(2s(beta^2+a/3)/n)+s/(3n), where a=sqrt(12 beta^2 d/n) and s=log(d/delta). Under the displayed sample size its three terms are at most 53 epsilon/78, 24 epsilon/78 and epsilon/78, respectively; 53^2>=2808 and 24^2>=574 verify the constants. The displayed probability event in the source's proof has the inequality direction reversed; use the failure event for lambda_min below the threshold, as given by Corollary 1.3. This is a lower spectral guarantee, not two-sided covariance accuracy. Singular covariance can later be handled by restriction to its support.",
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "notes": "Audit: whiten by K^(-1/2), which explains the explicit positive-definiteness hypothesis from the section's standing setup. The centered rank-one summands have lower eigenvalue at least -1/n regardless of ||w||. Their Gaussian proxy has quadratic-form weak variance <=beta^2/n. A sphere-net argument bounds E||Z|| <=sqrt(12 beta^2 d/n): use a 1/8-net of size <=17^d and the 4/3 quadratic-form norm factor. Apply the lower comparison to obtain error a+sqrt(2s(beta^2+a/3)/n)+s/(3n), where a=sqrt(12 beta^2 d/n) and s=log(d/delta). Under the displayed sample size its three terms are at most 53 epsilon/78, 24 epsilon/78 and epsilon/78, respectively; 53^2>=2808 and 24^2>=574 verify the constants. The displayed probability event in the source's proof has the inequality direction reversed; use the failure event for lambda_min below the threshold, as given by Corollary 1.3. This is a lower spectral guarantee, not two-sided covariance accuracy. Singular covariance can later be handled by restriction to its support. Formalization: the native iid HasLaw theorem proves the literal success probability at least 1-delta, with a companion failure-event theorem and actual product-law versions. It constructs the full-covariance-matched Hermitian Gaussian proxy from the negative centered rank-one summands, derives zero imaginary entries for a proxy of real data, and uses the real-dimensional sphere-net bound without doubling the dimension. The quadratic weak-variance supremum is bounded by beta^2/n from the actual directional fourth moments; no Gaussian norm or variance estimate is supplied as a hypothesis. Positive-definite whitening is performed by an actual invertible inverse-square-root matrix and the original Loewner event is recovered exactly. The exact scalar split 53/78+24/78+1/78=1 proves the displayed constant 26. The checked theorem is stronger than the centered source statement: it works for the positive-definite raw second moment E[ww^T] without requiring E[w]=0. The centered card is obtained directly by retaining its original mean-zero hypothesis. Singular second moments are not included in this capstone.",
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_specNorm_and_integral_le_sqrt_of_quadratic_hasSubgaussianMGF",
+     "module": "NLAlib.Probability.Concentration.Matrix.QuadraticNet",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_specNorm_and_integral_le_sqrt_gaussian_of_quadratic_variance",
+     "module": "NLAlib.Probability.Concentration.Matrix.QuadraticNet",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadraticWeakVariance_le_and_integral_lambdaMax_le_of_covariance_eq_real",
+     "module": "NLAlib.Probability.Concentration.Matrix.RealWeakVariance",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an actual centered real L2 matrix law, a centered Hermitian Gaussian law with matching full real and imaginary entry covariances, and the actual directional quadratic variance bound; obtain both the complex quadratic weak-variance bound and the real-dimensional expected-largest-eigenvalue bound sqrt(12 c d)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_not_smul_one_le_sampleCovariance_pi_le",
+     "module": "NLAlib.RandomMatrix.Covariance.FourthMomentLower",
+     "status": "proved",
+     "usage": "Use for an isotropic real vector law and canonical iid samples; finite fourth moments and the directional variance bound give the exact constant-26 lower covariance estimate."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_not_smul_le_sampleCovariance_pi_le",
+     "module": "NLAlib.RandomMatrix.Covariance.FourthMomentLower",
+     "status": "proved",
+     "usage": "Use for canonical independent product samples from a real vector law with a positive-definite actual second moment; the theorem performs whitening internally and bounds the relative lower-bound failure probability by delta."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_not_smul_le_sampleCovariance_le_of_hasLaw",
+     "module": "NLAlib.RandomMatrix.Covariance.FourthMomentLower",
+     "status": "proved",
+     "usage": "Pass the same actual iid law and exact constant-26 hypotheses to bound the probability that the relative lower Loewner inequality fails by delta."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_add_sqrt_add_div_le_of_sample_size",
+     "module": "NLAlib.RandomMatrix.Covariance.FourthMomentSampleSize",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply with v=beta-squared, d=the dimension, s=log(d/delta) and n=the sample count to prove that the full three-term Gaussian-proxy deviation threshold is at most epsilon under the displayed constant-26 sample size."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.one_sub_le_measureReal_smul_le_sampleCovariance_of_hasLaw",
+     "module": "NLAlib.RandomMatrix.Covariance.FourthMomentSuccess",
+     "status": "proved",
+     "usage": "Pass actual independent observations with a common HasLaw law, finite fourth moment, its positive-definite actual second moment, directional fourth-moment variance control and the exact sample-size inequality; obtain the literal success probability at least 1-delta."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.variance_quadForm_sampleCovariance_pi",
+     "module": "NLAlib.RandomMatrix.Covariance.SampleCovarianceMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass finite fourth vector moments to identify exactly the actual iid empirical covariance quadratic variance as the single-observation squared-linear-probe variance divided by the sample count."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.lambdaMax",
+    "NLAlib.matrixRealCoordinates",
+    "NLAlib.quadForm",
+    "NLAlib.quadraticWeakVariance",
+    "NLAlib.sampleCovariance",
+    "NLAlib.specNorm"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-18",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For actual iid observations satisfying the original positive-definite second-moment and directional fourth-moment assumptions, the exact sample-size constant 26 gives success probability at least 1-delta.",
+      "decls": [
+       "NLAlib.one_sub_le_measureReal_smul_le_sampleCovariance_of_hasLaw"
+      ]
+     },
+     {
+      "statement": "The equivalent actual-law failure probability is at most delta, with canonical product-law versions for both isotropic and general positive-definite second moments.",
+      "decls": [
+       "NLAlib.measureReal_not_smul_le_sampleCovariance_le_of_hasLaw",
+       "NLAlib.measureReal_not_smul_le_sampleCovariance_pi_le",
+       "NLAlib.measureReal_not_smul_one_le_sampleCovariance_pi_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "khatri-rao-sharp-growth",
@@ -52683,7 +53230,7 @@
    "title": "Lipschitz functions have bounded weighted Chebyshev coefficient energy",
    "area": "polynomial-series",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "A global square-summability estimate controls the simultaneous size of Chebyshev coefficients, beyond separate coefficient decay bounds.",
    "hypotheses": [
     "$f:[-1,1]\\to\\mathbb R$ is $L$-Lipschitz, $L\\ge0$, with the standard coefficients $a_j$ of `chebyshev-coefficients-def`",
@@ -52696,33 +53243,94 @@
      "label": "Lemma 13; Appendix A.1, Lemma 31; audited extension from smooth to Lipschitz functions"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_mul_sq_chebyshevCoeff_le_of_lipschitzOnWith",
+     "module": "NLAlib.Polynomial.FunctionApproximation.ChebyshevEnergy",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an interval Lipschitz bound and any finite set of positive frequencies to obtain the sharp standard-coefficient energy bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tsum_mul_sq_chebyshevCoeff_le_of_lipschitzOnWith",
+     "module": "NLAlib.Polynomial.FunctionApproximation.ChebyshevEnergy",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an interval Lipschitz bound to obtain the full positive-frequency weighted Chebyshev energy at most L squared."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tsum_mul_sq_chebyshevCoeff_affine",
+     "module": "NLAlib.Polynomial.FunctionApproximation.ChebyshevEnergy",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to any affine function to compute its full positive-frequency weighted Chebyshev energy exactly as the squared slope."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tsum_norm_sq_mul_tensorChebyshevCoeff_sq_le_of_lipschitzOnWith",
+     "module": "NLAlib.Polynomial.FunctionApproximation.ChebyshevTensor",
+     "status": "proved",
+     "usage": "Pass a Euclidean Lipschitz bound only on the cube to bound the full squared-frequency energy of the actual normalized tensor coefficients by d*pi^d*L squared/2."
+    }
+   ],
    "depends_on": [
     "chebyshev-coefficients-def",
     "chebyshev-second-kind"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.chebyshevCoeff",
+    "NLAlib.chebyshevCube",
+    "NLAlib.tensorChebyshevCoeff"
+   ],
    "variants": [],
    "aliases": [
     "global Chebyshev coefficient decay",
     "weighted Chebyshev Sobolev bound",
-    "MMRS Lemma 13"
+    "MMRS Lemma 13",
+    "normalized tensor Chebyshev energy",
+    "cube Lipschitz Chebyshev coefficients"
    ],
    "mathlib_prereqs": [],
    "difficulty": 4,
    "priority": "next",
    "tags": [
-    "source-reviewed"
+    "source-reviewed",
+    "done"
    ],
-   "notes": "The univariate displayed constant uses standard, unnormalized coefficients; the source uses orthonormal coefficients and constant pi/2. The Lipschitz extension follows by an absolutely continuous cosine pullback, or by smooth approximation and finite-sum limits. Do not differentiate an arbitrary infinite series term by term without justification.",
-   "updated_at": "2026-10-15"
+   "notes": "The univariate displayed constant uses standard, unnormalized coefficients; the source uses orthonormal coefficients and constant pi/2. The Lipschitz extension follows by an absolutely continuous cosine pullback, or by smooth approximation and finite-sum limits. Do not differentiate an arbitrary infinite series term by term without justification. Formalization: the univariate proof uses an actual absolutely continuous cosine pullback, integration by parts and finite sine Bessel inequalities. The tensor proof defines coefficients by the actual product Chebyshev measure, proves its cosine pushforward and normalized mixed sine/cosine orthogonality, then applies parameter-measurable coordinate derivatives, Fubini and finite Bessel. The final theorem assumes Lipschitz continuity only on the Euclidean cube; a same-constant real extension is constructed internally and coefficients are unchanged by actual product-measure support. Neither differentiability of the input nor termwise differentiation of an infinite series is assumed. The zero-dimensional tensor case is also included.",
+   "updated_at": "2026-10-17",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For an interval Lipschitz function, the actual standard unnormalized positive-frequency Chebyshev energy sums to at most L squared.",
+      "decls": [
+       "NLAlib.tsum_mul_sq_chebyshevCoeff_le_of_lipschitzOnWith"
+      ]
+     },
+     {
+      "statement": "The univariate constant is attained by affine functions, including f(x)=c+L*x.",
+      "decls": [
+       "NLAlib.tsum_mul_sq_chebyshevCoeff_affine"
+      ]
+     },
+     {
+      "statement": "For a function Lipschitz only on the Euclidean cube, actual normalized product-Chebyshev coefficients have total squared-frequency energy at most d*pi^d*L squared/2.",
+      "decls": [
+       "NLAlib.tsum_norm_sq_mul_tensorChebyshevCoeff_sq_le_of_lipschitzOnWith"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "chebyshev-moment-wasserstein",
    "title": "Weighted Chebyshev moment error controls Wasserstein distance",
    "area": "estimation-spectral-density",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Higher moments may be substantially noisier while still controlling the spectral distribution. The estimate includes atomic measures and a tensor version for complex-plane spectra.",
    "hypotheses": [
     "$\\mu,\\nu$ are probability measures supported on $[-1,1]$, $k\\ge1$, and $\\Gamma^2=\\sum_{j=1}^k j^{-2}|\\int T_j\\,d\\mu-\\int T_j\\,d\\nu|^2$",
@@ -52735,26 +53343,75 @@
      "label": "Theorem 1, §3.1; Appendix A, Theorem 32"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.wassersteinEDistOne_le_twelve_div_add_chebyshevMomentError",
+     "module": "NLAlib.Probability.Transforms.ChebyshevMomentWasserstein",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the stronger univariate estimate with approximation term 12/k and the same actual weighted moment discrepancy."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.wassersteinEDistOne_le_thirtySix_div_add_chebyshevMomentError",
+     "module": "NLAlib.Probability.Transforms.ChebyshevMomentWasserstein",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass two native probability laws supported on [-1,1] and k>=1 to obtain the source Wasserstein bound from their actual weighted Chebyshev moments."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.wassersteinEDistOne_le_tensorChebyshevMomentError",
+     "module": "NLAlib.Probability.Transforms.TensorChebyshevMomentWasserstein",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass actual probability laws supported on the Euclidean cube to obtain 12*d/k plus the exactly normalized tensor moment error term."
+    }
+   ],
    "depends_on": [
     "chebyshev-lipschitz-coefficient-energy",
-    "jackson-lipschitz"
+    "tensor-chebyshev-kernel-measure"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.chebyshevCube",
+    "NLAlib.chebyshevMomentError",
+    "NLAlib.tensorChebyshevMomentError",
+    "NLAlib.wassersteinEDistOne"
+   ],
    "variants": [],
    "aliases": [
     "robust Chebyshev moment matching",
     "noisy moments Wasserstein",
-    "MMRS Theorems 1 and 32"
+    "MMRS Theorems 1 and 32",
+    "coupling Wasserstein moment bound",
+    "normalized tensor moment discrepancy"
    ],
    "mathlib_prereqs": [],
    "difficulty": 4,
    "priority": "next",
    "tags": [
-    "source-reviewed"
+    "source-reviewed",
+    "done"
    ],
-   "notes": "Requires a damped Chebyshev Jackson approximant whose coefficient magnitudes do not increase; bare existence of a degree-k approximant is insufficient. Zeroth moments cancel because both measures have mass one. The source proof writes a density expansion for a general measure; the audited argument instead pairs the finite approximating polynomial directly against the signed measure, covering atoms and endpoint mass.",
-   "updated_at": "2026-10-15"
+   "notes": "Requires a damped Chebyshev Jackson approximant whose coefficient magnitudes do not increase; bare existence of a degree-k approximant is insufficient. Zeroth moments cancel because both measures have mass one. The source proof writes a density expansion for a general measure; the audited argument instead pairs the finite approximating polynomial directly against the signed measure, covering atoms and endpoint mass. Formalization: W1 is the infimum of actual coupling costs. Compact positive extension and metric c-transforms prove the needed Kantorovich bridge. Finite damped-polynomial pairing cancels the zeroth moments, covers atoms and endpoint mass, and uses the actual weighted moments. The checked bounds have the stronger approximation constants 12/k and 12*d/k; the displayed source constants 36/k and 36*d/k therefore follow. The tensor coefficient normalization and Euclidean transport metric are retained exactly.",
+   "updated_at": "2026-10-17",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For arbitrary actual probability laws supported on the closed unit interval, the coupling-defined Wasserstein distance is at most 36/k plus the square root of the displayed weighted actual Chebyshev moment discrepancy.",
+      "decls": [
+       "NLAlib.wassersteinEDistOne_le_thirtySix_div_add_chebyshevMomentError"
+      ]
+     },
+     {
+      "statement": "For arbitrary actual laws supported on the Euclidean d-cube, normalized tensor moments give the stated bound, with the stronger approximation term 12*d/k and exactly the displayed factor sqrt(d*pi^d/2).",
+      "decls": [
+       "NLAlib.wassersteinEDistOne_le_tensorChebyshevMomentError"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "chebyshev-moment-simplex-regression",
@@ -53155,7 +53812,7 @@
    "title": "Positive tensor Chebyshev kernels approximate probability measures",
    "area": "estimation-spectral-density",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Explicit nonnegative kernels reconstruct a probability measure from its finite mixed moments and give a deterministic Wasserstein approximation guarantee.",
    "hypotheses": [
     "$M\\ge1$, $\\theta=\\pi/(M+2)$, $\\rho_j=((M+2-j)\\cos(j\\theta)+\\sin(j\\theta)\\cot\\theta)/(M+2)$ for $0\\le j\\le M$",
@@ -53169,26 +53826,133 @@
      "label": "§2.2, equations (2.6)–(2.18), Theorem 2.2, Lemmas 2.3–2.4 and 2.6, Theorem 2.5"
     }
    ],
-   "formalizations": [],
-   "depends_on": [
-    "chebyshev-coefficients-def",
-    "jackson-lipschitz"
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tensorChebyshevJacksonOperator_nonneg",
+     "module": "NLAlib.Polynomial.FunctionApproximation.JacksonTensorOperator",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an almost-everywhere nonnegative input on the cube to prove positivity of the actual product-kernel integral operator."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_tensorChebyshevJacksonOperator_le",
+     "module": "NLAlib.Polynomial.FunctionApproximation.JacksonTensorOperator",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass a uniform input bound to obtain the same output bound for the actual positive kernel operator."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tensorChebyshevJacksonOperator_const",
+     "module": "NLAlib.Polynomial.FunctionApproximation.JacksonTensorOperator",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to a constant function to prove exact constant preservation by the mass-one product kernel."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_tensorChebyshevJacksonOperator_sub_le_of_coordinate_lipschitz",
+     "module": "NLAlib.Polynomial.FunctionApproximation.JacksonTensorOperator",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the coordinate Lipschitz bounds to obtain error at most (6/M) times their sum for the actual kernel operator."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tensorChebyshevSmoothedDensity_eq_sum",
+     "module": "NLAlib.Probability.Transforms.ChebyshevKernelMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "Expand the actual smoothed density as a finite sum of exact product damping times normalized tensor polynomials times the actual mixed input moments."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.wassersteinEDistOne_tensorChebyshevSmoothedLaw_le",
+     "module": "NLAlib.Probability.Transforms.ChebyshevKernelMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the explicit Markov mixture coupling to bound Euclidean Wasserstein distance from the original cube law by 6*d/M."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tensorChebyshevSmoothedLaw_eq_map_withDensity",
+     "module": "NLAlib.Probability.Transforms.ChebyshevKernelMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite the Euclidean output law as the map of its actual product-Chebyshev-weight density."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tensorChebyshevSmoothedLaw_probability_density_wasserstein",
+     "module": "NLAlib.Probability.Transforms.ChebyshevKernelMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to an actual probability law on the cube and M>=1 to obtain the native probability output, exact kernel density, and coupling-defined Wasserstein cost at most 6*d/M."
+    }
    ],
-   "uses_defs": [],
+   "depends_on": [
+    "chebyshev-coefficients-def"
+   ],
+   "uses_defs": [
+    "NLAlib.chebyshevCube",
+    "NLAlib.tensorChebyshevJacksonDamping",
+    "NLAlib.tensorChebyshevJacksonOperator",
+    "NLAlib.tensorChebyshevMoment",
+    "NLAlib.tensorChebyshevSmoothedDensity",
+    "NLAlib.tensorChebyshevSmoothedLaw",
+    "NLAlib.tensorNormalizedChebyshev",
+    "NLAlib.wassersteinEDistOne"
+   ],
    "variants": [],
    "aliases": [
     "multivariate kernel polynomial method",
     "positive Chebyshev smoothing",
-    "Jackson damping spectral density"
+    "Jackson damping spectral density",
+    "Markov Chebyshev smoothing kernel",
+    "finite mixed moment density",
+    "Euclidean smoothing coupling"
    ],
    "mathlib_prereqs": [],
    "difficulty": 4,
    "priority": "next",
    "tags": [
-    "source-reviewed"
+    "source-reviewed",
+    "done"
    ],
-   "notes": "The input law may be atomic; only the output has an absolutely continuous density. Endpoint singularities of the Chebyshev weight are integrable and are interpreted measure-theoretically. Arbitrary noisy moment arrays need not yield a positive density: positivity here follows from exact moments of an actual probability measure. A finite weighted empirical spectral measure supplies such moments even when it is random.",
-   "updated_at": "2026-10-15"
+   "notes": "The input law may be atomic; only the output has an absolutely continuous density. Endpoint singularities of the Chebyshev weight are integrable and are interpreted measure-theoretically. Arbitrary noisy moment arrays need not yield a positive density: positivity here follows from exact moments of an actual probability measure. A finite weighted empirical spectral measure supplies such moments even when it is random. Formalization: the exact sine-autocorrelation damping gives the displayed theta and rho coefficients, kernel nonnegativity, mass one and damping in [0,1]. The output is the native Markov-kernel mixture of an actual input probability law; Tonelli identifies its density, finite expansion gives its actual mixed moments, and an explicit joint measure proves the 6*d/M coupling cost. Operator positivity, constant preservation, uniform contraction and coordinate-Lipschitz error are checked for this same kernel. Arbitrary noisy moment arrays are not assumed to define positive laws.",
+   "updated_at": "2026-10-17",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The mixture of the exact displayed product kernels against an actual input law is an actual probability measure, has the averaged kernel density, and admits a coupling of Euclidean cost at most 6*d/M.",
+      "decls": [
+       "NLAlib.tensorChebyshevSmoothedLaw_probability_density_wasserstein"
+      ]
+     },
+     {
+      "statement": "The density is the exact finite product-damping expansion in the actual normalized mixed Chebyshev moments with each coordinate degree at most M.",
+      "decls": [
+       "NLAlib.tensorChebyshevSmoothedDensity_eq_sum"
+      ]
+     },
+     {
+      "statement": "The actual product-kernel integral operator preserves positivity and constants and is a contraction in uniform norm.",
+      "decls": [
+       "NLAlib.tensorChebyshevJacksonOperator_nonneg",
+       "NLAlib.abs_tensorChebyshevJacksonOperator_le",
+       "NLAlib.tensorChebyshevJacksonOperator_const"
+      ]
+     },
+     {
+      "statement": "For coordinate Lipschitz constants L_i, the actual operator has uniform error at most (6/M)*sum_i L_i, with the displayed exact damping kernel.",
+      "decls": [
+       "NLAlib.abs_tensorChebyshevJacksonOperator_sub_le_of_coordinate_lipschitz"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "normal-spectral-density-query",
@@ -53319,7 +54083,7 @@
    "title": "A unique, stable threshold from the singular-value D-transform",
    "area": "lra-spectral-shrinkage",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "priority": "next",
    "difficulty": 4,
    "informal": "The scalar equation underlying ScreeNOT has one root above the noise spectrum; it is computable by bisection and continuous under weak convergence together with convergence of the spectral edge.",
@@ -53338,18 +54102,148 @@
    "aliases": [
     "ScreeNOT root",
     "D-transform threshold",
-    "singular value hard threshold selection"
+    "singular value hard threshold selection",
+    "native singular-value D-transform threshold",
+    "support-edge weak-law threshold continuity",
+    "certified ScreeNOT midpoint bisection",
+    "positive-edge-atom thickness"
    ],
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.neg_four_le_singularValuePsi_sqrt_three_mul",
+     "module": "NLAlib.Probability.Transforms.DTransform.Bounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the exact compact-support kernel bound at sqrt three times the positive support edge to certify the universal right bracket."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_singularValuePsi_atBot_of_edge_thickness",
+     "module": "NLAlib.Probability.Transforms.DTransform.Edge",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the actual second edge-resolvent moment divergence to obtain the negative-infinity limit of the actual root function at the right edge."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_singularValuePsi_atTop",
+     "module": "NLAlib.Probability.Transforms.DTransform.Infinity",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass compact support and a probability law to obtain the actual root-function limit minus two at positive infinity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.continuousOn_singularValuePsi",
+     "module": "NLAlib.Probability.Transforms.DTransform.Monotonicity",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply compact nonnegative support and the aspect-ratio range to obtain continuity of the actual derivative-based root function on the open interval above the edge."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.strictMonoOn_singularValuePsi",
+     "module": "NLAlib.Probability.Transforms.DTransform.Monotonicity",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass a positive upper support point and compact support to obtain strict increase of the actual root function, derived from the true inverse-moment derivatives."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_singularValuePsi_eq_neg_four",
+     "module": "NLAlib.Probability.Transforms.DTransform.Root",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the positive actual upper support edge, aspect ratio and edge thickness to obtain the unique minus-four crossing inside the universal bracket."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.screeThreshold_spec",
+     "module": "NLAlib.Probability.Transforms.DTransform.Root",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual infimum-defined threshold lies strictly above the support edge, at most sqrt three times that edge, and solves the native derivative-based equation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.singularValuePsi_eq_neg_four_iff_eq_screeThreshold",
+     "module": "NLAlib.Probability.Transforms.DTransform.Root",
+     "status": "proved",
+     "partial": true,
+     "usage": "For any point above the support edge, the actual root equation holds if and only if that point equals the defined threshold, including points beyond the universal bracket."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.bisectionInterval_screeThreshold",
+     "module": "NLAlib.Probability.Transforms.DTransform.Root",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the actual midpoint recursion to retain the true threshold and obtain exact width (sqrt three minus one) times the edge divided by two to the iteration count."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_screeThreshold_of_weak_convergence",
+     "module": "NLAlib.Probability.Transforms.DTransform.Stability",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass native weak convergence of actual probability measures, convergence of their actual positive support edges and aspect ratios, and the individual thickness conditions to obtain convergence of the actual thresholds."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.bisectionInterval",
+    "NLAlib.screeThreshold",
+    "NLAlib.singularValueEdgeMoment",
+    "NLAlib.singularValuePsi"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "tags": [
     "matrix-method",
-    "source-revisited"
+    "source-revisited",
+    "done"
    ],
-   "notes": "Finite empirical measures with positive largest atom satisfy the edge condition. An evaluation of Psi uses all p singular values, so j bisection steps cost O(pj) scalar arithmetic after the singular values are supplied; computing an SVD is not included. Weak convergence alone is insufficient because isolated outliers can move the upper support edge. The zero measure at the origin is excluded. This card is the deterministic numerical core, not the full asymptotic MSE-oracle theorem.",
-   "updated_at": "2026-10-15"
+   "notes": "Finite empirical measures with positive largest atom satisfy the edge condition. An evaluation of Psi uses all p singular values, so j bisection steps cost O(pj) scalar arithmetic after the singular values are supplied; computing an SVD is not included. Weak convergence alone is insufficient because isolated outliers can move the upper support edge. The zero measure at the origin is excluded. This card is the deterministic numerical core, not the full asymptotic MSE-oracle theorem. Formalization: native Bochner integrals define phi and D; Psi uses the genuine ordinary derivative of D. All inverse-moment derivatives, positivity and strict increase are derived from compact support and positive mass away from zero. The threshold is an actual infimum of its crossing set, not a supplied root. ProbabilityMeasure weak topology and actual converging support bounds imply test-integral convergence, then actual Psi and threshold convergence; no transform-convergence or root-convergence premise is supplied. The separate positive-edge-atom helper proves the advertised thickness condition for any law carrying a positive edge atom. The numerical recursion uses exact real comparison; no SVD algorithm or arithmetic complexity formalization is claimed.",
+   "updated_at": "2026-10-18",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual derivative-based root function is continuous and strictly increasing on the whole open interval above the positive upper support edge.",
+      "decls": [
+       "NLAlib.continuousOn_singularValuePsi",
+       "NLAlib.strictMonoOn_singularValuePsi"
+      ]
+     },
+     {
+      "statement": "The actual edge-thickness hypothesis gives the limit minus infinity at the right edge, and compact support gives the limit minus two at positive infinity.",
+      "decls": [
+       "NLAlib.tendsto_singularValuePsi_atBot_of_edge_thickness",
+       "NLAlib.tendsto_singularValuePsi_atTop"
+      ]
+     },
+     {
+      "statement": "There is a unique crossing above the edge; the actual infimum-defined threshold solves the minus-four equation and lies in the universal interval (b,sqrt three times b], with global uniqueness beyond this interval as well.",
+      "decls": [
+       "NLAlib.existsUnique_singularValuePsi_eq_neg_four",
+       "NLAlib.screeThreshold_spec",
+       "NLAlib.singularValuePsi_eq_neg_four_iff_eq_screeThreshold",
+       "NLAlib.neg_four_le_singularValuePsi_sqrt_three_mul"
+      ]
+     },
+     {
+      "statement": "The actual midpoint/value bisection recursion on [b,sqrt three times b] encloses the actual threshold and has exact width (sqrt three minus one) times b divided by two to the iteration count; it does not evaluate at the singular edge.",
+      "decls": [
+       "NLAlib.bisectionInterval_screeThreshold"
+      ]
+     },
+     {
+      "statement": "Native weak convergence of probability laws, convergence of their actual positive upper support edges, and convergence of aspect ratios imply convergence of the actual thresholds when the limit and each approximating law meet the stated thickness conditions.",
+      "decls": [
+       "NLAlib.tendsto_screeThreshold_of_weak_convergence"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "matrix-k-transform-stability",
@@ -54216,7 +55110,7 @@
    "hypotheses": [
     "A finite nonempty rooted family of real-rooted polynomials of equal positive degree with positive leading coefficients; every sibling family is nonempty and has a common interlacing; internal polynomials are sums of their descendants."
    ],
-   "conclusion": "Some leaf $f$ satisfies $\\maxroot(f)\\le\\maxroot(f_{\\varnothing})$.",
+   "conclusion": "Some leaf $f$ satisfies $\\operatorname{maxroot}(f)\\le\\operatorname{maxroot}(f_{\\varnothing})$.",
    "sources": [
     {
      "source": "mss13-interlacing",
@@ -54250,7 +55144,7 @@
    "hypotheses": [
     "$A_1,\\ldots,A_m\\in\\mathbb C^{d\\times d}$ are PSD, $d\\ge1$, $m\\ge0$; $\\mu[A](x):=\\left.\\prod_{i=1}^m(1-\\partial_{z_i})\\det(xI+\\sum_{i=1}^m z_iA_i)\\right|_{z=0}$."
    ],
-   "conclusion": "$\\mu[A]$ is real-rooted; $A_i=\\mathbb E v_iv_i^*$ for independent finitely supported vectors gives $\\mu[A]=\\mathbb E\\det(xI-\\sum_i v_iv_i^*)$. If $\\sum_iA_i=I$ and $\\operatorname{Tr}A_i\\le\\varepsilon$, then $\\maxroot\\mu[A]\\le(1+\\sqrt\\varepsilon)^2$.",
+   "conclusion": "$\\mu[A]$ is real-rooted; $A_i=\\mathbb E v_iv_i^*$ for independent finitely supported vectors gives $\\mu[A]=\\mathbb E\\det(xI-\\sum_i v_iv_i^*)$. If $\\sum_iA_i=I$ and $\\operatorname{Tr}A_i\\le\\varepsilon$, then $\\operatorname{maxroot}\\mu[A]\\le(1+\\sqrt\\varepsilon)^2$.",
    "sources": [
     {
      "source": "mss13-interlacing",
@@ -54672,37 +55566,213 @@
    "title": "Matching Gaussian covariance controls the expected matrix resolvent",
    "area": "gaussian-comparison",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Expected matrix resolvents of bounded independent Hermitian sums admit an operator-norm comparison with the matching Gaussian proxy.",
    "hypotheses": [
-    "$X=Z_0+\\sum_i Z_i\\in M_d(\\mathbb C)_{sa}$, $d\\ge1$, deterministic $Z_0$, independent centered Hermitian $Z_i$ with $\\|Z_i\\|_2\\le R<\\infty$ a.s.; $G$ has jointly real-Gaussian Hermitian entries with the same mean and full covariance of real and imaginary entries.",
-    "$\\sigma:=\\|\\sum_i\\mathbb E Z_i^2\\|_2^{1/2}$, $\\operatorname{Im}z>0$."
+    "$X=A_0+\\sum_{i\\in I} Z_i\\in M_d(\\mathbb C)_{sa}$, $d\\ge1$, $I$ finite (possibly empty), deterministic Hermitian $A_0$, independent centered Hermitian $Z_i$, and $0\\le R<\\infty$ with $\\|Z_i\\|_2\\le R$ a.s.; $G$ has jointly real-Gaussian real and imaginary entries, is Hermitian a.s., and has the same actual mean and full real-entry covariance as $X$.",
+    "$\\sigma^2:=\\|\\sum_i\\mathbb E Z_i^2\\|_2$, $\\operatorname{Im}z>0$."
    ],
-   "conclusion": "$\\|\\mathbb E(zI-X)^{-1}-\\mathbb E(zI-G)^{-1}\\|_2\\le C\\,[R\\sigma^2+R^3\\log(2d)]/(\\operatorname{Im}z)^4$, with universal $C$.",
+   "conclusion": "$\\|\\mathbb E(zI-X)^{-1}-\\mathbb E(zI-G)^{-1}\\|_2\\le 288\\,[R\\sigma^2+R^3\\log(2d)]/(\\operatorname{Im}z)^4$.",
    "sources": [
     {
      "source": "bvh22-universality",
-     "label": "Theorem 2.10, PDF p. 12"
+     "label": "Theorem 2.10 (first inequality), PDF p. 12; Section 6.4, Lemmas 6.11–6.12"
     }
    ],
-   "formalizations": [],
-   "depends_on": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sum_resolvent_mul_mul_resolvent_le",
+     "module": "NLAlib.Matrix.Functions.AggregateResolvent",
+     "status": "proved",
+     "partial": true,
+     "usage": "Bound a sum of actual matrix-resolvent words by the aggregate square masses of both endpoint families, retaining operator norm throughout."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sum_resolvent_cubic_word_le",
+     "module": "NLAlib.Matrix.Functions.AggregateResolvent",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply to individually perturbed Hermitian resolvents to control actual cubic words by common endpoint square masses and a quadratic perturbation correction, with no smallness premise."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.resolvent_mul_resolvent_sub_eq_smul_add_smul_sq",
+     "module": "NLAlib.Matrix.Functions.ResolventCancellation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite the actual difference of directional resolvent derivatives as its common quadratic term plus the explicitly defined six-word cubic remainder."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sum_resolventCubicRemainder_le",
+     "module": "NLAlib.Matrix.Functions.ResolventCancellation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Estimate a finite sum of the actual six-word remainders using aggregate squared differences and exact fourth- and sixth-resolvent powers."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_sum_sq_le_chernoff",
+     "module": "NLAlib.Probability.Concentration.Matrix.IndependentSquareSum",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply native independent-matrix Chernoff to actual squared Hermitian increments to bound their expected aggregate norm by (exp(1)-1) times the raw second-moment norm plus R squared times log(d)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_sum_coordinate_sq_le_chernoff",
+     "module": "NLAlib.Probability.Gaussian.Comparison.MatrixCoordinateSquareMass",
+     "status": "proved",
+     "partial": true,
+     "usage": "Transport actual bounded Hermitian matrix laws to full real and imaginary coordinates and obtain the same expected square-mass Chernoff estimate with the original matrix second moments."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_resamplingInterpolation_matrix",
+     "module": "NLAlib.Probability.Gaussian.Comparison.MatrixResamplingInterpolation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Supply the actual differentiable coefficient fields and full Gaussian covariance to obtain the operator-valued resampling derivative through exact entrywise identities, without summing entrywise norms."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.resamplingInterpolation_one_matrix_resolvent_law",
+     "module": "NLAlib.Probability.Gaussian.Comparison.MatrixResolventEndpoints",
+     "status": "proved",
+     "partial": true,
+     "usage": "Identify time one of the actual coordinate interpolation with the original product-law matrix-resolvent expectation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.resamplingInterpolation_zero_matrix_resolvent_law",
+     "module": "NLAlib.Probability.Gaussian.Comparison.MatrixResolventEndpoints",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the actual Gaussian mean and Hermitian coordinate reconstruction to identify time zero with the matching Gaussian matrix-resolvent expectation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_specNorm_card_smul_integral_resolventCubicRemainder_le",
+     "module": "NLAlib.Probability.Moments.ExpectedResolventRemainder",
+     "status": "proved",
+     "partial": true,
+     "usage": "Derive selected-index remainder integrability and cancel its uniform cardinality factor before taking the operator norm, obtaining the expected aggregate square-mass bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_sum_sub_sq_le_of_hasLaw",
+     "module": "NLAlib.Probability.Moments.SquareMass",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass two arrays with the same actual joint bounded Hermitian law to control their expected squared-difference aggregate by four times the original expected square mass, without requiring the copies to be independent."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_sum_sub_sq_prod_le",
+     "module": "NLAlib.Probability.Moments.SquareMass",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the common-law square-mass estimate to two independent actual copies of a bounded measurable Hermitian array."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_sum_resamplingTriple_prod_copy_sub_sq_le",
+     "module": "NLAlib.Probability.Moments.ThirdCopySquareMass",
+     "status": "proved",
+     "partial": true,
+     "usage": "Choose any two full slots of the actual resampling triple and bound their expected transformed square-mass difference by four times the original product-law square mass."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_integral_resolvent_sum_sub_gaussian_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.MatrixResolventUniversality",
+     "status": "proved",
+     "usage": "Apply to bounded a.e. Hermitian independent matrix laws, an actual Hermitian Gaussian law with matching actual mean and every real-entry covariance, a deterministic Hermitian offset, R>=0 and Im(z)>0 to obtain the explicit 288 operator-resolvent comparison using the raw second-moment sum; centered increments recover the source variance proxy."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_integral_resolvent_sum_sub_gaussian_le_of_hasLaw",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.MatrixResolventUniversalityHasLaw",
+     "status": "proved",
+     "usage": "Pass actual independent random matrices and their marginal laws, an actual Hermitian Gaussian random matrix with matching actual mean and full covariance, and the norm bound to obtain the 288 comparison directly for the original-space resolvent expectations and second moments."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_resamplingInterpolation_sub_le_square_mass",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventOperatorComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the actual Gaussian full-covariance interpolation to bound its operator-valued endpoint difference by 72 times the expected aggregate squared-increment norm with the exact fourth- and sixth-resolvent powers."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_resamplingInterpolation_hermitianCoordinateResolvent",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventOperatorInterpolation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Specialize the actual matrix-valued covariance derivative to native Hermitian coordinate resolvents, deriving all coefficient fields and analytic bounds internally."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_hasDerivAt_resamplingInterpolation_resolventCubicRemainder",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventOperatorInterpolation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use actual Hermitian resolvent coefficient fields and full Gaussian covariance to derive both cubic-remainder integrability and the native interpolation derivative identity; no comparison or third-moment estimate is assumed."
+    }
+   ],
+   "depends_on": [
+    "matrix-function-block-divided-differences",
+    "exchangeable-matrix-covariance",
+    "gaussian-integration-by-parts",
+    "matrix-chernoff"
+   ],
+   "uses_defs": [
+    "NLAlib.centeredMatrixCoordinateLaw",
+    "NLAlib.hermitianCoordinateResolvent",
+    "NLAlib.hermitianMatrixFromRealCoordinates",
+    "NLAlib.matrixRealCoordinates",
+    "NLAlib.resamplingAffinePoint",
+    "NLAlib.resamplingInterpolation",
+    "NLAlib.resamplingTripleFirst",
+    "NLAlib.resamplingTripleMeasure",
+    "NLAlib.resamplingTripleOriginal",
+    "NLAlib.resamplingTripleSecond",
+    "NLAlib.resolventCubicRemainder",
+    "NLAlib.specNorm"
+   ],
    "variants": [
     "cauchy-transform-gaussian-universality"
    ],
    "aliases": [
-    "matrix resolvent universality"
+    "matrix resolvent universality",
+    "operator resolvent Gaussian comparison",
+    "expected matrix resolvent",
+    "full covariance resolvent universality",
+    "bounded Hermitian sum Gaussian comparison"
    ],
    "mathlib_prereqs": [],
    "difficulty": 5,
    "priority": "next",
    "tags": [
     "foundation",
-    "source-reviewed"
+    "source-reviewed",
+    "done"
    ],
-   "notes": "Matrix-valued comparison. log(2d) makes the dimension-one case explicit and only enlarges the bound. Normalized-trace Cauchy comparison is a distinct existing card.",
-   "updated_at": "2026-10-16"
+   "notes": "Matrix-valued comparison in the actual spectral operator norm. The explicit constant 288 is proved by the present estimates; the source leaves its universal constant unspecified. The source assumes d>=2 and centered increments. The native law-level theorems also cover d=1 via log(2d), empty summand families, R=0, singular Gaussian covariance and noncentered increments with raw second-moment sum Q=||sum_i E Zi^2||_2 in place of sigma^2. R>=0 makes the bound parameter explicit, including empty families. Actual operator-valued Gaussian integration by parts cancels full covariance; exact cubic resolvent algebra, common-array resampling and independent squared-sum Chernoff control retain the aggregate second-moment scale. No interpolation, remainder estimate, endpoint-law identity, sample invertibility or desired comparison is a premise. The original-space consumer transports actual means, covariances, resolvents and second moments from marginal laws and independence. Normalized-trace Cauchy comparison is a distinct existing card. The W^{5,1} functional-calculus consequence of Theorem 2.10 is outside this card.",
+   "updated_at": "2026-10-17",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For actual independent bounded Hermitian random matrices on arbitrary probability spaces, matching actual Gaussian mean and every real and imaginary covariance imply the displayed operator-resolvent comparison with explicit universal constant 288; centered increments give exactly the source variance proxy.",
+      "decls": [
+       "NLAlib.specNorm_integral_resolvent_sum_sub_gaussian_le_of_hasLaw"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "heterogeneous-gaussian-schatten-row-comparison",
@@ -54892,7 +55962,7 @@
    "hypotheses": [
     "$p(x)=\\sum_{i=0}^d(-1)^ia_ix^{d-i}$ and $q(x)=\\sum_{i=0}^d(-1)^ib_ix^{d-i}$ are monic with nonnegative roots, $d\\ge1$; $(p\\boxtimes_dq)(x):=\\sum_{i=0}^d(-1)^ia_ib_i\\binom di^{-1}x^{d-i}$."
    ],
-   "conclusion": "$p\\boxtimes_dq$ has nonnegative roots and $\\maxroot(p\\boxtimes_dq)\\le\\maxroot(p)\\maxroot(q)$. For $p=\\chi_A,q=\\chi_B$, $A,B\\succeq0$, and Haar $U\\in U(d)$, $p\\boxtimes_dq=\\mathbb E\\chi_{AUBU^*}$.",
+   "conclusion": "$p\\boxtimes_dq$ has nonnegative roots and $\\operatorname{maxroot}(p\\boxtimes_dq)\\le\\operatorname{maxroot}(p)\\operatorname{maxroot}(q)$. For $p=\\chi_A,q=\\chi_B$, $A,B\\succeq0$, and Haar $U\\in U(d)$, $p\\boxtimes_dq=\\mathbb E\\chi_{AUBU^*}$.",
    "sources": [
     {
      "source": "mss15-finite-free",
@@ -54921,7 +55991,7 @@
    "title": "Multivariate Araki–Lieb–Thirring integral inequality",
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "An integral over ordered imaginary powers bounds the Schatten norm of a product of positive matrix powers.",
    "hypotheses": [
     "$A_1,\\ldots,A_k\\succeq0$, $1\\le p<\\infty$, $0<r<1$; $\\beta_r(t)=\\sin(\\pi r)/(2r[\\cosh(\\pi t)+\\cos(\\pi r)])$."
@@ -54933,29 +56003,143 @@
      "label": "Theorem 3.2, equations (30), (33), pp. 6–7"
     }
    ],
-   "formalizations": [],
-   "depends_on": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "Real.isProbabilityMeasure_hirschmanMeasure",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.HirschmanMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "For 0<r<1, install the probability-measure instance for the actual Lebesgue measure with density beta_r; its mass is computed from the proved explicit antiderivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Real.integral_hirschmanMeasure",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.HirschmanMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite any native Bochner integral against the actual Hirschman probability measure as the displayed beta_r-weighted Lebesgue integral, with no separate integrability premise."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.schattenNormReal_abs_rpow_orderedMatrixComplexPower_le_exp_log_add",
+     "module": "NLAlib.Matrix.Functions.MultivariateArakiLiebThirring",
+     "status": "proved",
+     "partial": true,
+     "usage": "For every positive delta, bound the original PSD modulus-power norm by exp of the exact beta_r integral of log(boundary norm plus delta); the positive-definite approximation and its dominated limit are proved."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.schattenNormReal_abs_rpow_orderedMatrixComplexPower_le_geometricMean",
+     "module": "NLAlib.Matrix.Functions.MultivariateArakiLiebThirring",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the zero-safe norm form: the actual Schatten norm of the modulus to power 1/r is bounded by the genuine extended geometric mean of the actual ordered complex-power boundary norms, including vanishing products."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.log_schattenNormReal_abs_rpow_prod_rpow_le_extendedLogIntegral",
+     "module": "NLAlib.Matrix.Functions.MultivariateArakiLiebThirring",
+     "status": "proved",
+     "usage": "Pass an ordered list of PSD complex square matrices, finite p at least one, and 0<r<1 to obtain the exact extended logarithmic ALT inequality for the actual ordered product of native CFC real powers; the right side uses the explicit beta_r probability measure and genuine positive-minus-negative logarithmic integrals."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.orderedMatrixComplexPower_ofReal_eq_prod_rpow",
+     "module": "NLAlib.Matrix.Functions.OrderedComplexPowers",
+     "status": "proved",
+     "partial": true,
+     "usage": "Rewrite the ordered principal complex-power product at a real exponent as the product, in the same displayed order, of native positive real CFC powers of the PSD factors."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.schattenNormReal_orderedMatrixExp_le_exp_hirschman",
+     "module": "NLAlib.Matrix.Functions.OrderedExponentialInterpolation",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "depends_on": [
+    "matrix-calculus-def",
+    "schatten-norms-def"
+   ],
+   "uses_defs": [
+    "MeasureTheory.extendedLogIntegral",
+    "MeasureTheory.geometricMean",
+    "NLAlib.orderedMatrixComplexPower",
+    "NLAlib.orderedMatrixExp",
+    "NLAlib.schattenNormReal",
+    "Real.hirschmanDensity",
+    "Real.hirschmanMeasure"
+   ],
    "variants": [],
    "aliases": [
-    "multivariate ALT"
+    "multivariate ALT",
+    "ordered positive matrix powers",
+    "PSD multivariate ALT",
+    "Stein-Hirschman weighted Schatten interpolation",
+    "singular matrix ALT",
+    "extended logarithmic ALT"
    ],
    "mathlib_prereqs": [],
    "difficulty": 5,
    "priority": "next",
    "tags": [
     "foundation",
-    "source-reviewed"
+    "source-reviewed",
+    "done"
    ],
-   "notes": "Products keep their displayed order. PSD endpoints use the positive-regularization limit, with log(0)=-infinity; r=1 is equality.",
-   "updated_at": "2026-10-16"
+   "notes": "The original PSD hypotheses and displayed conclusion are preserved. Matrix complex powers are the native normal complex CFC of the principal scalar complex power; at real exponents they are proved equal to native positive real CFC powers. List products retain their displayed order throughout. The primary theorem uses the native EReal logarithm of the nonnegative Schatten norm, so log(0) is literally minus infinity. Its right side is an independently defined positive-part logarithmic lintegral minus the negative-part logarithmic lintegral against the explicit Lebesgue-with-density beta_r probability measure. The proved uniform upper bound makes the positive part finite; an infinite negative part is allowed. No ordinary-log integrability or nonvanishing hypothesis is supplied. Positive scalar identity regularizations are actually constructed, their complex powers converge in a fixed eigenbasis through zero eigenvalues, and the weighted logarithmic integrals converge for every positive delta using a common finite dominating bound. Monotone convergence of deficits removes delta. The companion geometric-mean inequality is zero-safe. The p=1 endpoint, rank-deficient factors, zero factors, zero products, empty matrix index types, and empty ordered factor lists are covered without extra hypotheses. The strict interval 0<r<1 is the displayed source target; the r=1 modulus/Schatten equality is the direct specialization of schattenNormReal_rpow_abs. Exact scalar Hirschman interpolation, matrix duality, and product boundary bounds are proved in separate reusable leaves. Only the actual real-power-product extended-log capstone carries the full card tag; normalization, bridges, and regularized bounds are partial companions.",
+   "updated_at": "2026-10-18",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The full source statement for arbitrary PSD factors, finite p>=1 and 0<r<1 is a native EReal logarithmic inequality for the actual ordered product of native CFC real powers.",
+      "decls": [
+       "NLAlib.log_schattenNormReal_abs_rpow_prod_rpow_le_extendedLogIntegral"
+      ]
+     },
+     {
+      "statement": "Principal matrix complex powers are actual normal-matrix CFC evaluations. Fixed Hermitian eigenbases identify their real exponents with positive CFC powers and positive-definite complex exponents with matrix exponentials of scalar multiples of matrix logarithms.",
+      "decls": [
+       "NLAlib.orderedMatrixComplexPower_ofReal_eq_prod_rpow"
+      ]
+     },
+     {
+      "statement": "Exact scalar Hirschman interpolation, attained complex Schatten duality, and the actual ordered exponential family provide the finite-parameter matrix inequality; no boundary norm estimate or interpolation conclusion is supplied as a target premise.",
+      "decls": [
+       "NLAlib.schattenNormReal_orderedMatrixExp_le_exp_hirschman"
+      ]
+     },
+     {
+      "statement": "Positive scalar identity shifts are genuinely positive definite, preserve the order and fixed eigenbases, and converge through zero eigenvalues. The right-boundary norms have a common finite bound independent of imaginary time and the scalar shift.",
+      "decls": [
+       "NLAlib.schattenNormReal_abs_rpow_orderedMatrixComplexPower_le_exp_log_add"
+      ]
+     },
+     {
+      "statement": "At each positive logarithmic regularization, genuine dominated convergence proves the PSD limiting inequality. Monotone convergence of logarithmic deficits then removes that regularization and identifies the result with the independently defined positive-minus-negative extended logarithmic integral.",
+      "decls": [
+       "NLAlib.schattenNormReal_abs_rpow_orderedMatrixComplexPower_le_exp_log_add",
+       "NLAlib.schattenNormReal_abs_rpow_orderedMatrixComplexPower_le_geometricMean"
+      ]
+     },
+     {
+      "statement": "The exact source density is a proved probability distribution and its native integration is the source weighted integral, rather than an unspecified measure.",
+      "decls": [
+       "Real.isProbabilityMeasure_hirschmanMeasure",
+       "Real.integral_hirschmanMeasure"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "multivariate-golden-thompson",
    "title": "Multivariate Golden–Thompson through an ordered integral",
    "area": "matrix-trace",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "An integral over ordered complex-time exponential products bounds the Schatten norm of the exponential of a Hermitian sum.",
    "hypotheses": [
     "$H_1,\\ldots,H_k$ Hermitian, $1\\le p<\\infty$, $\\beta_0(t)=\\pi/[2(\\cosh(\\pi t)+1)]$."
@@ -54967,11 +56151,70 @@
      "label": "Corollary 3.3, equations (32), (38), p. 8"
     }
    ],
-   "formalizations": [],
-   "depends_on": [
-    "multivariate-araki-lieb-thirring"
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "HasDerivAt.tendsto_pow_inv_nat",
+     "module": "NLAlib.ForMathlib.Analysis.Normed.Algebra.EulerPower",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_hirschmanDensityZero_mul_log_orderedMatrixExp",
+     "module": "NLAlib.Matrix.Functions.MultivariateGoldenThompson",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.schattenNormReal_rpow_abs_orderedMatrixExp_le_exp_hirschman",
+     "module": "NLAlib.Matrix.Functions.MultivariateGoldenThompson",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the actual CFC modulus power and exact Schatten exponent identity to obtain the finite-r precursor to the Golden--Thompson limit."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.schattenNormReal_matrixExp_sum_le_exp_integral_log_orderedMatrixExp",
+     "module": "NLAlib.Matrix.Functions.MultivariateGoldenThompson",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the zero-safe norm form on every finite matrix shape, including the empty one, to bound the actual exponential of the generator sum."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.log_schattenNormReal_matrixExp_sum_le_integral_log_orderedMatrixExp",
+     "module": "NLAlib.Matrix.Functions.MultivariateGoldenThompson",
+     "status": "proved",
+     "usage": "Pass the ordered Hermitian generators and a finite p>=1 to obtain the exact beta_0 logarithmic integral bound, with no analytic, interpolation, integrability or product-limit premises."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.schattenNormReal_orderedMatrixExp_le_exp_hirschman",
+     "module": "NLAlib.Matrix.Functions.OrderedExponentialInterpolation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply exact finite-r matrix interpolation directly to an actual ordered Hermitian exponential product; all strip and boundary hypotheses are derived internally."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_abs_orderedMatrixExp_pow",
+     "module": "NLAlib.Matrix.Functions.OrderedExponentialModulus",
+     "status": "proved",
+     "partial": true
+    }
    ],
-   "uses_defs": [],
+   "depends_on": [
+    "schatten-norms-def"
+   ],
+   "uses_defs": [
+    "NLAlib.matrixExp",
+    "NLAlib.orderedMatrixExp",
+    "NLAlib.schattenNormReal",
+    "Real.hirschmanDensity",
+    "Real.hirschmanDensityZero"
+   ],
    "variants": [
     "golden-thompson"
    ],
@@ -54983,10 +56226,21 @@
    "priority": "next",
    "tags": [
     "foundation",
-    "source-reviewed"
+    "source-reviewed",
+    "done"
    ],
-   "notes": "The beta densities integrate to one. This does not assert the false naive product-of-three-exponentials bound.",
-   "updated_at": "2026-10-16"
+   "notes": "The beta densities integrate to one. This does not assert the false naive product-of-three-exponentials bound. Formalization: exact scalar Hirschman interpolation is proved by a disk conformal map, actual boundary-measure pushforward, radial dominated convergence and zero-safe logarithmic regularization. Constructed entire complex Schatten dual tests give the matrix specialization, including p=1 and rank-deficient centers. Native ordered exponentials supply all boundary hypotheses. An actual CFC modulus first-order calculation and the noncommutative Banach-algebra Euler theorem prove the product limit. Bounded continuous right-boundary logarithms give the exact beta_r-to-beta_0 limit. No interpolation or product-limit conclusion is a premise. The zero-safe norm form includes empty shapes; the logarithmic empty-shape specialization uses the native Real.log(0)=0 convention. The nonempty source case has actual positive norms.",
+   "updated_at": "2026-10-17",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For every finite ordered Hermitian matrix family and every finite Schatten exponent p>=1, the displayed logarithmic Golden--Thompson inequality holds with the exact normalized beta_0 density and native exponential product.",
+      "decls": [
+       "NLAlib.log_schattenNormReal_matrixExp_sum_le_integral_log_orderedMatrixExp"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "shifted-qr-rapid-decoupling",
@@ -55031,36 +56285,190 @@
    "title": "The matrix Dyson solution is a compactly supported matrix Stieltjes transform",
    "area": "matrix-equations",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "A holomorphic positive-imaginary solution of the matrix Dyson equation is the Stieltjes transform of a uniquely determined compactly supported positive matrix measure.",
    "hypotheses": [
-    "$A\\in M_N(\\mathbb C)$ Hermitian, $N\\ge1$; complex-linear $\\mathcal S:M_N\\to M_N$ preserves PSD matrices and is self-adjoint for $\\langle R,T\\rangle=N^{-1}\\operatorname{Tr}(R^*T)$.",
-    "$M:\\mathbb H\\to M_N(\\mathbb C)$ is the holomorphic positive-imaginary solution of $-M(z)^{-1}=zI-A+\\mathcal S[M(z)]$."
+    "$A\\in M_N(\\mathbb C)$ is Hermitian, $N\\ge1$; complex-linear $\\mathcal S:M_N\\to M_N$ preserves positive semidefinite matrices and is self-adjoint for $\\langle R,T\\rangle=N^{-1}\\operatorname{Tr}(R^*T)$.",
+    "$M:\\mathbb H\\to M_N(\\mathbb C)$ is holomorphic, $\\operatorname{Im}M(z)\\succ0$, and $-M(z)^{-1}=zI-A+\\mathcal S[M(z)]$ for every $z\\in\\mathbb H$."
    ],
-   "conclusion": "There is a unique PSD matrix-valued measure $V$ with $V(\\mathbb R)=I$, supported on $[-\\kappa,\\kappa]$, $\\kappa=\\|A\\|_2+2\\|\\mathcal S\\|_{\\mathrm{op}\\to\\mathrm{op}}^{1/2}$, such that $M(z)=\\int(\\tau-z)^{-1}V(d\\tau)$; here the norm of $\\mathcal S$ is induced by the matrix spectral norm. Also $\\|M(z)\\|_2\\le1/\\operatorname{Im}z$.",
+   "conclusion": "There is a unique PSD matrix-valued measure $V$ with $V(\\mathbb R)=I$, supported on $[-\\kappa,\\kappa]$, $\\kappa=\\|A\\|_2+2\\|\\mathcal S\\|_{\\mathrm{op}\\to\\mathrm{op}}^{1/2}$, such that $M(z)=\\int(\\tau-z)^{-1}V(d\\tau)$; the map norm is induced by the matrix spectral norm. Also $\\|M(z)\\|_2\\le1/\\operatorname{Im}z$.",
    "sources": [
     {
      "source": "aek16-dyson",
-     "label": "§2.1 and Proposition 2.1, PDF pp. 4–5; bound (4.1)"
+     "label": "§2.1 and Proposition 2.1, PDF pp. 4–5; proof and bounds (4.1)–(4.8), arXiv:1604.08188v5"
     }
    ],
-   "formalizations": [],
-   "depends_on": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "AnalyticOnNhd.exists_finiteMeasure_cayley_integral_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Harmonic.HalfPlaneRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an analytic upper-half-plane function with nonnegative imaginary part to construct its positive finite circle measure in Cayley coordinates before imposing finite real-line normalization."
+    },
+    {
+     "library": "nlalib",
+     "decl": "AnalyticOnNhd.exists_finiteMeasure_herglotzRieszKernel_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Harmonic.HerglotzRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an analytic disk function with nonnegative real part to construct its actual positive finite Herglotz–Riesz circle measure and the exact imaginary additive constant."
+    },
+    {
+     "library": "nlalib",
+     "decl": "InnerProductSpace.HarmonicOnNhd.exists_finiteMeasure_poissonKernel_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Harmonic.PositiveRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass a nonnegative real harmonic function on the open unit disk to construct an actual finite positive circle measure of mass u(0) with its exact Poisson representation, without assuming boundary regularity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "AnalyticOnNhd.existsUnique_finiteMeasure_stieltjes_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Harmonic.StieltjesCharacterization",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass scalar holomorphy, nonnegative imaginary part and finite Stieltjes normalization to obtain the unique actual finite positive representing real measure, without a compact-support assumption."
+    },
+    {
+     "library": "nlalib",
+     "decl": "AnalyticOnNhd.existsUnique_finiteMeasure_stieltjes_eq_of_im_le",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Harmonic.StieltjesCharacterization",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use the scalar Herglotz characterization to construct a unique actual positive real measure of exact finite mass and compact support from holomorphy, nonnegative imaginary part, high-imaginary normalization, and the exterior imaginary bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "AnalyticOnNhd.exists_finiteMeasure_stieltjes_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Harmonic.StieltjesRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass analytic upper-half-plane data, nonnegative imaginary part and iy f(iy)→−c for c≥0 to construct an actual positive finite real Stieltjes measure of exact mass c, with no representation or boundary-value premise."
+    },
+    {
+     "library": "nlalib",
+     "decl": "MeasureTheory.measure_eq_of_integral_real_cauchyKernel_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Complex.Harmonic.StieltjesUniqueness",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass equality of the upper-half-plane Cauchy transforms of two actual finite positive real measures to identify the measures, without support or moment assumptions."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.exists_positiveMatrixMeasure_stieltjes_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Matrix.HerglotzRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass analytic matrix data, positive semidefinite imaginary part, the derived normalization and exterior imaginary bound to construct a native PSD matrix measure of total mass I, compact support, and literal complex-entry Stieltjes integrals."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.existsUnique_positiveMatrixMeasure_stieltjes_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Matrix.HerglotzRepresentation",
+     "status": "proved",
+     "partial": true,
+     "usage": "For a general analytic matrix Herglotz function, pass positivity, the normalization iy M(iy) → −I, and the exterior O(Im z) estimate to construct the actual unique positive matrix measure, with total mass I, compact support, and native complex-entry Stieltjes integrals. The Dyson consumer proves these analytic inputs from the equation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "Matrix.existsUnique_finiteMeasure_quadratic_stieltjes_eq",
+     "module": "NLAlib.ForMathlib.Analysis.Matrix.HerglotzScalar",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass an analytic normalized matrix Herglotz function with the exterior imaginary norm estimate to construct each actual unique positive scalar quadratic-probe measure of exact mass v* v and the common compact support."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_le_inv_im_of_matrixDyson",
+     "module": "NLAlib.Matrix.Functions.MatrixDysonBounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass a positive-imaginary matrix satisfying the polynomial negative-right-inverse Dyson identity; imaginary coercivity gives the actual Euclidean operator bound 1/Im z without normality or diagonalization."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_imaginaryPart_le_of_matrixDyson_exterior",
+     "module": "NLAlib.Matrix.Functions.MatrixDysonExterior",
+     "status": "proved",
+     "partial": true,
+     "usage": "For c strictly above the exact support radius and |Re z|≥c, continuity plus the actual Dyson identity and positive imaginary part derive ‖Im M(z)‖ ≤ 4 Im z/((c−specNorm A)²−4‖S‖); no small-branch hypothesis is supplied."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_mul_I_smul_matrixDyson",
+     "module": "NLAlib.Matrix.Functions.MatrixDysonNormalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "Pass the actual Dyson equation and nonnegative native imaginary part on the upper half plane to derive iy M(iy) → −I; no analytic or asymptotic-normalization hypothesis is supplied."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_positiveMatrixMeasure_and_specNorm_le_of_matrixDyson_inverse",
+     "module": "NLAlib.Matrix.Functions.MatrixDysonStieltjes",
+     "status": "proved",
+     "usage": "Pass Hermitian A, a positive complex-linear continuous matrix map S, a holomorphic matrix function M with positive definite native imaginary part, and the actual inverse Dyson equation to obtain a unique native PSD matrix measure, mass I, exact spectral support radius, entrywise Stieltjes integrals, and specNorm(M z) ≤ (Im z)⁻¹."
+    }
+   ],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The source inverse equation with strictly positive matrix imaginary part constructs one unique actual positive matrix measure of mass I, with the exact support radius and literal entrywise Stieltjes integral identities, and gives the Euclidean norm bound 1/Im z.",
+      "decls": [
+       "NLAlib.existsUnique_positiveMatrixMeasure_and_specNorm_le_of_matrixDyson_inverse"
+      ]
+     },
+     {
+      "statement": "Imaginary coercivity and the actual polynomial Dyson identity prove the inverse bound and the normalization at imaginary infinity without assuming either conclusion.",
+      "decls": [
+       "NLAlib.specNorm_le_inv_im_of_matrixDyson",
+       "NLAlib.tendsto_mul_I_smul_matrixDyson"
+      ]
+     },
+     {
+      "statement": "Continuity on actual vertical lines and norm decay at infinity select the small norm branch; the exact exterior imaginary estimate supplies compact support. No branch-selection, representation, or support premise is present in the inverse capstone.",
+      "decls": [
+       "NLAlib.norm_imaginaryPart_le_of_matrixDyson_exterior",
+       "Matrix.existsUnique_positiveMatrixMeasure_stieltjes_eq",
+       "AnalyticOnNhd.existsUnique_finiteMeasure_stieltjes_eq_of_im_le"
+      ]
+     }
+    ]
+   },
+   "depends_on": [
+    "norms-frob-spec"
+   ],
+   "uses_defs": [
+    "Complex.cayleyTransform",
+    "Matrix.matrixQuadraticFormCLM",
+    "Matrix.quadraticProbeMass",
+    "MeasureTheory.PositiveMatrixMeasure",
+    "MeasureTheory.PositiveMatrixMeasure.entryStieltjesTransform",
+    "MeasureTheory.PositiveMatrixMeasure.toVectorMeasure",
+    "NLAlib.matrixDysonRadius",
+    "NLAlib.specNorm"
+   ],
    "variants": [],
    "aliases": [
     "matrix Dyson equation",
-    "matrix-valued Stieltjes transform"
+    "matrix-valued Stieltjes transform",
+    "positive matrix Herglotz measure",
+    "matrix Nevanlinna representation",
+    "compact matrix spectral measure",
+    "exact Dyson support radius",
+    "positive self-energy operator"
    ],
    "mathlib_prereqs": [],
    "difficulty": 5,
    "priority": "next",
    "tags": [
     "foundation",
-    "source-reviewed"
+    "source-reviewed",
+    "done"
    ],
-   "notes": "Deterministic equation theory. The target assumes the positive-imaginary holomorphic solution; it does not bundle the separately sourced existence theorem, A1/A2 stability, or a probabilistic local law.",
-   "updated_at": "2026-10-16"
+   "notes": "This target assumes a holomorphic positive-imaginary solution, as in the source; it does not assert existence or uniqueness of the Dyson solution itself, A1/A2 stability, or a random-matrix local law. The checked inverse capstone is stronger than the displayed data-pair assumptions: positivity of the complex-linear map suffices, and Hilbert–Schmidt self-adjointness is not needed once the actual solution is given. Bundling S as a continuous linear map adds no finite-dimensional mathematical hypothesis. The norm of S is the operator norm for the matrix spectral norm, not its normalized Hilbert–Schmidt operator norm. Positive definiteness of Im M proves nonsingularity before converting the genuine inverse equation to the polynomial identity; invertibility is not an extra hypothesis. The norm estimate treats nonnormal matrices through imaginary quadratic coercivity. Normalization follows from ‖zM+I‖≤‖A‖‖M‖+‖S‖‖M‖². The support proof works on vertical lines with fixed |Re z| above c>κ: the barrier excludes 2/(c−‖A‖), continuity and 1/y decay choose the small branch, and the imaginary congruence yields the exact O(Im z) bound. This is sufficient for support in [−κ,κ] and does not claim the stronger auxiliary exterior norm bound for every |z|>κ. No division by ‖S‖ occurs, so S=0, A=0 and κ=0 are included; the final source theorem has a nonempty finite index type, exactly N≥1. The positive matrix measure extends native VectorMeasure with PSD measurable values; each entry is a native ComplexMeasure. Its Stieltjes integral is defined using native vector integrals of the entry's real and imaginary signed parts, preserving the sign (τ−z)⁻¹. Scalar measures are actually constructed from disk harmonic radial measures and a Cayley transformation; normalization gives finite real mass, Cauchy probability regularization gives uniqueness and support, and finite Hermitian polarization proves compatibility and PSD values on all measurable sets. Only the combined inverse capstone has a full atlas tag; every analytic or deterministic supporting theorem is partial.",
+   "updated_at": "2026-10-18"
   },
   {
    "id": "subgaussian-gaussian-series-comparison",

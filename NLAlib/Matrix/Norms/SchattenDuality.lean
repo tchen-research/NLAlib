@@ -15,13 +15,15 @@ open scoped Matrix ENNReal
 
 namespace NLAlib
 
+variable {𝕜 : Type*} [RCLike 𝕜]
+
 open scoped Matrix.Norms.L2Operator in
 /-- The explicit normalized power coefficients in the finite Schatten dual
 attainer. At a nonzero matrix and `1 < p`, these are
 `σᵢ^(p-1) / ‖A‖_(S_p)^(p-1)`.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 def schattenDualCoefficients {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
-    (A : Matrix m n ℝ) (p : ℝ) (i : ℕ) : ℝ :=
+    (A : Matrix m n 𝕜) (p : ℝ) (i : ℕ) : ℝ :=
   singularValues A i ^ (p - 1) / schattenNormReal A p ^ (p - 1)
 
 open scoped Matrix.Norms.L2Operator in
@@ -29,7 +31,7 @@ open scoped Matrix.Norms.L2Operator in
 power sum one, with the exact source scaling.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem sum_schattenDualCoefficients_rpow_eq_one {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) {p q : ℝ} (hpq : Real.HolderConjugate p q) (hA : A ≠ 0) :
+    (A : Matrix (Fin m) (Fin n) 𝕜) {p q : ℝ} (hpq : Real.HolderConjugate p q) (hA : A ≠ 0) :
     (∑ i ∈ Finset.range (min m n), schattenDualCoefficients A p i ^ q) = 1 := by
   have hN : 0 < schattenNormReal A p := lt_of_le_of_ne (schattenNormReal_nonneg A p)
     (Ne.symm (fun h => hA ((schattenNormReal_eq_zero_iff A hpq.pos).mp h)))
@@ -53,7 +55,7 @@ open scoped Matrix.Norms.L2Operator in
 original Schatten norm. Zero singular values contribute zero.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem sum_singularValues_mul_schattenDualCoefficients_eq {m n : ℕ}
-    (A : Matrix (Fin m) (Fin n) ℝ) {p q : ℝ} (hpq : Real.HolderConjugate p q) (hA : A ≠ 0) :
+    (A : Matrix (Fin m) (Fin n) 𝕜) {p q : ℝ} (hpq : Real.HolderConjugate p q) (hA : A ≠ 0) :
     (∑ i ∈ Finset.range (min m n), singularValues A i * schattenDualCoefficients A p i) =
       schattenNormReal A p := by
   have hN : 0 < schattenNormReal A p := lt_of_le_of_ne (schattenNormReal_nonneg A p)
@@ -84,11 +86,11 @@ open scoped Matrix.Norms.L2Operator in
 conjugate Schatten norm and attain the source matrix norm.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem IsSVD.schattenDualCoefficients_attain {m n : ℕ}
-    {A : Matrix (Fin m) (Fin n) ℝ} {U : Matrix (Fin m) (Fin m) ℝ}
-    {V : Matrix (Fin n) (Fin n) ℝ} (h : IsSVD A U V) {p q : ℝ}
+    {A : Matrix (Fin m) (Fin n) 𝕜} {U : Matrix (Fin m) (Fin m) 𝕜}
+    {V : Matrix (Fin n) (Fin n) 𝕜} (h : IsSVD A U V) {p q : ℝ}
     (hpq : Real.HolderConjugate p q) (hA : A ≠ 0) :
-    schattenNormReal (U * (rectDiag (schattenDualCoefficients A p) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) q = 1 ∧
-    frobInner A (U * (rectDiag (schattenDualCoefficients A p) : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) =
+    schattenNormReal (U * (rectDiag (schattenDualCoefficients A p) : Matrix (Fin m) (Fin n) 𝕜) * Vᴴ) q = 1 ∧
+    frobInner A (U * (rectDiag (schattenDualCoefficients A p) : Matrix (Fin m) (Fin n) 𝕜) * Vᴴ) =
       schattenNormReal A p := by
   have hb0 : ∀ i, 0 ≤ schattenDualCoefficients A p i := fun i =>
     div_nonneg (Real.rpow_nonneg (singularValues_nonneg A i) _)
@@ -99,9 +101,9 @@ theorem IsSVD.schattenDualCoefficients_attain {m n : ℕ}
       (Real.rpow_le_rpow (singularValues_nonneg A j) (singularValues_antitone A hij) hpq.sub_one_pos.le)
       (Real.rpow_nonneg (schattenNormReal_nonneg A p) _)
   constructor
-  · rw [schattenNormReal_mul_rectDiag_mul_transpose h.conjTranspose_mul_left h.conjTranspose_mul_right
+  · rw [schattenNormReal_mul_rectDiag_mul_conjTranspose h.conjTranspose_mul_left h.conjTranspose_mul_right
       _ hb0 hb, sum_schattenDualCoefficients_rpow_eq_one A hpq hA, Real.one_rpow]
-  · rw [h.frobInner_mul_rectDiag_mul_transpose,
+  · rw [h.frobInner_mul_rectDiag_mul_conjTranspose,
       sum_singularValues_mul_schattenDualCoefficients_eq A hpq hA]
 
 open scoped Matrix.Norms.L2Operator in
@@ -195,10 +197,10 @@ open scoped Matrix.Norms.L2Operator in
 attains the spectral pairing for every nonzero matrix.
 Bhatia (1997), §IV.2; matrix toolkit derivations, (10)–(12). -/
 theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
-    {A : Matrix (Fin m) (Fin n) ℝ} {U : Matrix (Fin m) (Fin m) ℝ}
-    {V : Matrix (Fin n) (Fin n) ℝ} (h : IsSVD A U V) (hA : A ≠ 0) :
-    nuclearNorm (U * (rectDiag leadingSingularCoefficients : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) = 1 ∧
-    frobInner A (U * (rectDiag leadingSingularCoefficients : Matrix (Fin m) (Fin n) ℝ) * Vᵀ) = specNorm A := by
+    {A : Matrix (Fin m) (Fin n) 𝕜} {U : Matrix (Fin m) (Fin m) 𝕜}
+    {V : Matrix (Fin n) (Fin n) 𝕜} (h : IsSVD A U V) (hA : A ≠ 0) :
+    nuclearNorm (U * (rectDiag leadingSingularCoefficients : Matrix (Fin m) (Fin n) 𝕜) * Vᴴ) = 1 ∧
+    frobInner A (U * (rectDiag leadingSingularCoefficients : Matrix (Fin m) (Fin n) 𝕜) * Vᴴ) = specNorm A := by
   have hfirst : singularValues A 0 = specNorm A := by
     exact singularValues_zero_eq_specNorm A
   have hN : 0 < min m n := by
@@ -220,10 +222,10 @@ theorem IsSVD.leadingSingularCoefficients_attain {m n : ℕ}
     · simp only [leadingSingularCoefficients, if_neg hj]
       split_ifs <;> norm_num
   constructor
-  · rw [← schattenNormReal_one, schattenNormReal_mul_rectDiag_mul_transpose
+  · rw [← schattenNormReal_one, schattenNormReal_mul_rectDiag_mul_conjTranspose
       h.conjTranspose_mul_left h.conjTranspose_mul_right _ hb0 hb]
     simp [leadingSingularCoefficients, hN]
-  · rw [h.frobInner_mul_rectDiag_mul_transpose]
+  · rw [h.frobInner_mul_rectDiag_mul_conjTranspose]
     simpa [leadingSingularCoefficients, hN] using hfirst
 
 open scoped Matrix.Norms.L2Operator in

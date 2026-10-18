@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Norms.BlockDiagonalBounds
 import NLAlib.Matrix.Norms.BlockNormBounds
 import NLAlib.Matrix.Norms.ColumnNorms
+import NLAlib.Matrix.Norms.ComplexSchattenDuality
 import NLAlib.Matrix.Norms.ComplexSchattenProducts
 import NLAlib.Matrix.Norms.Complexification
 import NLAlib.Matrix.Norms.Continuity
@@ -24,6 +25,7 @@ import NLAlib.Matrix.Norms.NuclearGram
 import NLAlib.Matrix.Norms.NuclearHermitian
 import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Norms.NuclearPSD
+import NLAlib.Matrix.Norms.QuadraticSeries
 import NLAlib.Matrix.Norms.RankNorm
 import NLAlib.Matrix.Norms.RankOneDifferences
 import NLAlib.Matrix.Norms.RayleighNorm
@@ -39,9 +41,12 @@ import NLAlib.Matrix.Norms.SchattenDiagonal
 import NLAlib.Matrix.Norms.SchattenDuality
 import NLAlib.Matrix.Norms.SchattenEndpoints
 import NLAlib.Matrix.Norms.SchattenEvenMoments
+import NLAlib.Matrix.Norms.SchattenFrames
 import NLAlib.Matrix.Norms.SchattenInvariant
 import NLAlib.Matrix.Norms.SchattenMoments
+import NLAlib.Matrix.Norms.SchattenNormalization
 import NLAlib.Matrix.Norms.SchattenNorms
+import NLAlib.Matrix.Norms.SchattenPowers
 import NLAlib.Matrix.Norms.SchattenProducts
 import NLAlib.Matrix.Norms.SchattenSingularCoefficients
 import NLAlib.Matrix.Norms.SchattenThirdMoment

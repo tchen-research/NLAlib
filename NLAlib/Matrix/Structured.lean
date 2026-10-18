@@ -65,6 +65,7 @@ import NLAlib.Matrix.Structured.RadixTwoDFT
 import NLAlib.Matrix.Structured.RadixTwoDFTSplit
 import NLAlib.Matrix.Structured.RadixTwoFFT
 import NLAlib.Matrix.Structured.RadixTwoRoots
+import NLAlib.Matrix.Structured.RankOneCovariance
 import NLAlib.Matrix.Structured.Realification
 import NLAlib.Matrix.Structured.RectangularCoefficientBlocks
 import NLAlib.Matrix.Structured.RectangularDilationBounds

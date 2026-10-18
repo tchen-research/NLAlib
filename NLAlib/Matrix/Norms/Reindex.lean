@@ -19,6 +19,20 @@ namespace NLAlib
 variable {m n p q : Type*} [Fintype m] [Fintype n] [Fintype p] [Fintype q]
 variable {𝕜 : Type*} [RCLike 𝕜]
 
+/-- Relabeling rows and columns preserves the full sesquilinear trace
+pairing, including its imaginary part over `ℂ`. -/
+theorem trace_conjTranspose_mul_reindex (A B : Matrix m n 𝕜)
+    (em : m ≃ p) (en : n ≃ q) :
+    ((A.reindex em en)ᴴ * B.reindex em en).trace = (Aᴴ * B).trace := by
+  simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply,
+    Matrix.reindex_apply, Matrix.submatrix_apply]
+  calc
+    (∑ j : q, ∑ i : p, star (A (em.symm i) (en.symm j)) * B (em.symm i) (en.symm j)) =
+        ∑ j : n, ∑ i : p, star (A (em.symm i) j) * B (em.symm i) j :=
+      en.symm.sum_comp (fun j => ∑ i : p, star (A (em.symm i) j) * B (em.symm i) j)
+    _ = ∑ j : n, ∑ i : m, star (A i j) * B i j :=
+      Finset.sum_congr rfl (fun j _ => em.symm.sum_comp (fun i => star (A i j) * B i j))
+
 /-- Relabeling rows and columns preserves the Frobenius pairing, over `ℝ` or `ℂ`. -/
 theorem frobInner_reindex (A B : Matrix m n 𝕜) (em : m ≃ p) (en : n ≃ q) :
     frobInner (A.reindex em en) (B.reindex em en) = frobInner A B := by

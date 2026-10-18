@@ -1,6 +1,10 @@
 import NLAlib.RandomMatrix.Gaussian.Comparison.CauchyInterpolation
 import NLAlib.RandomMatrix.Gaussian.Comparison.CauchyTransform
 import NLAlib.RandomMatrix.Gaussian.Comparison.CauchyTransformLaw
+import NLAlib.RandomMatrix.Gaussian.Comparison.MatrixResolventUniversality
+import NLAlib.RandomMatrix.Gaussian.Comparison.MatrixResolventUniversalityHasLaw
+import NLAlib.RandomMatrix.Gaussian.Comparison.ResolventOperatorComparison
+import NLAlib.RandomMatrix.Gaussian.Comparison.ResolventOperatorInterpolation
 
 /-! # `RandomMatrix/Gaussian/Comparison`
 

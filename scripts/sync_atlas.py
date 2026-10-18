@@ -26,8 +26,8 @@ from atlas_proof_status import proof_family_status
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ATLAS = ROOT / "atlas/atlas.json"
 check = "--check" in sys.argv
-atlas = json.load(open(ATLAS))
-decls = json.load(open(ROOT / "atlas/declarations.json"))
+atlas = json.loads(ATLAS.read_text(encoding="utf-8"))
+decls = json.loads((ROOT / "atlas/declarations.json").read_text(encoding="utf-8"))
 by_id = {r["id"]: r for r in atlas["results"]}
 errors, changes = [], []
 declaration_index = {d["name"]: d for d in decls}

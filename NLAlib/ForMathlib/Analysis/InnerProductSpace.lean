@@ -1,4 +1,5 @@
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.BlockCauchySchwarz
+import NLAlib.ForMathlib.Analysis.InnerProductSpace.CoerciveInverse
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.GramSchmidt
 
 /-! # `ForMathlib/Analysis/InnerProductSpace`

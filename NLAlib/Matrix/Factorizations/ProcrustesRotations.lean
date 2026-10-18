@@ -124,7 +124,9 @@ theorem exists_orthogonal_pair_attaining_singularValue_pairing (A B : Matrix m n
     rw [← Matrix.mul_assoc LBᵀ LB _, show LBᵀ * LB = 1 from hB.conjTranspose_mul_left,
       Matrix.one_mul, ← Matrix.mul_assoc RBᵀ RB _,
       show RBᵀ * RB = 1 from hB.conjTranspose_mul_right, Matrix.one_mul]
-  rw [hAligned, hA.frobInner_mul_rectDiag_mul_transpose]
+  rw [hAligned]
+  simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
+    hA.frobInner_mul_rectDiag_mul_conjTranspose (singularValues B)
 
 /-- Two-sided orthogonal Procrustes has the exact singular-value squared
 distance as its minimum. SVD alignment supplies the attained rotations,

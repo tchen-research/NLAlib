@@ -35,12 +35,14 @@ import NLAlib.Matrix.Basic.PositiveDefiniteClosure
 import NLAlib.Matrix.Basic.PositiveSemidefiniteSeries
 import NLAlib.Matrix.Basic.Pseudoinverse
 import NLAlib.Matrix.Basic.QuadForm
+import NLAlib.Matrix.Basic.QuadraticFunctional
 import NLAlib.Matrix.Basic.QuadraticMinimization
 import NLAlib.Matrix.Basic.RankBounds
 import NLAlib.Matrix.Basic.RankFactorization
 import NLAlib.Matrix.Basic.RankInequalities
 import NLAlib.Matrix.Basic.RankOneCorrection
 import NLAlib.Matrix.Basic.RealCoordinates
+import NLAlib.Matrix.Basic.RealQuadraticForm
 import NLAlib.Matrix.Basic.ResidualEnergy
 import NLAlib.Matrix.Basic.SchurComplement
 import NLAlib.Matrix.Basic.SchurRank

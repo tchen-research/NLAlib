@@ -1,6 +1,12 @@
+import NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum
+import NLAlib.ForMathlib.Combinatorics.BipartitePartitionBound
+import NLAlib.ForMathlib.Combinatorics.BipartiteSpanningTree
+import NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum
 import NLAlib.ForMathlib.Combinatorics.ColoringAverage
 import NLAlib.ForMathlib.Combinatorics.CoordinatePartitions
 import NLAlib.ForMathlib.Combinatorics.Enumerative
+import NLAlib.ForMathlib.Combinatorics.PairingQuotientBound
+import NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph
 import NLAlib.ForMathlib.Combinatorics.SubsetDeletionProduct
 
 /-! # `ForMathlib/Combinatorics`

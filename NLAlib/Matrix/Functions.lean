@@ -29,6 +29,10 @@ import NLAlib.Matrix.Functions.ExponentialDifferentiation
 import NLAlib.Matrix.Functions.ExponentialEnergy
 import NLAlib.Matrix.Functions.ExponentialEnergyConverse
 import NLAlib.Matrix.Functions.ExtremeEigenvalues
+import NLAlib.Matrix.Functions.FrameBarrierIteration
+import NLAlib.Matrix.Functions.FrameBarrierSelection
+import NLAlib.Matrix.Functions.FrameSparsification
+import NLAlib.Matrix.Functions.FrameSparsificationParameters
 import NLAlib.Matrix.Functions.FunctionalCalculusEigenvalues
 import NLAlib.Matrix.Functions.GeneralizedKlein
 import NLAlib.Matrix.Functions.GeometricMean
@@ -181,6 +185,7 @@ import NLAlib.Matrix.Functions.PositiveMapInverse
 import NLAlib.Matrix.Functions.PositiveMapNorm
 import NLAlib.Matrix.Functions.PositiveMapSpectral
 import NLAlib.Matrix.Functions.PositiveSandwichBoundary
+import NLAlib.Matrix.Functions.RankOneBarrierUpdate
 import NLAlib.Matrix.Functions.RankOneWords
 import NLAlib.Matrix.Functions.RationalBlockIdentities
 import NLAlib.Matrix.Functions.RationalBlockMaps
@@ -188,6 +193,7 @@ import NLAlib.Matrix.Functions.RationalBlockOperations
 import NLAlib.Matrix.Functions.RationalBlocks
 import NLAlib.Matrix.Functions.RationalCalculus
 import NLAlib.Matrix.Functions.RationalDerivatives
+import NLAlib.Matrix.Functions.ReciprocalBarrier
 import NLAlib.Matrix.Functions.ReciprocalExponential
 import NLAlib.Matrix.Functions.ResolventCancellation
 import NLAlib.Matrix.Functions.ResolventCoefficientFields
@@ -219,6 +225,7 @@ import NLAlib.Matrix.Functions.SignNewtonCayley
 import NLAlib.Matrix.Functions.SignNewtonPositive
 import NLAlib.Matrix.Functions.SignProjectors
 import NLAlib.Matrix.Functions.SignSylvester
+import NLAlib.Matrix.Functions.SparseFrameCompactness
 import NLAlib.Matrix.Functions.SpectralProjectors
 import NLAlib.Matrix.Functions.SteinConvergence
 import NLAlib.Matrix.Functions.SteinFactors

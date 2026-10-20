@@ -100,3 +100,20 @@ example {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
   intro u hu
   obtain ⟨S, hS, _hK, hvalue, hminimum, _hdet⟩ := hmin u hu
   exact ⟨S, hS, hvalue, hminimum⟩
+
+-- A nonintegral sparsification parameter gives an exact natural support budget:
+-- d = 3/2 in dimension two retains at most three atoms.
+open scoped BigOperators MatrixOrder in
+example {I : Type*} [Fintype I] (v : I → Fin 2 → ℝ)
+    (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) :
+    ∃ s : I → ℝ,
+      (∀ i, 0 ≤ s i) ∧ (Function.support s).ncard ≤ 3 ∧
+      ((1 : Matrix (Fin 2) (Fin 2) ℝ) ≤
+        ∑ i, s i • Matrix.vecMulVec (v i) (v i)) ∧
+      (∑ i, s i • Matrix.vecMulVec (v i) (v i) ≤
+        rankOneSparsificationFactor (3 / 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ)) := by
+  obtain ⟨s, hs, hcard, hlower, hupper⟩ :=
+    exists_nonneg_weights_spectral_sandwich v hframe (3 / 2) (by norm_num)
+  refine ⟨s, hs, ?_, hlower, hupper⟩
+  norm_num at hcard
+  exact_mod_cast hcard

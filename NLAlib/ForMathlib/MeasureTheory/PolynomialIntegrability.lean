@@ -84,6 +84,20 @@ theorem HasFiniteNatMoments.sum [IsFiniteMeasure μ] {ι : Type*} (s : Finset ι
       exact (hf i (Finset.mem_insert_self i s)).add
         (ih fun j hj => hf j (Finset.mem_insert_of_mem hj))
 
+/-- Finite products preserve finiteness of all natural moments. The empty product
+is integrable because the measure is finite. -/
+theorem HasFiniteNatMoments.prod [IsFiniteMeasure μ] {ι : Type*} (s : Finset ι)
+    {f : ι → Ω → ℝ} (hf : ∀ i ∈ s, HasFiniteNatMoments (f i) μ) :
+    HasFiniteNatMoments (fun ω => ∏ i ∈ s, f i ω) μ := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simpa using (hasFiniteNatMoments_const (μ := μ) 1)
+  | @insert i s hi ih =>
+      simp only [Finset.prod_insert hi]
+      exact ((hf i (Finset.mem_insert_self i s)).mul
+        (ih fun j hj => hf j (Finset.mem_insert_of_mem hj)))
+
 /-- Measure-preserving substitution preserves finiteness of all natural moments. -/
 theorem HasFiniteNatMoments.comp_measurePreserving {Ω' : Type*} [MeasurableSpace Ω']
     {ν : Measure Ω'} (hf : HasFiniteNatMoments f μ) {T : Ω' → Ω}

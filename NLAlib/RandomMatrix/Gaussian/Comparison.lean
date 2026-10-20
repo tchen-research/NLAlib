@@ -39,8 +39,11 @@ import NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeSpectralObservables
 import NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeSpectralProbability
 import NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeSpectrum
 import NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeZeroParameter
+import NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick
 import NLAlib.RandomMatrix.Gaussian.Comparison.GaussianQuadraticFreeSpectrum
 import NLAlib.RandomMatrix.Gaussian.Comparison.GaussianSpectralDistance
+import NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum
+import NLAlib.RandomMatrix.Gaussian.Comparison.IndependentGramMoments
 import NLAlib.RandomMatrix.Gaussian.Comparison.MatrixResolventUniversality
 import NLAlib.RandomMatrix.Gaussian.Comparison.MatrixResolventUniversalityHasLaw
 import NLAlib.RandomMatrix.Gaussian.Comparison.ResolventError

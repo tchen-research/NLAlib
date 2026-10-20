@@ -1,5 +1,6 @@
 import NLAlib.Probability.Gaussian.Comparison.CenteredMatrixLaw
 import NLAlib.Probability.Gaussian.Comparison.GordonMinimax
+import NLAlib.Probability.Gaussian.Comparison.IndependentMoments
 import NLAlib.Probability.Gaussian.Comparison.Interpolation
 import NLAlib.Probability.Gaussian.Comparison.MatrixCauchyEndpoints
 import NLAlib.Probability.Gaussian.Comparison.MatrixCoordinateLaws

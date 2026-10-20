@@ -41,6 +41,7 @@ import NLAlib.Matrix.Basic.RankBounds
 import NLAlib.Matrix.Basic.RankFactorization
 import NLAlib.Matrix.Basic.RankInequalities
 import NLAlib.Matrix.Basic.RankOneCorrection
+import NLAlib.Matrix.Basic.RankOneInverse
 import NLAlib.Matrix.Basic.RealCoordinates
 import NLAlib.Matrix.Basic.RealQuadraticForm
 import NLAlib.Matrix.Basic.ResidualEnergy

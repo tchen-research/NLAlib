@@ -1,4 +1,5 @@
 import NLAlib.ForMathlib.Analysis.SpecialFunctions.Gamma
+import NLAlib.ForMathlib.Analysis.SpecialFunctions.ReciprocalBarrier
 
 /-! # `ForMathlib/Analysis/SpecialFunctions`
 

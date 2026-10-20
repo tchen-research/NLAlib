@@ -56699,7 +56699,7 @@
    "title": "Deterministic spectral sparsification of an identity decomposition",
    "area": "matrix-spectral-selection",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "An identity decomposition admits a sparse nonnegative reweighting with two-sided spectral control.",
    "hypotheses": [
     "$v_1,\\ldots,v_m\\in\\mathbb R^n$, $n\\ge1$, $\\sum_i v_iv_i^\\top=I$, $d>1$."
@@ -56711,7 +56711,15 @@
      "label": "Theorem 3.1, pp. 5–6; barrier construction in §3.2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_nonneg_weights_spectral_sandwich",
+     "module": "NLAlib.Matrix.Functions.FrameSparsification",
+     "status": "proved",
+     "usage": "Apply NLAlib.exists_nonneg_weights_spectral_sandwich v hframe d hd to an identity decomposition in a nonempty finite real coordinate space and hd : 1 < d. The witnesses are nonnegative weights with support at most d times the dimension and the exact two-sided spectral bound from Theorem 3.1."
+    }
+   ],
    "depends_on": [],
    "uses_defs": [],
    "variants": [
@@ -56729,7 +56737,7 @@
     "source-reviewed"
    ],
    "notes": "This card specifies the sparse reweighting theorem. The source constructs it deterministically; implementation and operation counts need a separate realization bridge. Unlike resistance sampling, there is no logarithmic factor in the support budget.",
-   "updated_at": "2026-10-16"
+   "updated_at": "2026-10-20"
   },
   {
    "id": "stable-rank-restricted-invertibility",
@@ -57538,7 +57546,7 @@
    "title": "A smaller iid Gaussian matrix dominates all normalized Gram moments",
    "area": "gaussian-extreme",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Normalized trace moments of a matrix with independent Gaussian-dominated entries are bounded by those of a dimension-matched homogeneous Gaussian matrix.",
    "hypotheses": [
     "$X_{ij}=b_{ij}\\xi_{ij}$ is real $n\\times m$, $n,m\\ge1$, $b_{ij}\\ge0$; independent symmetric $\\xi_{ij}$ satisfy $\\mathbb E\\xi_{ij}^{2p}\\le\\mathbb Eg^{2p}$ for every integer $p\\ge1$, $g\\sim N(0,1)$.",
@@ -57552,9 +57560,21 @@
      "label": "Model 1.3 and Theorem 1.7, pp. 2 and 4"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_normalizedTrace_gram_pow_le_integral_gaussianMatrix",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+     "status": "proved",
+     "usage": "Apply NLAlib.integral_normalizedTrace_gram_pow_le_integral_gaussianMatrix to the independent symmetric entry family X, its Gaussian-dominated even moments, a nonnegative profile b with maximum entry square one, and p > 0. The comparator dimensions are the natural ceilings of the maximum column and row square sums; both expectations use their own normalized trace."
+    }
+   ],
    "depends_on": [],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.gaussianEvenMoment",
+    "NLAlib.gaussianMatrix",
+    "NLAlib.normalizedTrace"
+   ],
    "variants": [],
    "aliases": [
     "Gaussian extremum principle"
@@ -57567,7 +57587,7 @@
     "source-reviewed"
    ],
    "notes": "Each trace is divided by its own row dimension; the comparator does not depend on p.",
-   "updated_at": "2026-10-16"
+   "updated_at": "2026-10-20"
   },
   {
    "id": "independent-entry-small-deviation",

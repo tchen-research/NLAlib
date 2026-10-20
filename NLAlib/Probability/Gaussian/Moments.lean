@@ -19,6 +19,7 @@ import NLAlib.Probability.Gaussian.Moments.SeriesNormMoments
 import NLAlib.Probability.Gaussian.Moments.SeriesPartialTranspose
 import NLAlib.Probability.Gaussian.Moments.SeriesPolynomialMoments
 import NLAlib.Probability.Gaussian.Moments.SeriesSecondMoment
+import NLAlib.Probability.Gaussian.Moments.WickPairingEdges
 import NLAlib.Probability.Gaussian.Moments.WickPairings
 
 /-! # `Probability/Gaussian/Moments`

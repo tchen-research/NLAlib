@@ -11179,6 +11179,26 @@
   "sorry":
   false,
   "signature":
+  "Fintype.prod_fiber_pow.{u_1, u_2} {R : Type u_1} {E : Type u_2} [Fintype R] [DecidableEq E] [Fintype E] (idx : R → E)\n  (z : E → ℝ) : ∏ r, z (idx r) = ∏ e, z e ^ {r | idx r = e}.card",
+  "name":
+  "Fintype.prod_fiber_pow",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum",
+  "line":
+  59,
+  "kind":
+  "theorem",
+  "doc":
+  "Occurrence regrouping bridge: the product over occurrences of a function\n`z` of the occurrence kind equals the product over kinds of `z e` raised to the\nnumber of occurrences of kind `e`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "FreeAlgebra.matrixLinearPolynomial.{u_1, u_2, u_3} {R : Type u_1} {D : Type u_2} {ι : Type u_3} [CommRing R] [Fintype ι]\n  (A₀ : Matrix D D R) (A : ι → Matrix D D R) : Matrix D D (FreeAlgebra R ι)",
   "name":
   "FreeAlgebra.matrixLinearPolynomial",
@@ -14227,6 +14247,26 @@
   "sorry":
   false,
   "signature":
+  "Matrix.PosDef.add_smul_one_posDef.{u_1} {n : Type u_1} [DecidableEq n] {A : Matrix n n ℝ} (hA : A.PosDef) {δ : ℝ}\n  (hδ : 0 < δ) : (A + δ • 1).PosDef",
+  "name":
+  "Matrix.PosDef.add_smul_one_posDef",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  40,
+  "kind":
+  "theorem",
+  "doc":
+  "A positive definite matrix shifted up by a positive multiple of the identity\nremains positive definite. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.PosDef.eventually_of_tendsto.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] [Nonempty n] {X : Type u_2}\n  {l : Filter X} {f : X → Matrix n n ℂ} {B : Matrix n n ℂ} (hB : B.PosDef) (hf : Filter.Tendsto f l (nhds B))\n  (hH : ∀ᶠ (x : X) in l, (f x).IsHermitian) : ∀ᶠ (x : X) in l, (f x).PosDef",
   "name":
   "Matrix.PosDef.eventually_of_tendsto",
@@ -14283,6 +14323,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.lt_eigenvalues_of_mul_trace_inv_lt_one.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {M : Matrix n n ℝ}\n  (hM : M.PosDef) {δ : ℝ} (hδ : 0 < δ) (hcap : δ * M⁻¹.trace < 1) (i : n) : δ < ⋯.eigenvalues i",
+  "name":
+  "Matrix.PosDef.lt_eigenvalues_of_mul_trace_inv_lt_one",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  275,
+  "kind":
+  "theorem",
+  "doc":
+  "A strict reciprocal-potential cap puts the shift below every eigenvalue.\nThis includes empty matrix shapes, where the conclusion is vacuous. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.quadForm"],
   "sorry":
   false,
@@ -14298,6 +14358,246 @@
   "theorem",
   "doc":
   "The quadratic form of a positive definite matrix is positive at a nonzero vector (in the\n`ComplexOrder` on `𝕜`). Mathlib's `Matrix.PosDef.dotProduct_mulVec_pos`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.reciprocal_barrier_lower_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] [Nonempty n]\n  {M : Matrix n n ℝ} (hM : M.PosDef) {δ : ℝ} (hδ : 0 < δ) (hcap : δ * M⁻¹.trace < 1) :\n  1 / δ - M⁻¹.trace ≤ ((M - δ • 1)⁻¹ ^ 2).trace / ((M - δ • 1)⁻¹.trace - M⁻¹.trace) - (M - δ • 1)⁻¹.trace",
+  "name":
+  "Matrix.PosDef.reciprocal_barrier_lower_le",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  350,
+  "kind":
+  "theorem",
+  "doc":
+  "Matrix lower reciprocal-barrier averaging inequality (BSS lower step) for\na real symmetric positive definite `M` satisfying the strict potential bound\n`δ * tr(M⁻¹) < 1`: with\n`RL = (M - δ•1)⁻¹` and `DL = tr(RL) - tr(M⁻¹) > 0`,\n`1/δ - tr(M⁻¹) ≤ tr(RL²)/DL - tr(RL)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.reciprocal_barrier_upper_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] [Nonempty n]\n  {M : Matrix n n ℝ} (hM : M.PosDef) {δ : ℝ} (hδ : 0 < δ) :\n  ((M + δ • 1)⁻¹ ^ 2).trace / (M⁻¹.trace - (M + δ • 1)⁻¹.trace) + (M + δ • 1)⁻¹.trace ≤ 1 / δ + M⁻¹.trace",
+  "name":
+  "Matrix.PosDef.reciprocal_barrier_upper_le",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  334,
+  "kind":
+  "theorem",
+  "doc":
+  "Matrix upper reciprocal-barrier averaging inequality (BSS upper step) for\na real symmetric positive definite `M`: with `RU = (M + δ•1)⁻¹` and\n`DU = tr(M⁻¹) - tr(RU) > 0`,\n`tr(RU²)/DU + tr(RU) ≤ 1/δ + tr(M⁻¹)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.sub_smul_one_posDef_of_eigenvalues_gt.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.PosDef) {δ : ℝ} (hδlt : ∀ (i : n), δ < ⋯.eigenvalues i) : (A - δ • 1).PosDef",
+  "name":
+  "Matrix.PosDef.sub_smul_one_posDef_of_eigenvalues_gt",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  260,
+  "kind":
+  "theorem",
+  "doc":
+  "A positive definite matrix shifted down by `δ•1` is positive definite as\nsoon as every eigenvalue exceeds `δ` (the actual shifted positivity derived from\nthe spectral representation). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.sub_smul_one_posDef_of_mul_trace_inv_lt_one.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {M : Matrix n n ℝ} (hM : M.PosDef) {δ : ℝ} (hδ : 0 < δ) (hcap : δ * M⁻¹.trace < 1) : (M - δ • 1).PosDef",
+  "name":
+  "Matrix.PosDef.sub_smul_one_posDef_of_mul_trace_inv_lt_one",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  295,
+  "kind":
+  "theorem",
+  "doc":
+  "The strict reciprocal-potential cap guarantees positivity after shifting\ndown, so the shifted matrix and its inverse are positive definite. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.sub_smul_vecMulVec_self.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {M : Matrix n n ℝ}\n  (hM : M.PosDef) {v : n → ℝ} {t : ℝ} (ht : 0 ≤ t) (hlt : t * NLAlib.quadForm M⁻¹ v < 1) :\n  (M - t • Matrix.vecMulVec v v).PosDef",
+  "name":
+  "Matrix.PosDef.sub_smul_vecMulVec_self",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneBarrierUpdate",
+  "line":
+  90,
+  "kind":
+  "theorem",
+  "doc":
+  "For positive definite `M` and `t ≥ 0`, the strict bound\n`t * quadForm M⁻¹ v < 1` guarantees that `M - t · v vᵀ` is positive definite.\nZero vectors, zero step size, and empty index types are included.\nSource: BSS 2008, Section 3.2 rank-one update. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.trace_add_smul_one_inv_eq_sum_inv_add.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.PosDef) {δ : ℝ} (hδ : 0 < δ) : (A + δ • 1)⁻¹.trace = ∑ i, 1 / (⋯.eigenvalues i + δ)",
+  "name":
+  "Matrix.PosDef.trace_add_smul_one_inv_eq_sum_inv_add",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  166,
+  "kind":
+  "theorem",
+  "doc":
+  "For positive `δ`, the trace of `(A + δ•1)⁻¹` is the sum of\n`1/(λ i + δ)` over the eigenvalues `λ i` of a positive definite `A`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.trace_add_smul_one_inv_sq_eq_sum_inv_sq_add.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} (hA : A.PosDef) {δ : ℝ} (hδ : 0 < δ) :\n  ((A + δ • 1)⁻¹ ^ 2).trace = ∑ i, (1 / (⋯.eigenvalues i + δ)) ^ 2",
+  "name":
+  "Matrix.PosDef.trace_add_smul_one_inv_sq_eq_sum_inv_sq_add",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  189,
+  "kind":
+  "theorem",
+  "doc":
+  "For positive `δ`, the trace of `((A + δ•1)⁻¹)²` is the sum of\n`(1/(λ i + δ))²` over the eigenvalues `λ i` of a positive definite `A`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.trace_inv_eq_sum_inv_eigenvalues.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.PosDef) : A⁻¹.trace = ∑ i, 1 / ⋯.eigenvalues i",
+  "name":
+  "Matrix.PosDef.trace_inv_eq_sum_inv_eigenvalues",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  138,
+  "kind":
+  "theorem",
+  "doc":
+  "The trace of the inverse of a real positive definite matrix is the sum of\nthe reciprocals of its eigenvalues. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.trace_inv_sub_trace_add_smul_one_inv_pos.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] [Nonempty n]\n  {M : Matrix n n ℝ} (hM : M.PosDef) {δ : ℝ} (hδ : 0 < δ) : 0 < M⁻¹.trace - (M + δ • 1)⁻¹.trace",
+  "name":
+  "Matrix.PosDef.trace_inv_sub_trace_add_smul_one_inv_pos",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  304,
+  "kind":
+  "theorem",
+  "doc":
+  "The upper reciprocal-barrier gap `tr(M⁻¹) - tr((M + δ•1)⁻¹)` of a\npositive definite matrix is strictly positive. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.trace_sub_smul_one_inv_eq_sum_inv_sub.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.PosDef) {δ : ℝ} (hδlt : ∀ (i : n), δ < ⋯.eigenvalues i) : (A - δ • 1)⁻¹.trace = ∑ i, 1 / (⋯.eigenvalues i - δ)",
+  "name":
+  "Matrix.PosDef.trace_sub_smul_one_inv_eq_sum_inv_sub",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  212,
+  "kind":
+  "theorem",
+  "doc":
+  "If every eigenvalue of a positive definite `A` exceeds `δ`, then the trace\nof `(A - δ•1)⁻¹` is the sum of `1/(λ i - δ)` over the eigenvalues `λ i`.\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.trace_sub_smul_one_inv_sq_eq_sum_inv_sq_sub.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} (hA : A.PosDef) {δ : ℝ} (hδlt : ∀ (i : n), δ < ⋯.eigenvalues i) :\n  ((A - δ • 1)⁻¹ ^ 2).trace = ∑ i, (1 / (⋯.eigenvalues i - δ)) ^ 2",
+  "name":
+  "Matrix.PosDef.trace_sub_smul_one_inv_sq_eq_sum_inv_sq_sub",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  236,
+  "kind":
+  "theorem",
+  "doc":
+  "If every eigenvalue of a positive definite `A` exceeds `δ`, then the trace\nof `((A - δ•1)⁻¹)²` is the sum of `(1/(λ i - δ))²` over the eigenvalues\n`λ i` of `A`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosDef.trace_sub_smul_one_inv_sub_trace_inv_pos.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] [Nonempty n]\n  {M : Matrix n n ℝ} (hM : M.PosDef) {δ : ℝ} (hδ : 0 < δ) (hcap : δ * M⁻¹.trace < 1) :\n  0 < (M - δ • 1)⁻¹.trace - M⁻¹.trace",
+  "name":
+  "Matrix.PosDef.trace_sub_smul_one_inv_sub_trace_inv_pos",
+  "module":
+  "NLAlib.Matrix.Functions.ReciprocalBarrier",
+  "line":
+  315,
+  "kind":
+  "theorem",
+  "doc":
+  "The lower reciprocal-barrier gap\n`tr((M - δ•1)⁻¹) - tr(M⁻¹)` of a positive definite matrix is strictly\npositive under the strict potential bound `δ * tr(M⁻¹) < 1`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -15368,6 +15668,46 @@
   "theorem",
   "doc":
   "Conjugate transpose commutes with the actual total square-matrix integral. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.inv_add_smul_vecMulVec_self.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2} [Field K]\n  (M : Matrix n n K) (v : n → K) (t : K) (hM : IsUnit M.det) (hd : 1 + t * v ⬝ᵥ M⁻¹.mulVec v ≠ 0) :\n  (M + t • Matrix.vecMulVec v v)⁻¹ = M⁻¹ - (t / (1 + t * v ⬝ᵥ M⁻¹.mulVec v)) • (M⁻¹ * Matrix.vecMulVec v v * M⁻¹)",
+  "name":
+  "Matrix.inv_add_smul_vecMulVec_self",
+  "module":
+  "NLAlib.Matrix.Basic.RankOneInverse",
+  "line":
+  78,
+  "kind":
+  "theorem",
+  "doc":
+  "The `t`-weighted rank-one inverse, `u = t • v`.\nSource: weighted Sherman–Morrison used in BSS/stable-rank restricted\ninvertibility arguments; `q = v ⬝ᵥ (M⁻¹ *ᵥ v)` may vanish. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.inv_add_vecMulVec.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2} [Field K]\n  (M : Matrix n n K) (u v : n → K) (hM : IsUnit M.det) (hd : 1 + v ⬝ᵥ M⁻¹.mulVec u ≠ 0) :\n  (M + Matrix.vecMulVec u v)⁻¹ = M⁻¹ - (1 + v ⬝ᵥ M⁻¹.mulVec u)⁻¹ • (M⁻¹ * Matrix.vecMulVec u v * M⁻¹)",
+  "name":
+  "Matrix.inv_add_vecMulVec",
+  "module":
+  "NLAlib.Matrix.Basic.RankOneInverse",
+  "line":
+  27,
+  "kind":
+  "theorem",
+  "doc":
+  "The inverse of a rank-one update: Sherman–Morrison.\nSource: standard Sherman–Morrison formula, `u = 0` / `v = 0` / empty index\ncases included because only `1 + q ≠ 0` is required (`q` itself may vanish). ",
   "atlas_partial":
   [],
   "atlas":
@@ -17247,6 +17587,26 @@
   "sorry":
   false,
   "signature":
+  "Matrix.trace_mul_inv_add_smul_vecMulVec_self.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {K : Type u_2}\n  [Field K] (M H : Matrix n n K) (v : n → K) (t : K) (hM : IsUnit M.det) (hd : 1 + t * v ⬝ᵥ M⁻¹.mulVec v ≠ 0) :\n  (H * (M + t • Matrix.vecMulVec v v)⁻¹).trace =\n    (H * M⁻¹).trace - t / (1 + t * v ⬝ᵥ M⁻¹.mulVec v) * v ⬝ᵥ (M⁻¹ * H * M⁻¹).mulVec v",
+  "name":
+  "Matrix.trace_mul_inv_add_smul_vecMulVec_self",
+  "module":
+  "NLAlib.Matrix.Basic.RankOneInverse",
+  "line":
+  110,
+  "kind":
+  "theorem",
+  "doc":
+  "Trace of `H` times the `t`-weighted rank-one inverse.\nNo symmetry or positivity of `M` or `H` is required; the identity is purely\nalgebraic.  Source: BSS/stable-rank restricted invertibility trace step. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.trace_mul_list_ofFn_prod_eq_sum.{u_1, u_2} {R : Type u_1} {n : Type u_2} [CommSemiring R] [Fintype n]\n  [DecidableEq n] {m : ℕ} (B : Matrix n n R) (A : Fin m → Matrix n n R) :\n  (B * (List.ofFn A).prod).trace = ∑ v, B (v (Fin.last m)) (v 0) * ∏ r, A r (v r.castSucc) (v r.succ)",
   "name":
   "Matrix.trace_mul_list_ofFn_prod_eq_sum",
@@ -17433,7 +17793,7 @@
   "module":
   "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
   "line":
-  87,
+  101,
   "kind":
   "theorem",
   "doc":
@@ -17493,7 +17853,7 @@
   "module":
   "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
   "line":
-  94,
+  108,
   "kind":
   "theorem",
   "doc":
@@ -17547,6 +17907,26 @@
   "sorry":
   false,
   "signature":
+  "MeasureTheory.HasFiniteNatMoments.prod.{u_1, u_2} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsFiniteMeasure μ] {ι : Type u_2} (s : Finset ι) {f : ι → Ω → ℝ}\n  (hf : ∀ i ∈ s, MeasureTheory.HasFiniteNatMoments (f i) μ) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => ∏ i ∈ s, f i ω) μ",
+  "name":
+  "MeasureTheory.HasFiniteNatMoments.prod",
+  "module":
+  "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
+  "line":
+  87,
+  "kind":
+  "theorem",
+  "doc":
+  "Finite products preserve finiteness of all natural moments. The empty product\nis integrable because the measure is finite. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments"],
+  "sorry":
+  false,
+  "signature":
   "MeasureTheory.HasFiniteNatMoments.sum.{u_1, u_2} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsFiniteMeasure μ] {ι : Type u_2} (s : Finset ι) {f : ι → Ω → ℝ}\n  (hf : ∀ i ∈ s, MeasureTheory.HasFiniteNatMoments (f i) μ) :\n  MeasureTheory.HasFiniteNatMoments (fun ω => ∑ i ∈ s, f i ω) μ",
   "name":
   "MeasureTheory.HasFiniteNatMoments.sum",
@@ -17573,7 +17953,7 @@
   "module":
   "NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability",
   "line":
-  105,
+  119,
   "kind":
   "theorem",
   "doc":
@@ -38749,6 +39129,989 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.PairingQuotient.Admissible.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1} {C : Type u_2} {O : Type u_3}\n  {E : Type u_4} {I : Type u_5} {J : Type u_6} (sr : O → R) (tg : O → C) (alpha beta : E → O) (x : R → I) (y : C → J) :\n  Prop",
+  "name":
+  "NLAlib.PairingQuotient.Admissible",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  76,
+  "kind":
+  "def",
+  "doc":
+  "A pair of original labels `x : R → I`, `y : C → J` is admissible when every\npaired pair identifies the labels of its two row endpoints and of its two column\nendpoints. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.ColQuotient.{u_2, u_3, u_4} {C : Type u_2} {O : Type u_3} {E : Type u_4} (tg : O → C)\n  (alpha beta : E → O) : Type u_2",
+  "name":
+  "NLAlib.PairingQuotient.ColQuotient",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  62,
+  "kind":
+  "def",
+  "doc":
+  "`V`: the quotient of the columns by `colSetoid`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.ColRel.{u_2, u_3, u_4} {C : Type u_2} {O : Type u_3} {E : Type u_4} (tg : O → C)\n  (alpha beta : E → O) (c c' : C) : Prop",
+  "name":
+  "NLAlib.PairingQuotient.ColRel",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  45,
+  "kind":
+  "def",
+  "doc":
+  "Column generating relation of a pairing: two columns are related if they are\nthe column endpoints `tg (alpha e)`, `tg (beta e)` of one paired pair `e`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.RowQuotient.{u_1, u_3, u_4} {R : Type u_1} {O : Type u_3} {E : Type u_4} (sr : O → R)\n  (alpha beta : E → O) : Type u_1",
+  "name":
+  "NLAlib.PairingQuotient.RowQuotient",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  58,
+  "kind":
+  "def",
+  "doc":
+  "`U`: the quotient of the rows by `rowSetoid`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.RowRel.{u_1, u_3, u_4} {R : Type u_1} {O : Type u_3} {E : Type u_4} (sr : O → R)\n  (alpha beta : E → O) (r r' : R) : Prop",
+  "name":
+  "NLAlib.PairingQuotient.RowRel",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  40,
+  "kind":
+  "def",
+  "doc":
+  "Row generating relation of a pairing: two rows are related if they are the\nrow endpoints `sr (alpha e)`, `sr (beta e)` of one paired pair `e`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.Admissible",
+   "NLAlib.PairingQuotient.colSetoid",
+   "NLAlib.PairingQuotient.rowSetoid"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.admissible_iff_rowSetoid_le_ker_colSetoid_le_ker.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1}\n  {C : Type u_2} {O : Type u_3} {E : Type u_4} {I : Type u_5} {J : Type u_6} (sr : O → R) (tg : O → C)\n  (alpha beta : E → O) (x : R → I) (y : C → J) :\n  NLAlib.PairingQuotient.Admissible sr tg alpha beta x y ↔\n    NLAlib.PairingQuotient.rowSetoid sr alpha beta ≤ Setoid.ker x ∧\n      NLAlib.PairingQuotient.colSetoid tg alpha beta ≤ Setoid.ker y",
+  "name":
+  "NLAlib.PairingQuotient.admissible_iff_rowSetoid_le_ker_colSetoid_le_ker",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  134,
+  "kind":
+  "theorem",
+  "doc":
+  "A pair of original labels is admissible iff the row labeling descends to\n`rowSetoid` and the column labeling descends to `colSetoid`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.bipartiteOccurrenceGraph_cycle_connected (q : ℕ) :\n  (SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.cycleRow (q + 1))\n      (NLAlib.PairingQuotient.cycleCol (q + 1))).Connected",
+  "name":
+  "NLAlib.PairingQuotient.bipartiteOccurrenceGraph_cycle_connected",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  449,
+  "kind":
+  "theorem",
+  "doc":
+  "The occurrence graph of the alternating Gram cycle of dimension `q + 1`\nis connected.  This proves the fact from the explicit closed-walk structure\n(`row t -- col t -- row (finRotate p t)`) and does not assume any quotient\nconnectedness or spanning-tree certificate. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.colEnd",
+   "NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "NLAlib.PairingQuotient.rowEnd",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.bipartiteOccurrenceGraph_quotient_cycle_connected.{u_4} {E : Type u_4} (q : ℕ) [Fintype E]\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) (hcover : Function.Bijective (Sum.elim alpha beta)) :\n  (SimpleGraph.bipartiteOccurrenceGraph\n      (NLAlib.PairingQuotient.rowEnd (NLAlib.PairingQuotient.cycleRow (q + 1)) alpha beta)\n      (NLAlib.PairingQuotient.colEnd (NLAlib.PairingQuotient.cycleCol (q + 1)) alpha beta)).Connected",
+  "name":
+  "NLAlib.PairingQuotient.bipartiteOccurrenceGraph_quotient_cycle_connected",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  470,
+  "kind":
+  "theorem",
+  "doc":
+  "For the alternating Gram cycle of dimension `q + 1`, every endpoint pairing\nwhose `alpha`/`beta` endpoints cover the original occurrences exactly once has\na connected paired quotient graph. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.card_pairing_eq_succ.{u_4} {E : Type u_4} (q : ℕ) [Fintype E]\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) (hcover : Function.Bijective (Sum.elim alpha beta)) :\n  Fintype.card E = q + 1",
+  "name":
+  "NLAlib.PairingQuotient.card_pairing_eq_succ",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  485,
+  "kind":
+  "theorem",
+  "doc":
+  "The number of paired pairs equals the cycle dimension `q + 1`: this follows\nfrom the bijection `E ⊕ E ≃ Fin (q + 1) ⊕ Fin (q + 1)` by finite-cardinality\narithmetic (no quotient cardinality formula is used). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.colEnd.{u_2, u_3, u_4} {C : Type u_2} {O : Type u_3} {E : Type u_4} (tg : O → C)\n  (alpha beta : E → O) (e : E) : NLAlib.PairingQuotient.ColQuotient tg alpha beta",
+  "name":
+  "NLAlib.PairingQuotient.colEnd",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  71,
+  "kind":
+  "def",
+  "doc":
+  "The column endpoint class of the paired pair `e`, i.e. the class of\n`tg (alpha e)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.colEnd",
+   "NLAlib.PairingQuotient.colSetoid"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.colEnd_beta.{u_2, u_3, u_4} {C : Type u_2} {O : Type u_3} {E : Type u_4} (tg : O → C)\n  (alpha beta : E → O) (e : E) : NLAlib.PairingQuotient.colEnd tg alpha beta e = Quotient.mk'' (tg (beta e))",
+  "name":
+  "NLAlib.PairingQuotient.colEnd_beta",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "The class of the `beta` column endpoint equals the `alpha` column endpoint\nclass of the same paired pair. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.cycleCol"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.colQuotient_nonempty_cycle.{u_4} {E : Type u_4} (q : ℕ)\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) :\n  Nonempty (NLAlib.PairingQuotient.ColQuotient (NLAlib.PairingQuotient.cycleCol (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.colQuotient_nonempty_cycle",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  465,
+  "kind":
+  "theorem",
+  "doc":
+  "The column quotient of the Gram cycle is nonempty (class of column `0`). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.colSetoid.{u_2, u_3, u_4} {C : Type u_2} {O : Type u_3} {E : Type u_4} (tg : O → C)\n  (alpha beta : E → O) : Setoid C",
+  "name":
+  "NLAlib.PairingQuotient.colSetoid",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  54,
+  "kind":
+  "def",
+  "doc":
+  "The column quotient equivalence: the equivalence closure of `ColRel`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.Admissible",
+   "NLAlib.PairingQuotient.colSetoid"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.colSetoid_rel_imp_eq_of_admissible.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1} {C : Type u_2}\n  {O : Type u_3} {E : Type u_4} {I : Type u_5} {J : Type u_6} (sr : O → R) (tg : O → C) (alpha beta : E → O) (x : R → I)\n  (y : C → J) (hA : NLAlib.PairingQuotient.Admissible sr tg alpha beta x y) (a b : C) :\n  (NLAlib.PairingQuotient.colSetoid tg alpha beta) a b → y a = y b",
+  "name":
+  "NLAlib.PairingQuotient.colSetoid_rel_imp_eq_of_admissible",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  119,
+  "kind":
+  "theorem",
+  "doc":
+  "An admissible column labeling is constant on `colSetoid` classes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.colEnd",
+   "NLAlib.PairingQuotient.rowEnd",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.connected_quotient_of_connected.{u_1, u_2, u_3, u_4} {R : Type u_1} {C : Type u_2} {O : Type u_3}\n  {E : Type u_4} (sr : O → R) (tg : O → C) (alpha beta : E → O) (hcover : Function.Bijective (Sum.elim alpha beta))\n  (hG : (SimpleGraph.bipartiteOccurrenceGraph sr tg).Connected) :\n  (SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.rowEnd sr alpha beta)\n      (NLAlib.PairingQuotient.colEnd tg alpha beta)).Connected",
+  "name":
+  "NLAlib.PairingQuotient.connected_quotient_of_connected",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  364,
+  "kind":
+  "theorem",
+  "doc":
+  "Connectedness of the original occurrence graph transfers to the paired\nquotient occurrence graph along the surjective homomorphism. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycleCol (p : ℕ) : Fin p ⊕ Fin p → Fin p",
+  "name":
+  "NLAlib.PairingQuotient.cycleCol",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  383,
+  "kind":
+  "def",
+  "doc":
+  "The column endpoint map of the alternating Gram cycle of dimension `p`:\nevery occurrence `Sum.inl t` and `Sum.inr t` sits in column `t`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.cycleCol"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycleColQuotientFintype.{u_7} (q : ℕ) {E : Type u_7}\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) :\n  Fintype (NLAlib.PairingQuotient.ColQuotient (NLAlib.PairingQuotient.cycleCol (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.cycleColQuotientFintype",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  70,
+  "kind":
+  "instance",
+  "doc":
+  "The column quotient of the Gram cycle is finite, with the actual finite\n`Fintype` instance from the finite column type `Fin (q + 1)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.cycleCol"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycleColQuotientNonempty.{u_7} (q : ℕ) {E : Type u_7}\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) :\n  Nonempty (NLAlib.PairingQuotient.ColQuotient (NLAlib.PairingQuotient.cycleCol (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.cycleColQuotientNonempty",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  84,
+  "kind":
+  "instance",
+  "doc":
+  "The column quotient of the Gram cycle is nonempty (class of column `0`). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycleRow (p : ℕ) : Fin p ⊕ Fin p → Fin p",
+  "name":
+  "NLAlib.PairingQuotient.cycleRow",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  376,
+  "kind":
+  "def",
+  "doc":
+  "The row endpoint map of the alternating Gram cycle of dimension `p`:\n`Sum.inl t ↦ t` (a `row t -- col t` occurrence) and\n`Sum.inr t ↦ finRotate p t` (a `row (finRotate p t) -- col t` occurrence). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.cycleRow"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycleRowQuotientFintype.{u_7} (q : ℕ) {E : Type u_7}\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) :\n  Fintype (NLAlib.PairingQuotient.RowQuotient (NLAlib.PairingQuotient.cycleRow (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.cycleRowQuotientFintype",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  62,
+  "kind":
+  "instance",
+  "doc":
+  "The row quotient of the Gram cycle is finite, with the actual finite\n`Fintype` instance from the finite row type `Fin (q + 1)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.cycleRow"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycleRowQuotientNonempty.{u_7} (q : ℕ) {E : Type u_7}\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) :\n  Nonempty (NLAlib.PairingQuotient.RowQuotient (NLAlib.PairingQuotient.cycleRow (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.cycleRowQuotientNonempty",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  78,
+  "kind":
+  "instance",
+  "doc":
+  "The row quotient of the Gram cycle is nonempty (class of row `0`). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycle_inl_edge (p : ℕ) (x : Fin p) :\n  (SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.cycleRow p) (NLAlib.PairingQuotient.cycleCol p)).Adj\n    (Sum.inl x) (Sum.inr x)",
+  "name":
+  "NLAlib.PairingQuotient.cycle_inl_edge",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  389,
+  "kind":
+  "theorem",
+  "doc":
+  "In the Gram-cycle occurrence graph, row `t` is adjacent to column `t`\nvia the occurrence `Sum.inl t`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycle_inr_edge (p : ℕ) (x : Fin p) :\n  (SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.cycleRow p) (NLAlib.PairingQuotient.cycleCol p)).Adj\n    (Sum.inr x) (Sum.inl ((finRotate p) x))",
+  "name":
+  "NLAlib.PairingQuotient.cycle_inr_edge",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  397,
+  "kind":
+  "theorem",
+  "doc":
+  "In the Gram-cycle occurrence graph, column `t` is adjacent to row\n`finRotate p t` via the occurrence `Sum.inr t`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycle_reachable_col (q : ℕ) (c : Fin (q + 1)) :\n  (SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.cycleRow (q + 1))\n        (NLAlib.PairingQuotient.cycleCol (q + 1))).Reachable\n    (Sum.inl 0) (Sum.inr c)",
+  "name":
+  "NLAlib.PairingQuotient.cycle_reachable_col",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  432,
+  "kind":
+  "theorem",
+  "doc":
+  "Every column of the Gram-cycle occurrence graph is reachable from row `0`\nthrough `row t -- col t`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycle_reachable_row (q : ℕ) (t : Fin (q + 1)) :\n  (SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.cycleRow (q + 1))\n        (NLAlib.PairingQuotient.cycleCol (q + 1))).Reachable\n    (Sum.inl 0) (Sum.inl t)",
+  "name":
+  "NLAlib.PairingQuotient.cycle_reachable_row",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  426,
+  "kind":
+  "theorem",
+  "doc":
+  "Every row of the Gram-cycle occurrence graph is reachable from row `0`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycle_reachable_row_down (q m : ℕ) (hm : m < q + 1) :\n  (SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.cycleRow (q + 1))\n        (NLAlib.PairingQuotient.cycleCol (q + 1))).Reachable\n    (Sum.inl ⟨m, hm⟩) (Sum.inl 0)",
+  "name":
+  "NLAlib.PairingQuotient.cycle_reachable_row_down",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  405,
+  "kind":
+  "theorem",
+  "doc":
+  "Iterating the two-edge steps `row s -- col s -- row (finRotate p s)`,\nevery row of the Gram-cycle occurrence graph is reachable from row `0` (the\nwalk runs backwards from row `t` towards row `0`). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.cycle_reachable_zero (q : ℕ) (x : Fin (q + 1) ⊕ Fin (q + 1)) :\n  (SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.cycleRow (q + 1))\n        (NLAlib.PairingQuotient.cycleCol (q + 1))).Reachable\n    (Sum.inl 0) x",
+  "name":
+  "NLAlib.PairingQuotient.cycle_reachable_zero",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  439,
+  "kind":
+  "theorem",
+  "doc":
+  "Every vertex of the Gram-cycle occurrence graph is reachable from row `0`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.pairWeight.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1} {C : Type u_2} {O : Type u_3}\n  {E : Type u_4} {I : Type u_5} {J : Type u_6} [Fintype E] (sr : O → R) (tg : O → C) (alpha : E → O) (w : I → J → ℝ)\n  (x : R → I) (y : C → J) : ℝ",
+  "name":
+  "NLAlib.PairingQuotient.pairWeight",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  203,
+  "kind":
+  "def",
+  "doc":
+  "The product over paired pairs of the `w`-weights of the original labels at\nthe `alpha` endpoints. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.colEnd",
+   "NLAlib.PairingQuotient.colSetoid",
+   "NLAlib.PairingQuotient.pairWeight",
+   "NLAlib.PairingQuotient.rowEnd",
+   "NLAlib.PairingQuotient.rowSetoid"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.pairWeight_pullback.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1} {C : Type u_2} {O : Type u_3}\n  {E : Type u_4} {I : Type u_5} {J : Type u_6} [Fintype E] (sr : O → R) (tg : O → C) (alpha beta : E → O)\n  (w : I → J → ℝ) (f : NLAlib.PairingQuotient.RowQuotient sr alpha beta → I)\n  (g : NLAlib.PairingQuotient.ColQuotient tg alpha beta → J) :\n  NLAlib.PairingQuotient.pairWeight sr tg alpha w (f ∘ Quotient.mk'') (g ∘ Quotient.mk'') =\n    ∏ e, w (f (NLAlib.PairingQuotient.rowEnd sr alpha beta e)) (g (NLAlib.PairingQuotient.colEnd tg alpha beta e))",
+  "name":
+  "NLAlib.PairingQuotient.pairWeight_pullback",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  227,
+  "kind":
+  "theorem",
+  "doc":
+  "Pulling back quotient labels to original labels replaces the weight by its\nvalue at the endpoint classes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.pairingSum.{u_1, u_2, u_3, u_4, u_5, u_6} {O : Type u_1} {R : Type u_2} {C : Type u_3}\n  {E : Type u_4} {I : Type u_5} {J : Type u_6} [Fintype R] [Fintype C] [Fintype E] [Fintype I] [Fintype J]\n  [DecidableEq R] [DecidableEq C] [DecidableEq I] [DecidableEq J] (sr : O → R) (tg : O → C) (alpha beta : E → O)\n  (w : I → J → ℝ) : ℝ",
+  "name":
+  "NLAlib.PairingQuotient.pairingSum",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  35,
+  "kind":
+  "def",
+  "doc":
+  "The unrestricted indicator sum over original labels: for each pair of row\nand column labelings, the product over paired pairs of the weight at the\n`alpha` endpoints when the paired pair identifies its row endpoints and its\ncolumn endpoints, and zero otherwise. This is exactly the left-hand side of\n`sum_prod_indicator_eq_sum_quotient`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "NLAlib.PairingQuotient.pairingSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.pairingSum_cycle_div_card_le.{u_4, u_5, u_6} {E : Type u_4} {I : Type u_5} {J : Type u_6}\n  [Fintype E] [Fintype I] [Fintype J] [Nonempty I] [DecidableEq I] [DecidableEq J] (q : ℕ)\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) (hcover : Function.Bijective (Sum.elim alpha beta)) (w : I → J → ℝ)\n  (d1 d2 : ℕ) (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j) (hwle : ∀ (i : I) (j : J), w i j ≤ 1)\n  (hcol : ∀ (j : J), ∑ i, w i j ≤ ↑d1) (hrow : ∀ (i : I), ∑ j, w i j ≤ ↑d2) (hd1 : 0 < d1) :\n  NLAlib.PairingQuotient.pairingSum (NLAlib.PairingQuotient.cycleRow (q + 1)) (NLAlib.PairingQuotient.cycleCol (q + 1))\n        alpha beta w /\n      ↑(Fintype.card I) ≤\n    (NLAlib.PairingQuotient.pairingSum (NLAlib.PairingQuotient.cycleRow (q + 1))\n        (NLAlib.PairingQuotient.cycleCol (q + 1)) alpha beta fun x x_1 => 1) /\n      ↑d1",
+  "name":
+  "NLAlib.PairingQuotient.pairingSum_cycle_div_card_le",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  220,
+  "kind":
+  "theorem",
+  "doc":
+  "The normalized per-pairing comparator: with nonempty `I` and positive\n`d1`, dividing by the label cardinalities turns the bound of\n`pairingSum_cycle_le_of_nat_bounds` into an inequality comparing the indicator\nsum for arbitrary weights against the constant-one profile on\n`Fin d1 × Fin d2`. No positivity of `d2` is required. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleColQuotientFintype",
+   "NLAlib.PairingQuotient.cycleRow",
+   "NLAlib.PairingQuotient.cycleRowQuotientFintype",
+   "NLAlib.PairingQuotient.pairingSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.pairingSum_cycle_le.{u_4, u_5, u_6} {E : Type u_4} {I : Type u_5} {J : Type u_6} [Fintype E]\n  [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J] (q : ℕ) (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1))\n  (hcover : Function.Bijective (Sum.elim alpha beta)) (w : I → J → ℝ) (a c : ℝ) (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j)\n  (hwle : ∀ (i : I) (j : J), w i j ≤ 1) (hcol : ∀ (j : J), ∑ i, w i j ≤ a) (hrow : ∀ (i : I), ∑ j, w i j ≤ c)\n  (ha : 0 ≤ a) (hc : 0 ≤ c) :\n  NLAlib.PairingQuotient.pairingSum (NLAlib.PairingQuotient.cycleRow (q + 1)) (NLAlib.PairingQuotient.cycleCol (q + 1))\n      alpha beta w ≤\n    ↑(Fintype.card I) *\n        a ^\n          (Fintype.card (NLAlib.PairingQuotient.RowQuotient (NLAlib.PairingQuotient.cycleRow (q + 1)) alpha beta) - 1) *\n      c ^ Fintype.card (NLAlib.PairingQuotient.ColQuotient (NLAlib.PairingQuotient.cycleCol (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.pairingSum_cycle_le",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  90,
+  "kind":
+  "theorem",
+  "doc":
+  "For the alternating Gram cycle of positive dimension `q + 1`, the\nunrestricted indicator sum is bounded by `(card I) * a ^ (r - 1) * c ^ v`,\nwhere `r` and `v` are the row- and column-quotient cardinalities, whenever the\nweights are nonnegative, at most `1`, have column sums at most `a`, row sums at\nmost `c`, and `a`, `c` are nonnegative. Empty label types `I`, `J` are\nallowed. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleColQuotientFintype",
+   "NLAlib.PairingQuotient.cycleRow",
+   "NLAlib.PairingQuotient.cycleRowQuotientFintype",
+   "NLAlib.PairingQuotient.pairingSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.pairingSum_cycle_le_of_nat_bounds.{u_4, u_5, u_6} {E : Type u_4} {I : Type u_5} {J : Type u_6}\n  [Fintype E] [Fintype I] [Fintype J] [DecidableEq I] [DecidableEq J] (q : ℕ)\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) (hcover : Function.Bijective (Sum.elim alpha beta)) (w : I → J → ℝ)\n  (a c : ℝ) (d1 d2 : ℕ) (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j) (hwle : ∀ (i : I) (j : J), w i j ≤ 1)\n  (hcol : ∀ (j : J), ∑ i, w i j ≤ a) (hrow : ∀ (i : I), ∑ j, w i j ≤ c) (ha : 0 ≤ a) (hc : 0 ≤ c) (hd1 : a ≤ ↑d1)\n  (hd2 : c ≤ ↑d2) :\n  NLAlib.PairingQuotient.pairingSum (NLAlib.PairingQuotient.cycleRow (q + 1)) (NLAlib.PairingQuotient.cycleCol (q + 1))\n      alpha beta w ≤\n    ↑(Fintype.card I) *\n        ↑d1 ^\n          (Fintype.card (NLAlib.PairingQuotient.RowQuotient (NLAlib.PairingQuotient.cycleRow (q + 1)) alpha beta) - 1) *\n      ↑d2 ^ Fintype.card (NLAlib.PairingQuotient.ColQuotient (NLAlib.PairingQuotient.cycleCol (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.pairingSum_cycle_le_of_nat_bounds",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  138,
+  "kind":
+  "theorem",
+  "doc":
+  "Same bound with the column/row-sum bounds replaced by natural-number bounds:\nif `a ≤ d1` and `c ≤ d2` for naturals `d1`, `d2`, then\n`pairingSum ... ≤ (card I) * (d1 : ℝ) ^ (r - 1) * (d2 : ℝ) ^ v`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleColQuotientFintype",
+   "NLAlib.PairingQuotient.cycleRow",
+   "NLAlib.PairingQuotient.cycleRowQuotientFintype",
+   "NLAlib.PairingQuotient.pairingSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.pairingSum_cycle_one.{u_4} {E : Type u_4} [Fintype E] (q : ℕ)\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) (d1 d2 : ℕ) :\n  (NLAlib.PairingQuotient.pairingSum (NLAlib.PairingQuotient.cycleRow (q + 1)) (NLAlib.PairingQuotient.cycleCol (q + 1))\n      alpha beta fun x x_1 => 1) =\n    ↑d1 ^ Fintype.card (NLAlib.PairingQuotient.RowQuotient (NLAlib.PairingQuotient.cycleRow (q + 1)) alpha beta) *\n      ↑d2 ^ Fintype.card (NLAlib.PairingQuotient.ColQuotient (NLAlib.PairingQuotient.cycleCol (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.pairingSum_cycle_one",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  174,
+  "kind":
+  "theorem",
+  "doc":
+  "The exact unit-profile identity: with the constant-one profile on\n`Fin d1 × Fin d2` the unrestricted indicator sum equals\n`(d1 : ℝ) ^ r * (d2 : ℝ) ^ v`. The identity remains valid for `d1 = 0` or\n`d2 = 0`, preserving `0 ^ 0 = 1`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.colEnd",
+   "NLAlib.PairingQuotient.pairingSum",
+   "NLAlib.PairingQuotient.rowEnd"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.pairingSum_eq_sum_quotient.{u_1, u_2, u_3, u_4, u_5, u_6} {O : Type u_1} {R : Type u_2}\n  {C : Type u_3} {E : Type u_4} {I : Type u_5} {J : Type u_6} (sr : O → R) (tg : O → C) (alpha beta : E → O) [Fintype R]\n  [Fintype C] [Fintype E] [Fintype I] [Fintype J] [DecidableEq R] [DecidableEq C] [DecidableEq I] [DecidableEq J]\n  [Fintype (NLAlib.PairingQuotient.RowQuotient sr alpha beta)]\n  [Fintype (NLAlib.PairingQuotient.ColQuotient tg alpha beta)]\n  [DecidableEq (NLAlib.PairingQuotient.RowQuotient sr alpha beta)]\n  [DecidableEq (NLAlib.PairingQuotient.ColQuotient tg alpha beta)] (w : I → J → ℝ) :\n  NLAlib.PairingQuotient.pairingSum sr tg alpha beta w =\n    ∑ f,\n      ∑ g,\n        ∏ e, w (f (NLAlib.PairingQuotient.rowEnd sr alpha beta e)) (g (NLAlib.PairingQuotient.colEnd tg alpha beta e))",
+  "name":
+  "NLAlib.PairingQuotient.pairingSum_eq_sum_quotient",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientBound",
+  "line":
+  48,
+  "kind":
+  "theorem",
+  "doc":
+  "The exact quotient identity for `pairingSum`: the unrestricted indicator\nsum over original labels equals the sum over quotient labels of the product of\nthe weights at the endpoint classes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.colEnd",
+   "NLAlib.PairingQuotient.rowEnd",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.quotientGraphHom.{u_1, u_2, u_3, u_4} {R : Type u_1} {C : Type u_2} {O : Type u_3} {E : Type u_4}\n  (sr : O → R) (tg : O → C) (alpha beta : E → O) (hcover : Function.Bijective (Sum.elim alpha beta)) :\n  SimpleGraph.bipartiteOccurrenceGraph sr tg →g\n    SimpleGraph.bipartiteOccurrenceGraph (NLAlib.PairingQuotient.rowEnd sr alpha beta)\n      (NLAlib.PairingQuotient.colEnd tg alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.quotientGraphHom",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  303,
+  "kind":
+  "def",
+  "doc":
+  "The map on vertices induced by quotienting rows and columns is a surjective\ngraph homomorphism from the original occurrence graph to the paired quotient\noccurrence graph.  The endpoint coverage bijection is used to realize every\noriginal occurrence `o` by the paired pair whose `alpha`- or `beta`-endpoint is\n`o`; when `o` is a `beta` endpoint, `rowEnd_beta` / `colEnd_beta` identify the\nquotient classes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.Admissible",
+   "NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.quotientLabelEquiv.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1} {C : Type u_2} {O : Type u_3}\n  {E : Type u_4} {I : Type u_5} {J : Type u_6} (sr : O → R) (tg : O → C) (alpha beta : E → O) :\n  (NLAlib.PairingQuotient.RowQuotient sr alpha beta → I) × (NLAlib.PairingQuotient.ColQuotient tg alpha beta → J) ≃\n    { xy // NLAlib.PairingQuotient.Admissible sr tg alpha beta xy.1 xy.2 }",
+  "name":
+  "NLAlib.PairingQuotient.quotientLabelEquiv",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  158,
+  "kind":
+  "def",
+  "doc":
+  "The exact quotient-label equivalence: quotient labels `(U → I) × (V → J)`\ncorrespond bijectively to admissible original labels `{xy : (R → I) × (C → J) //\nAdmissible xy.1 xy.2}`, by pullback along `Quotient.mk''` and\n`Quotient.liftOn'` respectively. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.Admissible",
+   "NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.colSetoid",
+   "NLAlib.PairingQuotient.quotientLabelEquiv",
+   "NLAlib.PairingQuotient.rowSetoid"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.quotientLabelEquiv_apply.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1} {C : Type u_2}\n  {O : Type u_3} {E : Type u_4} {I : Type u_5} {J : Type u_6} (sr : O → R) (tg : O → C) (alpha beta : E → O)\n  (f : NLAlib.PairingQuotient.RowQuotient sr alpha beta → I)\n  (g : NLAlib.PairingQuotient.ColQuotient tg alpha beta → J) :\n  ↑((NLAlib.PairingQuotient.quotientLabelEquiv sr tg alpha beta) (f, g)) = (f ∘ Quotient.mk'', g ∘ Quotient.mk'')",
+  "name":
+  "NLAlib.PairingQuotient.quotientLabelEquiv_apply",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  192,
+  "kind":
+  "theorem",
+  "doc":
+  "The quotient label equivalence sends `(f, g)` to the pullback pair\n`(f ∘ Quotient.mk'', g ∘ Quotient.mk'')`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.RowQuotient"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.rowEnd.{u_1, u_3, u_4} {R : Type u_1} {O : Type u_3} {E : Type u_4} (sr : O → R)\n  (alpha beta : E → O) (e : E) : NLAlib.PairingQuotient.RowQuotient sr alpha beta",
+  "name":
+  "NLAlib.PairingQuotient.rowEnd",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  66,
+  "kind":
+  "def",
+  "doc":
+  "The row endpoint class of the paired pair `e`, i.e. the class of\n`sr (alpha e)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.rowEnd",
+   "NLAlib.PairingQuotient.rowSetoid"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.rowEnd_beta.{u_1, u_3, u_4} {R : Type u_1} {O : Type u_3} {E : Type u_4} (sr : O → R)\n  (alpha beta : E → O) (e : E) : NLAlib.PairingQuotient.rowEnd sr alpha beta e = Quotient.mk'' (sr (beta e))",
+  "name":
+  "NLAlib.PairingQuotient.rowEnd_beta",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  86,
+  "kind":
+  "theorem",
+  "doc":
+  "The class of the `beta` row endpoint equals the `alpha` row endpoint class\nof the same paired pair. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.cycleRow"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.rowQuotient_nonempty_cycle.{u_4} {E : Type u_4} (q : ℕ)\n  (alpha beta : E → Fin (q + 1) ⊕ Fin (q + 1)) :\n  Nonempty (NLAlib.PairingQuotient.RowQuotient (NLAlib.PairingQuotient.cycleRow (q + 1)) alpha beta)",
+  "name":
+  "NLAlib.PairingQuotient.rowQuotient_nonempty_cycle",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  460,
+  "kind":
+  "theorem",
+  "doc":
+  "The row quotient of the Gram cycle is nonempty (class of row `0`). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.rowSetoid.{u_1, u_3, u_4} {R : Type u_1} {O : Type u_3} {E : Type u_4} (sr : O → R)\n  (alpha beta : E → O) : Setoid R",
+  "name":
+  "NLAlib.PairingQuotient.rowSetoid",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  50,
+  "kind":
+  "def",
+  "doc":
+  "The row quotient equivalence: the equivalence closure of `RowRel`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.Admissible",
+   "NLAlib.PairingQuotient.rowSetoid"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.rowSetoid_rel_imp_eq_of_admissible.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1} {C : Type u_2}\n  {O : Type u_3} {E : Type u_4} {I : Type u_5} {J : Type u_6} (sr : O → R) (tg : O → C) (alpha beta : E → O) (x : R → I)\n  (y : C → J) (hA : NLAlib.PairingQuotient.Admissible sr tg alpha beta x y) (a b : R) :\n  (NLAlib.PairingQuotient.rowSetoid sr alpha beta) a b → x a = x b",
+  "name":
+  "NLAlib.PairingQuotient.rowSetoid_rel_imp_eq_of_admissible",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  104,
+  "kind":
+  "theorem",
+  "doc":
+  "An admissible row labeling is constant on `rowSetoid` classes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.ColQuotient",
+   "NLAlib.PairingQuotient.RowQuotient",
+   "NLAlib.PairingQuotient.colEnd",
+   "NLAlib.PairingQuotient.rowEnd"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.sum_prod_indicator_eq_sum_quotient.{u_1, u_2, u_3, u_4, u_5, u_6} {R : Type u_1} {C : Type u_2}\n  {O : Type u_3} {E : Type u_4} {I : Type u_5} {J : Type u_6} (sr : O → R) (tg : O → C) (alpha beta : E → O) [Fintype R]\n  [Fintype C] [Fintype E] [Fintype I] [Fintype J] [DecidableEq R] [DecidableEq C] [DecidableEq I] [DecidableEq J]\n  [Fintype (NLAlib.PairingQuotient.RowQuotient sr alpha beta)]\n  [Fintype (NLAlib.PairingQuotient.ColQuotient tg alpha beta)]\n  [DecidableEq (NLAlib.PairingQuotient.RowQuotient sr alpha beta)]\n  [DecidableEq (NLAlib.PairingQuotient.ColQuotient tg alpha beta)] (w : I → J → ℝ) :\n  (∑ x,\n      ∑ y,\n        ∏ e,\n          if x (sr (alpha e)) = x (sr (beta e)) ∧ y (tg (alpha e)) = y (tg (beta e)) then\n            w (x (sr (alpha e))) (y (tg (alpha e)))\n          else 0) =\n    ∑ f,\n      ∑ g,\n        ∏ e, w (f (NLAlib.PairingQuotient.rowEnd sr alpha beta e)) (g (NLAlib.PairingQuotient.colEnd tg alpha beta e))",
+  "name":
+  "NLAlib.PairingQuotient.sum_prod_indicator_eq_sum_quotient",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  236,
+  "kind":
+  "theorem",
+  "doc":
+  "The exact finite-sum identity: the sum over original labels of the product\nof local indicators (which forces admissibility) equals the sum over quotient\nlabels of the product of `w`-weights at the endpoint classes. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.PairingQuotient.colSetoid",
+   "NLAlib.PairingQuotient.rowSetoid"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.PairingQuotient.surjective_sum_map_quotient.{u_1, u_2, u_3, u_4} {R : Type u_1} {C : Type u_2} {O : Type u_3}\n  {E : Type u_4} (sr : O → R) (tg : O → C) (alpha beta : E → O) :\n  Function.Surjective (Sum.map Quotient.mk'' Quotient.mk'')",
+  "name":
+  "NLAlib.PairingQuotient.surjective_sum_map_quotient",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph",
+  "line":
+  347,
+  "kind":
+  "theorem",
+  "doc":
+  "The vertex map of `quotientGraphHom` is surjective:\nevery quotient vertex has a representative. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.QRAlgorithmSucceeds {n : ℕ} (qr : Matrix (Fin n) (Fin n) ℝ → Matrix (Fin n) (Fin n) ℝ × Matrix (Fin n) (Fin n) ℝ)\n  (μ : ℕ → ℝ) (A : Matrix (Fin n) (Fin n) ℝ) (k : ℕ) : Prop",
   "name":
   "NLAlib.QRAlgorithmSucceeds",
@@ -39567,6 +40930,956 @@
   ["radix-two-fft-realization"],
   "atlas":
   ["radix-two-fft-realization"]},
+ {"uses":
+  ["NLAlib.RankOneBarrier.lowerGap",
+   "NLAlib.RankOneBarrier.lowerMatrix",
+   "NLAlib.RankOneBarrier.lowerScore",
+   "NLAlib.RankOneBarrier.upperGap",
+   "NLAlib.RankOneBarrier.upperMatrix",
+   "NLAlib.RankOneBarrier.upperScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.exists_candidate.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I] [Fintype n] [DecidableEq n]\n  [Nonempty n] (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) (MU : Matrix n n ℝ) (hMU : MU.PosDef)\n  (ML : Matrix n n ℝ) (hML : ML.PosDef) (δU δL : ℝ) (hδU : 0 < δU) (hδL : 0 < δL) (hcap : δL * ML⁻¹.trace < 1)\n  (hpot : 1 / δU + MU⁻¹.trace ≤ 1 / δL - ML⁻¹.trace) :\n  ∃ i,\n    v i ≠ 0 ∧\n      0 <\n          NLAlib.RankOneBarrier.upperScore (NLAlib.RankOneBarrier.upperMatrix MU δU)\n            (NLAlib.RankOneBarrier.upperGap MU δU) (v i) ∧\n        NLAlib.RankOneBarrier.upperScore (NLAlib.RankOneBarrier.upperMatrix MU δU)\n            (NLAlib.RankOneBarrier.upperGap MU δU) (v i) ≤\n          NLAlib.RankOneBarrier.lowerScore (NLAlib.RankOneBarrier.lowerMatrix ML δL)\n            (NLAlib.RankOneBarrier.lowerGap ML δL) (v i)",
+  "name":
+  "NLAlib.RankOneBarrier.exists_candidate",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  196,
+  "kind":
+  "theorem",
+  "doc":
+  "**Candidate selection.** For an isotropic frame and two positive definite\nbarriers with shifts satisfying the reciprocal-potential and potential cap\nhypotheses, some nonzero frame vector has upper score positive and no larger\nthan its lower score. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.lowerGap",
+   "NLAlib.RankOneBarrier.lowerMatrix",
+   "NLAlib.RankOneBarrier.lowerScore",
+   "NLAlib.RankOneBarrier.upperGap",
+   "NLAlib.RankOneBarrier.upperMatrix",
+   "NLAlib.RankOneBarrier.upperScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.exists_candidate_inverse.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I] [Fintype n]\n  [DecidableEq n] [Nonempty n] (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) (MU : Matrix n n ℝ)\n  (hMU : MU.PosDef) (ML : Matrix n n ℝ) (hML : ML.PosDef) (δU δL : ℝ) (hδU : 0 < δU) (hδL : 0 < δL)\n  (hcap : δL * ML⁻¹.trace < 1) (hpot : 1 / δU + MU⁻¹.trace ≤ 1 / δL - ML⁻¹.trace) :\n  ∃ i,\n    v i ≠ 0 ∧\n      ∃ t,\n        0 < t ∧\n          NLAlib.RankOneBarrier.upperScore (NLAlib.RankOneBarrier.upperMatrix MU δU)\n                (NLAlib.RankOneBarrier.upperGap MU δU) (v i) ≤\n              1 / t ∧\n            1 / t ≤\n              NLAlib.RankOneBarrier.lowerScore (NLAlib.RankOneBarrier.lowerMatrix ML δL)\n                (NLAlib.RankOneBarrier.lowerGap ML δL) (v i)",
+  "name":
+  "NLAlib.RankOneBarrier.exists_candidate_inverse",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  270,
+  "kind":
+  "theorem",
+  "doc":
+  "**Candidate step.** Under the hypotheses of `exists_candidate` there is a\nnonzero frame vector `v i` and a positive `t` with the upper score at most\n`1 / t` and `1 / t` at most the lower score.  Taking `t = 1 / U_i` realises\nthe reciprocal bridging step used by the BSS rank-one potential update. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.rankOneSparsificationFactor"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.exists_nonneg_weights_spectral_sandwich_of_card_lt_budget.{u_1, u_2} {I : Type u_1} {n : Type u_2}\n  [Fintype I] [Fintype n] [DecidableEq n] [Nonempty n] (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1)\n  (q : ℕ) (hq : Fintype.card n < q) :\n  ∃ s,\n    (∀ (i : I), 0 ≤ s i) ∧\n      (Function.support s).ncard ≤ q ∧\n        1 ≤ ∑ i, s i • Matrix.vecMulVec (v i) (v i) ∧\n          ∑ i, s i • Matrix.vecMulVec (v i) (v i) ≤ NLAlib.rankOneSparsificationFactor (↑q / ↑(Fintype.card n)) • 1",
+  "name":
+  "NLAlib.RankOneBarrier.exists_nonneg_weights_spectral_sandwich_of_card_lt_budget",
+  "module":
+  "NLAlib.Matrix.Functions.FrameSparsificationParameters",
+  "line":
+  93,
+  "kind":
+  "theorem",
+  "doc":
+  "**Integer-budget spectral sandwich.**  Let `v : I → n → ℝ` be a real\nisotropic frame (`∑ i, v_i v_iᵀ = 1`) and let `q` be a natural number with\n`N = Fintype.card n < q`.  Then there are nonnegative weights `s` with\nsupport at most `q` such that the weighted Gram matrix satisfies the\nLoewner sandwich\n\n`1 ≤ ∑ i, s i • v_i v_iᵀ ≤ rankOneSparsificationFactor (q / N) • 1`.\n\nWith `a = √(q / N) > 1` we have `a² = q / N` and `q = N·a²`, so the\nresult is the square-budget theorem\n`exists_nonneg_weights_spectral_sandwich_of_sq_budget` applied to\n`a`, with its upper constant `((a+1)²/(a-1)²)` identified with the factor\nvia `rankOneSparsificationFactor_eq_sq_div_sq`.\n\nSource: BSS 2008, Theorem 3.1 and Section 3.2. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.exists_nonneg_weights_spectral_sandwich_of_sq_budget.{u_1, u_2} {I : Type u_1} {n : Type u_2}\n  [Fintype I] [Fintype n] [DecidableEq n] [Nonempty n] (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1)\n  (a : ℝ) (ha1 : 1 < a) (q : ℕ) (hq : ↑q = ↑(Fintype.card n) * a ^ 2) :\n  ∃ sFinal,\n    (∀ (i : I), 0 ≤ sFinal i) ∧\n      (Function.support sFinal).ncard ≤ q ∧\n        1 ≤ ∑ i, sFinal i • Matrix.vecMulVec (v i) (v i) ∧\n          ∑ i, sFinal i • Matrix.vecMulVec (v i) (v i) ≤ ((a + 1) ^ 2 / (a - 1) ^ 2) • 1",
+  "name":
+  "NLAlib.RankOneBarrier.exists_nonneg_weights_spectral_sandwich_of_sq_budget",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierIteration",
+  "line":
+  271,
+  "kind":
+  "theorem",
+  "doc":
+  "**Integer-budget spectral sandwich.**  Let `v : I → n → ℝ` be a real\nisotropic frame (`∑ i, v_i v_iᵀ = 1`) with `N = Fintype.card n`, let `a > 1`\nbe real, and let `q` be a natural number with `(q : ℝ) = N*a²`.\n\nThen there are nonnegative weights `sFinal` with support at most `q` such that\nthe normalized weighted Gram matrix satisfies the Loewner sandwich\n\n`1 ≤ ∑ i, sFinal i • v_i v_iᵀ ≤ ((a+1)²/(a-1)²) • 1`.\n\nThis is the exact quantitative specialization of the finite iteration with the BSS 2008\nconstants (Section 3.2): `δL = 1`, `epsL = 1/a`, `l0 = -(N*a)`,\n`δU = (a+1)/(a-1)`, `epsU = (a-1)/(a*(a+1))`, `u0 = N*a*(a+1)/(a-1)`.\nAfter `q` steps the lower barrier is `lq = N*a*(a-1) > 0`, the upper barrier is\n`uq = N*a*(a+1)²/(a-1)`, and `uq/lq = (a+1)²/(a-1)²`; scaling the returned\nweights by `1/lq` converts the strict positivity of the barrier differences\ninto the semi-definite Loewner inequalities. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.exists_updates_of_frame.{u_1, u_2} {n : Type u_1} [Fintype n] [DecidableEq n] {I : Type u_2}\n  [Fintype I] [Nonempty n] (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) (MU : Matrix n n ℝ)\n  (hMU : MU.PosDef) (ML : Matrix n n ℝ) (hML : ML.PosDef) (δU δL : ℝ) (hδU : 0 < δU) (hδL : 0 < δL)\n  (hcap : δL * ML⁻¹.trace < 1) (hpot : 1 / δU + MU⁻¹.trace ≤ 1 / δL - ML⁻¹.trace) :\n  ∃ i,\n    v i ≠ 0 ∧\n      ∃ t,\n        0 < t ∧\n          (MU + δU • 1 - t • Matrix.vecMulVec (v i) (v i)).PosDef ∧\n            (MU + δU • 1 - t • Matrix.vecMulVec (v i) (v i))⁻¹.trace ≤ MU⁻¹.trace ∧\n              (ML - δL • 1 + t • Matrix.vecMulVec (v i) (v i)).PosDef ∧\n                (ML - δL • 1 + t • Matrix.vecMulVec (v i) (v i))⁻¹.trace ≤ ML⁻¹.trace",
+  "name":
+  "NLAlib.RankOneBarrier.exists_updates_of_frame",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneBarrierUpdate",
+  "line":
+  366,
+  "kind":
+  "theorem",
+  "doc":
+  "**Candidate rank-one step with both barrier updates.**  Under the frame,\npositivity, shift and potential hypotheses of `exists_candidate_inverse`, there\nis a nonzero frame vector `v i` and a positive step size `t` for which both the\nupper and the lower barrier update are positive definite and do not increase\ntheir inverse traces.  Source: BSS 2008, Section 3.2. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.exists_weights_barriers_of_potential_bounds.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I]\n  [Fintype n] [DecidableEq n] [Nonempty n] (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1)\n  (u0 l0 deltaU deltaL epsU epsL : ℝ) (hu0 : 0 < u0) (hl0 : l0 < 0) (hδU : 0 < deltaU) (hδL : 0 < deltaL)\n  (hU0 : ↑(Fintype.card n) / u0 ≤ epsU) (hL0 : ↑(Fintype.card n) / -l0 ≤ epsL) (hcap0 : deltaL * epsL < 1)\n  (hpot0 : 1 / deltaU + epsU ≤ 1 / deltaL - epsL) (k : ℕ) :\n  ∃ s,\n    (∀ (i : I), 0 ≤ s i) ∧\n      (Function.support s).ncard ≤ k ∧\n        have A := ∑ i, s i • Matrix.vecMulVec (v i) (v i);\n        have u := u0 + ↑k * deltaU;\n        have l := l0 + ↑k * deltaL;\n        (u • 1 - A).PosDef ∧ (u • 1 - A)⁻¹.trace ≤ epsU ∧ (A - l • 1).PosDef ∧ (A - l • 1)⁻¹.trace ≤ epsL",
+  "name":
+  "NLAlib.RankOneBarrier.exists_weights_barriers_of_potential_bounds",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierIteration",
+  "line":
+  72,
+  "kind":
+  "theorem",
+  "doc":
+  "**Finite rank-one barrier iteration.**  For a real isotropic frame\n`v : I → n → ℝ` (`∑ i, v_i v_iᵀ = 1`) and scalar barrier parameters with\n`u0 > 0`, `l0 < 0`, `δU, δL > 0`, satisfying the initial budget\n`N/u0 ≤ epsU`, `N/(-l0) ≤ epsL`, the strict lower potential cap\n`δL*epsL < 1`, and the reciprocal-potential compatibility\n`1/δU + epsU ≤ 1/δL - epsL`, there are, for every finite horizon `k`,\nnonnegative weights `s` with `(Function.support s).ncard ≤ k` such that with\n`A = ∑ i, s i • v_i v_iᵀ`, `u = u0 + k*δU`, `l = l0 + k*δL`,\n\n* `u•1 - A ≻ 0` and `tr((u•1 - A)⁻¹) ≤ epsU`, and\n* `A - l•1 ≻ 0` and `tr((A - l•1)⁻¹) ≤ epsL`.\n\nSource: BSS 2008, Section 3.2 finite iteration. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.lowerGap.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (ML : Matrix n n ℝ) (δ : ℝ) : ℝ",
+  "name":
+  "NLAlib.RankOneBarrier.lowerGap",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  96,
+  "kind":
+  "def",
+  "doc":
+  "The lower reciprocal-barrier gap\n`tr((ML - δ•1)⁻¹) - tr(ML⁻¹)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.lowerGap"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.lowerGap_pos.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] [Nonempty n] (ML : Matrix n n ℝ)\n  (hML : ML.PosDef) {δ : ℝ} (hδ : 0 < δ) (hcap : δ * ML⁻¹.trace < 1) : 0 < NLAlib.RankOneBarrier.lowerGap ML δ",
+  "name":
+  "NLAlib.RankOneBarrier.lowerGap_pos",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  129,
+  "kind":
+  "theorem",
+  "doc":
+  "The lower reciprocal-barrier gap is positive under the strict potential\ncap on a nonempty index type. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.lowerMatrix.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (ML : Matrix n n ℝ) (δ : ℝ) :\n  Matrix n n ℝ",
+  "name":
+  "NLAlib.RankOneBarrier.lowerMatrix",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  92,
+  "kind":
+  "def",
+  "doc":
+  "The shifted-and-inverted lower barrier matrix `(ML - δ•1)⁻¹`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.lowerMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.lowerMatrix_posDef.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (ML : Matrix n n ℝ)\n  (hML : ML.PosDef) {δ : ℝ} (hδ : 0 < δ) (hcap : δ * ML⁻¹.trace < 1) : (NLAlib.RankOneBarrier.lowerMatrix ML δ).PosDef",
+  "name":
+  "NLAlib.RankOneBarrier.lowerMatrix_posDef",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  115,
+  "kind":
+  "theorem",
+  "doc":
+  "The lower shifted matrix is positive definite under the strict potential\ncap `δ * tr(ML⁻¹) < 1`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.lowerScore.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (RL : Matrix n n ℝ) (DL : ℝ)\n  (v : n → ℝ) : ℝ",
+  "name":
+  "NLAlib.RankOneBarrier.lowerScore",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  105,
+  "kind":
+  "def",
+  "doc":
+  "The lower candidate score `quadForm (RL²) v / DL - quadForm RL v`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.lowerScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.lowerScore_zero.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (RL : Matrix n n ℝ) (DL : ℝ) :\n  NLAlib.RankOneBarrier.lowerScore RL DL 0 = 0",
+  "name":
+  "NLAlib.RankOneBarrier.lowerScore_zero",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  153,
+  "kind":
+  "theorem",
+  "doc":
+  "The lower candidate score of the zero vector is zero, for every gap. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.lowerGap",
+   "NLAlib.RankOneBarrier.lowerMatrix",
+   "NLAlib.RankOneBarrier.lowerScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.posDef_and_trace_inv_le_of_le_lowerScore.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  [Nonempty n] {ML : Matrix n n ℝ} (hML : ML.PosDef) {δL : ℝ} (hδL : 0 < δL) (hcap : δL * ML⁻¹.trace < 1) {v : n → ℝ}\n  (hv : v ≠ 0) {t : ℝ} (ht : 0 < t)\n  (hscore :\n    1 / t ≤\n      NLAlib.RankOneBarrier.lowerScore (NLAlib.RankOneBarrier.lowerMatrix ML δL) (NLAlib.RankOneBarrier.lowerGap ML δL)\n        v) :\n  (ML - δL • 1 + t • Matrix.vecMulVec v v).PosDef ∧ (ML - δL • 1 + t • Matrix.vecMulVec v v)⁻¹.trace ≤ ML⁻¹.trace",
+  "name":
+  "NLAlib.RankOneBarrier.posDef_and_trace_inv_le_of_le_lowerScore",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneBarrierUpdate",
+  "line":
+  260,
+  "kind":
+  "theorem",
+  "doc":
+  "**Lower barrier update.**  If `δL * trace ML⁻¹ < 1` and the lower candidate\nscore of a nonzero vector `v` is at least `1/t`, then `ML - δL·1 + t·v vᵀ`\nis positive definite and its inverse trace does not exceed `trace ML⁻¹`.\nSource: BSS 2008, Section 3.2 lower barrier step. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.upperGap",
+   "NLAlib.RankOneBarrier.upperMatrix",
+   "NLAlib.RankOneBarrier.upperScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.posDef_and_trace_inv_le_of_upperScore_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  [Nonempty n] {MU : Matrix n n ℝ} (hMU : MU.PosDef) {δU : ℝ} (hδU : 0 < δU) {v : n → ℝ} (hv : v ≠ 0) {t : ℝ}\n  (ht : 0 < t)\n  (hscore :\n    NLAlib.RankOneBarrier.upperScore (NLAlib.RankOneBarrier.upperMatrix MU δU) (NLAlib.RankOneBarrier.upperGap MU δU)\n        v ≤\n      1 / t) :\n  (MU + δU • 1 - t • Matrix.vecMulVec v v).PosDef ∧ (MU + δU • 1 - t • Matrix.vecMulVec v v)⁻¹.trace ≤ MU⁻¹.trace",
+  "name":
+  "NLAlib.RankOneBarrier.posDef_and_trace_inv_le_of_upperScore_le",
+  "module":
+  "NLAlib.Matrix.Functions.RankOneBarrierUpdate",
+  "line":
+  141,
+  "kind":
+  "theorem",
+  "doc":
+  "**Upper barrier update.**  If the upper candidate score of a nonzero vector\n`v` is at most `1/t`, then `MU + δU·1 - t·v vᵀ` is positive definite and its\ninverse trace does not exceed `trace MU⁻¹`.  Source: BSS 2008, Section 3.2\nupper barrier step. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.lowerScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.sum_lowerScore_eq.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I] [Fintype n] [DecidableEq n]\n  (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) (RL : Matrix n n ℝ) (DL : ℝ) :\n  ∑ i, NLAlib.RankOneBarrier.lowerScore RL DL (v i) = (RL ^ 2).trace / DL - RL.trace",
+  "name":
+  "NLAlib.RankOneBarrier.sum_lowerScore_eq",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  177,
+  "kind":
+  "theorem",
+  "doc":
+  "Sum of the lower candidate scores over an isotropic frame. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.upperScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.sum_upperScore_eq.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I] [Fintype n] [DecidableEq n]\n  (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) (RU : Matrix n n ℝ) (DU : ℝ) :\n  ∑ i, NLAlib.RankOneBarrier.upperScore RU DU (v i) = (RU ^ 2).trace / DU + RU.trace",
+  "name":
+  "NLAlib.RankOneBarrier.sum_upperScore_eq",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  158,
+  "kind":
+  "theorem",
+  "doc":
+  "Sum of the upper candidate scores over an isotropic frame. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.upperGap.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (MU : Matrix n n ℝ) (δ : ℝ) : ℝ",
+  "name":
+  "NLAlib.RankOneBarrier.upperGap",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  87,
+  "kind":
+  "def",
+  "doc":
+  "The upper reciprocal-barrier gap\n`tr(MU⁻¹) - tr((MU + δ•1)⁻¹)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.upperGap"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.upperGap_pos.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] [Nonempty n] (MU : Matrix n n ℝ)\n  (hMU : MU.PosDef) {δ : ℝ} (hδ : 0 < δ) : 0 < NLAlib.RankOneBarrier.upperGap MU δ",
+  "name":
+  "NLAlib.RankOneBarrier.upperGap_pos",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  123,
+  "kind":
+  "theorem",
+  "doc":
+  "The upper reciprocal-barrier gap is positive on a nonempty index type. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.upperMatrix.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (MU : Matrix n n ℝ) (δ : ℝ) :\n  Matrix n n ℝ",
+  "name":
+  "NLAlib.RankOneBarrier.upperMatrix",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  83,
+  "kind":
+  "def",
+  "doc":
+  "The shifted-and-inverted upper barrier matrix `(MU + δ•1)⁻¹`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.upperMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.upperMatrix_posDef.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (MU : Matrix n n ℝ)\n  (hMU : MU.PosDef) {δ : ℝ} (hδ : 0 < δ) : (NLAlib.RankOneBarrier.upperMatrix MU δ).PosDef",
+  "name":
+  "NLAlib.RankOneBarrier.upperMatrix_posDef",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  109,
+  "kind":
+  "theorem",
+  "doc":
+  "The upper shifted matrix is positive definite. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.upperScore.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (RU : Matrix n n ℝ) (DU : ℝ)\n  (v : n → ℝ) : ℝ",
+  "name":
+  "NLAlib.RankOneBarrier.upperScore",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  101,
+  "kind":
+  "def",
+  "doc":
+  "The upper candidate score `quadForm (RU²) v / DU + quadForm RU v`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.upperScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.upperScore_pos_of_ne_zero.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] {RU : Matrix n n ℝ}\n  (hRU : RU.PosDef) {DU : ℝ} (hDU : 0 < DU) {v : n → ℝ} (hv : v ≠ 0) : 0 < NLAlib.RankOneBarrier.upperScore RU DU v",
+  "name":
+  "NLAlib.RankOneBarrier.upperScore_pos_of_ne_zero",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  137,
+  "kind":
+  "theorem",
+  "doc":
+  "The upper candidate score is positive at a nonzero vector. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RankOneBarrier.upperScore"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RankOneBarrier.upperScore_zero.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n] (RU : Matrix n n ℝ) (DU : ℝ) :\n  NLAlib.RankOneBarrier.upperScore RU DU 0 = 0",
+  "name":
+  "NLAlib.RankOneBarrier.upperScore_zero",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  148,
+  "kind":
+  "theorem",
+  "doc":
+  "The upper candidate score of the zero vector is zero, for every gap. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree : ℕ → ℕ → Type",
+  "name":
+  "NLAlib.RowRootedBipartiteTree",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  69,
+  "kind":
+  "inductive",
+  "doc":
+  "Syntax for constructing row-rooted bipartite trees with `r` non-root rows and\n`q` columns. Row vertices are indexed by `Fin (r+1)` and column vertices by\n`Fin q`. A new row is inserted at index `0`, shifting all earlier row vertices,\nincluding the original root. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.addColumn {r q : ℕ} :\n  NLAlib.RowRootedBipartiteTree r q → Fin (r + 1) → NLAlib.RowRootedBipartiteTree r (q + 1)",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.addColumn",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  77,
+  "kind":
+  "constructor",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.addColumn.elim.{u} {motive : (a a_1 : ℕ) → NLAlib.RowRootedBipartiteTree a a_1 → Sort u}\n  {a✝ a✝¹ : ℕ} (t : NLAlib.RowRootedBipartiteTree a✝ a✝¹) (h : t.ctorIdx = 2)\n  (addColumn :\n    {r q : ℕ} → (a : NLAlib.RowRootedBipartiteTree r q) → (a_1 : Fin (r + 1)) → motive r (q + 1) (a.addColumn a_1)) :\n  motive a✝ a✝¹ t",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.addColumn.elim",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  77,
+  "kind":
+  "def",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.addRow {r q : ℕ} :\n  NLAlib.RowRootedBipartiteTree r q → Fin q → NLAlib.RowRootedBipartiteTree (r + 1) q",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.addRow",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  75,
+  "kind":
+  "constructor",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.addRow.elim.{u} {motive : (a a_1 : ℕ) → NLAlib.RowRootedBipartiteTree a a_1 → Sort u}\n  {a✝ a✝¹ : ℕ} (t : NLAlib.RowRootedBipartiteTree a✝ a✝¹) (h : t.ctorIdx = 1)\n  (addRow : {r q : ℕ} → (a : NLAlib.RowRootedBipartiteTree r q) → (a_1 : Fin q) → motive (r + 1) q (a.addRow a_1)) :\n  motive a✝ a✝¹ t",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.addRow.elim",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  75,
+  "kind":
+  "def",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.edgeList {r q : ℕ} : NLAlib.RowRootedBipartiteTree r q → List (Fin (r + 1) × Fin q)",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.edgeList",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  82,
+  "kind":
+  "def",
+  "doc":
+  "The actual edge list of the tree: the list of row-column index pairs, built\nby successive leaf attachment. `addRow` attaches the edge `(0, v)` (the new row leaf, index `0`, made\nadjacent to column `v`) and shifts old row endpoints by `Fin.succ`; `addColumn`\nattaches `(u, 0)` and shifts old column endpoints by `Fin.succ`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.edgeList"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.edgeList_addColumn {r q : ℕ} (t : NLAlib.RowRootedBipartiteTree r q) (u : Fin (r + 1)) :\n  (t.addColumn u).edgeList = (u, 0) :: List.map (fun e => (e.1, e.2.succ)) t.edgeList",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.edgeList_addColumn",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  98,
+  "kind":
+  "theorem",
+  "doc":
+  "The edge list of a tree with a new column leaf starts with the new edge\n`(u, 0)` and then contains the old edges with column indices shifted by\n`Fin.succ`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.edgeList"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.edgeList_addRow {r q : ℕ} (t : NLAlib.RowRootedBipartiteTree r q) (v : Fin q) :\n  (t.addRow v).edgeList = (0, v) :: List.map (fun e => (e.1.succ, e.2)) t.edgeList",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.edgeList_addRow",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  91,
+  "kind":
+  "theorem",
+  "doc":
+  "The edge list of a tree with a new row leaf starts with the new edge `(0, v)`\nand then contains the old edges with row indices shifted by `Fin.succ`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.edgeList"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.edgeList_length {r q : ℕ} (t : NLAlib.RowRootedBipartiteTree r q) :\n  t.edgeList.length = r + q",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.edgeList_length",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  198,
+  "kind":
+  "theorem",
+  "doc":
+  "The size of the edge list is `r + q`: each of the `r` non-root rows and `q`\ncolumns is attached exactly once. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.edgeList"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.edgeList_nodup {r q : ℕ} (t : NLAlib.RowRootedBipartiteTree r q) : t.edgeList.Nodup",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.edgeList_nodup",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  211,
+  "kind":
+  "theorem",
+  "doc":
+  "The edge list contains no repeated edge. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.edgeList",
+   "SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.exists_spanning_tree_syntax.{u_1, u_2, u_3} {U : Type u_1} {V : Type u_2} {E : Type u_3}\n  [Fintype U] [Fintype V] [Nonempty U] (sr : E → U) (tg : E → V)\n  (hG : (SimpleGraph.bipartiteOccurrenceGraph sr tg).Connected) :\n  ∃ r q t ur vc occ,\n    ∀ (k : Fin t.edgeList.length), sr (occ k) = ur (t.edgeList.get k).1 ∧ tg (occ k) = vc (t.edgeList.get k).2",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.exists_spanning_tree_syntax",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteSpanningTree",
+  "line":
+  184,
+  "kind":
+  "theorem",
+  "doc":
+  "**The bridge.** For every connected bipartite multigraph with finite row and\ncolumn vertex sets and indexed edge occurrences `sr : E -> U`, `tg : E -> V`,\nthere is a syntax tree `t : RowRootedBipartiteTree r q` with equivalences\n`ur : Fin (r+1) ≃ U` (rows) and `vc : Fin q ≃ V`\n(columns) and an injective occurrence map `occ : Fin t.edgeList.length ↪ E`\nsuch that each tree edge `(i, j)` is realized by the occurrence `occ k`: the\n`k`-th edge of `t` has row endpoint `ur i` and column endpoint `vc j`.\nThe original root index shifts with each row attachment. Column vertices and\nedge occurrences may be empty, and finiteness of the occurrence type is not\nrequired. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.partitionSum.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I] [Fintype J] {r q : ℕ}\n  (t : NLAlib.RowRootedBipartiteTree r q) (w : I → J → ℝ) : ℝ",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.partitionSum",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  156,
+  "kind":
+  "def",
+  "doc":
+  "Sum of the tree weight over all labelings of rows (`Fin (r+1)`, including the\nroot row) and of columns. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.partitionSum",
+   "NLAlib.RowRootedBipartiteTree.weight"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_addColumn_eq.{u_1, u_2} {r q : ℕ} {I : Type u_1} {J : Type u_2} [Fintype I]\n  [Fintype J] (t : NLAlib.RowRootedBipartiteTree r q) (u : Fin (r + 1)) (w : I → J → ℝ) :\n  (t.addColumn u).partitionSum w = ∑ x, ∑ y, (∑ j, w (x u) j) * NLAlib.RowRootedBipartiteTree.weight w t x y",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_addColumn_eq",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  275,
+  "kind":
+  "theorem",
+  "doc":
+  "Column-leaf elimination identity: summing the weight of `addColumn t u` over\nthe label of the new column equals summing the row sum `∑ j, w (x u) j` of the\noriginal tree weight. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.partitionSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_addColumn_le.{u_1, u_2} {r q : ℕ} {I : Type u_1} {J : Type u_2} [Fintype I]\n  [Fintype J] (t : NLAlib.RowRootedBipartiteTree r q) (u : Fin (r + 1)) (w : I → J → ℝ) (c : ℝ)\n  (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j) (hrow : ∀ (i : I), ∑ j, w i j ≤ c) :\n  (t.addColumn u).partitionSum w ≤ c * t.partitionSum w",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_addColumn_le",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  329,
+  "kind":
+  "theorem",
+  "doc":
+  "Adding a column leaf costs at most the row-sum factor `c`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.partitionSum",
+   "NLAlib.RowRootedBipartiteTree.weight"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_addRow_eq.{u_1, u_2} {r q : ℕ} {I : Type u_1} {J : Type u_2} [Fintype I]\n  [Fintype J] (t : NLAlib.RowRootedBipartiteTree r q) (v : Fin q) (w : I → J → ℝ) :\n  (t.addRow v).partitionSum w = ∑ x, ∑ y, (∑ i, w i (y v)) * NLAlib.RowRootedBipartiteTree.weight w t x y",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_addRow_eq",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  239,
+  "kind":
+  "theorem",
+  "doc":
+  "Row-leaf elimination identity: summing the weight of `addRow t v` over the label\nof the new row equals summing the column sum `∑ i, w i (y v)` of the original tree\nweight. This is the semantic bridge between the concrete partition sum of a grown\ntree and the partition sum of the original tree. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.partitionSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_addRow_le.{u_1, u_2} {r q : ℕ} {I : Type u_1} {J : Type u_2} [Fintype I]\n  [Fintype J] (t : NLAlib.RowRootedBipartiteTree r q) (v : Fin q) (w : I → J → ℝ) (a : ℝ)\n  (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j) (hcol : ∀ (j : J), ∑ i, w i j ≤ a) :\n  (t.addRow v).partitionSum w ≤ a * t.partitionSum w",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_addRow_le",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  309,
+  "kind":
+  "theorem",
+  "doc":
+  "Adding a row leaf costs at most the column-sum factor `a`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.partitionSum"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_le.{u_1, u_2} {r q : ℕ} {I : Type u_1} {J : Type u_2} [Fintype I] [Fintype J]\n  (t : NLAlib.RowRootedBipartiteTree r q) (w : I → J → ℝ) (a c : ℝ) (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j)\n  (hcol : ∀ (j : J), ∑ i, w i j ≤ a) (hrow : ∀ (i : I), ∑ j, w i j ≤ c) (ha : 0 ≤ a) (hc : 0 ≤ c) :\n  t.partitionSum w ≤ ↑(Fintype.card I) * a ^ r * c ^ q",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.partitionSum_le",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  349,
+  "kind":
+  "theorem",
+  "doc":
+  "Bound for every tree constructed by `RowRootedBipartiteTree`: if `w` is\nnonnegative, every column sum of `w` is at most `a`, and every row sum of `w` is\nat most `c`, then the partition sum is at most `Fintype.card I * a ^ r * c ^ q`.\nOnly the root-row label remains free after eliminating all leaf labels, which gives\nthe `Fintype.card I` factor. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.root : NLAlib.RowRootedBipartiteTree 0 0",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.root",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  74,
+  "kind":
+  "constructor",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.root.elim.{u} {motive : (a a_1 : ℕ) → NLAlib.RowRootedBipartiteTree a a_1 → Sort u}\n  {a✝ a✝¹ : ℕ} (t : NLAlib.RowRootedBipartiteTree a✝ a✝¹) (h : t.ctorIdx = 0)\n  (root : motive 0 0 NLAlib.RowRootedBipartiteTree.root) : motive a✝ a✝¹ t",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.root.elim",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  74,
+  "kind":
+  "def",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.weight.{u_1, u_2} {I : Type u_1} {J : Type u_2} (w : I → J → ℝ) {r q : ℕ}\n  (t : NLAlib.RowRootedBipartiteTree r q) (x : Fin (r + 1) → I) (y : Fin q → J) : ℝ",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.weight",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  108,
+  "kind":
+  "def",
+  "doc":
+  "Weight of the tree under labelings `x` of rows and `y` of columns: the product\nof `w (x i) (y j)` over all edges `(i, j)` of the tree. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.weight"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.weight_addColumn_eq.{u_1, u_2} {r q : ℕ} {I : Type u_1} {J : Type u_2}\n  (t : NLAlib.RowRootedBipartiteTree r q) (u : Fin (r + 1)) (w : I → J → ℝ) (x : Fin (r + 1) → I)\n  (y : Fin (q + 1) → J) :\n  NLAlib.RowRootedBipartiteTree.weight w (t.addColumn u) x y =\n    w (x u) (y 0) * NLAlib.RowRootedBipartiteTree.weight w t x fun j => y j.succ",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.weight_addColumn_eq",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  140,
+  "kind":
+  "theorem",
+  "doc":
+  "The recursive weight identity for a new column leaf: the weight of\n`addColumn t u` factorizes as the weight of the new edge `(u, 0)` times the weight\nof the original tree with column indices shifted by `Fin.succ`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.weight"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.weight_addRow_eq.{u_1, u_2} {r q : ℕ} {I : Type u_1} {J : Type u_2}\n  (t : NLAlib.RowRootedBipartiteTree r q) (v : Fin q) (w : I → J → ℝ) (x : Fin (r + 1 + 1) → I) (y : Fin q → J) :\n  NLAlib.RowRootedBipartiteTree.weight w (t.addRow v) x y =\n    w (x 0) (y v) * NLAlib.RowRootedBipartiteTree.weight w t (fun i => x i.succ) y",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.weight_addRow_eq",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  126,
+  "kind":
+  "theorem",
+  "doc":
+  "The recursive weight identity for a new row leaf: the weight of `addRow t v`\nfactorizes as the weight of the new edge `(0, v)` times the weight of the original\ntree with row indices shifted by `Fin.succ`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.weight"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.RowRootedBipartiteTree.weight_nonneg.{u_1, u_2} {I : Type u_1} {J : Type u_2} (w : I → J → ℝ) {r q : ℕ}\n  (t : NLAlib.RowRootedBipartiteTree r q) (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j) (x : Fin (r + 1) → I) (y : Fin q → J) :\n  0 ≤ NLAlib.RowRootedBipartiteTree.weight w t x y",
+  "name":
+  "NLAlib.RowRootedBipartiteTree.weight_nonneg",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum",
+  "line":
+  114,
+  "kind":
+  "theorem",
+  "doc":
+  "Nonnegativity of the tree weight when `w` is nonnegative. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   [],
   "sorry":
@@ -88922,6 +91235,29 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges",
+   "NLAlib.gramPairingFirstOccurrence",
+   "NLAlib.gramPairingSecondOccurrence"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.bijective_sum_elim_gramPairingFirstOccurrence_gramPairingSecondOccurrence (p : ℕ)\n  (π : NLAlib.GaussianPairings (p + p)) :\n  Function.Bijective (Sum.elim (NLAlib.gramPairingFirstOccurrence p π) (NLAlib.gramPairingSecondOccurrence p π))",
+  "name":
+  "NLAlib.bijective_sum_elim_gramPairingFirstOccurrence_gramPairingSecondOccurrence",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+  "line":
+  206,
+  "kind":
+  "theorem",
+  "doc":
+  "The transported endpoints of the edge list of a canonical pairing cover the\nGram cycle occurrences bijectively: the existing endpoint bijection of\n`gaussianPairingEdges` composed with `gramCycleEquiv p`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -103359,6 +105695,26 @@
   "theorem",
   "doc":
   "Each actual finite moment Jacobi entry is continuous at a nonsingular,\npositive-norm system. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.rankOneSparsificationFactor"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.continuousAt_rankOneSparsificationFactor {d : ℝ} (hd : 1 < d) : ContinuousAt NLAlib.rankOneSparsificationFactor d",
+  "name":
+  "NLAlib.continuousAt_rankOneSparsificationFactor",
+  "module":
+  "NLAlib.Matrix.Functions.FrameSparsificationParameters",
+  "line":
+  60,
+  "kind":
+  "theorem",
+  "doc":
+  "`rankOneSparsificationFactor` is continuous at every `d > 1`\n(the denominator `d + 1 - 2√d = (√d - 1)²` is strictly positive there). ",
   "atlas_partial":
   [],
   "atlas":
@@ -125185,6 +127541,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_nat_budget_ratio_tendsto (N : ℕ) (hN : 0 < N) (d : ℝ) (hd : 1 < d) :\n  ∃ r q,\n    (∀ (m : ℕ), 0 < r m ∧ q m = ⌊d * ↑N * ↑(r m)⌋₊ ∧ N * r m < q m ∧ q m < r m * (⌊d * ↑N⌋₊ + 1)) ∧\n      Filter.Tendsto (fun m => ↑(q m) / (↑N * ↑(r m))) Filter.atTop (nhds d)",
+  "name":
+  "NLAlib.exists_nat_budget_ratio_tendsto",
+  "module":
+  "NLAlib.Matrix.Functions.FrameSparsificationParameters",
+  "line":
+  153,
+  "kind":
+  "theorem",
+  "doc":
+  "**Natural-budget ratio sequence.**  For `N > 0` and a real target\nbudget `d > 1`, there are sequences `r`, `q : ℕ → ℕ` with\n`q m = ⌊d·N·(r m)⌋` such that for every `m`:\n\n* `0 < r m`,\n* `N * r m < q m` (the budget strictly exceeds the amplified dimension),\n* `q m < r m * (⌊d·N⌋ + 1)` (strict upper support bound, used for the\n  pigeonhole step in block amplification/compactness), and\n* `(q m : ℝ) / ((N : ℝ) * (r m : ℝ)) → d` as `m → ∞`.\n\nThe floor identity is exposed verbatim.  The convergence follows by\nsqueezing `d - 1/(N·r m) < q m/(N·r m) ≤ d`, where the error\n`1/(N·r m)` tends to zero.  This is the elementary statement-preserving\nroute that turns the real parameter `d` into a natural budget sequence. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.HasOrthonormalCols"],
   "sorry":
   false,
@@ -125260,6 +127636,66 @@
   "theorem",
   "doc":
   "Two nonnegative smooth functions with disjoint ordered supports and equal total\nmass admit a nonnegative smooth compactly supported primitive of their difference.\nThis turns a weak derivative inequality into local integral domination.\nSource: Edelman 1988, interval alternative to mollification;\natlas wishart-lambda-min-tail (helper). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_nonneg_weights_spectral_sandwich.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I] [Fintype n]\n  [DecidableEq n] [Nonempty n] (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) (d : ℝ) (hd : 1 < d) :\n  ∃ s,\n    (∀ (i : I), 0 ≤ s i) ∧\n      ↑(Function.support s).ncard ≤ d * ↑(Fintype.card n) ∧\n        1 ≤ ∑ i, s i • Matrix.vecMulVec (v i) (v i) ∧\n          ∑ i, s i • Matrix.vecMulVec (v i) (v i) ≤ ((d + 1 + 2 * √d) / (d + 1 - 2 * √d)) • 1",
+  "name":
+  "NLAlib.exists_nonneg_weights_spectral_sandwich",
+  "module":
+  "NLAlib.Matrix.Functions.FrameSparsification",
+  "line":
+  29,
+  "kind":
+  "theorem",
+  "doc":
+  "An identity decomposition admits a sparse nonnegative reweighting for every\nreal `d > 1`. The support has cardinality at most `d * card n`, the weighted\nGram sum is at least the identity, and its upper spectral bound is\n`(d + 1 + 2 * √d) / (d + 1 - 2 * √d)`.\n\nSource: Batson--Spielman--Srivastava (2008), Theorem 3.1.\natlas: deterministic-rank-one-sparsification ",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["deterministic-rank-one-sparsification"]},
+ {"uses":
+  ["NLAlib.frameBlockVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_nonneg_weights_spectral_sandwich_of_block_sum.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I]\n  [DecidableEq n] (v : I → n → ℝ) (r : ℕ) (_hr : 0 < r) (k : ℕ) (B : ℝ) (w : I × Fin r → ℝ)\n  (hw_nonneg : ∀ (p : I × Fin r), 0 ≤ w p) (hw_card : (Function.support w).ncard < r * (k + 1))\n  (hw_lower : 1 ≤ ∑ p, w p • Matrix.vecMulVec (NLAlib.frameBlockVector v r p) (NLAlib.frameBlockVector v r p))\n  (hw_upper : ∑ p, w p • Matrix.vecMulVec (NLAlib.frameBlockVector v r p) (NLAlib.frameBlockVector v r p) ≤ B • 1) :\n  ∃ s,\n    (∀ (i : I), 0 ≤ s i) ∧\n      (Function.support s).ncard ≤ k ∧\n        1 ≤ ∑ i, s i • Matrix.vecMulVec (v i) (v i) ∧ ∑ i, s i • Matrix.vecMulVec (v i) (v i) ≤ B • 1",
+  "name":
+  "NLAlib.exists_nonneg_weights_spectral_sandwich_of_block_sum",
+  "module":
+  "NLAlib.Matrix.Functions.SparseFrameCompactness",
+  "line":
+  337,
+  "kind":
+  "theorem",
+  "doc":
+  "**Finite block extraction.**\n\nLet `w : I × Fin r → ℝ` be nonnegative with total support strictly below\n`r*(k+1)`, and assume the weighted Gram sum of the unscaled lifted frame lies\nbetween `1` and `B • 1`.  Then some principal block `a₀` gives an\noriginal-dimensional weight family `s i = w (i, a₀)` with support at most `k`\nwhose Gram sum lies between `1` and `B • 1`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_nonneg_weights_spectral_sandwich_of_tendsto.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I]\n  [Fintype n] [DecidableEq n] (v : I → n → ℝ) (k : ℕ) (beta : ℕ → ℝ) (b : ℝ)\n  (hbeta : Filter.Tendsto beta Filter.atTop (nhds b))\n  (hseq :\n    ∀ (m : ℕ),\n      ∃ s,\n        (∀ (i : I), 0 ≤ s i) ∧\n          (Function.support s).ncard ≤ k ∧\n            1 ≤ ∑ i, s i • Matrix.vecMulVec (v i) (v i) ∧ ∑ i, s i • Matrix.vecMulVec (v i) (v i) ≤ beta m • 1) :\n  ∃ s,\n    (∀ (i : I), 0 ≤ s i) ∧\n      (Function.support s).ncard ≤ k ∧\n        1 ≤ ∑ i, s i • Matrix.vecMulVec (v i) (v i) ∧ ∑ i, s i • Matrix.vecMulVec (v i) (v i) ≤ b • 1",
+  "name":
+  "NLAlib.exists_nonneg_weights_spectral_sandwich_of_tendsto",
+  "module":
+  "NLAlib.Matrix.Functions.SparseFrameCompactness",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "**Compactness of sparse nonnegative reweightings.**\n\nLet `v : I → n → ℝ` be any finite family of real vectors (no isotropy,\nnonemptiness, or nonzero-vector assumption is needed). If for every\n`m` there is a nonnegative weight family `s_m` with at most `k` supporting\nindices such that the weighted Gram matrix satisfies\n\n`1 ≤ ∑ i, s_m i • v_i v_iᵀ ≤ beta m • 1`\n\nand `beta m → b`, then there is one nonnegative weight family `s` with at\nmost `k` supporting indices such that\n\n`1 ≤ ∑ i, s i • v_i v_iᵀ ≤ b • 1`.\n\nThis is the finite-dimensional closure of sparse nonnegative reweightings\nunder limits of the sandwich constant. ",
   "atlas_partial":
   [],
   "atlas":
@@ -133980,6 +136416,26 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.frameBlockVector.{u_3, u_4} {I : Type u_3} {n : Type u_4} (v : I → n → ℝ) (r : ℕ) (p : I × Fin r) : n × Fin r → ℝ",
+  "name":
+  "NLAlib.frameBlockVector",
+  "module":
+  "NLAlib.Matrix.Functions.SparseFrameCompactness",
+  "line":
+  227,
+  "kind":
+  "def",
+  "doc":
+  "Unscaled copy of the frame on a product dimension: atom `(i,a)` becomes the\nvector on `n × Fin r` that equals `v i` on block `a` and vanishes outside it.\nThis is the block lifting used by\n`exists_nonneg_weights_spectral_sandwich_of_block_sum`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["Polynomial.dividedDifference",
    "Polynomial.frechetDerivative"],
   "sorry":
@@ -141122,6 +143578,132 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.gaussianPairingEdges {m : ℕ} : NLAlib.GaussianPairings m → List (Fin m × Fin m)",
+  "name":
+  "NLAlib.gaussianPairingEdges",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.WickPairingEdges",
+  "line":
+  22,
+  "kind":
+  "def",
+  "doc":
+  "The finite list of edges of a canonical complete pairing, in the same\nrecursive order as `gaussianPairingPositions`: the edge of the first remaining\nposition, followed by the edges of the recursive pairing on the remaining\npositions, mapped through the partner-induced reindexing.\nSource: Janson 1997, *Gaussian Hilbert Spaces*, §1.5. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianPairingEdges_endpoints_bijective {m : ℕ} (π : NLAlib.GaussianPairings m) :\n  Function.Bijective\n    (Sum.elim (fun e => ((NLAlib.gaussianPairingEdges π).get e).1) fun e => ((NLAlib.gaussianPairingEdges π).get e).2)",
+  "name":
+  "NLAlib.gaussianPairingEdges_endpoints_bijective",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.WickPairingEdges",
+  "line":
+  113,
+  "kind":
+  "theorem",
+  "doc":
+  "The endpoints of the edge list of a canonical pairing form a bijection from\nthe disjoint union of the left and right endpoint copies to the labelled\npositions: the `Sum.inl`-side is the first endpoint of every edge (in edge\norder) and the `Sum.inr`-side is the second endpoint of every edge. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges",
+   "NLAlib.gaussianPairingPositions"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianPairingEdges_flatMap_eq_gaussianPairingPositions {m : ℕ} (π : NLAlib.GaussianPairings m) :\n  List.flatMap (fun e => [e.1, e.2]) (NLAlib.gaussianPairingEdges π) = NLAlib.gaussianPairingPositions π",
+  "name":
+  "NLAlib.gaussianPairingEdges_flatMap_eq_gaussianPairingPositions",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.WickPairingEdges",
+  "line":
+  33,
+  "kind":
+  "theorem",
+  "doc":
+  "The flattened endpoints of the edge list of a canonical pairing are exactly\nits `gaussianPairingPositions`, in the same interleaved order: each edge's first\nendpoint is immediately followed by its second endpoint. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianPairingEdges_flatten_nodup {m : ℕ} (π : NLAlib.GaussianPairings m) :\n  (List.flatMap (fun e => [e.1, e.2]) (NLAlib.gaussianPairingEdges π)).Nodup",
+  "name":
+  "NLAlib.gaussianPairingEdges_flatten_nodup",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.WickPairingEdges",
+  "line":
+  96,
+  "kind":
+  "theorem",
+  "doc":
+  "The flattened edge endpoints of a canonical pairing use every position at\nmost once. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianPairingEdges_flatten_toFinset {m : ℕ} (π : NLAlib.GaussianPairings m) :\n  (List.flatMap (fun e => [e.1, e.2]) (NLAlib.gaussianPairingEdges π)).toFinset = Finset.univ",
+  "name":
+  "NLAlib.gaussianPairingEdges_flatten_toFinset",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.WickPairingEdges",
+  "line":
+  103,
+  "kind":
+  "theorem",
+  "doc":
+  "The flattened edge endpoints of a canonical pairing cover every labelled\nposition. Together with `gaussianPairingEdges_flatten_nodup` this says each\nendpoint appears exactly once. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianPairingEdges_length_two_mul {p : ℕ} (π : NLAlib.GaussianPairings (2 * p)) :\n  (NLAlib.gaussianPairingEdges π).length = p",
+  "name":
+  "NLAlib.gaussianPairingEdges_length_two_mul",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.WickPairingEdges",
+  "line":
+  88,
+  "kind":
+  "theorem",
+  "doc":
+  "A canonical complete pairing on `2 * p` labelled positions has exactly `p`\nedges. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.gaussianPairingPositions {m : ℕ} : NLAlib.GaussianPairings m → List (Fin m)",
   "name":
   "NLAlib.gaussianPairingPositions",
@@ -141216,6 +143798,53 @@
   "def",
   "doc":
   "The product of covariance entries over the unordered pairs of a canonical\ncomplete pairing. Source: Isserlis 1918; Janson 1997, *Gaussian Hilbert Spaces*, Thm 1.28. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges",
+   "NLAlib.gaussianPairingWeight"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianPairingWeight_eq_prod_gaussianPairingEdges {m : ℕ} (C : Fin m → Fin m → ℝ)\n  (π : NLAlib.GaussianPairings m) :\n  NLAlib.gaussianPairingWeight C π = (List.map (fun e => C e.1 e.2) (NLAlib.gaussianPairingEdges π)).prod",
+  "name":
+  "NLAlib.gaussianPairingWeight_eq_prod_gaussianPairingEdges",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.WickPairingEdges",
+  "line":
+  59,
+  "kind":
+  "theorem",
+  "doc":
+  "The weight of a canonical pairing is the product of the covariance entries\nover its edges, with no symmetry assumption on `C`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges",
+   "NLAlib.gaussianPairingWeight",
+   "NLAlib.gramCycleEquiv",
+   "NLAlib.gramCycleIdx",
+   "NLAlib.gramCyclePairCovariance"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gaussianPairingWeight_gramCyclePairCovariance_eq_prod_edges.{u_1, u_2} {I : Type u_1} {J : Type u_2}\n  [DecidableEq I] [DecidableEq J] (b : I → J → ℝ) (p : ℕ) (x : Fin p → I) (y : Fin p → J)\n  (π : NLAlib.GaussianPairings (p + p)) :\n  NLAlib.gaussianPairingWeight (NLAlib.gramCyclePairCovariance b p x y) π =\n    (List.map\n        (fun e =>\n          if\n              NLAlib.gramCycleIdx p x y ((NLAlib.gramCycleEquiv p) e.1) =\n                NLAlib.gramCycleIdx p x y ((NLAlib.gramCycleEquiv p) e.2) then\n            b (NLAlib.gramCycleIdx p x y ((NLAlib.gramCycleEquiv p) e.1)).1\n                (NLAlib.gramCycleIdx p x y ((NLAlib.gramCycleEquiv p) e.1)).2 ^\n              2\n          else 0)\n        (NLAlib.gaussianPairingEdges π)).prod",
+  "name":
+  "NLAlib.gaussianPairingWeight_gramCyclePairCovariance_eq_prod_edges",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  505,
+  "kind":
+  "theorem",
+  "doc":
+  "For fixed row and column labels, each pairing weight is the product over the edge list\n`gaussianPairingEdges π` of the square covariances of the paired occurrences. ",
   "atlas_partial":
   [],
   "atlas":
@@ -143711,6 +146340,237 @@
   "def",
   "doc":
   "The literal variable row `[A,0]` in the positive Gram linearization. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramCycleEquiv (p : ℕ) : Fin (p + p) ≃ Fin p ⊕ Fin p",
+  "name":
+  "NLAlib.gramCycleEquiv",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  76,
+  "kind":
+  "def",
+  "doc":
+  "The explicit equivalence `Fin (p + p) ≃ Fin p ⊕ Fin p` used to transport the\noccurrence labels of the closed Gram cycle: `finSumFinEquiv.symm`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramCycleIdx.{u_1, u_2} {I : Type u_1} {J : Type u_2} (p : ℕ) (x : Fin p → I) (y : Fin p → J) :\n  Fin p ⊕ Fin p → I × J",
+  "name":
+  "NLAlib.gramCycleIdx",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  69,
+  "kind":
+  "def",
+  "doc":
+  "The occurrence index of the closed Gram cycle: `Sum.inl t` is the left\nfactor `(x t, y t)` and `Sum.inr t` the right factor\n`(x (finRotate p t), y t)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gramCycleIdx",
+   "NLAlib.gramOccurrenceIdx"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramCycleIdx_eq_gramOccurrenceIdx.{u_1, u_2} {I : Type u_1} {J : Type u_2} (q : ℕ) (x : Fin (q + 1) → I)\n  (y : Fin (q + 1) → J) : NLAlib.gramCycleIdx (q + 1) x y = NLAlib.gramOccurrenceIdx q x y",
+  "name":
+  "NLAlib.gramCycleIdx_eq_gramOccurrenceIdx",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "At `p = q + 1` the closed Gram cycle index coincides exactly with the\npublic `gramOccurrenceIdx q` of the integrated Gram trace expansion. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramCyclePairCovariance.{u_1, u_2} {I : Type u_1} {J : Type u_2} [DecidableEq I] [DecidableEq J] (b : I → J → ℝ)\n  (p : ℕ) (x : Fin p → I) (y : Fin p → J) : Fin (p + p) → Fin (p + p) → ℝ",
+  "name":
+  "NLAlib.gramCyclePairCovariance",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  81,
+  "kind":
+  "def",
+  "doc":
+  "The pairing covariance of the weighted Gaussian Gram occurrences: two\noccurrences `a`, `b'` of the cycle contribute `(b at idx_xy a)^2` exactly when\nthey sit at the same matrix entry, and `0` otherwise. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramOccurrenceCount.{u_1, u_2} {m : Type u_1} {n : Type u_2} [DecidableEq m] [DecidableEq n] (q : ℕ)\n  (r : Fin (q + 1) → m) (c : Fin (q + 1) → n) (e : m × n) : ℕ",
+  "name":
+  "NLAlib.gramOccurrenceCount",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentGramMoments",
+  "line":
+  66,
+  "kind":
+  "def",
+  "doc":
+  "Number of occurrences of the entry `e` among the `2(q+1)` edges of the\nclosed `(q+1)`-cycle Gram trace expansion with row assignment `r` and\ncolumn assignment `c`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramOccurrenceIdx.{u_1, u_2} {m : Type u_1} {n : Type u_2} (q : ℕ) (r : Fin (q + 1) → m) (c : Fin (q + 1) → n) :\n  Fin (q + 1) ⊕ Fin (q + 1) → m × n",
+  "name":
+  "NLAlib.gramOccurrenceIdx",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentGramMoments",
+  "line":
+  55,
+  "kind":
+  "def",
+  "doc":
+  "The occurrence kind of each of the `2(q+1)` edges of the closed\n`(q+1)`-cycle Gram trace expansion with row assignment `r` and column\nassignment `c`: `Sum.inl t` is the left factor `A (r t) (c t)` and\n`Sum.inr t` the right factor `A (r (finRotate (q+1) t)) (c t)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramPairingContribution.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I] [Fintype J] [DecidableEq I]\n  [DecidableEq J] (b : I → J → ℝ) (p : ℕ) (π : NLAlib.GaussianPairings (p + p)) : ℝ",
+  "name":
+  "NLAlib.gramPairingContribution",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  486,
+  "kind":
+  "def",
+  "doc":
+  "The per-pairing contribution of the exact Gaussian Gram trace expansion, as\na transparent finite sum over row and column assignments. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gramPairingContribution"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramPairingContribution_div_card_le_unit_profile.{u_3, u_4} {I : Type u_3} {J : Type u_4} [Fintype I] [Fintype J]\n  [Nonempty I] [DecidableEq I] [DecidableEq J] (b : I → J → ℝ) (p : ℕ) (hp : 0 < p)\n  (π : NLAlib.GaussianPairings (p + p)) (d1 d2 : ℕ) (hentry : ∀ (i : I) (j : J), b i j ^ 2 ≤ 1)\n  (hcol : ∀ (j : J), ∑ i, b i j ^ 2 ≤ ↑d1) (hrow : ∀ (i : I), ∑ j, b i j ^ 2 ≤ ↑d2) (hd1 : 0 < d1) :\n  NLAlib.gramPairingContribution b p π / ↑(Fintype.card I) ≤ NLAlib.gramPairingContribution (fun x x_1 => 1) p π / ↑d1",
+  "name":
+  "NLAlib.gramPairingContribution_div_card_le_unit_profile",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+  "line":
+  289,
+  "kind":
+  "theorem",
+  "doc":
+  "**Stage 1 bound**: for every canonical pairing, the per-pairing\ncontribution normalized by the row cardinality is at most the unit-profile\ncontribution on `Fin d1 × Fin d2` normalized by `d1`, whenever the entry\nsquares are at most `1`, column sums at most `d1`, row sums at most `d2`, and\n`d1 > 0`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.PairingQuotient.cycleCol",
+   "NLAlib.PairingQuotient.cycleRow",
+   "NLAlib.PairingQuotient.pairingSum",
+   "NLAlib.gaussianPairingEdges",
+   "NLAlib.gramPairingContribution",
+   "NLAlib.gramPairingFirstOccurrence",
+   "NLAlib.gramPairingSecondOccurrence"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramPairingContribution_eq_pairingSum_cycle.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I] [Fintype J]\n  [DecidableEq I] [DecidableEq J] (b : I → J → ℝ) (p : ℕ) (π : NLAlib.GaussianPairings (p + p)) :\n  NLAlib.gramPairingContribution b p π =\n    NLAlib.PairingQuotient.pairingSum (NLAlib.PairingQuotient.cycleRow p) (NLAlib.PairingQuotient.cycleCol p)\n      (NLAlib.gramPairingFirstOccurrence p π) (NLAlib.gramPairingSecondOccurrence p π) fun i j => b i j ^ 2",
+  "name":
+  "NLAlib.gramPairingContribution_eq_pairingSum_cycle",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+  "line":
+  267,
+  "kind":
+  "theorem",
+  "doc":
+  "**Canonical-pairing adapter**: the per-pairing contribution of the native\nGaussian Gram Wick expansion is exactly the unrestricted equality-indicator sum\nof `pairingSum` with the transported cycle endpoint maps and weights the entry\nsquares. The identity holds for arbitrary real profiles `b`, including signed\nones. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramPairingFirstOccurrence (p : ℕ) (π : NLAlib.GaussianPairings (p + p)) :\n  Fin (NLAlib.gaussianPairingEdges π).length → Fin p ⊕ Fin p",
+  "name":
+  "NLAlib.gramPairingFirstOccurrence",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+  "line":
+  192,
+  "kind":
+  "def",
+  "doc":
+  "The first occurrence of each edge of the canonical pairing `π` on the Gram cycle with\noccurrence type `Fin p ⊕ Fin p`: edge index `e` is transported through `gramCycleEquiv p`\nfrom the first endpoint of `(gaussianPairingEdges π).get e` in `Fin (p + p)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.gramPairingSecondOccurrence (p : ℕ) (π : NLAlib.GaussianPairings (p + p)) :\n  Fin (NLAlib.gaussianPairingEdges π).length → Fin p ⊕ Fin p",
+  "name":
+  "NLAlib.gramPairingSecondOccurrence",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+  "line":
+  199,
+  "kind":
+  "def",
+  "doc":
+  "The second occurrence of each edge of the canonical pairing `π` on the Gram cycle with\noccurrence type `Fin p ⊕ Fin p`: edge index `e` is transported through `gramCycleEquiv p`\nfrom the second endpoint of `(gaussianPairingEdges π).get e` in `Fin (p + p)`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -147965,6 +150825,27 @@
   "theorem",
   "doc":
   "Finite moments of the squared vector norm imply finite natural moments of each scalar\ncoordinate, including odd powers. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["MeasureTheory.HasFiniteNatMoments",
+   "NLAlib.gaussianVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasFiniteNatMoments_eval_gaussianVector.{u_2} {E : Type u_2} [Fintype E] (e : E) :\n  MeasureTheory.HasFiniteNatMoments (fun x => x e) (NLAlib.gaussianVector E)",
+  "name":
+  "NLAlib.hasFiniteNatMoments_eval_gaussianVector",
+  "module":
+  "NLAlib.Probability.Gaussian.Comparison.IndependentMoments",
+  "line":
+  156,
+  "kind":
+  "theorem",
+  "doc":
+  "A coordinate of the standard Gaussian vector has finite natural moments. ",
   "atlas_partial":
   [],
   "atlas":
@@ -161303,6 +164184,27 @@
   "atlas":
   []},
  {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.gaussianMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_prod_gaussianMatrix_entry_weighted.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I] [Fintype J]\n  {k : ℕ} (b : I → J → ℝ) (idx : Fin k → I × J) :\n  MeasureTheory.Integrable (fun G => ∏ t, b (idx t).1 (idx t).2 * G (idx t).1 (idx t).2) (NLAlib.gaussianMatrix I J)",
+  "name":
+  "NLAlib.integrable_prod_gaussianMatrix_entry_weighted",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  261,
+  "kind":
+  "theorem",
+  "doc":
+  "The weighted entry product of the Gaussian matrix is integrable for any\nfinite occurrence family (needed to interchange the finite sums and the integral). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -161318,6 +164220,26 @@
   "theorem",
   "doc":
   "Abstract centered Gaussian-vector product moments are absolutely integrable.\nSource: Isserlis 1918; Janson 1997, Thm 1.28 (transport of the canonical Gaussian law). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gaussianVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_prod_pow_gaussianVector.{u_2} {E : Type u_2} [Fintype E] (k : E → ℕ) :\n  MeasureTheory.Integrable (fun x => ∏ e, x e ^ k e) (NLAlib.gaussianVector E)",
+  "name":
+  "NLAlib.integrable_prod_pow_gaussianVector",
+  "module":
+  "NLAlib.Probability.Gaussian.Comparison.IndependentMoments",
+  "line":
+  178,
+  "kind":
+  "theorem",
+  "doc":
+  "Monomial products of standard Gaussian vector coordinates are integrable. ",
   "atlas_partial":
   [],
   "atlas":
@@ -162219,6 +165141,47 @@
   "theorem",
   "doc":
   "A measurable orthonormal frame and a probe with finite squared Euclidean norm give an\nintegrable deflated scalar trace kernel on the product measure. The frame distribution has\nno moment assumptions. Source: supplied operator derivations, (T2), helper for\n`hutchpp-unbiased` and `xtrace-unbiased`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.gaussianMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_trace_gram_pow_gaussianMatrix_nat.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] (b : m → n → ℝ) (p : ℕ) :\n  MeasureTheory.Integrable\n    (fun G => (((Matrix.of fun i j => b i j * G i j) * (Matrix.of fun i j => b i j * G i j).conjTranspose) ^ p).trace)\n    (NLAlib.gaussianMatrix m n)",
+  "name":
+  "NLAlib.integrable_trace_gram_pow_gaussianMatrix_nat",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentGramMoments",
+  "line":
+  429,
+  "kind":
+  "theorem",
+  "doc":
+  "The Gram trace integrand on the Gaussian-matrix side is integrable for\nevery natural power `p`, including `p = 0`, with any real profile.\nEmpty row and column index types are included. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integrable_trace_gram_pow_nat.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  [DecidableEq m] [DecidableEq n] {Ω : Type u_3} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure μ] {X : m → n → Ω → ℝ}\n  (hsym : ∀ (e : m × n), ProbabilityTheory.IdentDistrib (X e.1 e.2) (fun w => -X e.1 e.2 w) μ μ)\n  (h2 : ∀ (e : m × n) (p : ℕ), 0 < p → MeasureTheory.Integrable (fun w => X e.1 e.2 w ^ (2 * p)) μ) (b : m → n → ℝ)\n  (p : ℕ) :\n  MeasureTheory.Integrable\n    (fun w =>\n      (((Matrix.of fun i j => b i j * X i j w) * (Matrix.of fun i j => b i j * X i j w).conjTranspose) ^ p).trace)\n    μ",
+  "name":
+  "NLAlib.integrable_trace_gram_pow_nat",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentGramMoments",
+  "line":
+  263,
+  "kind":
+  "theorem",
+  "doc":
+  "The profiled Gram trace is integrable for every natural power, including\nzero, when the entries are symmetric and have finite even moments.\nIndependence, Gaussian moment bounds, and a nonnegative profile are unnecessary. ",
   "atlas_partial":
   [],
   "atlas":
@@ -169535,6 +172498,29 @@
   "atlas":
   ["gaussian-free-spectrum-two-sided"]},
  {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianMatrix",
+   "NLAlib.normalizedTrace"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_normalizedTrace_gram_pow_le_integral_gaussianMatrix.{u_1, u_2, u_3} {I : Type u_1} {J : Type u_2}\n  [Fintype I] [Fintype J] [Nonempty I] [Nonempty J] [DecidableEq I] [DecidableEq J] {Ω : Type u_3} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {X : I → J → Ω → ℝ}\n  (hX : ProbabilityTheory.iIndepFun (fun e => X e.1 e.2) μ)\n  (hsym : ∀ (e : I × J), ProbabilityTheory.IdentDistrib (X e.1 e.2) (fun w => -X e.1 e.2 w) μ μ)\n  (h2 :\n    ∀ (e : I × J) (p : ℕ),\n      0 < p →\n        MeasureTheory.Integrable (fun w => X e.1 e.2 w ^ (2 * p)) μ ∧\n          ∫ (w : Ω), X e.1 e.2 w ^ (2 * p) ∂μ ≤ NLAlib.gaussianEvenMoment p)\n  (b : I → J → ℝ) (hb : ∀ (e : I × J), 0 ≤ b e.1 e.2) (hmax : (Finset.univ.sup' ⋯ fun e => b e.1 e.2 ^ 2) = 1) (p : ℕ)\n  (hp : 0 < p) :\n  ∫ (w : Ω),\n      NLAlib.normalizedTrace\n        (((Matrix.of fun i j => b i j * X i j w) * (Matrix.of fun i j => b i j * X i j w).conjTranspose) ^ p) ∂μ ≤\n    ∫ (Y :\n      Matrix (Fin ⌈Finset.univ.sup' ⋯ fun j => ∑ i, b i j ^ 2⌉₊) (Fin ⌈Finset.univ.sup' ⋯ fun i => ∑ j, b i j ^ 2⌉₊) ℝ),\n      NLAlib.normalizedTrace\n        ((Y * Y.conjTranspose) ^\n          p) ∂NLAlib.gaussianMatrix (Fin ⌈Finset.univ.sup' ⋯ fun j => ∑ i, b i j ^ 2⌉₊)\n        (Fin ⌈Finset.univ.sup' ⋯ fun i => ∑ j, b i j ^ 2⌉₊)",
+  "name":
+  "NLAlib.integral_normalizedTrace_gram_pow_le_integral_gaussianMatrix",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+  "line":
+  433,
+  "kind":
+  "theorem",
+  "doc":
+  "Every positive integer normalized Gram moment of independent symmetric\nreal entries with Gaussian-dominated even moments is bounded by the moment of\nthe homogeneous Gaussian matrix whose dimensions are the ceilings of the\nmaximal column and row sums of profile squares. The nonnegative profile has\nmaximal entry square one, equivalently the source's nonnegative scale `σ* = 1`.\nEach trace uses its own row dimension. Both maxima and the native Gaussian\ncomparator appear explicitly in the conclusion.\n\nSource: Brailovskaya–van Handel, arXiv:2401.06284v2, Model 1.3 and Theorem 1.7.\n\natlas: independent-entry-gaussian-extremum\n",
+  "atlas_partial":
+  [],
+  "atlas":
+  ["independent-entry-gaussian-extremum"]},
+ {"uses":
   ["NLAlib.GUECoordinate",
    "NLAlib.GaussianFreeFiniteCoordinate",
    "NLAlib.gaussianFreeFiniteInterpolation",
@@ -169899,6 +172885,26 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.gaussianEvenMoment"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_pow_nonneg_and_le_gaussianReal.{u_1} {Ω : Type u_1} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure μ] {X : Ω → ℝ} (hsym : ProbabilityTheory.IdentDistrib X (fun w => -X w) μ μ)\n  (h2 :\n    ∀ (p : ℕ),\n      0 < p →\n        MeasureTheory.Integrable (fun w => X w ^ (2 * p)) μ ∧ ∫ (w : Ω), X w ^ (2 * p) ∂μ ≤ NLAlib.gaussianEvenMoment p)\n  (p : ℕ) : 0 ≤ ∫ (w : Ω), X w ^ p ∂μ ∧ ∫ (w : Ω), X w ^ p ∂μ ≤ ∫ (z : ℝ), z ^ p ∂ProbabilityTheory.gaussianReal 0 1",
+  "name":
+  "NLAlib.integral_pow_nonneg_and_le_gaussianReal",
+  "module":
+  "NLAlib.Probability.Gaussian.Comparison.IndependentMoments",
+  "line":
+  103,
+  "kind":
+  "theorem",
+  "doc":
+  "Symmetric variables with even moments dominated by the Gaussian even moments\nhave every natural moment nonnegative and at most the matching standard Gaussian\nmoment. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.spectralMeasure"],
   "sorry":
   false,
@@ -170234,6 +173240,30 @@
   "atlas":
   ["isserlis"]},
  {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.GaussianPairings",
+   "NLAlib.gaussianMatrix",
+   "NLAlib.gaussianPairingWeight",
+   "NLAlib.gaussianPairingsFintype"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_prod_gaussianMatrix_entry_weighted_eq_sum_pairings.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I]\n  [Fintype J] [DecidableEq I] [DecidableEq J] {k : ℕ} (b : I → J → ℝ) (idx : Fin k → I × J) :\n  ∫ (G : Matrix I J ℝ), ∏ t, b (idx t).1 (idx t).2 * G (idx t).1 (idx t).2 ∂NLAlib.gaussianMatrix I J =\n    ∑ π, NLAlib.gaussianPairingWeight (fun a b' => if idx a = idx b' then b (idx a).1 (idx a).2 ^ 2 else 0) π",
+  "name":
+  "NLAlib.integral_prod_gaussianMatrix_entry_weighted_eq_sum_pairings",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  209,
+  "kind":
+  "theorem",
+  "doc":
+  "**Weighted-entry Gaussian Wick adapter**: for any finite family `idx : Fin k → I × J`\nof occurrence positions in the Gaussian matrix and any real profile `b`, the\nexpectation of the weighted product `∏ t, b (idx t).1 (idx t).2 * G (idx t).1 (idx t).2`\nis the finite sum over the canonical Gaussian pairings of the pairing weight of\nthe square covariance `if idx a = idx b' then (b (idx a).1 (idx a).2)^2 else 0`.\nThis is the native Gaussian Wick expansion for arbitrary correlated and repeated\noccurrence coordinates; no independence or moment-comparison input is used. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.GaussianPairings",
    "NLAlib.gaussianPairingWeight",
    "NLAlib.gaussianPairingsFintype"],
@@ -170255,6 +173285,27 @@
   [],
   "atlas":
   ["isserlis"]},
+ {"uses":
+  ["NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_prod_pow_le_integral_prod_pow_gaussianVector.{u_1, u_2} {Ω : Type u_1} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} {E : Type u_2} [Fintype E] {X : E → Ω → ℝ} [MeasureTheory.IsProbabilityMeasure μ]\n  (hX : ProbabilityTheory.iIndepFun X μ) (hsym : ∀ (e : E), ProbabilityTheory.IdentDistrib (X e) (fun w => -X e w) μ μ)\n  (h2 :\n    ∀ (e : E) (p : ℕ),\n      0 < p →\n        MeasureTheory.Integrable (fun w => X e w ^ (2 * p)) μ ∧\n          ∫ (w : Ω), X e w ^ (2 * p) ∂μ ≤ NLAlib.gaussianEvenMoment p)\n  (k : E → ℕ) : ∫ (w : Ω), ∏ e, X e w ^ k e ∂μ ≤ ∫ (x : E → ℝ), ∏ e, x e ^ k e ∂NLAlib.gaussianVector E",
+  "name":
+  "NLAlib.integral_prod_pow_le_integral_prod_pow_gaussianVector",
+  "module":
+  "NLAlib.Probability.Gaussian.Comparison.IndependentMoments",
+  "line":
+  203,
+  "kind":
+  "theorem",
+  "doc":
+  "**Independent-entry moment domination, monomial form**: for independent\nsymmetric entries whose even moments are dominated by the Gaussian even moments,\nthe integral of every monomial product is at most the matching standard Gaussian\nvector monomial moment. The comparison is obtained after factoring both sides\ninto products of scalar moments by independence; it is not eventwise stochastic\ndomination. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.gaussianVector",
    "NLAlib.productHermite"],
@@ -173383,6 +176434,27 @@
   "atlas":
   ["chebyshev-integral-formula"]},
  {"uses":
+  ["NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_sum_mul_prod_pow_le_integral_sum_mul_prod_pow_gaussianVector.{u_1, u_2, u_3} {Ω : Type u_1}\n  [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω} {E : Type u_2} [Fintype E] {X : E → Ω → ℝ} {τ : Type u_3}\n  (c : τ → ℝ) (k : τ → E → ℕ) [Fintype τ] [MeasureTheory.IsProbabilityMeasure μ] (hX : ProbabilityTheory.iIndepFun X μ)\n  (hsym : ∀ (e : E), ProbabilityTheory.IdentDistrib (X e) (fun w => -X e w) μ μ)\n  (h2 :\n    ∀ (e : E) (p : ℕ),\n      0 < p →\n        MeasureTheory.Integrable (fun w => X e w ^ (2 * p)) μ ∧\n          ∫ (w : Ω), X e w ^ (2 * p) ∂μ ≤ NLAlib.gaussianEvenMoment p)\n  (hc : ∀ (t : τ), 0 ≤ c t) :\n  ∫ (w : Ω), ∑ t, c t * ∏ e, X e w ^ k t e ∂μ ≤ ∫ (x : E → ℝ), ∑ t, c t * ∏ e, x e ^ k t e ∂NLAlib.gaussianVector E",
+  "name":
+  "NLAlib.integral_sum_mul_prod_pow_le_integral_sum_mul_prod_pow_gaussianVector",
+  "module":
+  "NLAlib.Probability.Gaussian.Comparison.IndependentMoments",
+  "line":
+  242,
+  "kind":
+  "theorem",
+  "doc":
+  "**Independent-entry moment domination, weighted-sum form**: with nonnegative\nweights the moment comparison extends from monomial products to finite weighted\nsums of monomial products (at the level of integrals, not eventwise). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["Matrix.instMeasurableSpace"],
   "sorry":
   false,
@@ -174236,6 +177308,141 @@
   "theorem",
   "doc":
   "A random history with the adaptive law has the same trace expectation.\nSource: CETW (2025), RPCholesky trace potential. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_trace_gram_pow_div_card_le_integral_gaussianMatrix_of_even_moments.{u_1, u_2, u_3} {I : Type u_1}\n  {J : Type u_2} [Fintype I] [Fintype J] [Nonempty I] [DecidableEq I] [DecidableEq J] {Ω : Type u_3} [MeasurableSpace Ω]\n  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {X : I → J → Ω → ℝ}\n  (hX : ProbabilityTheory.iIndepFun (fun e => X e.1 e.2) μ)\n  (hsym : ∀ (e : I × J), ProbabilityTheory.IdentDistrib (X e.1 e.2) (fun w => -X e.1 e.2 w) μ μ)\n  (h2 :\n    ∀ (e : I × J) (p : ℕ),\n      0 < p →\n        MeasureTheory.Integrable (fun w => X e.1 e.2 w ^ (2 * p)) μ ∧\n          ∫ (w : Ω), X e.1 e.2 w ^ (2 * p) ∂μ ≤ NLAlib.gaussianEvenMoment p)\n  (b : I → J → ℝ) (hb : ∀ (e : I × J), 0 ≤ b e.1 e.2) (p : ℕ) (hp : 0 < p) (d1 d2 : ℕ)\n  (hentry : ∀ (i : I) (j : J), b i j ^ 2 ≤ 1) (hcol : ∀ (j : J), ∑ i, b i j ^ 2 ≤ ↑d1)\n  (hrow : ∀ (i : I), ∑ j, b i j ^ 2 ≤ ↑d2) (hd1 : 0 < d1) :\n  (∫ (w : Ω),\n        (((Matrix.of fun i j => b i j * X i j w) * (Matrix.of fun i j => b i j * X i j w).conjTranspose) ^\n            p).trace ∂μ) /\n      ↑(Fintype.card I) ≤\n    (∫ (Y : Matrix (Fin d1) (Fin d2) ℝ), ((Y * Y.conjTranspose) ^ p).trace ∂NLAlib.gaussianMatrix (Fin d1) (Fin d2)) /\n      ↑d1",
+  "name":
+  "NLAlib.integral_trace_gram_pow_div_card_le_integral_gaussianMatrix_of_even_moments",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+  "line":
+  391,
+  "kind":
+  "theorem",
+  "doc":
+  "**Stage 3: independent symmetric entries, explicit natural caps**. For\nindependent symmetric entries with Gaussian-dominated even moments and a\nnonnegative profile `b` with squares at most `1`, column sums at most `d1`,\nrow sums at most `d2`, `d1 > 0`, every positive integer normalized Gram trace\nmoment of the profiled matrix `(b i j * X i j)` is at most the normalized moment of the homogeneous Gaussian matrix on\n`Fin d1 × Fin d2`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.gaussianMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_trace_gram_pow_div_card_le_integral_gaussianMatrix_of_sq_bounds.{u_1, u_2} {I : Type u_1} {J : Type u_2}\n  [Fintype I] [Fintype J] [Nonempty I] [DecidableEq I] [DecidableEq J] (b : I → J → ℝ) (p : ℕ) (hp : 0 < p) (d1 d2 : ℕ)\n  (hentry : ∀ (i : I) (j : J), b i j ^ 2 ≤ 1) (hcol : ∀ (j : J), ∑ i, b i j ^ 2 ≤ ↑d1)\n  (hrow : ∀ (i : I), ∑ j, b i j ^ 2 ≤ ↑d2) (hd1 : 0 < d1) :\n  (∫ (G : Matrix I J ℝ),\n        (((Matrix.of fun i j => b i j * G i j) * (Matrix.of fun i j => b i j * G i j).conjTranspose) ^\n            p).trace ∂NLAlib.gaussianMatrix I J) /\n      ↑(Fintype.card I) ≤\n    (∫ (Y : Matrix (Fin d1) (Fin d2) ℝ), ((Y * Y.conjTranspose) ^ p).trace ∂NLAlib.gaussianMatrix (Fin d1) (Fin d2)) /\n      ↑d1",
+  "name":
+  "NLAlib.integral_trace_gram_pow_div_card_le_integral_gaussianMatrix_of_sq_bounds",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentEntryExtremum",
+  "line":
+  342,
+  "kind":
+  "theorem",
+  "doc":
+  "**Stage 2: native Gaussian rectangular comparator**. For every `p ≥ 1`,\nthe normalized raw trace moment of `b .* G` under the genuine `gaussianMatrix I J`\nlaw is at most the normalized raw trace moment of the homogeneous Gaussian\nmatrix on `Fin d1 × Fin d2`, whenever the entry squares are at most `1`,\ncolumn sums at most `d1`, row sums at most `d2`, and `d1 > 0`. No positivity of\n`b` is required. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.GaussianPairings",
+   "NLAlib.gaussianMatrix",
+   "NLAlib.gaussianPairingWeight",
+   "NLAlib.gaussianPairingsFintype",
+   "NLAlib.gramCyclePairCovariance"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_trace_gram_pow_gaussianMatrix_eq_sum_pairings.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I]\n  [Fintype J] [DecidableEq I] [DecidableEq J] (b : I → J → ℝ) (p : ℕ) (hp : 0 < p) :\n  ∫ (G : Matrix I J ℝ),\n      (((Matrix.of fun i j => b i j * G i j) * (Matrix.of fun i j => b i j * G i j).conjTranspose) ^\n          p).trace ∂NLAlib.gaussianMatrix I J =\n    ∑ π, ∑ x, ∑ y, NLAlib.gaussianPairingWeight (NLAlib.gramCyclePairCovariance b p x y) π",
+  "name":
+  "NLAlib.integral_trace_gram_pow_gaussianMatrix_eq_sum_pairings",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  298,
+  "kind":
+  "theorem",
+  "doc":
+  "**Exact Gaussian Gram trace Wick expansion**: for every `p > 0`, the\nexpectation of `trace ((B(G) B(G)ᴴ)^p)` under the genuine Gaussian matrix law\nis the finite sum over the canonical Gaussian pairings (with `p + p`\noccurrences) of the pairing weight of the square covariance of the closed Gram\ncycle occurrences. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.GaussianPairings",
+   "NLAlib.gaussianMatrix",
+   "NLAlib.gaussianPairingsFintype",
+   "NLAlib.gramPairingContribution"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_trace_gram_pow_gaussianMatrix_eq_sum_pairings_outer.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I]\n  [Fintype J] [DecidableEq I] [DecidableEq J] (b : I → J → ℝ) (p : ℕ) (hp : 0 < p) :\n  ∫ (G : Matrix I J ℝ),\n      (((Matrix.of fun i j => b i j * G i j) * (Matrix.of fun i j => b i j * G i j).conjTranspose) ^\n          p).trace ∂NLAlib.gaussianMatrix I J =\n    ∑ π, NLAlib.gramPairingContribution b p π",
+  "name":
+  "NLAlib.integral_trace_gram_pow_gaussianMatrix_eq_sum_pairings_outer",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  493,
+  "kind":
+  "theorem",
+  "doc":
+  "The exact Gaussian Gram trace expansion with the pairing sum outermost,\nidentified as the finite sum of the per-pairing contributions. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.gaussianEvenMoment",
+   "NLAlib.gaussianMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_trace_gram_pow_le_integral_gaussianMatrix_nat.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {Ω : Type u_3} [MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}\n  [MeasureTheory.IsProbabilityMeasure μ] {X : m → n → Ω → ℝ} (hX : ProbabilityTheory.iIndepFun (fun e => X e.1 e.2) μ)\n  (hsym : ∀ (e : m × n), ProbabilityTheory.IdentDistrib (X e.1 e.2) (fun w => -X e.1 e.2 w) μ μ)\n  (h2 :\n    ∀ (e : m × n) (p : ℕ),\n      0 < p →\n        MeasureTheory.Integrable (fun w => X e.1 e.2 w ^ (2 * p)) μ ∧\n          ∫ (w : Ω), X e.1 e.2 w ^ (2 * p) ∂μ ≤ NLAlib.gaussianEvenMoment p)\n  (b : m → n → ℝ) (hb : ∀ (e : m × n), 0 ≤ b e.1 e.2) (p : ℕ) :\n  ∫ (w : Ω),\n      (((Matrix.of fun i j => b i j * X i j w) * (Matrix.of fun i j => b i j * X i j w).conjTranspose) ^ p).trace ∂μ ≤\n    ∫ (G : Matrix m n ℝ),\n      (((Matrix.of fun i j => b i j * G i j) * (Matrix.of fun i j => b i j * G i j).conjTranspose) ^\n          p).trace ∂NLAlib.gaussianMatrix m n",
+  "name":
+  "NLAlib.integral_trace_gram_pow_le_integral_gaussianMatrix_nat",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentGramMoments",
+  "line":
+  497,
+  "kind":
+  "theorem",
+  "doc":
+  "**Independent-entry Gram trace moment comparison, every natural power**:\nfor independent symmetric real entries with Gaussian-dominated even moments\nand a deterministic nonnegative profile `b`, for every natural `p`,\n`∫ tr (((b .* X)(b .* X)ᴴ)^p) ≤ ∫ tr (((b .* G)(b .* G)ᴴ)^p)` with `G` of law\n`gaussianMatrix m n`. The case `p = 0` and empty index types are included.\nThe integrands are integrable by `integrable_trace_gram_pow_nat` and\n`integrable_trace_gram_pow_gaussianMatrix_nat`; this is a moment comparison,\nnot eventwise stochastic domination. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Matrix.instMeasurableSpace",
+   "NLAlib.gaussianMatrix"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.integral_trace_gram_zero_pow_gaussianMatrix.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I] [Fintype J]\n  [DecidableEq I] (b : I → J → ℝ) :\n  ∫ (G : Matrix I J ℝ),\n      (((Matrix.of fun i j => b i j * G i j) * (Matrix.of fun i j => b i j * G i j).conjTranspose) ^\n          0).trace ∂NLAlib.gaussianMatrix I J =\n    ↑(Fintype.card I)",
+  "name":
+  "NLAlib.integral_trace_gram_zero_pow_gaussianMatrix",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  519,
+  "kind":
+  "theorem",
+  "doc":
+  "The `p = 0` case is separate: the empty Gram power has trace `Fintype.card I`\n(the identity), not the empty-cycle pairing sum (whose label product is `1`). ",
   "atlas_partial":
   [],
   "atlas":
@@ -228015,6 +231222,68 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.prod_bipartite_edge_weight_le_pow.{u_5, u_6, u_7, u_8, u_9} {U : Type u_5} {V : Type u_6} {I : Type u_7}\n  {J : Type u_8} {E : Type u_9} {w : I → J → ℝ} {s : ℝ} (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j)\n  (hw : ∀ (i : I) (j : J), w i j ≤ s) (A : Finset E) (sr : E → U) (tg : E → V) (x : U → I) (y : V → J) :\n  ∏ e ∈ A, w (x (sr e)) (y (tg e)) ≤ s ^ A.card",
+  "name":
+  "NLAlib.prod_bipartite_edge_weight_le_pow",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum",
+  "line":
+  197,
+  "kind":
+  "theorem",
+  "doc":
+  "Off-tree factor cap: for a nonnegative weight array `w` whose entries are at\nmost `s`, the product of the `w`-weights over any finite set `A` of edges (with\narbitrary labelings `x`, `y`) is at most `s ^ A.card`. This is the factor\nremoved for each non-tree edge before leaf elimination. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.prod_bipartite_edge_weight_le_prod_mul_pow.{u_5, u_6, u_7, u_8, u_9} {U : Type u_5} {V : Type u_6} {I : Type u_7}\n  {J : Type u_8} {E : Type u_9} [Fintype E] [DecidableEq E] {w : I → J → ℝ} {s : ℝ}\n  (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j) (hw : ∀ (i : I) (j : J), w i j ≤ s) (T O : Finset E) (hdisj : Disjoint T O)\n  (huni : T ∪ O = Finset.univ) (sr : E → U) (tg : E → V) (x : U → I) (y : V → J) :\n  ∏ e, w (x (sr e)) (y (tg e)) ≤ (∏ e ∈ T, w (x (sr e)) (y (tg e))) * s ^ O.card",
+  "name":
+  "NLAlib.prod_bipartite_edge_weight_le_prod_mul_pow",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum",
+  "line":
+  215,
+  "kind":
+  "theorem",
+  "doc":
+  "Split off-tree bound: if the edge set is the disjoint union `T ∪ O` (tree\nedges `T` and off-tree edges `O`), the full product is at most the tree product\ntimes `s ^ O.card`. The labelings `x`, `y` remain unrestricted functions. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.RowRootedBipartiteTree",
+   "NLAlib.RowRootedBipartiteTree.edgeList",
+   "NLAlib.RowRootedBipartiteTree.weight"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.prod_bipartite_tree_edges_eq_weight.{u_1, u_2, u_3, u_4, u_5} {U : Type u_1} {V : Type u_2} {E : Type u_3}\n  {I : Type u_4} {J : Type u_5} [Fintype E] [DecidableEq E] {r q : ℕ} (t : NLAlib.RowRootedBipartiteTree r q)\n  (sr : E → U) (tg : E → V) (ur : Fin (r + 1) ≃ U) (vc : Fin q ≃ V) (occ : Fin t.edgeList.length ↪ E)\n  (hend : ∀ (k : Fin t.edgeList.length), sr (occ k) = ur (t.edgeList.get k).1 ∧ tg (occ k) = vc (t.edgeList.get k).2)\n  (w : I → J → ℝ) (X : Fin (r + 1) → I) (Y : Fin q → J) :\n  ∏ e ∈ Finset.map occ Finset.univ, w (X (ur.symm (sr e))) (Y (vc.symm (tg e))) =\n    NLAlib.RowRootedBipartiteTree.weight w t X Y",
+  "name":
+  "NLAlib.prod_bipartite_tree_edges_eq_weight",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartitePartitionBound",
+  "line":
+  40,
+  "kind":
+  "theorem",
+  "doc":
+  "The product over the occurrence-indexed tree edges equals the syntax-tree\nweight: if the injective occurrence map `occ` realizes each tree edge `(i, j)`\nby an occurrence with endpoints `ur i`, `vc j`, then the product of the weights\nover `univ.map occ` equals `weight w t X Y`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.prod_eigenvalues_eq_prod_sorted.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (f : ℝ → ℝ) : ∏ i, f (hA.eigenvalues i) = ∏ i, f (hA.eigenvalues₀ i)",
   "name":
   "NLAlib.prod_eigenvalues_eq_prod_sorted",
@@ -228046,6 +231315,26 @@
   "theorem",
   "doc":
   "Independent Gaussian head and tail coordinates have the explicit square-root\nenergy-ratio tail. Source: manuscript `rt:log-moments`, conditional small-ball step.\nNo inverse-head moment is integrated. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.gramOccurrenceCount"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.prod_gram_entries_eq_prod_pow_gramOccurrenceCount.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) (q : ℕ) (v : Fin (q + 1) → m) (c : Fin (q + 1) → n) :\n  ∏ t, A (v t) (c t) * A (v ((finRotate (q + 1)) t)) (c t) = ∏ e, A e.1 e.2 ^ NLAlib.gramOccurrenceCount q v c e",
+  "name":
+  "NLAlib.prod_gram_entries_eq_prod_pow_gramOccurrenceCount",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentGramMoments",
+  "line":
+  75,
+  "kind":
+  "theorem",
+  "doc":
+  "The closed entry product of the Gram trace expansion equals the\nregrouped product over `m × n` entry kinds. ",
   "atlas_partial":
   [],
   "atlas":
@@ -231407,6 +234696,46 @@
   "theorem",
   "doc":
   "Prepending one sample adds its centered covariance matrix to the sum. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneSparsificationFactor (d : ℝ) : ℝ",
+  "name":
+  "NLAlib.rankOneSparsificationFactor",
+  "module":
+  "NLAlib.Matrix.Functions.FrameSparsificationParameters",
+  "line":
+  39,
+  "kind":
+  "def",
+  "doc":
+  "The scalar sparsification factor `(d + 1 + 2√d) / (d + 1 - 2√d)`\nof Batson--Spielman--Srivastava (2008), Theorem 3.1.  It is the total\nreal function used as the Loewner upper constant in the integer-budget\nsparsification theorem; its analytical facts below are restricted to\n`d > 1` (where the denominator is positive). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.rankOneSparsificationFactor"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.rankOneSparsificationFactor_eq_sq_div_sq {d : ℝ} (hd : 0 ≤ d) :\n  NLAlib.rankOneSparsificationFactor d = (√d + 1) ^ 2 / (√d - 1) ^ 2",
+  "name":
+  "NLAlib.rankOneSparsificationFactor_eq_sq_div_sq",
+  "module":
+  "NLAlib.Matrix.Functions.FrameSparsificationParameters",
+  "line":
+  47,
+  "kind":
+  "theorem",
+  "doc":
+  "For `d ≥ 0`, the sparsification factor is the square of\n`(√d + 1) / (√d - 1)`.  No division cancellation is used, so the\ntotalized `d = 1` case is included correctly. ",
   "atlas_partial":
   [],
   "atlas":
@@ -258518,6 +261847,46 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_column_leaf_mul_eq_sum_row_sum_mul.{u_1, u_2, u_3, u_4} {U : Type u_1} {V : Type u_2} {I : Type u_3}\n  {J : Type u_4} [Fintype U] [Fintype V] [Fintype I] [Fintype J] [DecidableEq U] [DecidableEq V] (u : U) (w : I → J → ℝ)\n  (F : (U → I) → (V → J) → ℝ) :\n  (∑ x, ∑ y, w (x u) (y none) * F x fun v => y (some v)) = ∑ x, ∑ y, (∑ j, w (x u) j) * F x y",
+  "name":
+  "NLAlib.sum_column_leaf_mul_eq_sum_row_sum_mul",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum",
+  "line":
+  148,
+  "kind":
+  "theorem",
+  "doc":
+  "Column-leaf analogue of `sum_row_leaf_mul_eq_sum_column_sum_mul`: the new leaf is a column\n(`Option V`) whose label is summed out, leaving the row sum `∑ j, w (x u) j`.\nDerived from the row identity by swapping the roles of rows (`U`, `I`) and\ncolumns (`V`, `J`) and flipping `w`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_column_leaf_mul_le_mul_sum.{u_1, u_2, u_3, u_4} {U : Type u_1} {V : Type u_2} {I : Type u_3} {J : Type u_4}\n  [Fintype U] [Fintype V] [Fintype I] [Fintype J] [DecidableEq U] [DecidableEq V] (u : U) (a : ℝ) (w : I → J → ℝ)\n  (F : (U → I) → (V → J) → ℝ) (hrow : ∀ (i : I), ∑ j, w i j ≤ a) (hF : ∀ (x : U → I) (y : V → J), 0 ≤ F x y) :\n  (∑ x, ∑ y, w (x u) (y none) * F x fun v => y (some v)) ≤ a * ∑ x, ∑ y, F x y",
+  "name":
+  "NLAlib.sum_column_leaf_mul_le_mul_sum",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum",
+  "line":
+  169,
+  "kind":
+  "theorem",
+  "doc":
+  "Column-leaf elimination estimate: if `F` is nonnegative and every row sum of\n`w` is at most `a`, then summing over the label of the new column leaf costs at\nmost the factor `a`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.complexCholeskyHistoryWeight"],
   "sorry":
   false,
@@ -260949,6 +264318,46 @@
   "atlas":
   []},
  {"uses":
+  ["SimpleGraph.bipartiteOccurrenceGraph"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_prod_bipartite_edge_weight_le_of_connected.{u_1, u_2, u_3, u_4, u_5} {U : Type u_1} {V : Type u_2}\n  {E : Type u_3} {I : Type u_4} {J : Type u_5} [Fintype U] [Fintype V] [Nonempty U] [Fintype E] [DecidableEq E]\n  [DecidableEq U] [DecidableEq V] [Fintype I] [Fintype J] (sr : E → U) (tg : E → V)\n  (hG : (SimpleGraph.bipartiteOccurrenceGraph sr tg).Connected) (w : I → J → ℝ) (a c s : ℝ)\n  (hwnn : ∀ (i : I) (j : J), 0 ≤ w i j) (hcol : ∀ (j : J), ∑ i, w i j ≤ a) (hrow : ∀ (i : I), ∑ j, w i j ≤ c)\n  (hw : ∀ (i : I) (j : J), w i j ≤ s) (ha : 0 ≤ a) (hc : 0 ≤ c) (hs : 0 ≤ s) :\n  ∑ x, ∑ y, ∏ e, w (x (sr e)) (y (tg e)) ≤\n    ↑(Fintype.card I) * a ^ (Fintype.card U - 1) * c ^ Fintype.card V *\n      s ^ (Fintype.card E - (Fintype.card U - 1 + Fintype.card V))",
+  "name":
+  "NLAlib.sum_prod_bipartite_edge_weight_le_of_connected",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartitePartitionBound",
+  "line":
+  77,
+  "kind":
+  "theorem",
+  "doc":
+  "**Universal partition-sum bound.** For every connected bipartite multigraph\nwith finite nonempty row set `U`, finite column set `V`, and indexed edge occurrences\n`sr : E -> U`, `tg : E -> V`, if `w` is nonnegative, every column sum of `w`\nis at most `a`, every row sum is at most `c`, and every entry is at most `s`,\nthen the unrestricted sum over all labelings of the product over all edge\noccurrences is at most\n\n```\n(Fintype.card I : ℝ) * a ^ (Fintype.card U - 1) * c ^ (Fintype.card V) *\n  s ^ (Fintype.card E - (Fintype.card U - 1 + Fintype.card V))\n```\n\nThe exponent of `s` is the number of edges outside a spanning tree: the tree has\n`Fintype.card U - 1 + Fintype.card V` edges, so the off-tree count is\n`Fintype.card E - (Fintype.card U - 1 + Fintype.card V)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_quadForm_eq_trace_of_frame.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I] [Fintype n] [DecidableEq n]\n  (v : I → n → ℝ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) (A : Matrix n n ℝ) :\n  ∑ i, NLAlib.quadForm A (v i) = A.trace",
+  "name":
+  "NLAlib.sum_quadForm_eq_trace_of_frame",
+  "module":
+  "NLAlib.Matrix.Functions.FrameBarrierSelection",
+  "line":
+  57,
+  "kind":
+  "theorem",
+  "doc":
+  "Sum of quadratic forms under an isotropic frame equals the trace. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.diagonalSequence",
    "NLAlib.singularValues"],
   "sorry":
@@ -261186,6 +264595,46 @@
   "theorem",
   "doc":
   "Deletion lower bounds yield the actual independent-copy positive-gradient\nbound. No measurability of the auxiliary deletion functions is needed, since\nonly their pointwise comparison and coordinate independence are used. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_row_leaf_mul_eq_sum_column_sum_mul.{u_1, u_2, u_3, u_4} {U : Type u_1} {V : Type u_2} {I : Type u_3}\n  {J : Type u_4} [Fintype U] [Fintype V] [Fintype I] [Fintype J] [DecidableEq U] [DecidableEq V] (v : V) (w : I → J → ℝ)\n  (F : (U → I) → (V → J) → ℝ) :\n  ∑ x, ∑ y, w (x none) (y v) * F (fun u => x (some u)) y = ∑ x, ∑ y, (∑ i, w i (y v)) * F x y",
+  "name":
+  "NLAlib.sum_row_leaf_mul_eq_sum_column_sum_mul",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum",
+  "line":
+  83,
+  "kind":
+  "theorem",
+  "doc":
+  "Summing over labelings of `Option U` (a row set with one new leaf attached)\nequals summing over the label of the new leaf and the labelings of `U`, with the\nleaf factor `w (x none) (y v)` extracted from `F`. This is the row-leaf\nelimination identity of the bipartite partition-sum argument; it holds with no\nsign assumption and for empty index types. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_row_leaf_mul_le_mul_sum.{u_1, u_2, u_3, u_4} {U : Type u_1} {V : Type u_2} {I : Type u_3} {J : Type u_4}\n  [Fintype U] [Fintype V] [Fintype I] [Fintype J] [DecidableEq U] [DecidableEq V] (v : V) (a : ℝ) (w : I → J → ℝ)\n  (F : (U → I) → (V → J) → ℝ) (hcol : ∀ (j : J), ∑ i, w i j ≤ a) (hF : ∀ (x : U → I) (y : V → J), 0 ≤ F x y) :\n  ∑ x, ∑ y, w (x none) (y v) * F (fun u => x (some u)) y ≤ a * ∑ x, ∑ y, F x y",
+  "name":
+  "NLAlib.sum_row_leaf_mul_le_mul_sum",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum",
+  "line":
+  120,
+  "kind":
+  "theorem",
+  "doc":
+  "Row-leaf elimination estimate: if `F` is nonnegative and every column sum of\n`w` is at most `a`, then summing over the label of the new leaf costs at most the\nfactor `a`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -261450,6 +264899,26 @@
   "theorem",
   "doc":
   "Flipping one sign changes the series by `2 xᵢ Aᵢ`. Supports `noncommutative-khintchine`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frameBlockVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_smul_vecMulVec_frameBlockVector_eq_blockDiagonal.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I]\n  (v : I → n → ℝ) (r : ℕ) (w : I × Fin r → ℝ) :\n  ∑ p, w p • Matrix.vecMulVec (NLAlib.frameBlockVector v r p) (NLAlib.frameBlockVector v r p) =\n    Matrix.blockDiagonal fun a => ∑ i, w (i, a) • Matrix.vecMulVec (v i) (v i)",
+  "name":
+  "NLAlib.sum_smul_vecMulVec_frameBlockVector_eq_blockDiagonal",
+  "module":
+  "NLAlib.Matrix.Functions.SparseFrameCompactness",
+  "line":
+  236,
+  "kind":
+  "theorem",
+  "doc":
+  "The matrix identity underlying block extraction: for every real coefficient\nfamily `w` on `I × Fin r`, the weighted Gram sum of the lifted vectors is\nexactly the block diagonal whose block `a` is the weighted Gram sum of the\noriginal atoms restricted to fiber `a`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -262273,6 +265742,26 @@
   "theorem",
   "doc":
   "The sum of the real variations of adjacent partition cells is the total variation.\nSource: Mathlib `eVariationOn.sum'`; operator derivations `polyseries:bv`,\nhelper for `chebyshev-coeff-bv-decay`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frameBlockVector"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_vecMulVec_frameBlockVector_eq_one.{u_1, u_2} {I : Type u_1} {n : Type u_2} [Fintype I] [DecidableEq n]\n  (v : I → n → ℝ) (r : ℕ) (hframe : ∑ i, Matrix.vecMulVec (v i) (v i) = 1) :\n  ∑ p, Matrix.vecMulVec (NLAlib.frameBlockVector v r p) (NLAlib.frameBlockVector v r p) = 1",
+  "name":
+  "NLAlib.sum_vecMulVec_frameBlockVector_eq_one",
+  "module":
+  "NLAlib.Matrix.Functions.SparseFrameCompactness",
+  "line":
+  303,
+  "kind":
+  "theorem",
+  "doc":
+  "The unweighted lifted frame of an isotropic frame is again isotropic: if\n`∑ i, v_i v_iᵀ = 1`, then `∑ p, V_p V_pᵀ = 1` for the unscaled block lift\n`V = frameBlockVector v r`. ",
   "atlas_partial":
   [],
   "atlas":
@@ -269781,6 +273270,46 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.gramOccurrenceCount"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_mul_conjTranspose_pow_eq_sum_gramOccurrence.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] (A : Matrix m n ℝ) (q : ℕ) :\n  ((A * A.conjTranspose) ^ (q + 1)).trace = ∑ r, ∑ c, ∏ e, A e.1 e.2 ^ NLAlib.gramOccurrenceCount q r c e",
+  "name":
+  "NLAlib.trace_mul_conjTranspose_pow_eq_sum_gramOccurrence",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.IndependentGramMoments",
+  "line":
+  105,
+  "kind":
+  "theorem",
+  "doc":
+  "The trace of `(A Aᴴ)^(q+1)` is the exact finite sum over row and\ncolumn assignments of the regrouped monomial in the entries of `A`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.trace_mul_conjTranspose_pow_eq_sum_gram_cycle.{u_1, u_2} {I : Type u_1} {J : Type u_2} [Fintype I] [Fintype J]\n  [DecidableEq I] [DecidableEq J] (A : Matrix I J ℝ) (q : ℕ) :\n  ((A * A.conjTranspose) ^ (q + 1)).trace = ∑ r, ∑ c, ∏ t, A (r t) (c t) * A (r ((finRotate (q + 1)) t)) (c t)",
+  "name":
+  "NLAlib.trace_mul_conjTranspose_pow_eq_sum_gram_cycle",
+  "module":
+  "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianGramWick",
+  "line":
+  282,
+  "kind":
+  "theorem",
+  "doc":
+  "The trace of `(A Aᴴ)^(q+1)` is the exact finite sum over row and column\nassignments of the closed cycle product (matching `gramOccurrenceIdx`). This\nis the cycle form of the public `trace_mul_conjTranspose_pow_eq_sum_gramOccurrence`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -271783,6 +275312,27 @@
   "theorem",
   "doc":
   "A cubic rational lower bound for the symmetric logarithm.\nSource: focused reroutes, the harmonic-remainder calculation; direct differentiation. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.GaussianPairings",
+   "NLAlib.gaussianPairingEdges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.two_mul_gaussianPairingEdges_length {m : ℕ} (π : NLAlib.GaussianPairings m) :\n  2 * (NLAlib.gaussianPairingEdges π).length = m",
+  "name":
+  "NLAlib.two_mul_gaussianPairingEdges_length",
+  "module":
+  "NLAlib.Probability.Gaussian.Moments.WickPairingEdges",
+  "line":
+  75,
+  "kind":
+  "theorem",
+  "doc":
+  "Twice the number of edges of a canonical complete pairing is the number of\nlabelled positions. ",
   "atlas_partial":
   [],
   "atlas":
@@ -281420,6 +284970,106 @@
   "sorry":
   false,
   "signature":
+  "Real.reciprocalBarrierGap.{u_1} {I : Type u_1} [Fintype I] (δ : ℝ) (x : I → ℝ) : ℝ",
+  "name":
+  "Real.reciprocalBarrierGap",
+  "module":
+  "NLAlib.ForMathlib.Analysis.SpecialFunctions.ReciprocalBarrier",
+  "line":
+  39,
+  "kind":
+  "def",
+  "doc":
+  "The reciprocal-barrier gap `∑ᵢ 1/xᵢ − ∑ᵢ 1/(xᵢ+δ)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Real.reciprocalBarrierGap"],
+  "sorry":
+  false,
+  "signature":
+  "Real.reciprocalBarrierGap_eq_mul_sum_inv_mul_inv_add.{u_1} {I : Type u_1} [Fintype I] {δ : ℝ} {x : I → ℝ} (hδ : 0 < δ)\n  (hx : ∀ (i : I), 0 < x i) : δ.reciprocalBarrierGap x = δ * ∑ i, 1 / (x i * (x i + δ))",
+  "name":
+  "Real.reciprocalBarrierGap_eq_mul_sum_inv_mul_inv_add",
+  "module":
+  "NLAlib.ForMathlib.Analysis.SpecialFunctions.ReciprocalBarrier",
+  "line":
+  53,
+  "kind":
+  "theorem",
+  "doc":
+  "The reciprocal-barrier gap factors as `δ * ∑ᵢ 1/(xᵢ(xᵢ+δ))`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["Real.reciprocalBarrierGap"],
+  "sorry":
+  false,
+  "signature":
+  "Real.reciprocalBarrierGap_pos.{u_1} {I : Type u_1} [Fintype I] [Nonempty I] {δ : ℝ} {x : I → ℝ} (hδ : 0 < δ)\n  (hx : ∀ (i : I), 0 < x i) : 0 < δ.reciprocalBarrierGap x",
+  "name":
+  "Real.reciprocalBarrierGap_pos",
+  "module":
+  "NLAlib.ForMathlib.Analysis.SpecialFunctions.ReciprocalBarrier",
+  "line":
+  66,
+  "kind":
+  "theorem",
+  "doc":
+  "The reciprocal-barrier gap is strictly positive for positive shifts and entries. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Real.reciprocal_barrier_lower_le.{u_1} {I : Type u_1} [Fintype I] [Nonempty I] {δ : ℝ} {y : I → ℝ} (hδ : 0 < δ)\n  (hy : ∀ (i : I), δ < y i) (hcap : δ * ∑ i, 1 / y i ≤ 1) :\n  1 / δ - ∑ i, 1 / y i ≤ (∑ i, (1 / (y i - δ)) ^ 2) / (∑ i, 1 / (y i - δ) - ∑ i, 1 / y i) - ∑ i, 1 / (y i - δ)",
+  "name":
+  "Real.reciprocal_barrier_lower_le",
+  "module":
+  "NLAlib.ForMathlib.Analysis.SpecialFunctions.ReciprocalBarrier",
+  "line":
+  136,
+  "kind":
+  "theorem",
+  "doc":
+  "Scalar lower reciprocal-barrier averaging inequality (BSS lower step).\n\nFor `δ > 0`, `yᵢ > δ`, and the potential bound `δ * ∑ᵢ 1/yᵢ ≤ 1`,\nwith `D = ∑ᵢ 1/(yᵢ−δ) − ∑ᵢ 1/yᵢ`,\n`1/δ − ∑ᵢ 1/yᵢ ≤ ((∑ᵢ 1/(yᵢ−δ)²)/D) − ∑ᵢ 1/(yᵢ−δ)`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Real.reciprocal_barrier_upper_le.{u_1} {I : Type u_1} [Fintype I] [Nonempty I] {δ : ℝ} {x : I → ℝ} (hδ : 0 < δ)\n  (hx : ∀ (i : I), 0 < x i) :\n  (∑ i, (1 / (x i + δ)) ^ 2) / (∑ i, 1 / x i - ∑ i, 1 / (x i + δ)) + ∑ i, 1 / (x i + δ) ≤ 1 / δ + ∑ i, 1 / x i",
+  "name":
+  "Real.reciprocal_barrier_upper_le",
+  "module":
+  "NLAlib.ForMathlib.Analysis.SpecialFunctions.ReciprocalBarrier",
+  "line":
+  84,
+  "kind":
+  "theorem",
+  "doc":
+  "Scalar upper reciprocal-barrier averaging inequality (BSS upper step).\n\nFor `δ > 0` and positive `xᵢ`, with\n`D = ∑ᵢ 1/xᵢ − ∑ᵢ 1/(xᵢ+δ)`,\n`((∑ᵢ 1/(xᵢ+δ)²)/D) + ∑ᵢ 1/(xᵢ+δ) ≤ 1/δ + ∑ᵢ 1/xᵢ`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Real.resolvent_comparison_remainder_le_of_source_parameters {R σ Q p δ η : ℝ} (hR : 0 ≤ R) (hp : 0 ≤ p) (hδ : 0 ≤ δ)\n  (hη : 0 < η) (hδη : δ ≤ η) (hQ : Q ≤ σ ^ 2) (hRp : R * p ≤ δ) (hcube : R * σ ^ 2 * p ^ 2 ≤ δ ^ 3) :\n  4096 * (p ^ 2 * R * Q + p ^ 3 * R ^ 3) / η ^ 4 ≤ 8192 * δ / η ^ 2",
   "name":
   "Real.resolvent_comparison_remainder_le_of_source_parameters",
@@ -282338,6 +285988,26 @@
   "theorem",
   "doc":
   "The original set is contained in its bounded-complement fill. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "SimpleGraph.bipartiteOccurrenceGraph.{u_1, u_2, u_3} {U : Type u_1} {V : Type u_2} {E : Type u_3} (sr : E → U)\n  (tg : E → V) : SimpleGraph (U ⊕ V)",
+  "name":
+  "SimpleGraph.bipartiteOccurrenceGraph",
+  "module":
+  "NLAlib.ForMathlib.Combinatorics.BipartiteSpanningTree",
+  "line":
+  61,
+  "kind":
+  "def",
+  "doc":
+  "The underlying undirected graph of a bipartite multigraph with row vertices\n`U`, column vertices `V`, and edge occurrences `E -> (U, V)`: a row and a column\nvertex are adjacent iff some occurrence has exactly those endpoints. ",
   "atlas_partial":
   [],
   "atlas":

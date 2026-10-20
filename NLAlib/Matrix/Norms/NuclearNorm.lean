@@ -31,10 +31,13 @@ theorem nuclearNorm_eq_sum_rank_singularValues {m n : ℕ} (A : Matrix (Fin m) (
   exact singularValues_eq_zero_of_rank_le A (by simpa only [Finset.mem_range, not_lt] using hi)
 
 open scoped Matrix.Norms.L2Operator in
-/-- The nuclear norm is nonnegative.
+/-- The nuclear norm is nonnegative over any real or complex scalar field.
 atlas: ky-fan-norms-def -/
-theorem nuclearNorm_nonneg {m n : Type*} [Fintype m] [Fintype n] [DecidableEq n]
-    (A : Matrix m n ℝ) : 0 ≤ nuclearNorm A := kyFanNorm_nonneg A _
+theorem nuclearNorm_nonneg {𝕜 m n : Type*} [RCLike 𝕜]
+    [Fintype m] [Fintype n] [DecidableEq n]
+    (A : Matrix m n 𝕜) : 0 ≤ nuclearNorm A := by
+  rw [nuclearNorm_eq_sum_range]
+  exact Finset.sum_nonneg fun i _ => singularValues_nonneg A i
 
 open scoped Matrix.Norms.L2Operator in
 /-- `Fin` step of `nuclearNorm_le_rank_mul_specNorm`. -/

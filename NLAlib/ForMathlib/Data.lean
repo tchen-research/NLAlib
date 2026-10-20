@@ -1,4 +1,5 @@
 import NLAlib.ForMathlib.Data.ExactRowSubset
+import NLAlib.ForMathlib.Data.List
 import NLAlib.ForMathlib.Data.MultisetPermutation
 
 /-! # `ForMathlib/Data`

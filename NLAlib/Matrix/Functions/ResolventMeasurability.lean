@@ -1,5 +1,5 @@
 import NLAlib.ForMathlib.MeasureTheory.MatrixInverse
-import NLAlib.Matrix.Functions.HermitianResolvent
+import NLAlib.Matrix.Functions.ResolventMoments
 import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
 
 /-!
@@ -7,10 +7,12 @@ import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
 
 The native total resolvent is measurable on every finite complex matrix,
 including singular shifts. Hermitian nonreal hypotheses are needed for norm
-and inverse identities, but not for this measurability statement.
+and inverse identities, but not for measurability. Normalized Gram
+moments inherit global measurability from this total resolvent.
 -/
 
 noncomputable section
+open scoped Matrix
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
@@ -23,5 +25,14 @@ theorem measurable_matrix_resolvent (ζ : ℂ) :
   apply Matrix.measurable_iff_entries.mpr
   intro i j
   exact measurable_const.sub (Matrix.measurable_entry i j)
+
+/-- Native normalized Gram moments are measurable on the whole matrix space,
+including singular and real shifts. -/
+theorem measurable_resolventEvenMoment (z : ℂ) (p : ℕ) :
+    Measurable (fun A : Matrix n n ℂ => resolventEvenMoment A z p) := by
+  have hc : Continuous (fun B : Matrix n n ℂ => (normalizedTrace ((Bᴴ * B) ^ p)).re) := by
+    unfold normalizedTrace
+    fun_prop
+  exact hc.measurable.comp (measurable_matrix_resolvent z)
 
 end NLAlib

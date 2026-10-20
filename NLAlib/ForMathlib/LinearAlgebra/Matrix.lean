@@ -6,6 +6,8 @@ import NLAlib.ForMathlib.LinearAlgebra.Matrix.Mul
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.PeakDifference
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.PosSemidef
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.RankInvertibility
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.TraceWordProfiles
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.TraceWords
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Triangular
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.TriangularRank
 

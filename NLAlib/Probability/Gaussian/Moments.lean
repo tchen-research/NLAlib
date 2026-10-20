@@ -1,3 +1,4 @@
+import NLAlib.Probability.Gaussian.Moments.ComplexLinearMoments
 import NLAlib.Probability.Gaussian.Moments.ExpectationNormDiff
 import NLAlib.Probability.Gaussian.Moments.Hermite
 import NLAlib.Probability.Gaussian.Moments.HermiteAction
@@ -9,6 +10,7 @@ import NLAlib.Probability.Gaussian.Moments.NaturalMoments
 import NLAlib.Probability.Gaussian.Moments.PolynomialLinearMoments
 import NLAlib.Probability.Gaussian.Moments.PositiveMoments
 import NLAlib.Probability.Gaussian.Moments.SeriesCovarianceNorm
+import NLAlib.Probability.Gaussian.Moments.SeriesFrobenius
 import NLAlib.Probability.Gaussian.Moments.SeriesHermiteAction
 import NLAlib.Probability.Gaussian.Moments.SeriesHermiteBound
 import NLAlib.Probability.Gaussian.Moments.SeriesHermiteVacuum

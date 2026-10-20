@@ -3,6 +3,7 @@ import NLAlib.Probability.Concentration.Basic.MatrixCalculus
 import NLAlib.Probability.Concentration.Basic.MatrixStatistics
 import NLAlib.Probability.Concentration.Basic.Net
 import NLAlib.Probability.Concentration.Basic.ScalarLaws
+import NLAlib.Probability.Concentration.Basic.SubGammaMoments
 import NLAlib.Probability.Concentration.Basic.TailIntegral
 
 /-! # `Probability/Concentration/Basic`

@@ -1,5 +1,24 @@
 import NLAlib.ForMathlib.Analysis.CStarAlgebra.AbsFirstOrder
 import NLAlib.ForMathlib.Analysis.CStarAlgebra.AggregateProducts
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.CStarMatrixBlockSpectra
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.CStarMatrixEntryBound
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.CStarMatrixPiLp
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.CompactOrderInterval
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.FunctionalCalculusClamp
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.GramNormPerturbation
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.MatrixFreeAlgebraEvaluation
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.MatrixPositiveFunctional
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.PositiveGramNorm
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.ResolventMeanCompression
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.ResolventModulus
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.ResolventParameter
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.ResolventSpectralNet
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.SelfAdjointPositivePowers
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.SelfAdjointResolvent
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.SpectralHausdorff
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.SpectrumPerturbation
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.SqrtMap
+import NLAlib.ForMathlib.Analysis.CStarAlgebra.TracialPositivePowers
 
 /-! # `ForMathlib/Analysis/CStarAlgebra`
 

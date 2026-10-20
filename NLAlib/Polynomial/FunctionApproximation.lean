@@ -39,6 +39,7 @@ import NLAlib.Polynomial.FunctionApproximation.JacksonTensorKernel
 import NLAlib.Polynomial.FunctionApproximation.JacksonTensorOperator
 import NLAlib.Polynomial.FunctionApproximation.LowerBounds
 import NLAlib.Polynomial.FunctionApproximation.Monomial
+import NLAlib.Polynomial.FunctionApproximation.ResolventModulus
 import NLAlib.Polynomial.FunctionApproximation.Sign
 import NLAlib.Polynomial.FunctionApproximation.SignChebyshevSeries
 import NLAlib.Polynomial.FunctionApproximation.SineCoordinates

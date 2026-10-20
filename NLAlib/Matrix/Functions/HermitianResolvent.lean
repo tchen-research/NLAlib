@@ -3,6 +3,7 @@ import NLAlib.Matrix.Norms.Core
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Complex.BigOperators
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import NLAlib.ForMathlib.Algebra.Resolvent
 
 /-!
 # Nonreal resolvents of Hermitian matrices
@@ -17,6 +18,14 @@ open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 
 variable {n : Type*} [Fintype n] [DecidableEq n]
+
+/-- Adjoint reflection of a Hermitian matrix's native total resolvent, over
+any real or complex scalar field and at every spectral parameter. -/
+theorem _root_.Matrix.IsHermitian.conjTranspose_resolvent
+    {𝕜 : Type*} [RCLike 𝕜] {A : Matrix n n 𝕜}
+    (hA : A.IsHermitian) (ζ : 𝕜) :
+    (resolvent A ζ)ᴴ = resolvent A (star ζ) := by
+  simpa only [Matrix.star_eq_conjTranspose, hA.eq] using star_resolvent A ζ
 
 /-- Mathlib's native resolvent is the inverse of the shifted matrix. -/
 theorem resolvent_matrix_eq_inv (A : Matrix n n ℂ) (ζ : ℂ) :

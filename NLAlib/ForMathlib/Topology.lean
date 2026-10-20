@@ -12,9 +12,11 @@ import NLAlib.ForMathlib.Topology.CubicalPathChain
 import NLAlib.ForMathlib.Topology.CubicalSubdivision
 import NLAlib.ForMathlib.Topology.CubicalSubdivisionSmall
 import NLAlib.ForMathlib.Topology.CubicalSupportMaps
+import NLAlib.ForMathlib.Topology.MetricSpace
 import NLAlib.ForMathlib.Topology.Order
 import NLAlib.ForMathlib.Topology.PathSubdivision
 import NLAlib.ForMathlib.Topology.ProperLocalHomeomorph
+import NLAlib.ForMathlib.Topology.RealIntervalNet
 import NLAlib.ForMathlib.Topology.RectangularGrid
 import NLAlib.ForMathlib.Topology.RectangularGridApproximation
 import NLAlib.ForMathlib.Topology.RectangularGridCellBounds

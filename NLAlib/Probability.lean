@@ -1,6 +1,7 @@
 import NLAlib.Probability.ChiSquare
 import NLAlib.Probability.Concentration
 import NLAlib.Probability.Exchangeable
+import NLAlib.Probability.Free
 import NLAlib.Probability.Gaussian
 import NLAlib.Probability.Moments
 import NLAlib.Probability.Rademacher

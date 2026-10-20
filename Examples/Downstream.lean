@@ -82,3 +82,21 @@ example {m n s J : Type*} [Fintype m] [Fintype n] [Fintype s] [Fintype J]
       ∂SketchProject.iidPathLaw q 0) = ‖WithLp.toLp 2 (x - xs)‖ ^ 2 := by
   rw [SketchProject.integral_sqErr_iidPathLaw]
   simp only [SketchProject.expErr, norm_toLp_sq_eq_dotProduct_self]
+
+-- A compact Hermitian sample law constructs an actual probability law
+-- and an attained variational logarithmic potential below its lower edge.
+open scoped Matrix.Norms.L2Operator ComplexOrder in
+example {n : Type*} [Fintype n] [DecidableEq n] [Nonempty n]
+    (ν : Measure (selfAdjoint (Matrix n n ℂ))) [IsProbabilityMeasure ν]
+    (hν : IsCompact ν.support) (α : ℝ) (hα : 0 < α) :
+    ∃ μ : FiniteMeasure ℝ, μ.mass = 1 ∧ IsCompact (μ : Measure ℝ).support ∧
+      ∀ u < sInf (μ : Measure ℝ).support, ∃ S : Matrix n n ℂ,
+        S ∈ matrixKStableDomain ν α ∧
+        logarithmicPotential (μ : Measure ℝ) u = matrixKPotential ν α u S / Fintype.card n ∧
+        ∀ Q ∈ matrixKStableDomain ν α, matrixKPotential ν α u S ≤ matrixKPotential ν α u Q := by
+  obtain ⟨_F, _hFa, _hF, μ, hmass, hcompact, _htrace, hmin⟩ :=
+    exists_matrixKTransform_law_variational_logarithmicPotential ν hν α hα
+  refine ⟨μ, hmass, hcompact, ?_⟩
+  intro u hu
+  obtain ⟨S, hS, _hK, hvalue, hminimum, _hdet⟩ := hmin u hu
+  exact ⟨S, hS, hvalue, hminimum⟩

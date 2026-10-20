@@ -1,14 +1,24 @@
+import NLAlib.ForMathlib.Analysis.Matrix.BilinearFunctional
 import NLAlib.ForMathlib.Analysis.Matrix.Charpoly
 import NLAlib.ForMathlib.Analysis.Matrix.ComplexParts
+import NLAlib.ForMathlib.Analysis.Matrix.DeterminantDerivative
+import NLAlib.ForMathlib.Analysis.Matrix.DeterminantFrechetDerivative
 import NLAlib.ForMathlib.Analysis.Matrix.HerglotzRepresentation
 import NLAlib.ForMathlib.Analysis.Matrix.HerglotzScalar
+import NLAlib.ForMathlib.Analysis.Matrix.HermitianBoundaryBound
 import NLAlib.ForMathlib.Analysis.Matrix.HermitianSpanning
 import NLAlib.ForMathlib.Analysis.Matrix.ImaginaryCoercivity
 import NLAlib.ForMathlib.Analysis.Matrix.ImaginaryInvertibility
+import NLAlib.ForMathlib.Analysis.Matrix.InverseTangent
 import NLAlib.ForMathlib.Analysis.Matrix.Order
+import NLAlib.ForMathlib.Analysis.Matrix.PosDefConnectedContinuation
+import NLAlib.ForMathlib.Analysis.Matrix.PositiveLimit
 import NLAlib.ForMathlib.Analysis.Matrix.QuadraticForm
 import NLAlib.ForMathlib.Analysis.Matrix.QuadraticPositiveMap
 import NLAlib.ForMathlib.Analysis.Matrix.RootCluster
+import NLAlib.ForMathlib.Analysis.Matrix.ScalarInverseBound
+import NLAlib.ForMathlib.Analysis.Matrix.StieltjesRealContinuation
+import NLAlib.ForMathlib.Analysis.Matrix.UpperHalfPlaneGerm
 
 /-! # `ForMathlib/Analysis/Matrix`
 

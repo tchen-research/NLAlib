@@ -1,5 +1,11 @@
+import NLAlib.Probability.Moments.BilinearCovariance
+import NLAlib.Probability.Moments.BilinearSumCovariance
+import NLAlib.Probability.Moments.BilinearVarianceNorm
+import NLAlib.Probability.Moments.BilinearWeakVariance
+import NLAlib.Probability.Moments.BilinearWeakVarianceProbes
 import NLAlib.Probability.Moments.Comparison
 import NLAlib.Probability.Moments.Euclidean
+import NLAlib.Probability.Moments.ExpectedResolventMomentTaylor
 import NLAlib.Probability.Moments.ExpectedResolventRemainder
 import NLAlib.Probability.Moments.FiniteWeighted
 import NLAlib.Probability.Moments.GaussianRadialization
@@ -7,6 +13,7 @@ import NLAlib.Probability.Moments.MatrixDifference
 import NLAlib.Probability.Moments.MatrixDifferenceBound
 import NLAlib.Probability.Moments.MatrixDifferenceTransport
 import NLAlib.Probability.Moments.MatrixZeroCovariance
+import NLAlib.Probability.Moments.ResolventMomentTaylorExpectation
 import NLAlib.Probability.Moments.ResolventRemainder
 import NLAlib.Probability.Moments.Schatten
 import NLAlib.Probability.Moments.SquareMass

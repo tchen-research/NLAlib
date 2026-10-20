@@ -34,10 +34,13 @@ import NLAlib.ForMathlib.Analysis.FactorialMomentBounds
 import NLAlib.ForMathlib.Analysis.FejerKernel
 import NLAlib.ForMathlib.Analysis.FejerModulation
 import NLAlib.ForMathlib.Analysis.FiniteCoordinateDerivative
+import NLAlib.ForMathlib.Analysis.FiniteGeometricSeries
+import NLAlib.ForMathlib.Analysis.FiniteMomentMeans
 import NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence
 import NLAlib.ForMathlib.Analysis.FinitePairNorm
 import NLAlib.ForMathlib.Analysis.FinitePowerSums
 import NLAlib.ForMathlib.Analysis.FiniteProductBounds
+import NLAlib.ForMathlib.Analysis.FiniteReciprocalExponents
 import NLAlib.ForMathlib.Analysis.FiniteWeightedHolder
 import NLAlib.ForMathlib.Analysis.FourierAutocorrelation
 import NLAlib.ForMathlib.Analysis.FourierBoundedVariation
@@ -59,6 +62,8 @@ import NLAlib.ForMathlib.Analysis.LobattoKernelSum
 import NLAlib.ForMathlib.Analysis.LogDimensionBudget
 import NLAlib.ForMathlib.Analysis.LogPowerMean
 import NLAlib.ForMathlib.Analysis.LogRationalBound
+import NLAlib.ForMathlib.Analysis.LogarithmicDimensionChange
+import NLAlib.ForMathlib.Analysis.LogarithmicMomentFactor
 import NLAlib.ForMathlib.Analysis.LogarithmicMomentOptimization
 import NLAlib.ForMathlib.Analysis.Matrix
 import NLAlib.ForMathlib.Analysis.MetricInfTransform
@@ -84,6 +89,8 @@ import NLAlib.ForMathlib.Analysis.ProperInverse
 import NLAlib.ForMathlib.Analysis.RangeIsometry
 import NLAlib.ForMathlib.Analysis.Real
 import NLAlib.ForMathlib.Analysis.RealRootedPeaks
+import NLAlib.ForMathlib.Analysis.ResolventMomentScale
+import NLAlib.ForMathlib.Analysis.RpowComparison
 import NLAlib.ForMathlib.Analysis.SchurTriangularization
 import NLAlib.ForMathlib.Analysis.SecondDerivativeBound
 import NLAlib.ForMathlib.Analysis.SimultaneousTriangularization
@@ -93,6 +100,7 @@ import NLAlib.ForMathlib.Analysis.SpecificLimits
 import NLAlib.ForMathlib.Analysis.SupportFunction
 import NLAlib.ForMathlib.Analysis.TriangularBasis
 import NLAlib.ForMathlib.Analysis.WeightedPowerProducts
+import NLAlib.ForMathlib.Analysis.WeightedSquareOptimization
 
 /-! # `ForMathlib/Analysis`
 

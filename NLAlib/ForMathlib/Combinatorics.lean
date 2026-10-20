@@ -1,5 +1,6 @@
 import NLAlib.ForMathlib.Combinatorics.ColoringAverage
 import NLAlib.ForMathlib.Combinatorics.CoordinatePartitions
+import NLAlib.ForMathlib.Combinatorics.Enumerative
 import NLAlib.ForMathlib.Combinatorics.SubsetDeletionProduct
 
 /-! # `ForMathlib/Combinatorics`

@@ -60,4 +60,19 @@ theorem norm_le_of_posSemidef_equal_fromBlocks {S D : Matrix n n ℂ}
   rw [norm_smul, Real.norm_of_nonneg (inv_pos.mpr ht).le] at hn
   simpa only [mul_one] using (inv_mul_le_iff₀ ht).mp hn
 
+/-- A complex matrix contraction gives a positive identity-diagonal block,
+including empty dimensions. This is the converse of
+`norm_le_one_of_posSemidef_identity_fromBlocks`. -/
+theorem posSemidef_identity_fromBlocks_of_specNorm_le_one {C : Matrix n n ℂ}
+    (hC : specNorm C ≤ 1) : (fromBlocks 1 C Cᴴ 1).PosSemidef := by
+  let : Invertible (1 : Matrix n n ℂ) := invertibleOne
+  apply (Matrix.PosDef.fromBlocks₁₁ C (1 : Matrix n n ℂ) Matrix.PosDef.one).mpr
+  rw [inv_one, Matrix.mul_one]
+  apply Matrix.le_iff.mp
+  apply (CStarAlgebra.norm_le_one_iff_of_nonneg _
+    (Matrix.posSemidef_conjTranspose_mul_self C).nonneg).mp
+  rw [Matrix.l2_opNorm_conjTranspose_mul_self]
+  rw [specNorm_eq_norm] at hC
+  nlinarith [norm_nonneg C]
+
 end NLAlib

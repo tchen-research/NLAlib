@@ -1,5 +1,6 @@
 import NLAlib.ForMathlib.Analysis.Normed.Algebra
 import NLAlib.ForMathlib.Analysis.Normed.Approximation
+import NLAlib.ForMathlib.Analysis.Normed.Module
 import NLAlib.ForMathlib.Analysis.Normed.UniformApproximation
 
 /-! # `ForMathlib/Analysis/Normed`

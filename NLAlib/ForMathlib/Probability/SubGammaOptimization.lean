@@ -271,4 +271,88 @@ theorem integral_le_sqrt_log_add_of_subgamma_mgf
     exact hj.trans (by simpa only [exp_add, exp_log hdpos] using hmgf θ hθ.le hdom)
   linarith
 
+/-- The strict absolute subgamma tail includes zero variance and zero scale.
+Both signed moment bounds concern the actual centered random variable. -/
+theorem measureReal_gt_abs_sub_sqrt_add_le_of_sign_subgamma_mgf
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {X : Ω → ℝ} {m d V c : ℝ} (hd : 1 ≤ d) (hV : 0 ≤ V) (hc : 0 ≤ c)
+    (hexp : ∀ e : ℝ, (e = 1 ∨ e = -1) → ∀ s : ℝ, 0 ≤ s → c * s < 1 →
+      Integrable (fun ω => Real.exp (s * (e * (X ω - m)))) μ)
+    (hmgf : ∀ e : ℝ, (e = 1 ∨ e = -1) → ∀ s : ℝ, 0 ≤ s → c * s < 1 →
+      (∫ ω, Real.exp (s * (e * (X ω - m))) ∂μ) ≤
+        d * Real.exp (V * s ^ 2 / (2 * (1 - c * s))))
+    {t : ℝ} (ht : 0 ≤ t) :
+    μ.real {ω | Real.sqrt (2 * V * t) + c * t < |X ω - m|} ≤
+      2 * d * Real.exp (-t) := by
+  have htail (e : ℝ) (he : e = 1 ∨ e = -1) :
+      μ.real {ω | Real.sqrt (2 * V * t) + c * t < e * (X ω - m)} ≤
+        d * Real.exp (-t) := by
+    have h := measureReal_gt_sqrt_add_le_of_subgamma_mgf
+      (X := fun ω => e * (X ω - m)) (m := 0) hd hV hc
+      (fun s hs hdom => by simpa only [sub_zero] using hexp e he s hs hdom)
+      (fun s hs hdom => by simpa only [sub_zero] using hmgf e he s hs hdom) ht
+    simpa only [zero_add] using h
+  have hset : {ω | Real.sqrt (2 * V * t) + c * t < |X ω - m|} ⊆
+      {ω | Real.sqrt (2 * V * t) + c * t < (1 : ℝ) * (X ω - m)} ∪
+      {ω | Real.sqrt (2 * V * t) + c * t < (-1 : ℝ) * (X ω - m)} := by
+    intro ω hω
+    change Real.sqrt (2 * V * t) + c * t < |X ω - m| at hω
+    rcases le_or_gt 0 (X ω - m) with h0 | h0
+    · left
+      change Real.sqrt (2 * V * t) + c * t < (1 : ℝ) * (X ω - m)
+      simpa only [one_mul, abs_of_nonneg h0] using hω
+    · right
+      change Real.sqrt (2 * V * t) + c * t < (-1 : ℝ) * (X ω - m)
+      simpa only [neg_one_mul, abs_of_neg h0] using hω
+  calc
+    _ ≤ μ.real {ω | Real.sqrt (2 * V * t) + c * t < (1 : ℝ) * (X ω - m)} +
+        μ.real {ω | Real.sqrt (2 * V * t) + c * t < (-1 : ℝ) * (X ω - m)} :=
+      (measureReal_mono hset).trans (measureReal_union_le _ _)
+    _ ≤ d * Real.exp (-t) + d * Real.exp (-t) :=
+      add_le_add (htail 1 (Or.inl rfl)) (htail (-1) (Or.inr rfl))
+    _ = _ := by ring
+
+/-- Two signed subgamma moments imply the actual absolute-deviation tail.
+The non-strict event is valid when at least one parameter is positive; this
+includes zero variance with positive scale and the endpoint `t=0`. -/
+theorem measureReal_ge_abs_sub_sqrt_add_le_of_sign_subgamma_mgf
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {X : Ω → ℝ} {m d V c : ℝ} (hd : 1 ≤ d) (hV : 0 ≤ V) (hc : 0 ≤ c)
+    (hnd : 0 < V ∨ 0 < c)
+    (hexp : ∀ e : ℝ, (e = 1 ∨ e = -1) → ∀ s : ℝ, 0 ≤ s → c * s < 1 →
+      Integrable (fun ω => Real.exp (s * (e * (X ω - m)))) μ)
+    (hmgf : ∀ e : ℝ, (e = 1 ∨ e = -1) → ∀ s : ℝ, 0 ≤ s → c * s < 1 →
+      (∫ ω, Real.exp (s * (e * (X ω - m))) ∂μ) ≤
+        d * Real.exp (V * s ^ 2 / (2 * (1 - c * s))))
+    {t : ℝ} (ht : 0 ≤ t) :
+    μ.real {ω | Real.sqrt (2 * V * t) + c * t ≤ |X ω - m|} ≤
+      2 * d * Real.exp (-t) := by
+  have htail (e : ℝ) (he : e = 1 ∨ e = -1) :
+      μ.real {ω | Real.sqrt (2 * V * t) + c * t ≤ e * (X ω - m)} ≤
+        d * Real.exp (-t) := by
+    have h := measureReal_ge_sqrt_add_le_of_subgamma_mgf
+      (X := fun ω => e * (X ω - m)) (m := 0) hd hV hc hnd
+      (fun s hs hdom => by simpa only [sub_zero] using hexp e he s hs hdom)
+      (fun s hs hdom => by simpa only [sub_zero] using hmgf e he s hs hdom) ht
+    simpa only [zero_add] using h
+  have hset : {ω | Real.sqrt (2 * V * t) + c * t ≤ |X ω - m|} ⊆
+      {ω | Real.sqrt (2 * V * t) + c * t ≤ (1 : ℝ) * (X ω - m)} ∪
+      {ω | Real.sqrt (2 * V * t) + c * t ≤ (-1 : ℝ) * (X ω - m)} := by
+    intro ω hω
+    change Real.sqrt (2 * V * t) + c * t ≤ |X ω - m| at hω
+    rcases le_or_gt 0 (X ω - m) with h0 | h0
+    · left
+      change Real.sqrt (2 * V * t) + c * t ≤ (1 : ℝ) * (X ω - m)
+      simpa only [one_mul, abs_of_nonneg h0] using hω
+    · right
+      change Real.sqrt (2 * V * t) + c * t ≤ (-1 : ℝ) * (X ω - m)
+      simpa only [neg_one_mul, abs_of_neg h0] using hω
+  calc
+    _ ≤ μ.real {ω | Real.sqrt (2 * V * t) + c * t ≤ (1 : ℝ) * (X ω - m)} +
+        μ.real {ω | Real.sqrt (2 * V * t) + c * t ≤ (-1 : ℝ) * (X ω - m)} :=
+      (measureReal_mono hset).trans (measureReal_union_le _ _)
+    _ ≤ d * Real.exp (-t) + d * Real.exp (-t) :=
+      add_le_add (htail 1 (Or.inl rfl)) (htail (-1) (Or.inr rfl))
+    _ = _ := by ring
+
 end NLAlib

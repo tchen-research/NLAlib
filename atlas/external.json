@@ -487,6 +487,28 @@
   "sorry":
   false,
   "signature":
+  "Metric.coveringNumber.{u_1} {X : Type u_1} [PseudoEMetricSpace X] (ε : NNReal) (A : Set X) : ℕ∞",
+  "name":
+  "Metric.coveringNumber",
+  "module":
+  "Mathlib.Topology.MetricSpace.CoveringNumbers",
+  "line":
+  74,
+  "library":
+  "mathlib",
+  "kind":
+  "def",
+  "doc":
+  "The covering number (or internal covering number) of a set `A` for radius `ε` is\nthe minimal cardinality (in `ℕ∞`) of an `ε`-cover contained in `A`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "MeasureTheory.condExp.{u_5, u_6} {α : Type u_5} {E : Type u_6} (m : MeasurableSpace α) {m₀ : MeasurableSpace α}\n  [NormedAddCommGroup E] [NormedSpace ℝ E] (μ : MeasureTheory.Measure α) (f : α → E) : α → E",
   "name":
   "MeasureTheory.condExp",

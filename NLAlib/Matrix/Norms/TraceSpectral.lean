@@ -1,3 +1,4 @@
+import Mathlib.Analysis.Normed.Module.FiniteDimension
 import NLAlib.Matrix.Norms.EntryBounds
 import NLAlib.Matrix.Norms.TraceNuclear
 
@@ -29,5 +30,15 @@ theorem norm_normalizedTrace_le_specNorm (A : Matrix n n 𝕜) :
   · simp [h,specNorm_nonneg]
   · have hd : (0 : ℝ) < Fintype.card n := Nat.cast_pos.mpr (Nat.pos_of_ne_zero h)
     exact (div_le_iff₀ hd).mpr (by simpa only [mul_comm] using norm_trace_le_card_mul_specNorm A)
+
+open scoped Matrix.Norms.L2Operator in
+/-- Dimension-normalized trace is a contractive continuous linear observation
+for the matrix spectral norm, including empty matrices. -/
+theorem norm_toContinuousLinearMap_normalizedTraceLinearMap_le_one :
+    ‖(normalizedTraceLinearMap : Matrix n n 𝕜 →ₗ[𝕜] 𝕜).toContinuousLinearMap‖ ≤ 1 := by
+  apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
+  intro A
+  simpa only [LinearMap.coe_toContinuousLinearMap', normalizedTraceLinearMap_apply,
+    one_mul, specNorm_eq_norm] using norm_normalizedTrace_le_specNorm A
 
 end NLAlib

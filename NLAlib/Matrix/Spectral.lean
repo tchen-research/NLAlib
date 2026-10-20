@@ -1,4 +1,7 @@
 import NLAlib.Matrix.Spectral.AdjugateRankOne
+import NLAlib.Matrix.Spectral.CStarRectangularDilation
+import NLAlib.Matrix.Spectral.CStarRectangularDilationComparison
+import NLAlib.Matrix.Spectral.CStarRectangularDilationPositive
 import NLAlib.Matrix.Spectral.CharpolySimplicity
 import NLAlib.Matrix.Spectral.CommutingHermitian
 import NLAlib.Matrix.Spectral.CommutingSpectra
@@ -39,6 +42,7 @@ import NLAlib.Matrix.Spectral.GershgorinBounds
 import NLAlib.Matrix.Spectral.GershgorinCounting
 import NLAlib.Matrix.Spectral.GramSingularValues
 import NLAlib.Matrix.Spectral.GramSpectralSums
+import NLAlib.Matrix.Spectral.HausdorffSpectrum
 import NLAlib.Matrix.Spectral.HaynsworthInertia
 import NLAlib.Matrix.Spectral.HermitianExtremaNorm
 import NLAlib.Matrix.Spectral.HermitianMinimum
@@ -78,6 +82,7 @@ import NLAlib.Matrix.Spectral.OrderedSchur
 import NLAlib.Matrix.Spectral.OrderedSimultaneousTriangularization
 import NLAlib.Matrix.Spectral.OrderedSymmetricDiagonalization
 import NLAlib.Matrix.Spectral.OstrowskiCongruence
+import NLAlib.Matrix.Spectral.PositiveTraceNorm
 import NLAlib.Matrix.Spectral.PowerBoundedOrbits
 import NLAlib.Matrix.Spectral.PowerRayleigh
 import NLAlib.Matrix.Spectral.PrimaryTriangularization
@@ -107,6 +112,8 @@ import NLAlib.Matrix.Spectral.RealSchurPlane
 import NLAlib.Matrix.Spectral.RealSchurSimilarity
 import NLAlib.Matrix.Spectral.RealSimilarityDescent
 import NLAlib.Matrix.Spectral.RealSpectrumSchur
+import NLAlib.Matrix.Spectral.ResolventSpectralInclusion
+import NLAlib.Matrix.Spectral.ResolventSpectralNet
 import NLAlib.Matrix.Spectral.SVD
 import NLAlib.Matrix.Spectral.SchurDensity
 import NLAlib.Matrix.Spectral.SchurFrobenius
@@ -126,6 +133,7 @@ import NLAlib.Matrix.Spectral.SingularValueSpectrum
 import NLAlib.Matrix.Spectral.SmallTriangularSimilarity
 import NLAlib.Matrix.Spectral.SpectralBounds
 import NLAlib.Matrix.Spectral.SpectralGramFactor
+import NLAlib.Matrix.Spectral.SpectralIntervalNet
 import NLAlib.Matrix.Spectral.SpectralMinimum
 import NLAlib.Matrix.Spectral.SpectrumCount
 import NLAlib.Matrix.Spectral.SpectrumCountContinuity

@@ -24,6 +24,7 @@ import NLAlib.ForMathlib.Analysis.Complex.ExteriorCircleChangeVariables
 import NLAlib.ForMathlib.Analysis.Complex.ExteriorHalfPlane
 import NLAlib.ForMathlib.Analysis.Complex.ExteriorReflection
 import NLAlib.ForMathlib.Analysis.Complex.FreeLoopHomotopy
+import NLAlib.ForMathlib.Analysis.Complex.HalfPlaneConvergence
 import NLAlib.ForMathlib.Analysis.Complex.Harmonic
 import NLAlib.ForMathlib.Analysis.Complex.Hirschman
 import NLAlib.ForMathlib.Analysis.Complex.HirschmanBoundary
@@ -43,8 +44,11 @@ import NLAlib.ForMathlib.Analysis.Complex.PrimitiveRefinement
 import NLAlib.ForMathlib.Analysis.Complex.PrimitiveTransport
 import NLAlib.ForMathlib.Analysis.Complex.RectangularCellWinding
 import NLAlib.ForMathlib.Analysis.Complex.RectangularGridWinding
+import NLAlib.ForMathlib.Analysis.Complex.ResolventClamp
+import NLAlib.ForMathlib.Analysis.Complex.ResolventModulus
 import NLAlib.ForMathlib.Analysis.Complex.SchwarzExtension
 import NLAlib.ForMathlib.Analysis.Complex.SineCoordinates
+import NLAlib.ForMathlib.Analysis.Complex.StripConvergence
 import NLAlib.ForMathlib.Analysis.Complex.ThinEllipsePositivity
 import NLAlib.ForMathlib.Analysis.Complex.ThinRectanglePositivity
 import NLAlib.ForMathlib.Analysis.Complex.TrigonometricGrowth

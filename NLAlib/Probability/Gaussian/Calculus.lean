@@ -2,14 +2,22 @@ import NLAlib.Probability.Gaussian.Calculus.AffineBilinearIntegrationByParts
 import NLAlib.Probability.Gaussian.Calculus.AffineProductIntegrationByParts
 import NLAlib.Probability.Gaussian.Calculus.BilinearIntegrationByParts
 import NLAlib.Probability.Gaussian.Calculus.ComplexIntegrationByParts
+import NLAlib.Probability.Gaussian.Calculus.CoordinateSplitInterpolation
+import NLAlib.Probability.Gaussian.Calculus.CoordinateSteinBanach
+import NLAlib.Probability.Gaussian.Calculus.CovarianceIntegral
 import NLAlib.Probability.Gaussian.Calculus.IntegrationByParts
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeck
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeckEntropy
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeckEntropyGrowth
 import NLAlib.Probability.Gaussian.Calculus.OrnsteinUhlenbeckGrowth
+import NLAlib.Probability.Gaussian.Calculus.ParameterDerivativeEvaluation
+import NLAlib.Probability.Gaussian.Calculus.ParameterIntegrationByParts
+import NLAlib.Probability.Gaussian.Calculus.Poincare
 import NLAlib.Probability.Gaussian.Calculus.PolynomialGrowthIntegrationByParts
 import NLAlib.Probability.Gaussian.Calculus.ProductIntegrationByParts
+import NLAlib.Probability.Gaussian.Calculus.StandardCovarianceIntegral
 import NLAlib.Probability.Gaussian.Calculus.Stein
+import NLAlib.Probability.Gaussian.Calculus.VarianceInterpolation
 
 /-! # `Probability/Gaussian/Calculus`
 

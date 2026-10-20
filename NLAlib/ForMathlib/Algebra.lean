@@ -18,6 +18,11 @@ import NLAlib.ForMathlib.Algebra.PolynomialRootPartition
 import NLAlib.ForMathlib.Algebra.PositiveCardinalWronskian
 import NLAlib.ForMathlib.Algebra.Reciprocal
 import NLAlib.ForMathlib.Algebra.RectangularChain
+import NLAlib.ForMathlib.Algebra.Resolvent
+import NLAlib.ForMathlib.Algebra.ResolventCommutator
+import NLAlib.ForMathlib.Algebra.ResolventHom
+import NLAlib.ForMathlib.Algebra.ResolventMixedPowers
+import NLAlib.ForMathlib.Algebra.Ring
 import NLAlib.ForMathlib.Algebra.SignedCoefficients
 
 /-! # `ForMathlib/Algebra`

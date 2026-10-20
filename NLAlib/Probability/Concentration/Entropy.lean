@@ -1,6 +1,11 @@
 import NLAlib.Probability.Concentration.Entropy.EntropyTensorization
 import NLAlib.Probability.Concentration.Entropy.EntropyTensorizationNonneg
 import NLAlib.Probability.Concentration.Entropy.Herbst
+import NLAlib.Probability.Concentration.Entropy.RandomGradientEntropy
+import NLAlib.Probability.Concentration.Entropy.RandomProxySubgamma
+import NLAlib.Probability.Concentration.Entropy.SelfBoundingMGF
+import NLAlib.Probability.Concentration.Entropy.TwoSidedProxyEntropy
+import NLAlib.Probability.Concentration.Entropy.WeightedProxyEntropy
 
 /-! # `Probability/Concentration/Entropy`
 

@@ -9727,21 +9727,24 @@
      "decl": "NLAlib.integrable_bilin_comp_of_hasGaussianLaw",
      "module": "NLAlib.Probability.Gaussian.Calculus.BilinearIntegrationByParts",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "A continuous real bilinear map applied to a Gaussian vector and a bounded continuous test is integrable."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_eq_sum_covariance_smul_integral_of_hasGaussianLaw",
      "module": "NLAlib.Probability.Gaussian.Calculus.BilinearIntegrationByParts",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Gaussian integration by parts contracted with any continuous real bilinear map."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_smul_eq_sum_covariance_smul_integral_complex",
      "module": "NLAlib.Probability.Gaussian.Calculus.ComplexIntegrationByParts",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Gaussian integration by parts for a bounded complex C¹ test with bounded continuous complex partial derivatives."
     },
     {
      "library": "nlalib",
@@ -45587,7 +45590,8 @@
      "decl": "NLAlib.gaussianWidth_nonneg",
      "module": "NLAlib.Probability.Gaussian.Basic.GaussianWidth",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Every nonempty compact set has nonnegative ordinary Gaussian width."
     },
     {
      "library": "nlalib",
@@ -45602,7 +45606,8 @@
      "decl": "NLAlib.gaussianWidth_singleton",
      "module": "NLAlib.Probability.Gaussian.Basic.GaussianWidth",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "A singleton has zero ordinary Gaussian width, irrespective of its location."
     },
     {
      "library": "nlalib",
@@ -45633,14 +45638,16 @@
      "decl": "NLAlib.gaussianWidth_image_smul",
      "module": "NLAlib.Probability.Gaussian.Basic.GaussianWidth",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Gaussian width is positively homogeneous, including zero scaling."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.gaussianWidth_mono",
      "module": "NLAlib.Probability.Gaussian.Basic.GaussianWidth",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Inclusion increases the Gaussian width of compact nonempty sets."
     }
    ],
    "uses_defs": [
@@ -45822,14 +45829,16 @@
      "decl": "NLAlib.specNorm_coefficientRow_sq",
      "module": "NLAlib.Matrix.Structured.RectangularCoefficientBlocks",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The horizontal block norm is the square root of the row-variance norm."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_coefficientColumn_sq",
      "module": "NLAlib.Matrix.Structured.RectangularCoefficientBlocks",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The vertical block norm is the square root of the column-variance norm."
     },
     {
      "library": "nlalib",
@@ -45919,14 +45928,16 @@
      "decl": "NLAlib.specNorm_chaosFlattening_empty_of_unique",
      "module": "NLAlib.RandomMatrix.Chaos.LinearFlattenings",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "In degree one, the empty-subset flattening is the horizontal coefficient block up to relabeling its singleton row-coordinate factor."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.specNorm_chaosFlattening_univ_of_unique",
      "module": "NLAlib.RandomMatrix.Chaos.LinearFlattenings",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "In degree one, the full-subset flattening is the vertical coefficient block."
     },
     {
      "library": "nlalib",
@@ -50143,224 +50154,256 @@
      "decl": "NLAlib.integrable_bilin_quadratic_of_memLp",
      "module": "NLAlib.ForMathlib.Probability.IndependentQuadratic",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "A bounded continuous operator-valued random coefficient can be contracted quadratically with any L² finite real vector."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_quadratic_eq_sum_of_indepFun",
      "module": "NLAlib.ForMathlib.Probability.IndependentQuadratic",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Independence factors a quadratic contraction into the actual second-moment tensor and the independent operator coefficient."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hermitianCoordinateTraceProduct_squaredResolvent_affine_remainder",
      "module": "NLAlib.Matrix.Functions.ResolventCoordinateDifferences",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Exact affine second remainder, paired with the actual normalized trace."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hasFDerivAt_resolvent_of_isHermitian",
      "module": "NLAlib.Matrix.Functions.ResolventDerivatives",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The actual resolvent has the single-insertion Fréchet derivative on the nonreal Hermitian domain."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hasFDerivAt_resolvent_sq_of_isHermitian",
      "module": "NLAlib.Matrix.Functions.ResolventDerivatives",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The squared resolvent's actual Fréchet derivative is its diagonal first insertion map."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hasFDerivAt_normalizedTrace_resolvent",
      "module": "NLAlib.Matrix.Functions.ResolventDerivatives",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The actual normalized trace resolvent has the advertised cyclic derivative."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.resolventSquareDifference_sub_self_of_sub_eq_smul",
      "module": "NLAlib.Matrix.Functions.ResolventDifferences",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Exact ordered second remainder for affine base-point increments."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.norm_normalizedTrace_mul_resolventSquareSecondDifference_le",
      "module": "NLAlib.Matrix.Functions.ResolventWordBounds",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The ordered second squared-resolvent difference has the exact three-word trace bound with four powers of the nonreal-shift denominator."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_resamplingTriple",
      "module": "NLAlib.Probability.Exchangeable.ThirdCopyBilinear",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Actual same-index resampling satisfies bilinear discrete integration by parts for every bounded continuous test, with the exact coefficient `N/2`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_coordinate_covariance_resamplingTriple",
      "module": "NLAlib.Probability.Exchangeable.ThirdCopyBilinear",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The genuine resampling difference realizes the entire bilinear covariance tensor, with factor `N/2`, for any two real continuous linear coordinates."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.covariance_resamplingTripleOriginal_eval",
      "module": "NLAlib.Probability.Exchangeable.ThirdCopyBilinear",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Every pair of actual finite real coordinates of the original sum has covariance exactly `N/2` times the resampling difference's second moment."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hasLaw_resamplingTriple_original_first",
      "module": "NLAlib.Probability.Exchangeable.ThirdCopyPairLaw",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The actual joint law of the original and first replacement in the triple equals that of the canonical independent-resampling pair."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.identDistrib_resamplingTriple_original_first",
      "module": "NLAlib.Probability.Exchangeable.ThirdCopyPairLaw",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The canonical resampling pair and the original/first coordinates of the actual triple have identical joint distributions."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_gaussian_affine",
      "module": "NLAlib.Probability.Gaussian.Calculus.AffineBilinearIntegrationByParts",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The affine Gaussian Stein identity with the actual full real-coordinate covariance."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_gaussian_affine_product",
      "module": "NLAlib.Probability.Gaussian.Calculus.AffineProductIntegrationByParts",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The exact affine Gaussian Stein identity after adjoining an arbitrary independent parameter."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_resamplingAffine",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingAffine",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The genuine discrete-resampling cancellation under the actual product probability law."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.continuous_resamplingInterpolation",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingInterpolation",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "A bounded continuous primitive gives a continuous interpolation on all real times, in particular at both endpoints of the unit interval."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.resamplingInterpolation_zero",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingInterpolation",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "At time zero the actual interpolation is the centered Gaussian law translated by the original sum's mean."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.resamplingInterpolation_one",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingInterpolation",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "At time one the actual interpolation is precisely the original sum law."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hasDerivAt_resamplingInterpolation",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingInterpolation",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The actual interpolation derivative follows from differentiation under the integral, genuine discrete resampling, and genuine Gaussian integration by parts."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integrable_bilin_quadratic_resamplingTriple_affine",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingQuadratic",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The genuine quadratic resampling integrand is integrable for every bounded continuous derivative field and an arbitrary independent probability sample."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_quadratic_resamplingTriple_affine",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingQuadratic",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The actual second-replacement quadratic test contracts into the actual resampling second-moment tensor and the original-sum affine derivative test."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_resamplingStein_first",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingStein",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The first exact source cancellation, with the actual triple and independent noise law."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_bilin_resamplingStein_gaussian",
      "module": "NLAlib.Probability.Gaussian.Comparison.ResamplingStein",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The second exact source cancellation."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.matrixDifferenceThirdMoment",
      "module": "NLAlib.Probability.Moments.MatrixDifference",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The actual sum of normalized third Schatten moments of independent same-law copies of each matrix summand."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_matrix_sub_copy_sq",
      "module": "NLAlib.Probability.Moments.MatrixDifference",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The independent-copy square is exactly twice the actual centered second moment."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.matrixDifferenceThirdMoment_le_four_mul_bound_mul_variance",
      "module": "NLAlib.Probability.Moments.MatrixDifferenceBound",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The actual independent-copy normalized Schatten cubic parameter satisfies `M3 ≤ 4 L sigma²`, with the actual centered variance matrix."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integrable_schattenNormReal_resamplingTriple_prod_differences",
      "module": "NLAlib.Probability.Moments.MatrixDifferenceTransport",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "All three actual resampling differences have genuine normalized Schatten cubic integrability on the triple times an independent probability space."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integral_schattenNormReal_resamplingTriple_prod_differences",
      "module": "NLAlib.Probability.Moments.MatrixDifferenceTransport",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The normalized cubic moments of all three actual transformed resampling differences are the same actual M3/N on the full product space."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integrable_and_norm_integral_six_word_remainder_le",
      "module": "NLAlib.Probability.Moments.ResolventRemainder",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The expected six-word remainder is bounded by its three actual normalized cubic Schatten moments."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integrable_and_norm_integral_six_word_remainder_le_of_memLp",
      "module": "NLAlib.Probability.Moments.ResolventRemainder",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Matrix L³ assumptions discharge every cubic integrability premise of the expected six-word estimate."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.norm_resamplingInterpolation_trace_resolvent_sub_le_matrixDifferenceThirdMoment",
      "module": "NLAlib.RandomMatrix.Gaussian.Comparison.CauchyInterpolation",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Sharp constant-one Cauchy comparison on the actual coordinate summand and independent Gaussian laws."
     },
     {
      "library": "nlalib",
@@ -50609,14 +50652,16 @@
      "decl": "NLAlib.integrable_specNorm_and_integral_le_sqrt_of_quadratic_hasSubgaussianMGF",
      "module": "NLAlib.Probability.Concentration.Matrix.QuadraticNet",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Unit sub-Gaussian quadratic forms of a real symmetric random matrix give an integrable spectral norm and the bound `sqrt (12 c d)`, with no independence assumption between its entries."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integrable_specNorm_and_integral_le_sqrt_gaussian_of_quadratic_variance",
      "module": "NLAlib.Probability.Concentration.Matrix.QuadraticNet",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "A centered real symmetric Gaussian law has expected spectral norm at most `sqrt (12 c d)` when every unit quadratic form has actual variance at most `c`."
     },
     {
      "library": "nlalib",
@@ -54000,7 +54045,7 @@
    "title": "Two-sided Gaussian spectrum comparison with the free model",
    "area": "gaussian-comparison",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "priority": "later",
    "difficulty": 5,
    "informal": "A Gaussian matrix spectrum is close to its free semicircular model in both Hausdorff directions. This controls missing spectral points and both extreme eigenvalues, beyond an upper norm bound.",
@@ -54023,25 +54068,575 @@
    "aliases": [
     "Hausdorff spectral comparison",
     "two-sided free probability bounds",
-    "lower spectral edge"
+    "lower spectral edge",
+    "intrinsic spectral Hausdorff tail",
+    "sigma star",
+    "matching Gaussian spectra"
    ],
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "IsSelfAdjoint.forall_exists_mem_spectrum_real_dist_le_of_resolvent_net",
+     "module": "NLAlib.ForMathlib.Analysis.CStarAlgebra.ResolventSpectralNet",
+     "status": "proved",
+     "partial": true,
+     "usage": "A finite covering net and native resolvent comparisons give actual directed spectral inclusion across different C-star algebras."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_coefficientCrossingTraceMultilinear_resolvent_le_sum_trace",
+     "module": "NLAlib.Matrix.Functions.CoefficientCrossingResolvent",
+     "status": "proved",
+     "partial": true,
+     "usage": "Four genuine different-matrix resolvent arcs retain the actual covariance crossing scale and a weighted sum of true modulus traces."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_coefficientCrossingTraceMultilinear_le_prod_schattenNorm",
+     "module": "NLAlib.Matrix.Functions.CoefficientCrossingTrace",
+     "status": "proved",
+     "partial": true,
+     "usage": "Genuine deterministic crossing Schatten inequality for arbitrary four exponents, including infinity, with the actual covariance alignment scale."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_normalizedTrace_mixed_resolvent_curve",
+     "module": "NLAlib.Matrix.Functions.MixedResolventDerivatives",
+     "status": "proved",
+     "partial": true,
+     "usage": "Along an actual differentiable Hermitian-base matrix curve, the first normalized mixed-resolvent trace derivative has its two exact cyclic terms."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.fderiv_fderiv_normalizedTrace_mixed_resolvent_coordinate_cyclic_apply",
+     "module": "NLAlib.Matrix.Functions.MixedResolventHessian",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true second coordinate derivative is the cyclic two-arc Hessian."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_twice_inserted_mixed_resolvent_trace_eq_cyclicHessian",
+     "module": "NLAlib.Matrix.Functions.MixedResolventInsertionHessian",
+     "status": "proved",
+     "partial": true,
+     "usage": "The literal twice-inserted normalized native word sum equals its cyclic two-arc Hessian."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_bilinearSquareMass_eq_sSup_unitSphere",
+     "module": "NLAlib.Matrix.Norms.BilinearSphereParameters",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual bilinear square-root parameter is exactly the source unit-sphere supremum, rather than a larger auxiliary budget."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_bilinearSquareMass_le_sqrt_variance_covariance",
+     "module": "NLAlib.Matrix.Structured.CoefficientBilinearParameters",
+     "status": "proved",
+     "partial": true,
+     "usage": "The literal sigma-star is bounded by the Gaussian/free geometric variance-covariance scale, without changing any covariance normalization."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_coefficientCrossingSum_le_variance_covariance",
+     "module": "NLAlib.Matrix.Structured.CoefficientCrossingBound",
+     "status": "proved",
+     "partial": true,
+     "usage": "Genuine covariance alignment for two actual Hermitian coefficient families."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.wordMatrixVacuumCompression_resolvent_dyson",
+     "module": "NLAlib.Probability.Free.WordMatrixDysonIdentity",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual native free resolvent compression satisfies the matrix Dyson equation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_resolvent_le_wordMatrixVacuum_evenMoment_rpow_mean_uniform_of_re_eq_zero",
+     "module": "NLAlib.Probability.Free.WordMatrixMeanResolventMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "At imaginary height the actual native free-polynomial resolvent has a rooted vacuum-moment bound independent of the norm of its deterministic scalar matrix mean."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_resolvent_le_wordMatrixVacuum_evenMoment_rpow_mean_uniform",
+     "module": "NLAlib.Probability.Free.WordMatrixMeanResolventMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual native free-polynomial resolvent has a rooted amplified vacuum-moment estimate uniform in its full deterministic mean, at every upper-half-plane parameter of height at most the free-series scale."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.spectrum_freeAlgebraEvaluation_eq_wordMatrix_of_semicircular",
+     "module": "NLAlib.Probability.Free.WordMatrixMomentTransport",
+     "status": "proved",
+     "partial": true,
+     "usage": "A faithful positive free semicircular model has the same actual real spectrum as its native word-matrix polynomial whenever the two evaluated polynomials are self-adjoint."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_resolvent_le_wordMatrixVacuum_evenMoment_rpow",
+     "module": "NLAlib.Probability.Free.WordMatrixResolventMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "Bound the genuine nonreal resolvent of an actual selfadjoint degree-k amplified word operator by its true rooted vacuum Gram moment and the constructed Jackson approximation error12norm(T)/(r Im(z)^2)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hausdorffDist_spectrum_wordMatrixLinearCombination_mean_le",
+     "module": "NLAlib.Probability.Free.WordMatrixSpectrum",
+     "status": "proved",
+     "partial": true,
+     "usage": "Enclose both actual native spectral sets of the word-model linear combination and its actual coefficient mean within2sigma."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_wordMatrixVacuum_gramMoment_rpow_sub_le_norm",
+     "module": "NLAlib.Probability.Free.WordMatrixTracialMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "Genuine rooted amplified-vacuum Gram moments change by at most the actual native norm of the perturbation, provided both actual operators belong to the closed matrix word algebra."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_toPiLp_wordMatrixVacuumEmbedding_le_gramMoment",
+     "module": "NLAlib.Probability.Free.WordMatrixVectorMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "Actual rooted Gram moments of the genuine amplified vacuum dominate the norm on every actual unit coefficient vacuum vector."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_sub_wordNativeDysonResolvent_le_residual",
+     "module": "NLAlib.Probability.Free.WordNativeDysonStability",
+     "status": "proved",
+     "partial": true,
+     "usage": "The spectral distance to the actual compressed free resolvent is controlled by the literal coefficient Dyson residual under the native contraction bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_resolvent_wordNativeMatrixLinearCombination_le_evenMoment_high",
+     "module": "NLAlib.Probability.Free.WordNativeHighResolventMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual coefficient free resolvent is controlled by its actual rooted amplified vacuum moment above the true centered free scale."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_resolvent_wordNativeMatrixLinearCombination_le_evenMoment_mean_uniform",
+     "module": "NLAlib.Probability.Free.WordNativeLinearResolventMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "The exact actual matrix-coefficient free model satisfies the source's mean-uniform resolvent bound, with a stronger dimension-free clipping error."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.spectrum_affineCombination_eq_wordNativeMatrixLinearCombination",
+     "module": "NLAlib.Probability.Free.WordNativeModelTransport",
+     "status": "proved",
+     "partial": true,
+     "usage": "Actual Hermitian affine combinations in any faithful positive free semicircular model have the native word-model spectrum."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_resolvent_wordNativeMatrixLinearCombination_le_evenMoment_log_order",
+     "module": "NLAlib.Probability.Free.WordNativeUniformResolventMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual coefficient free resolvent is controlled by its genuine amplified vacuum Gram moment at logarithmic order, uniformly in the full mean and at every positive height."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_gt_sublevel_add_le_gaussianVector",
+     "module": "NLAlib.Probability.Gaussian.Concentration.MedianMean",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine Gaussian half-probability sublevel bound yields the explicit source-scale all-height tail."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_gaussianSeries_gt_bilinear_scale_le",
+     "module": "NLAlib.Probability.Gaussian.Moments.SeriesFrobenius",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual Gaussian series is localized in a deterministic spectral norm ball with a second-moment tail at the literal bilinear variance scale."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_resolventEvenMoment_eq_re_mixed_pow",
+     "module": "NLAlib.Probability.Transforms.ResolventMixedMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine expected resolvent Gram moment equals the real part of the actual mixed-resolvent trace integral."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_normalizedTrace_gaussianFreeFiniteResolventWord_one",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeDiagonalEndpoint",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual q=1 finite-N expected normalized nonreal resolvent word equals the original affine Gaussian matrix series's expectation, for every word length, arbitrary Hermitian mean, and positive ensemble size."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_bilin_gaussianFreeFiniteMixedArc_covariance",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteArcCovariance",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true covariance of two native mixed resolvent arcs is the exact single-coordinate derivative contraction under the actual product Gaussian law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_covarianceDifference_gaussianFreeFiniteMixedArc_eq_gradient_integral",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteArcCovariance",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual diagonal-minus-GUE two-arc expectation is a genuine Gaussian gradient covariance."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_nativeMixedArc_gradient_sandwich_eq_crossing",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteArcCrossing",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual coordinate-gradient contraction of two native mixed arcs is the finite four-arc coefficient crossing."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_integral_nativeMixedArc_crossing_le_original_moment",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteArcCrossingBounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "Integrating a genuine four-arc crossing under four actual standard Gaussian marginal maps retains the original normalized modulus moment."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_normalized_modulus_gaussianFreeFinite_correlation",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteArcMarginals",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every actual normalized even resolvent modulus moment on the genuine correlation path has exactly the original native Gaussian expectation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_integral_nativeMixedArc_covarianceDifference_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteCovarianceMomentBound",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual native two-arc covariance is bounded by the original variance/covariance product and the expected native higher Gram moment."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_integral_normalizedTrace_gaussianFreeFinite_mixed_resolvent_covariance",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteCyclicCovariance",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual native moment derivative is its literal sum of true positive-arc covariance means."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_integral_normalizedTrace_gaussianFreeFinite_mixed_resolvent_cyclic",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteCyclicVarianceDerivative",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual finite-N expected mixed trace has the exact cyclic diagonal-minus-GUE derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_gaussianFreeFiniteDysonResolvent_residual_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteDysonResidual",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine finite-N expected GUE resolvent has a Dyson residual of order N⁻², uniformly in the deterministic mean and the real part of the nonreal spectral parameter."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_norm_partialTraceResolventEntry_sub_dyson_sq_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteDysonResolvent",
+     "status": "proved",
+     "partial": true,
+     "usage": "Centering a native normalized GUE partial-trace entry at the actual finite-N Dyson function gives its true N⁻² variance estimate."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianFreeFiniteDysonResolvent_raw_dyson",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteDysonResolvent",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual normalized finite-N GUE expectation satisfies its exact coefficient-side Dyson equation before covariance factorization."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_integral_gaussianFreeFiniteResolventWord_eq_kronecker_one",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteExpectedWords",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual expected nonreal finite-N resolvent word is a tensor with the ensemble identity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_diagonal_sub_gue_covariance_sandwich_integral_resolvent_word",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteExpectedWords",
+     "status": "proved",
+     "partial": true,
+     "usage": "The two genuine finite-N covariance families cancel on the actual expected resolvent word."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.fderiv_gaussianFreeFiniteMixedArc_apply",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteMixedArcs",
+     "status": "proved",
+     "partial": true,
+     "usage": "Exact positive-arc insertion formula for the genuine native mixed arc's coordinate derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_hasDerivAt_integral_gaussianFreeFinite_mixed_resolvent_norm_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteMomentDerivativeBound",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine finite-N moment derivative has the source fractional moment bound with its actual original variance and unnormalized entry covariance."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.continuous_integral_gaussianFreeFinite_resolventEvenMoment",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteMomentPath",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual expected Gram moment is continuous through both endpoints by its native uniform resolvent domination."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_coefficientCovariance_gaussianFreeFiniteCoefficient_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteParameters",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual unnormalized vectorized covariance never exceeds the original covariance budget."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_norm_fderiv_gaussianFreeFinitePartialTraceResolventEntry_sq_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFinitePartialTraceGradient",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true squared-coordinate-gradient budget for the GUE endpoint of the actual normalized partial-trace resolvent is exactly v²/(N² |Im z|⁴)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_norm_partialTraceResolventEntry_sub_integral_sq_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFinitePartialTraceGradient",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual GUE normalized partial-trace resolvent entry has centered second moment at most v²/(N² |Im z|⁴) under the genuine coordinate law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_integral_gaussianFreeFinite_resolventEvenMoment_rpow_sub_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteRootComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual finite-ensemble endpoint Gram moment roots differ by the source variance-times-covariance error, uniformly in ensemble size and the full deterministic mean."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_integral_normalizedTrace_gaussianFreeFinite_mixed_resolvent",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFiniteVarianceDerivative",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine finite-N mixed resolvent trace has the exact diagonal-minus- GUE covariance derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_hausdorffDist_gaussian_wordNative_gt_fixed_height",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeFixedHeight",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual two-sided spectral distance has a fixed-confidence bound whenever a positive radius dominates the literal weak, variance and cubic moment budgets."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussian_free_hausdorffDist_le_with_probability_and_mean_of_pos",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeHausdorff",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual Gaussian series and native free affine model satisfy the source Hausdorff tail and expectation estimates at the geometric variance-covariance scale, for positive actual weak variance."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussian_free_hausdorffDist_le_with_probability_and_mean",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeHausdorff",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual Gaussian series and native free affine model satisfy the source Hausdorff tail and expectation bounds for every coefficient family, including zero variance."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_gaussianFreeFinite_resolventEvenMoment_one",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeMomentEndpoints",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine q=1 finite-ensemble Gram moment equals the actual original Gaussian matrix Gram moment, including moment order zero and empty matrix dimension."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendstoLocallyUniformlyOn_gaussianFreeFiniteDysonResolvent",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeNativeDysonLimit",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual Gaussian resolvent expectation converges locally uniformly to the actual vacuum-compressed free resolvent."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendstoLocallyUniformlyOn_gaussianFreeFinite_resolventPowerMean",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeNativeDysonLimit",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every genuine positive-power Gaussian resolvent mean converges locally uniformly to the corresponding vacuum compression of the concrete free resolvent power."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_integral_normalizedTrace_gaussianFreeFinite_resolvent_mixed_powers",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeNativeMomentLimit",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true Gaussian expected normalized mixed trace converges to the actual normalized matrix vacuum of the concrete free resolvent word."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_integral_gaussianFreeFinite_resolventEvenMoment",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeNativeMomentLimit",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine expected even Gram resolvent moment converges to the actual free Gram moment, with its native normalization."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_gaussian_resolvent_gt_free_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeResolventProbability",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual Gaussian resolvent exceeds the actual native free resolvent plus the interpolation error with an explicit even-moment Markov tail."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_free_resolvent_gt_gaussian_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeResolventProbability",
+     "status": "proved",
+     "partial": true,
+     "usage": "At a point above the actual free spectrum, the actual free resolvent is controlled by the actual Gaussian resolvent with the source logarithmic moment loss and its genuine sigma-star Gaussian fluctuation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.abs_gaussian_wordNative_resolventEvenMoment_rpow_sub_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeRootMomentComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual original Gaussian and native free resolvent Gram moments differ by the dimension-free finite interpolation error."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussian_free_spectral_observables_mean_and_tail",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeSpectralObservables",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual smallest eigenvalue, largest eigenvalue and operator norm share the Gaussian/free source tail and expectation bounds."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_hausdorffDist_gaussian_wordNative_gt_le_grid_error",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeSpectralProbability",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual two-sided spectral distance has an explicit probability bound from the actual coefficient parameters, at every numerically admissible height and comparison error."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussian_free_spectrum_comparison",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianFreeSpectrum",
+     "status": "proved",
+     "usage": "Apply to the actual Hermitian coefficient matrices, a faithful normalized positive free semicircular model and any joint standard Gaussian realization to obtain the full source spectral, extreme-eigenvalue and norm tails and expectation errors, including zero variance."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_hausdorffDist_spectrum_affineSeries_gt_of_half_measure",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianSpectralDistance",
+     "status": "proved",
+     "partial": true,
+     "usage": "An actual half-probability spectral-distance bound gives the all-height Gaussian tail at the literal sigma-star scale."
+    }
+   ],
+   "uses_defs": [
+    "CStarMatrix.affineCombination",
+    "CStarMatrix.freeAlgebraEvaluation",
+    "CStarMatrix.mapStarAlgHom",
+    "CStarMatrix.toPiLpStarAlgHom",
+    "NLAlib.GUECoordinate",
+    "NLAlib.GaussianFreeFiniteCoordinate",
+    "NLAlib.WordHilbertSpace",
+    "NLAlib.WordMatrixHilbertSpace",
+    "NLAlib.bilinearSquareMass",
+    "NLAlib.coefficientCovariance",
+    "NLAlib.coefficientCrossingSum",
+    "NLAlib.coefficientCrossingTraceMultilinear",
+    "NLAlib.coefficientSandwichSum",
+    "NLAlib.coefficientVariance",
+    "NLAlib.cyclicMixedResolventHessian",
+    "NLAlib.gaussianFreeCovarianceDifferenceBilinear",
+    "NLAlib.gaussianFreeFiniteBlockWord",
+    "NLAlib.gaussianFreeFiniteCoefficient",
+    "NLAlib.gaussianFreeFiniteCovarianceInsertionMean",
+    "NLAlib.gaussianFreeFiniteDysonResolvent",
+    "NLAlib.gaussianFreeFiniteInterpolation",
+    "NLAlib.gaussianFreeFiniteMixedArc",
+    "NLAlib.gaussianFreeFinitePartialTraceResolventEntry",
+    "NLAlib.gaussianFreeFiniteResolventWord",
+    "NLAlib.gaussianVector",
+    "NLAlib.gueCoefficientMatrix",
+    "NLAlib.hermitianMatrixFromRealCoordinates",
+    "NLAlib.lambdaMax",
+    "NLAlib.lambdaMin",
+    "NLAlib.mixedResolventSplitLeft",
+    "NLAlib.mixedResolventSplitRight",
+    "NLAlib.mixedResolventTraceInsertion",
+    "NLAlib.mixedResolventWord",
+    "NLAlib.normalizedPartialTrace",
+    "NLAlib.normalizedSandwichTraceBilinear",
+    "NLAlib.normalizedTrace",
+    "NLAlib.resolventEvenMoment",
+    "NLAlib.resolventWordInsert",
+    "NLAlib.schattenNorm",
+    "NLAlib.specNorm",
+    "NLAlib.wordMatrixFieldAlgebra",
+    "NLAlib.wordMatrixLinearCombination",
+    "NLAlib.wordMatrixPolynomialEvaluation",
+    "NLAlib.wordMatrixVacuumCompression",
+    "NLAlib.wordMatrixVacuumEmbedding",
+    "NLAlib.wordMatrixVacuumExpectation",
+    "NLAlib.wordNativeDysonResolvent",
+    "NLAlib.wordNativeMatrixLinearCombination",
+    "NLAlib.wordWickDegreeSpan",
+    "NoncommutativeProbability.IsFreeFamily"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "tags": [
     "matrix-method",
     "source-revisited"
    ],
-   "notes": "This is a spectral-set comparison, not an eigenvalue-by-eigenvalue matching or multiplicity theorem. The noncentered mean is unrestricted. A faithful free model and its resolvent ultracontractivity are substantial prerequisites. Handle zero covariance directly; d>=2 is essential to this logarithmic normalization.",
-   "updated_at": "2026-10-15"
+   "notes": "The full source theorem and Corollary 2.3 are proved for every actual Hermitian Gaussian coefficient series and arbitrary faithful positive free semicircular C-star model, on every probability space carrying the actual joint standard Gaussian law. The exact variance, unnormalized vectorized covariance and literal bilinear weak parameters retain the source normalization. The universal constant is explicitly 10^20. Both spectral inclusions, the Hausdorff tail and mean, minimum-eigenvalue, maximum-eigenvalue and operator-norm tails and actual expectation differences are proved for all t>=0, including zero variance and arbitrary deterministic mean. Genuine finite-N interpolation, native free endpoint limits, actual moment comparison, finite grids, Gaussian localization/concentration, faithful model transport and law transport are derived; no spectral, probability, comparison or model certificate is a premise.",
+   "updated_at": "2026-10-20"
   },
   {
    "id": "gaussian-quadratic-free-spectrum",
    "title": "Gaussian quadratic spectra via shifted Hermitian linearization",
    "area": "gaussian-comparison",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "priority": "later",
    "difficulty": 5,
    "informal": "A two-sided spectral comparison extends to a Gaussian Gram matrix plus an arbitrary deterministic Hermitian shift, covering centered covariance spectra.",
@@ -54067,16 +54662,58 @@
     "centered sample covariance free spectrum",
     "Gram linearization"
    ],
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "CStarMatrix.sq_image_spectrum_real_rectangularDilation",
+     "module": "NLAlib.Matrix.Spectral.CStarRectangularDilation",
+     "status": "proved",
+     "partial": true,
+     "usage": "The square-image of the full actual dilation spectrum is exactly the union of the two actual Gram spectra."
+    },
+    {
+     "library": "nlalib",
+     "decl": "CStarMatrix.hausdorffDist_spectrum_rowGram_le_of_dilation_gap",
+     "module": "NLAlib.Matrix.Spectral.CStarRectangularDilationComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "Actual rectangular row-Gram spectra inherit the sharp deterministic squaring modulus from a dilation comparison, provided both positive spectra have gap `4δ²`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "CStarMatrix.hausdorffDist_spectrum_shiftedGram_le_of_positiveGramRow",
+     "module": "NLAlib.Matrix.Structured.PositiveGramRow",
+     "status": "proved",
+     "partial": true,
+     "usage": "The constructed positive square-root row turns a true Hermitian linearized spectral comparison into the actual shifted quadratic spectral comparison, with no finite-spectrum assumption and no spurious zero match."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussian_free_shiftedGram_spectrum_comparison",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.GaussianQuadraticFreeSpectrum",
+     "status": "proved",
+     "usage": "Apply directly to the original non-Hermitian coefficient matrices, an arbitrary Hermitian shift, any faithful normalized positive free semicircular model and an actual joint Gaussian realization to obtain the full shifted-Gram Hausdorff tail and pointwise zero-variance equality."
+    }
+   ],
+   "uses_defs": [
+    "CStarMatrix.affineCombination",
+    "CStarMatrix.mapStarAlgHom",
+    "CStarMatrix.positiveGramRow",
+    "CStarMatrix.rectangularDilation",
+    "NLAlib.bilinearSquareMass",
+    "NLAlib.coefficientCovariance",
+    "NLAlib.gaussianVector",
+    "NLAlib.specNorm",
+    "NoncommutativeProbability.IsFreeFamily"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "tags": [
     "matrix-method",
     "source-revisited"
    ],
-   "notes": "The auxiliary shift makes the Gram square root strictly positive, so extra zero eigenvalues of the dilation cannot contaminate the reverse inclusion. Padding rectangular matrices needs a separate dimension/zero-spectrum bridge. This is not a claim about arbitrary nonlinear matrix chaos.",
-   "updated_at": "2026-10-15"
+   "notes": "The full source Theorem 2.5 is proved for actual non-Hermitian Gaussian coefficient series, arbitrary Hermitian shifts and arbitrary faithful positive free semicircular models on any probability space carrying the genuine joint Gaussian law. The explicit universal constant is 10^44. The actual source variance, unnormalized vectorized covariance and literal bilinear weak variance retain their original normalization. Genuine three-block affine identities, actual positive square roots, continuous native free spectra, positive-gap matching and quantitative squaring derive the probability statement. Zero weak variance gives pointwise deterministic equality. No dilation, spectral comparison, probability or model certificate is a premise.",
+   "updated_at": "2026-10-20"
   },
   {
    "id": "scree-threshold-root",
@@ -54438,7 +55075,7 @@
    "title": "Variational spectral edges of a block-Wishart law",
    "area": "gaussian-comparison",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "priority": "later",
    "difficulty": 5,
    "informal": "The edges of a block-Wishart limiting law admit finite-matrix variational formulas using the stable branch of its K-transform, including indefinite block coefficients.",
@@ -54459,28 +55096,708 @@
    "aliases": [
     "block Wishart spectral edge",
     "matrix valued Stieltjes inverse",
-    "indefinite covariance spectral support"
+    "indefinite covariance spectral support",
+    "stable matrix K-transform",
+    "K-transform injectivity"
    ],
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_conjTranspose",
+     "module": "NLAlib.Matrix.Functions.KTransformAdjoint",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual rational K transform commutes with conjugate transpose through its native total matrix integral."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_decreasing_affine_branch",
+     "module": "NLAlib.Matrix.Functions.KTransformAffineBranch",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every strictly positive target direction has an actual local stable inverse branch through a genuine real K point."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_uniform_matrixKResolvent_defect_bound_below_trace_support",
+     "module": "NLAlib.Matrix.Functions.KTransformBoundaryDefectBound",
+     "status": "proved",
+     "partial": true,
+     "usage": "Below the actual normalized-trace law, every sample in the true compact ν-support has a uniformly bounded native defect transform."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUnit_inverse_add_below_matrixKTransform_trace_support",
+     "module": "NLAlib.Matrix.Functions.KTransformBoundaryUnits",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every actual sample denominator is invertible below the true trace support."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_compact_stieltjes_probability_measure",
+     "module": "NLAlib.Matrix.Functions.KTransformCompactStieltjesLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual compact Hermitian sample law constructs a global analytic native K branch and its unique compactly supported Stieltjes probability law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_imaginaryPart_matrixKTransform_solution_le_exterior",
+     "module": "NLAlib.Matrix.Functions.KTransformExteriorImaginary",
+     "status": "proved",
+     "partial": true,
+     "usage": "Outside the native sample-dependent interval, the actual analytic K branch has imaginary part bounded by its height."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_neg_inverse_sub_scalar_matrixKTransform_solution_lt",
+     "module": "NLAlib.Matrix.Functions.KTransformExteriorNorm",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine analytic K branch stays on its small inverse-variable solution outside a uniform interval determined by the actual sample bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_inverseVariable_resolvents_matrixKTransform_solution_le_exterior",
+     "module": "NLAlib.Matrix.Functions.KTransformExteriorNorm",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual K branch and every sample resolvent have a uniform norm bound outside the derived exterior interval."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_eq_iff_eq_of_derivative_witness",
+     "module": "NLAlib.Matrix.Functions.KTransformGlobalInjectivity",
+     "status": "proved",
+     "partial": true,
+     "usage": "Prove equality of two actual stable admissible K-transform values forces equality of the matrices, using their genuine derivative witnesses."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_eq_iff_eq_of_quadratic_pos",
+     "module": "NLAlib.Matrix.Functions.KTransformGlobalInjectivity",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply source Frobenius quadratic positivity at both matrices to obtain global injectivity of the actual K-transform on the stable region."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUnit_matrixKDenominator_of_posDef_imaginaryPart",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlane",
+     "status": "proved",
+     "partial": true,
+     "usage": "A positive-imaginary matrix makes the actual rational K denominator invertible for every Hermitian sample, including singular or indefinite samples."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.imaginaryPart_matrixKResolvent",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlane",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual K resolvent has its exact negative Gram imaginary part."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.imaginaryPart_matrixKTransform",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlane",
+     "status": "proved",
+     "partial": true,
+     "usage": "The nonlinear rational K-transform itself satisfies the exact source imaginary-part identity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.imaginaryPart_matrixKResolvent_dual",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlaneDual",
+     "status": "proved",
+     "partial": true,
+     "usage": "The native K resolvent has the exact opposite-adjoint Gram identity as well."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_matrixKResolvent_le_inv_imaginaryPart",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlaneDual",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine K resolvent satisfies the source uniform norm bound without requiring an invertible Hermitian sample."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.imaginaryPart_matrixKTransform_dual",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlaneDual",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual compact-support K transform satisfies its dual imaginary Gram identity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_solution_unique_upperHalfPlane",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlaneUniqueness",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine nonlinear K equation has at most one solution in the matrix upper half-plane for a given upper-half-plane target."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.injective_matrixKTransformDerivComplex_of_upperHalfPlane",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlaneUniqueness",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual complex K derivative is invertible at every genuine upper-half-plane solution with an upper-half-plane image."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_inverse_branch_of_upperHalfPlane",
+     "module": "NLAlib.Matrix.Functions.KTransformHalfPlaneUniqueness",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine upper-half-plane solution has a native local analytic inverse for scalar spectral parameters."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inverseVariable_kernel_sub_le",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseContraction",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual sample resolvent sandwich has the true inverse-variable Lipschitz bound on a coercive matrix half-space."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_matrixKInverseVariableMap_sub_le",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseContraction",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true nonlinear inverse-variable map has a uniform contraction constant derived from the actual compact sample law and coercivity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matrixKTransform_solution_of_imaginary_coercive_contraction",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseContraction",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine upper-half-plane K solution exists whenever the actual inverse-variable map is at high enough imaginary height to contract."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_inverse_eq",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseConvexity",
+     "status": "proved",
+     "partial": true,
+     "usage": "The real inverse-variable expression is exactly the original K transform, including every native sample integral and its normalization."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.smul_matrixKTransform_inverse_sub_le_inverseStability_defect",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseConvexity",
+     "status": "proved",
+     "partial": true,
+     "usage": "The native inverse stability defect dominates the exact decrease of the K transform."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posDef_sub_and_mem_matrixKInverseStableDomain_of_ordered_transform_decrease",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseConvexity",
+     "status": "proved",
+     "partial": true,
+     "usage": "An ordered real inverse solution with a strictly decreased native K target has a positive stability certificate."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.imaginaryPart_matrixKInverseVariableMap",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseImaginary",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual nonlinear inverse-variable map has this exact positive imaginary-part equation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_imaginaryPart_matrixKInverseVariableMap_le",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseImaginary",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine uniform sample-resolvent bound controls the imaginary part of the actual inverse-variable K map."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posDef_imaginaryPart_neg_matrixInverse",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseVariable",
+     "status": "proved",
+     "partial": true,
+     "usage": "Negative inversion preserves the genuine matrix upper half-plane."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKResolvent_neg_inverse_eq",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseVariable",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual rational K kernel becomes an ordinary Hermitian-sample resolvent sandwich after genuine negative inversion."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_neg_inverse_eq",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseVariable",
+     "status": "proved",
+     "partial": true,
+     "usage": "The inverse-variable equation is exactly the original native K equation, with all sample integrability proved from compact support."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_neg_inverse_eq_iff_fixedPoint",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseVariable",
+     "status": "proved",
+     "partial": true,
+     "usage": "A fixed point of the native inverse-variable map is precisely an actual upper-half-plane K solution after negative inversion."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inverseVariable_resolvent_le_inv",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseVariable",
+     "status": "proved",
+     "partial": true,
+     "usage": "A positive native imaginary coercivity bound controls every genuine inverse-variable resolvent by the reciprocal coercivity, including nonnormal matrix parameters."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.le_imaginaryPart_matrixKInverseVariableMap",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseVariable",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine inverse-variable map preserves the target imaginary coercivity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matrixKResolvent_defect_measure_family",
+     "module": "NLAlib.Matrix.Functions.KTransformKernelFamily",
+     "status": "proved",
+     "partial": true,
+     "usage": "The original compact sample law constructs the actual positive sample-defect measures with an AE uniform mass bound, continuous native transforms, and their exact mean identity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_stieltjes_measure_matrixKResolvent_defect",
+     "module": "NLAlib.Matrix.Functions.KTransformKernelMeasure",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every genuine Hermitian sample has an actual positive finite Stieltjes measure for its native resolvent defect."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_inverse_branch",
+     "module": "NLAlib.Matrix.Functions.KTransformLocalInverse",
+     "status": "proved",
+     "partial": true,
+     "usage": "Construct the actual local complex analytic inverse branch of K from the genuine real stability condition and denominator domain."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sInf_support_eq_sSup_lambdaMin_matrixKTransform",
+     "module": "NLAlib.Matrix.Functions.KTransformLowerEdge",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual lower support edge equals the supremum of the true smallest K eigenvalue over the native strict stable region."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sInf_support_pos_iff_exists_matrixKTransform_posDef_witness",
+     "module": "NLAlib.Matrix.Functions.KTransformLowerEdge",
+     "status": "proved",
+     "partial": true,
+     "usage": "Strict positivity of the actual limiting support is equivalent to the original finite-matrix source witnesses: positive S and B, positive sample gaps, a positive true derivative value DK(S)[B], and positive K(S)."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_real_stieltjes_extension_eq",
+     "module": "NLAlib.Matrix.Functions.KTransformLowerRealInverse",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine regular Stieltjes boundary value satisfies the actual nonlinear K equation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_stable_matrixKTransform_scalar_solution_below_trace_support",
+     "module": "NLAlib.Matrix.Functions.KTransformLowerRealInverse",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every real point below the actual characterized trace law has a true stable scalar K inverse."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_integral_matrixKResolvent_of_solution_le",
+     "module": "NLAlib.Matrix.Functions.KTransformNormalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual averaged rational kernel of a genuine K solution is bounded using the sample support and the target imaginary coercivity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_normalization_error_identity",
+     "module": "NLAlib.Matrix.Functions.KTransformNormalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "Multiplication of the original nonlinear K equation gives its exact normalization error identity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_matrixKTransform_normalization_error_le",
+     "module": "NLAlib.Matrix.Functions.KTransformNormalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual nonlinear K equation gives a quantitative normalization error controlled solely by native sample and target coercivity bounds."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_mul_I_smul_matrixKTransform_solution",
+     "module": "NLAlib.Matrix.Functions.KTransformNormalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every genuine upper-half-plane K solution has the exact mass normalization `iy (α S(iy)) → -I`, derived from its actual nonlinear equation and compact sample law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_ordered_matrixKTransform_inverse_solution_le",
+     "module": "NLAlib.Matrix.Functions.KTransformOrderedBounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "Actual ordered real K solutions have a norm bound from the sample support and the genuine base resolvents."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_norm_bound_ordered_matrixKTransform_inverse",
+     "module": "NLAlib.Matrix.Functions.KTransformOrderedBounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "Compact native sample support makes the real inverse K map proper on every actual lower order cone: bounded targets give bounded inverse variables."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_ordered_matrixKTransform_inverse_solution",
+     "module": "NLAlib.Matrix.Functions.KTransformOrderedContinuation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every strictly positive native K target decrease can be reached by an actual ordered positive inverse variable."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isClosed_image_ordered_matrixKTransform_inverse",
+     "module": "NLAlib.Matrix.Functions.KTransformOrderedImage",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual inverse K transform has closed image on a positive lower order cone with native sample gaps."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_posDef_matrixKTransformDeriv_preimage",
+     "module": "NLAlib.Matrix.Functions.KTransformPositiveDerivativeInverse",
+     "status": "proved",
+     "partial": true,
+     "usage": "At an actual stable K point, every strictly positive matrix has a strictly positive preimage under the native derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_inverse_branch_posDef_deriv",
+     "module": "NLAlib.Matrix.Functions.KTransformPositiveDerivativeInverse",
+     "status": "proved",
+     "partial": true,
+     "usage": "The local analytic scalar inverse at an actual stable real K point has a strictly positive native derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eq_real_stieltjes_extension_at_stable_matrixKTransform_solution",
+     "module": "NLAlib.Matrix.Functions.KTransformRealBoundary",
+     "status": "proved",
+     "partial": true,
+     "usage": "At a genuine stable scalar K point the actual Stieltjes matrix continuation equals the source real inverse branch."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matrixKTransform_stable_scalar_stieltjes_seed",
+     "module": "NLAlib.Matrix.Functions.KTransformRealBoundary",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual compact sample law has a genuine stable scalar point strictly below the whole characterized trace support, and the actual real Stieltjes branch equals that stable solution there."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eventually_isHermitian_matrixKTransform_inverse_branch",
+     "module": "NLAlib.Matrix.Functions.KTransformRealBranch",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine local analytic inverse of the actual K transform at a stable real point takes Hermitian values on a real neighborhood."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_real_matrixKTransform_inverse_branch",
+     "module": "NLAlib.Matrix.Functions.KTransformRealBranch",
+     "status": "proved",
+     "partial": true,
+     "usage": "A stable real solution has a genuine analytic local inverse with a strictly positive derivative and Hermitian values on a real neighborhood."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_posDef_sample_gap_real_stieltjes_extension_matrixKTransform",
+     "module": "NLAlib.Matrix.Functions.KTransformRealSampleGaps",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true nonlinear upper branch has an actual analytic real Stieltjes continuation with strictly positive native sample gaps at every point below its characterized trace law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_global_posDef_real_stieltjes_extension_matrixKTransform",
+     "module": "NLAlib.Matrix.Functions.KTransformRealStieltjesBranch",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual nonlinear upper-half-plane K branch has a genuine real analytic matrix continuation below its characterized trace law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_posDef_real_stieltjes_extension_matrixKTransform",
+     "module": "NLAlib.Matrix.Functions.KTransformRealStieltjesBranch",
+     "status": "proved",
+     "partial": true,
+     "usage": "At every point below the actual normalized-trace law, the native nonlinear K branch has an actual analytic Hermitian continuation with positive value and derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_map_neg_neg",
+     "module": "NLAlib.Matrix.Functions.KTransformReflection",
+     "status": "proved",
+     "partial": true,
+     "usage": "Negating the true sample law and matrix input negates the native nonlinear K-transform."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_reflected_stieltjes_branch",
+     "module": "NLAlib.Matrix.Functions.KTransformReflection",
+     "status": "proved",
+     "partial": true,
+     "usage": "The original sample negation constructs a genuine analytic native K branch whose actual trace law is the reflection of the original law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isConnected_matrixKInverseStableDomain",
+     "module": "NLAlib.Matrix.Functions.KTransformStableConnected",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual source inverse-variable stable domain is connected."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.image_inverse_matrixKInverseStableDomain",
+     "module": "NLAlib.Matrix.Functions.KTransformStableDomain",
+     "status": "proved",
+     "partial": true,
+     "usage": "The original source stable region is exactly the actual inversion image of the genuine inverse-variable stable region."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isConnected_matrixKStableDomain",
+     "module": "NLAlib.Matrix.Functions.KTransformStableDomain",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual source stable K-domain is connected."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_stable_branch_agrees_upper",
+     "module": "NLAlib.Matrix.Functions.KTransformStableGap",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine local inverse at a stable real scalar K point agrees with the actual upper-half-plane branch, and its imaginary part is bounded by height."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.notMem_support_of_matrixKTransform_stable_solution",
+     "module": "NLAlib.Matrix.Functions.KTransformStableGap",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every actual stable scalar K solution lies outside the support of the genuine characterized Stieltjes law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isOpen_matrixKStableDomain_hermitian",
+     "module": "NLAlib.Matrix.Functions.KTransformStableOpen",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual original source stable K-domain is open relative to the Hermitian matrix space."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKInverseStability_add_smul_le",
+     "module": "NLAlib.Matrix.Functions.KTransformStableRays",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual inverse-variable stability map decreases along the positive certificate ray, even when neither sample nor certificate commutes with the base."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKInverseStableDomain_certificate_ray",
+     "module": "NLAlib.Matrix.Functions.KTransformStableRays",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine positive inverse-variable certificate remains a certificate everywhere along its own nonnegative ray."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_stieltjes_probability_measure_of_matrixKTransform_solution",
+     "module": "NLAlib.Matrix.Functions.KTransformStieltjesLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "The normalized trace of an actual analytic K solver has a unique positive Stieltjes probability measure."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_stieltjes_probability_measure",
+     "module": "NLAlib.Matrix.Functions.KTransformStieltjesLaw",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual compact Hermitian sample law constructs a global analytic native K branch and its unique positive normalized-trace Stieltjes probability law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.support_subset_Ici_lambdaMin_matrixKTransform_of_stable",
+     "module": "NLAlib.Matrix.Functions.KTransformSupportLowerBound",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine stable K point gives a lower bound on every point of the actual characterized Stieltjes law, including nonscalar stable points."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_compact_matrixKTransform_law_lower_edge_bound",
+     "module": "NLAlib.Matrix.Functions.KTransformSupportLowerBound",
+     "status": "proved",
+     "partial": true,
+     "usage": "The original compact sample law constructs its compactly supported probability law whose lower edge dominates every general stable-point objective."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKTransform_solution_inverse_variable",
+     "module": "NLAlib.Matrix.Functions.KTransformUpperBounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "An actual upper-half-plane K solution yields the actual inverse fixed point and its target imaginary coercivity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_matrixKInverseVariableMap_le",
+     "module": "NLAlib.Matrix.Functions.KTransformUpperBounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine inverse-variable map is bounded uniformly on a fixed coercive half-space by the actual compact Hermitian sample bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_inverse_of_matrixKTransform_solution_le",
+     "module": "NLAlib.Matrix.Functions.KTransformUpperBounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "Actual upper-half-plane K solutions have a uniform inverse bound on every coercive target region."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_of_matrixKTransform_solution_le_inv",
+     "module": "NLAlib.Matrix.Functions.KTransformUpperBounds",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual upper-half-plane K solution has the reciprocal target coercivity bound, derived from its native inverse equation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matrixKTransform_solution_upperHalfPlane",
+     "module": "NLAlib.Matrix.Functions.KTransformUpperExistence",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every scalar upper-half-plane parameter has a genuine solution of the original nonlinear matrix K equation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_matrixKTransform_solution_upperHalfPlane",
+     "module": "NLAlib.Matrix.Functions.KTransformUpperExistence",
+     "status": "proved",
+     "partial": true,
+     "usage": "The original nonlinear K equation has exactly one genuine solution in the matrix upper half-plane for every scalar parameter in the upper half-plane."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_matrixKTransform_upperHalfPlane_solution",
+     "module": "NLAlib.Matrix.Functions.KTransformUpperExistence",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine nonlinear K solutions form an actual analytic branch over the whole scalar upper half-plane, with the native reciprocal imaginary norm bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sSup_support_eq_neg_sSup_lambdaMin_matrixKTransform_map_neg",
+     "module": "NLAlib.Matrix.Functions.KTransformVariationalEdges",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true upper edge is minus the native lower-edge variational supremum for the original sample law reflected by T↦−T."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matrixKTransform_law_variational_support_edges",
+     "module": "NLAlib.Matrix.Functions.KTransformVariationalEdges",
+     "status": "proved",
+     "usage": "For an actual compact Hermitian probability sample law and alpha>0, construct the native analytic K branch and characterized compact probability law with the exact lower and reflected upper variational edges and strict-positivity witness criterion."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.specNorm_integral_cross_kernel_lt_one",
+     "module": "NLAlib.Matrix.Functions.PositiveCrossKernelIntegral",
+     "status": "proved",
+     "partial": true,
+     "usage": "Derive strict contraction of the actual mixed matrix-kernel integral from the positive-definite defects of both actual row-Gram integrals."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.eq_zero_of_integral_cross_kernel_fixedPoint",
+     "module": "NLAlib.Matrix.Functions.PositiveCrossKernelIntegral",
+     "status": "proved",
+     "partial": true,
+     "usage": "Conclude that a fixed point of the actual strict mixed matrix-kernel integral vanishes, using its genuine row-Gram defects."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inv_mul_weight_inv_add_smul_le",
+     "module": "NLAlib.Matrix.Functions.WeightedInverseRay",
+     "status": "proved",
+     "partial": true,
+     "usage": "Along a positive definite direction, the actual weighted inverse square decreases in Loewner order."
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.frobInner",
+    "NLAlib.lambdaMin",
+    "NLAlib.matrixKInverseStability",
+    "NLAlib.matrixKInverseStableDomain",
+    "NLAlib.matrixKInverseVariableMap",
+    "NLAlib.matrixKResolvent",
+    "NLAlib.matrixKStableDomain",
+    "NLAlib.matrixKTransform",
+    "NLAlib.matrixKTransformDeriv",
+    "NLAlib.matrixKTransformDerivComplex",
+    "NLAlib.matrixKTransformDomain",
+    "NLAlib.normalizedTrace",
+    "NLAlib.specNorm"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "tags": [
     "matrix-method",
     "source-revisited"
    ],
-   "notes": "The characterized law corresponds to normalization W=(1/n)(X* tensor I_k)diag(T_i)(X tensor I_k), n/p->alpha with k fixed. The claim concerns the limiting law, not automatically the smallest eigenvalue of every finite sample. No-outlier/support convergence and the row-law assumptions are separate bridges. The stable domain is essential; optimizing over all positive S can select a wrong analytic branch. Existence and uniqueness of the characterized law and its faithful free-operator realization are external prerequisites; the existing Gaussian Cauchy-transform universality card does not supply them.",
-   "updated_at": "2026-10-15"
+   "notes": "The full source edge card is proved for every compact Hermitian probability sample law and alpha>0, including singular and indefinite samples. The native analytic K branch and actual compact Stieltjes probability law are constructed. The exact lower-support-edge supremum, equivalent strict-positivity finite derivative witnesses, and reflected upper-support-edge formula are proved. Actual reflected sample and trace laws are constructed using nonlinear upper-half-plane uniqueness and genuine push-forward support transport. No branch, law, gap, edge equality, reflection law or optimizer attainment is a premise. Stable optimizer attainment is not asserted; it generally fails even for the zero sample law.",
+   "updated_at": "2026-10-20"
   },
   {
    "id": "block-wishart-log-potential",
    "title": "Variational log potential of a block-Wishart law",
    "area": "gaussian-comparison",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "priority": "later",
    "difficulty": 5,
-   "informal": "Outside the lower spectral edge, the normalized log-determinant limit is the minimum of an explicit finite-matrix potential on the stable K-transform branch.",
+   "informal": "Below the lower spectral edge, the characterized block-Wishart law's logarithmic potential is the attained minimum of an explicit finite-matrix potential on the stable K-transform domain.",
    "hypotheses": [
     "$k\\ge1$, $\\alpha>0$, $\\nu$ is a compactly supported probability law on Hermitian $k\\times k$ matrices. Let $\\mu_{\\alpha,\\nu}$ be the compactly supported probability measure characterized by $s(z)=\\alpha\\operatorname{Tr}S(z)/k=\\int(\\lambda-z)^{-1}\\,d\\mu_{\\alpha,\\nu}(\\lambda)$, where $\\operatorname{Im}S(z)\\succ0$ and $K(S(z))=zI$ for $\\operatorname{Im}z>0$",
     "$K(S)=\\int T(I+ST)^{-1}\\,d\\nu(T)-\\alpha^{-1}S^{-1}$ and $\\mathcal P_- =\\{S\\succ0:S^{-1}+T\\succ0\\ \\forall T\\in\\operatorname{supp}\\nu,\\ DK(S)\\text{ is positive definite in Frobenius geometry}\\}$",
@@ -54500,18 +55817,149 @@
    ],
    "aliases": [
     "block Wishart log determinant",
-    "matrix K-transform variational potential"
+    "matrix K-transform variational potential",
+    "K-transform potential gradient"
    ],
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.smul_add_smul_matrixKTransform_inverse_le",
+     "module": "NLAlib.Matrix.Functions.KTransformInverseConcavity",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true inverse-variable K transform is operator concave on its positive sample-gap domain, including indefinite and singular samples."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_analytic_real_matrixKTransform_affine_branch",
+     "module": "NLAlib.Matrix.Functions.KTransformLocalRealBranch",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every Hermitian affine target direction has a genuine local analytic inverse through an original stable K point."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_matrixKPotential_line",
+     "module": "NLAlib.Matrix.Functions.KTransformLogDet",
+     "status": "proved",
+     "partial": true,
+     "usage": "Differentiate the actual logarithmic K-potential along a native Hermitian matrix direction to obtain the source trace gradient."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasFDerivAt_matrixKPotential",
+     "module": "NLAlib.Matrix.Functions.KTransformPotentialFrechet",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine Frechet derivative of the source K potential is its actual K-transform trace gradient, on the original positive sample-gap domain."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKPotential_le_of_stable_scalar_solution",
+     "module": "NLAlib.Matrix.Functions.KTransformPotentialMinimum",
+     "status": "proved",
+     "partial": true,
+     "usage": "A genuine stable scalar K solution globally minimizes the actual source potential over its entire original strict stable domain."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_matrixKPotential_scalar_solution_sub_log",
+     "module": "NLAlib.Matrix.Functions.KTransformPotentialNormalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "The true finite-matrix variational potential has exactly the native logarithmic-potential normalization at negative infinity."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_stable_matrixKTransform_scalar_increase",
+     "module": "NLAlib.Matrix.Functions.KTransformStableImage",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every original stable K target admits a genuine positive scalar increase, with a constructed preimage in the same original stable domain."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.convex_image_matrixKTransform_stableDomain",
+     "module": "NLAlib.Matrix.Functions.KTransformStableImage",
+     "status": "proved",
+     "partial": true,
+     "usage": "The image of the original stable K domain is genuinely convex."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_hasDerivAt_matrixKStableInverse_affine",
+     "module": "NLAlib.Matrix.Functions.KTransformStableInverse",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual stable inverse has a Hermitian derivative along every Hermitian affine target path through its actual image."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_stable_matrixKTransform_inverse_solution_of_strict_subsolution",
+     "module": "NLAlib.Matrix.Functions.KTransformSubsolution",
+     "status": "proved",
+     "partial": true,
+     "usage": "Every actual strict inverse-variable subsolution constructs an ordered solution in the original stable region."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalizedTrace_stable_matrixKTransform_solution_eq_stieltjes",
+     "module": "NLAlib.Matrix.Functions.KTransformTraceBoundary",
+     "status": "proved",
+     "partial": true,
+     "usage": "Below the actual trace support, every genuine stable scalar solution has the actual real Stieltjes trace."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_matrixKPotential_solution_path",
+     "module": "NLAlib.Matrix.Functions.KTransformTraceBoundary",
+     "status": "proved",
+     "partial": true,
+     "usage": "Along any differentiable actual scalar solution path, the moving potential has its exact envelope derivative."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hasDerivAt_matrixKStableInverse_potential_below_trace_support",
+     "module": "NLAlib.Matrix.Functions.KTransformTraceBoundary",
+     "status": "proved",
+     "partial": true,
+     "usage": "The potential of the actual stable inverse has precisely the derivative of the characterized trace law's logarithmic potential throughout its true lower spectral gap."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.matrixKStableInverse_potential_eq_logarithmicPotential",
+     "module": "NLAlib.Matrix.Functions.KTransformVariationalPotential",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual stable inverse potential equals the logarithmic potential of its characterized compact trace law throughout the true lower gap."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matrixKTransform_law_variational_logarithmicPotential",
+     "module": "NLAlib.Matrix.Functions.KTransformVariationalPotential",
+     "status": "proved",
+     "usage": "For a compact Hermitian probability sample law and alpha>0, construct the native branch and actual compact trace law; at every point below its lower support edge obtain a genuine stable minimizer, its exact logarithmic-potential value, and actual positive sample determinants."
+    }
+   ],
+   "uses_defs": [
+    "MeasureTheory.logarithmicPotential",
+    "NLAlib.matrixKInverseStableDomain",
+    "NLAlib.matrixKPotential",
+    "NLAlib.matrixKStableDomain",
+    "NLAlib.matrixKStableInverse",
+    "NLAlib.matrixKTransform",
+    "NLAlib.matrixKTransformDeriv",
+    "NLAlib.matrixKTransformDomain",
+    "NLAlib.normalizedTrace"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "tags": [
     "matrix-method",
     "source-revisited"
    ],
-   "notes": "Tr is unnormalized, while the law and output potential are normalized by k. The minimum is over the stable domain, not the full positive cone. A finite matrix logdet convergence result also needs separation from sample spectra; weak convergence alone does not justify integrating an unbounded logarithm. The right-of-spectrum version follows by sign reflection.",
-   "updated_at": "2026-10-15"
+   "notes": "The full variational logarithmic-potential theorem is proved for every compact Hermitian probability sample law and alpha>0, including singular and indefinite samples. The native analytic K branch and compact characterized probability trace law are constructed. At every real point below the actual lower support edge, a genuine stable matrix solves K(S)=uI, its source potential divided by the dimension equals the actual logarithmic potential, and it attains the global minimum over the original strict Frobenius-stable domain. Actual determinant positivity, convexity of the native stable image, local analytic inversion, the genuine Frechet gradient, real trace-law boundary continuity, and normalization at negative infinity are all derived from the original equation and sample law. No branch, law, derivative, normalization, potential identity, or minimization certificate is a premise.",
+   "updated_at": "2026-10-20"
   },
   {
    "id": "coefficient-block-partial-transpose",
@@ -54944,35 +56392,40 @@
      "decl": "NLAlib.hasLaw_mulVec_circularComplexGaussianVector_orthonormalRows",
      "module": "NLAlib.Probability.Gaussian.Basic.ComplexUnitary",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "A complex matrix with orthonormal rows maps an actual circular complex Gaussian product law to the corresponding target product law."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hasLaw_mulVec_circularComplexGaussianVector_unitary",
      "module": "NLAlib.Probability.Gaussian.Basic.ComplexUnitary",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "A square unitary matrix preserves the full circular complex Gaussian product law."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hasLaw_mulVec_circularComplexGaussianVector_of_hasLaw",
      "module": "NLAlib.Probability.Gaussian.Basic.ComplexUnitary",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The orthonormal-row complex Gaussian transform applies to a random vector on any sample space using its actual joint circular complex Gaussian law."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.hasLaw_realify_mulVec_circularComplexGaussianVector_of_hasLaw",
      "module": "NLAlib.Probability.Gaussian.Basic.ComplexUnitary",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "All transformed real and imaginary entries together have the full product standard-real-Gaussian law, including independence between the two parts."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.iIndepFun_realify_mulVec_circularComplexGaussianVector_of_hasLaw",
      "module": "NLAlib.Probability.Gaussian.Basic.ComplexUnitary",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "Every transformed real and imaginary coordinate is independent of all the others, under the actual sample-space law."
     },
     {
      "library": "nlalib",
@@ -55529,10 +56982,10 @@
    "title": "Independent sums and matching Gaussian matrices have close spectra",
    "area": "gaussian-comparison",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "The spectral set of a bounded independent Hermitian sum is close in probability to the spectral set of its matching Gaussian proxy.",
    "hypotheses": [
-    "$X=Z_0+\\sum_i Z_i\\in M_d(\\mathbb C)_{sa}$, $d\\ge1$, deterministic $Z_0$, independent centered Hermitian $Z_i$ with $\\|Z_i\\|_2\\le R<\\infty$ a.s.; $G$ has jointly real-Gaussian Hermitian entries with the same mean and full covariance of real and imaginary entries.",
+    "$X=Z_0+\\sum_i Z_i\\in M_d(\\mathbb C)_{sa}$, $d\\ge2$, deterministic $Z_0$, independent centered Hermitian $Z_i$ with $\\|Z_i\\|_2\\le R<\\infty$ a.s.; $G$ has jointly real-Gaussian Hermitian entries with the same mean and full covariance of real and imaginary entries.",
     "$\\sigma:=\\|\\sum_i\\mathbb E Z_i^2\\|_2^{1/2}$, $\\sigma_*:=\\sup_{\\|v\\|_2=\\|w\\|_2=1}(\\mathbb E|v^*(X-\\mathbb EX)w|^2)^{1/2}$."
    ],
    "conclusion": "With universal $C$, for every $t\\ge0$, $\\mathbb P\\{d_H(\\operatorname{sp}X,\\operatorname{sp}G)>C(\\sigma_*\\sqrt t+R^{1/3}\\sigma^{2/3}t^{2/3}+Rt)\\}\\le de^{-t}$.",
@@ -55542,14 +56995,250 @@
      "label": "Theorem 2.6, pp. 11–12"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "Real.resolvent_variance_scale_le_of_source_parameters",
+     "module": "NLAlib.ForMathlib.Analysis.ResolventMomentScale",
+     "status": "proved",
+     "partial": true,
+     "usage": "The original bilinear, matrix and radius scale inequalities imply the required bounds on the literal resolvent variance and gamma expressions."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_bilinearSquareMass_copy_sub_pi_le",
+     "module": "NLAlib.Probability.Concentration.Matrix.BilinearCopyExpectation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Control the literal independent-copy bilinear energy by8v+64R times the actual centered sum-norm expectation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_bilinearSquareMass_pi_le_of_ae_bound",
+     "module": "NLAlib.Probability.Concentration.Matrix.BilinearSquareExpectation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Bound the actual expected bilinear square mass of native centered matrix samples by2v+16R times the actual sum-norm expectation, deriving continuity only on the matrix-valued laws by radial projection."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_norm_sq_bilinear_sum_pi_eq_sum",
+     "module": "NLAlib.Probability.Concentration.Matrix.BilinearVariance",
+     "status": "proved",
+     "partial": true,
+     "usage": "Identify the source complex bilinear second moment of the actual full centered sum with the sum of the actual marginal probe moments."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_specNorm_sum_pi_le_two_mul_sqrt_add_of_log_le",
+     "module": "NLAlib.Probability.Concentration.Matrix.FiniteHermitianBernstein",
+     "status": "proved",
+     "partial": true,
+     "usage": "At a moment order above log dimension, the actual independent centered sum has expected norm at most `2*σ*sqrt(p)+R*p`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_sum_pi_gt_four_sqrt_add_le",
+     "module": "NLAlib.Probability.Concentration.Matrix.FiniteHermitianBernsteinTail",
+     "status": "proved",
+     "partial": true,
+     "usage": "A bounded independent centered Hermitian sum has norm at most `4*σ*sqrt(s)+4*R*s` except on probability `2*d*exp(-s)`, whenever the displayed scale is positive."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_gt_abs_centered_specNorm_resolvent_pi_le_of_bilinear_moments",
+     "module": "NLAlib.Probability.Concentration.Matrix.IndependentResolventConcentration",
+     "status": "proved",
+     "partial": true,
+     "usage": "Obtain a deterministic two-sided concentration bound for the actual resolvent norm using the derived proxy expectation rather than assuming it."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lpNorm_specNorm_resolvent_pi_le_integral_add_of_bilinear_moments",
+     "module": "NLAlib.Probability.Concentration.Matrix.IndependentResolventMoments",
+     "status": "proved",
+     "partial": true,
+     "usage": "Actual non-Gaussian resolvent Lp norms are controlled by their actual means and a derived bilinear/variance expression."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_gt_abs_centered_specNorm_resolvent_pi_le",
+     "module": "NLAlib.Probability.Concentration.Matrix.IndependentResolventTail",
+     "status": "proved",
+     "partial": true,
+     "usage": "Apply the genuine signed resolvent MGF to obtain a strict two-sided tail with the literal actual proxy expectation, including zero radius and empty dimensions."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_resolventVarianceProxy_copy_pi_le",
+     "module": "NLAlib.Probability.Concentration.Matrix.ResolventVarianceProxyExpectation",
+     "status": "proved",
+     "partial": true,
+     "usage": "Derive integrability and an explicit expectation bound for the actual original/copy resolvent variance proxy from native bilinear and matrix second moments."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.bilinearWeakVariance_eq_sSup_unitSphere",
+     "module": "NLAlib.Probability.Moments.BilinearWeakVarianceProbes",
+     "status": "proved",
+     "partial": true,
+     "usage": "The defined centered bilinear weak variance equals the literal source unit-sphere supremum in nonempty dimension."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sqrt_bilinearWeakVariance_eq_sSup_unitSphere",
+     "module": "NLAlib.Probability.Moments.BilinearWeakVarianceProbes",
+     "status": "proved",
+     "partial": true,
+     "usage": "Identify the square root of the native centered weak variance with the exact source supremum of root mean square probes over two unit spheres."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sum_integral_norm_sq_bilinear_le_bilinearWeakVariance_shifted_sum",
+     "module": "NLAlib.Probability.Moments.BilinearWeakVarianceProbes",
+     "status": "proved",
+     "partial": true,
+     "usage": "Derive the actual marginal bilinear probe budget from the intrinsic weak variance of the literal shifted independent-sum law."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_spectral_inclusion_failure_le_resolvent_grid",
+     "module": "NLAlib.Probability.Transforms.ResolventSpectralGrid",
+     "status": "proved",
+     "partial": true,
+     "usage": "A deterministic finite grid bounds the probability that the actual source spectrum is not within `2*C*η` of the actual comparison spectrum."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_hausdorffDist_spectra_gt_le_resolvent_grid",
+     "module": "NLAlib.Probability.Transforms.ResolventSpectralHausdorffGrid",
+     "status": "proved",
+     "partial": true,
+     "usage": "Two-sided actual resolvent comparisons on a common finite covering grid control the Hausdorff distance of the native spectra."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.independentSumResolventError_add_mesh_le_inv_two_height",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventError",
+     "status": "proved",
+     "partial": true,
+     "usage": "The literal original-law error and the deterministic grid mesh are absorbed at the source linear/cubic spectral scale."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.lpNorm_specNorm_resolvent_gaussian_le_pi",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventNormMomentUniversality",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual Gaussian resolvent Lp norm is controlled by the original independent sum with matching full covariance."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_resolvent_pi_gt_gaussian_mean_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventNormMomentUniversality",
+     "status": "proved",
+     "partial": true,
+     "usage": "An actual independent sum obeys the fixed-parameter upper resolvent tail derived from its full-covariance Gaussian proxy."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_resolvent_sum_gt_gaussian_le_of_hasLaw",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventPointwiseComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "The actual resolvent of an independent matrix sum is bounded by the realized full-covariance Gaussian resolvent outside an explicit probability bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_resolvent_sum_gt_gaussian_le_of_bilinear_moments",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventPointwiseComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "The fixed-parameter comparison with an actual full-covariance Gaussian proxy uses only the original independent increments' bilinear variance budget."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_resolvent_gaussian_gt_sum_le_of_bilinear_moments",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventReversePointwiseComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "The realized Gaussian proxy resolvent is controlled by the original independent sum outside an explicit probability bound."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_two_sided_resolvent_comparison_failure_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.ResolventTwoSidedPointwiseComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "Both directions of the actual fixed-parameter resolvent comparison use one deterministic error budget independent of the real spectral parameter."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_hausdorffDist_spectra_gt_le_of_source_scale",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.SpectralGridComparison",
+     "status": "proved",
+     "partial": true,
+     "usage": "A common deterministic spectral grid gives the actual Hausdorff comparison for every coupling of a bounded independent Hermitian sum and its full-covariance matching Gaussian matrix."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_sum_pi_gt_bilinear_scale_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.SpectralLocalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "The original independent centered Hermitian sum has a localization tail at a scale determined by its actual bilinear variance budget."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_specNorm_gaussian_sub_mean_gt_bilinear_scale_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.SpectralLocalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "Full covariance matching derives the actual centered Gaussian localization tail from the original increments' bilinear variance budget."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_hausdorffDist_spectra_gt_spectralScale_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.SpectrumUniversality",
+     "status": "proved",
+     "partial": true,
+     "usage": "The genuine independent-sum Hausdorff spectral comparison at the source scale, for every nonnegative real tail parameter."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_hausdorffDist_spectra_sum_gaussian_gt_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.SpectrumUniversalityHasLaw",
+     "status": "proved",
+     "usage": "Apply directly to independent measurable centered bounded Hermitian increments and an arbitrarily coupled jointly Gaussian Hermitian matrix with the same actual mean and full covariance to obtain the intrinsic source-scale Hausdorff tail for every t>=0."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_hausdorffDist_spectra_gt_le_of_matching_gaussian",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.SpectrumUniversalityIntrinsic",
+     "status": "proved",
+     "usage": "Apply to any coupling with the original independent marginal product law and its full-covariance Gaussian proxy to obtain the exact intrinsic variance spectral tail, including zero radius and singular covariance."
+    }
+   ],
    "depends_on": [],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.bilinearSquareMass",
+    "NLAlib.bilinearWeakVariance",
+    "NLAlib.independentSumResolventError",
+    "NLAlib.independentSumSpectralScale",
+    "NLAlib.matrixRealCoordinates",
+    "NLAlib.resolventVarianceProxy",
+    "NLAlib.specNorm"
+   ],
    "variants": [
     "cauchy-transform-gaussian-universality"
    ],
    "aliases": [
-    "spectrum universality"
+    "spectrum universality",
+    "resolvent concentration",
+    "bilinear variance proxy",
+    "intrinsic spectral Hausdorff tail",
+    "sigma star",
+    "matching Gaussian spectra"
    ],
    "mathlib_prereqs": [],
    "difficulty": 5,
@@ -55558,8 +57247,8 @@
     "foundation",
     "source-reviewed"
    ],
-   "notes": "Any joint coupling of X and G is allowed. This is Hausdorff distance of spectral sets, not an ordered-eigenvalue coupling.",
-   "updated_at": "2026-10-16"
+   "notes": "The full retained Hausdorff spectral tail is proved for actual independent bounded centered Hermitian random matrices and every mean- and full-entry-covariance-matching jointly Gaussian Hermitian matrix, with arbitrary coupling and deterministic mean. The explicit universal constant is80000000. The actual sigma parameter is sqrt(specNorm(sum_i E Zi^2)); the actual sigma-star parameter is proved equal to the literal unit-sphere supremum of centered probe root mean squares. The fractional-power scale is exactly the displayed source scale. All t>=0, zero radius and singular Gaussian covariance are included. The proof derives actual two-sided resolvent probabilities, Bernstein/Gaussian localization and a shared grid of at most9d^2 points. The source requires d>=2. This card requests the tail part of source Theorem2.6; its separate expectation inequality is not asserted here.",
+   "updated_at": "2026-10-20"
   },
   {
    "id": "matrix-resolvent-gaussian-universality",
@@ -56056,7 +57745,8 @@
      "decl": "NLAlib.schattenNormReal_orderedMatrixExp_le_exp_hirschman",
      "module": "NLAlib.Matrix.Functions.OrderedExponentialInterpolation",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The exact finite-parameter interpolation estimate for an actual ordered product of Hermitian exponentials."
     }
    ],
    "depends_on": [
@@ -56157,14 +57847,16 @@
      "decl": "HasDerivAt.tendsto_pow_inv_nat",
      "module": "NLAlib.ForMathlib.Analysis.Normed.Algebra.EulerPower",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The Euler power limit for any differentiable curve through the identity."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.integrable_hirschmanDensityZero_mul_log_orderedMatrixExp",
      "module": "NLAlib.Matrix.Functions.MultivariateGoldenThompson",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The displayed Golden--Thompson integrand is actually Lebesgue integrable; both logarithmic tails are controlled by the ordered product and its inverse."
     },
     {
      "library": "nlalib",
@@ -56202,7 +57894,8 @@
      "decl": "NLAlib.tendsto_abs_orderedMatrixExp_pow",
      "module": "NLAlib.Matrix.Functions.OrderedExponentialModulus",
      "status": "proved",
-     "partial": true
+     "partial": true,
+     "usage": "The genuine ordered-product modulus powers converge to the exponential of the Hermitian sum."
     }
    ],
    "depends_on": [

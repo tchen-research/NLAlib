@@ -1,3 +1,4 @@
+import NLAlib.ForMathlib.RingTheory.Polynomial.ChebyshevSequence
 import NLAlib.ForMathlib.RingTheory.Polynomial.Hermite
 
 /-! # `ForMathlib/RingTheory/Polynomial`

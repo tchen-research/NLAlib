@@ -1,6 +1,7 @@
 import NLAlib.Matrix.Functions.ResolventDifferences
 import NLAlib.Matrix.Basic.NormalizedTrace
 import Mathlib.Analysis.Calculus.FDeriv.RestrictScalars
+import NLAlib.ForMathlib.Analysis.Normed.Algebra.InverseDerivatives
 
 /-!
 # Derivatives of the Hermitian resolvent and its normalized trace
@@ -9,6 +10,8 @@ The actual complex Fréchet derivatives are rational block maps. On a
 Hermitian base point the nonreal shift is invertible, so the formulas apply
 on a genuine open matrix neighborhood. Restricting scalars then gives the
 real derivatives used in Gaussian interpolation.
+The geometric series also supplies the native iterated derivative of every
+order as a finite sum of ordered resolvent insertion words.
 Source: the supplied Cauchy-transform reroute, (comparison-L).
 -/
 
@@ -19,6 +22,22 @@ open scoped Matrix Matrix.Norms.L2Operator
 namespace NLAlib
 variable {n : Type*} [Fintype n] [DecidableEq n]
 local notation "M" => Matrix n n ℂ
+
+/-- Every iterated derivative of a nonreal Hermitian resolvent is its actual
+finite ordered insertion sum. Directions may be arbitrary complex matrices;
+only the base point is Hermitian. Order zero and empty matrix dimensions
+are included.
+Source: Brailovskaya–van Handel, arXiv:2201.05142v3, Lemma 6.9. -/
+theorem _root_.Matrix.IsHermitian.iteratedFDeriv_resolvent_apply
+    {A : M} (hA : A.IsHermitian) {ζ : ℂ} (hζ : ζ.im ≠ 0)
+    {k : ℕ} (H : Fin k → M) :
+    iteratedFDeriv ℂ k (fun B : M => resolvent B ζ) A H =
+      ∑ σ : Equiv.Perm (Fin k),
+        (List.ofFn (fun i => resolvent A ζ * H (σ i))).prod * resolvent A ζ := by
+  apply _root_.iteratedFDeriv_resolvent_apply
+  change IsUnit (algebraMap ℂ M ζ - A)
+  simpa only [Algebra.algebraMap_eq_smul_one] using
+    hA.isUnit_smul_one_sub_of_im_ne_zero hζ
 
 private theorem isUnit_aeval_shift (ζ : ℂ) (A : M) (hA : A.IsHermitian)
     (hζ : ζ.im ≠ 0) : IsUnit (aeval A (C ζ-X)) := by

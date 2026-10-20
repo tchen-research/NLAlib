@@ -1,3 +1,7 @@
+import NLAlib.RandomMatrix.Gaussian.Basic.GUE
+import NLAlib.RandomMatrix.Gaussian.Basic.GUECoefficientMatrices
+import NLAlib.RandomMatrix.Gaussian.Basic.GUECoefficientParameters
+import NLAlib.RandomMatrix.Gaussian.Basic.GUECovarianceAction
 import NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix
 import NLAlib.RandomMatrix.Gaussian.Basic.LinearForms
 import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz

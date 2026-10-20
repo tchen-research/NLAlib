@@ -1,3 +1,4 @@
+import NLAlib.ForMathlib.Topology.Order.CompactMonotoneFixedPoint
 import NLAlib.ForMathlib.Topology.Order.IntermediateValue
 
 /-! # `ForMathlib/Topology/Order`

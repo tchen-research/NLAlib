@@ -1,12 +1,19 @@
 import NLAlib.Krylov.Solvers.CG
 import NLAlib.Krylov.Solvers.CGRecurrence
+import NLAlib.Krylov.Solvers.ChebyshevRecurrence
 import NLAlib.Krylov.Solvers.ChristoffelDirections
+import NLAlib.Krylov.Solvers.FOM
+import NLAlib.Krylov.Solvers.FlexibleGMRES
 import NLAlib.Krylov.Solvers.GMRES
 import NLAlib.Krylov.Solvers.GMRESArnoldi
 import NLAlib.Krylov.Solvers.GMRESComplexDiagonal
+import NLAlib.Krylov.Solvers.GMRESPositiveReal
+import NLAlib.Krylov.Solvers.MINRESIntervals
 import NLAlib.Krylov.Solvers.Minimizer
 import NLAlib.Krylov.Solvers.PolynomialMethods
 import NLAlib.Krylov.Solvers.Preconditioned
+import NLAlib.Krylov.Solvers.PreconditionedRichardson
+import NLAlib.Krylov.Solvers.StationarySplitting
 
 /-! # `Krylov/Solvers`
 

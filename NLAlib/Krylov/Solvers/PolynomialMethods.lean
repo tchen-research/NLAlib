@@ -206,6 +206,26 @@ private lemma one_sub_X_mul_divByMonic {p : ℝ[X]} (hp0 : p.eval 0 = 1) :
   rw [(modByMonic_eq_zero_iff_dvd monic_X).2 hdvd, zero_add] at h
   rw [h]; ring
 
+/-- The polynomial Chebyshev iterate has exactly the normalized Chebyshev residual.
+Source: Saad (2003), §12.3; this bridge is also used by the coupled recurrence realization.
+atlas: chebyshev-iteration (partial) -/
+theorem sub_mulVec_chebyshevIterate {a b : ℝ} (ha : 0 < a) (hab : a < b)
+    (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) :
+    c - A *ᵥ chebyshevIterate a b A c x₀ q =
+      aeval A (chebyshevResidual a b q) *ᵥ (c - A *ᵥ x₀) := by
+  rw [chebyshevIterate, sub_mulVec_polyIterate,
+    one_sub_X_mul_divByMonic (eval_chebyshevResidual_zero ha hab)]
+
+/-- About an exact solution, the Chebyshev iterate has the normalized residual polynomial
+as its exact error polynomial. Source: Saad (2003), §12.3.
+atlas: chebyshev-iteration (partial) -/
+theorem chebyshevIterate_sub {a b : ℝ} (ha : 0 < a) (hab : a < b)
+    {A : Matrix n n ℝ} {c xs : n → ℝ} (hxs : A *ᵥ xs = c) (x₀ : n → ℝ) (q : ℕ) :
+    chebyshevIterate a b A c x₀ q - xs =
+      aeval A (chebyshevResidual a b q) *ᵥ (x₀ - xs) := by
+  rw [chebyshevIterate, polyIterate_sub hxs,
+    one_sub_X_mul_divByMonic (eval_chebyshevResidual_zero ha hab)]
+
 /-- The Chebyshev iterate lies in `x₀ + K_q(A, r₀)` (its iteration polynomial has degree
 `< q`). Source: Saad (2003) [`saad03`], §12.3. -/
 theorem chebyshevIterate_sub_mem_krylovSpace {a b : ℝ} (ha : 0 < a) (hab : a < b)

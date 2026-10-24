@@ -92,7 +92,7 @@ theorem specNorm_residual_sq_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Mat
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₁.conjTranspose_mul_self
   have h2 : specNorm (A - Z) =
       specNorm (S₂ * V₂ᵀ + -(S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ)) := by
-    have he := sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit
+    have he := sub_mul_pinvR_mul_conjTranspose_eq hA hΩ₁ hΩ₂ hunit
     simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at he
     rw [hZdef, he, specNorm_mul_left_of_hasOrthonormalCols hU₂t, sub_eq_add_neg]
   -- Step 3: the two summands have orthogonal rows.

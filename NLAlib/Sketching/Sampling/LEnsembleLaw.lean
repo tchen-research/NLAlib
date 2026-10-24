@@ -1,4 +1,3 @@
-import NLAlib.ForMathlib.LinearAlgebra.Matrix.PrincipalMinorExpansion
 import NLAlib.Matrix.Inequalities.PrincipalMinorProducts
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
 import Mathlib.Probability.HasLaw
@@ -28,17 +27,6 @@ theorem sum_principalMinor_eq_det_one_add (L : Matrix n n ℝ) :
     ∑ S : Finset n, principalMinor L S = (1 + L).det := by
   exact (Matrix.det_one_add_eq_sum_principal_minors L).symm
 
-/-- The L-ensemble normalizer is at least one, even for a singular or zero
-PSD kernel and in dimension zero. Dereziński–Mahoney 2020, §3.
-atlas: l-ensemble-law (partial) -/
-theorem one_le_det_one_add_of_posSemidef {L : Matrix n n ℝ} (hL : L.PosSemidef) :
-    1 ≤ (1 + L).det := by
-  classical
-  rw [← sum_principalMinor_eq_det_one_add]
-  have h := Finset.single_le_sum (fun S (_ : S ∈ (Finset.univ : Finset (Finset n))) =>
-    principalMinor_nonneg hL S) (Finset.mem_univ (∅ : Finset n))
-  simpa only [principalMinor, Matrix.toBlock, Matrix.det_isEmpty] using h
-
 /-- The normalized principal-minor mass. For kernels outside the PSD domain
 this is merely a total scalar formula; `lEnsemblePMF` requires PSD. -/
 def lEnsembleProbability (L : Matrix n n ℝ) (S : Finset n) : ℝ :=
@@ -48,14 +36,14 @@ def lEnsembleProbability (L : Matrix n n ℝ) (S : Finset n) : ℝ :=
 theorem lEnsembleProbability_nonneg {L : Matrix n n ℝ} (hL : L.PosSemidef)
     (S : Finset n) : 0 ≤ lEnsembleProbability L S :=
   div_nonneg (principalMinor_nonneg hL S) ((by norm_num : (0 : ℝ) ≤ 1).trans
-    (one_le_det_one_add_of_posSemidef hL))
+    (hL.one_le_det_one_add))
 
 /-- All L-ensemble masses sum to one. No prescribed cardinality is imposed. -/
 theorem sum_lEnsembleProbability {L : Matrix n n ℝ} (hL : L.PosSemidef) :
     ∑ S : Finset n, lEnsembleProbability L S = 1 := by
   simp only [lEnsembleProbability, ← Finset.sum_div, sum_principalMinor_eq_det_one_add]
   exact div_self (ne_of_gt (lt_of_lt_of_le zero_lt_one
-    (one_le_det_one_add_of_posSemidef hL)))
+    (hL.one_le_det_one_add)))
 
 /-- The variable-size determinantal PMF on every finite subset of the index
 set. The empty determinant has mass `1 / det (I + L)`.

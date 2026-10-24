@@ -1,4 +1,5 @@
 import NLAlib.Krylov.Quadrature.AnalyticQuadrature
+import NLAlib.Krylov.Quadrature.CanonicalLanczos
 import NLAlib.Krylov.Quadrature.Christoffel
 import NLAlib.Krylov.Quadrature.ChristoffelNumbers
 import NLAlib.Krylov.Quadrature.CoefficientBounds
@@ -8,7 +9,9 @@ import NLAlib.Krylov.Quadrature.DilationMoments
 import NLAlib.Krylov.Quadrature.DilationReduction
 import NLAlib.Krylov.Quadrature.DilationWeightedMoments
 import NLAlib.Krylov.Quadrature.DiscreteCanonical
+import NLAlib.Krylov.Quadrature.DiscreteLanczos
 import NLAlib.Krylov.Quadrature.DiscreteMeasure
+import NLAlib.Krylov.Quadrature.DiscreteStieltjes
 import NLAlib.Krylov.Quadrature.EndpointMatrixBounds
 import NLAlib.Krylov.Quadrature.ExponentialQuadrature
 import NLAlib.Krylov.Quadrature.GaussQuadrature

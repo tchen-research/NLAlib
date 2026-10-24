@@ -13880,6 +13880,46 @@
   "atlas":
   []},
  {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.IsHermitian.sum_det_principal_minors_eq_sum_prod.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n]\n  [DecidableEq n] {G : Matrix n n 𝕜} (hG : G.IsHermitian) (k : ℕ) :\n  ∑ S ∈ Finset.powersetCard k Finset.univ, (G.submatrix Subtype.val Subtype.val).det =\n    ∑ S ∈ Finset.powersetCard k Finset.univ, ∏ i ∈ S, ↑(hG.eigenvalues i)",
+  "name":
+  "Matrix.IsHermitian.sum_det_principal_minors_eq_sum_prod",
+  "module":
+  "NLAlib.Matrix.Spectral.PrincipalMinors",
+  "line":
+  74,
+  "kind":
+  "theorem",
+  "doc":
+  "The sum of fixed-order Hermitian principal determinants is the elementary\nsum of the actual eigenvalues, over either scalar field. The spectral theorem\nand the generic determinant-coefficient identity prove the assertion without\na positivity or invertibility assumption. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.IsHermitian.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2}\n  [RCLike 𝕜] [Fintype n] [DecidableEq n] {A : Matrix n n 𝕜} (hA : A.IsHermitian) (k : ℕ) :\n  ∑ h, RCLike.re (A.submatrix h h).det =\n    ↑k.factorial * ∑ S ∈ Finset.powersetCard k Finset.univ, ∏ i ∈ S, hA.eigenvalues₀ i",
+  "name":
+  "Matrix.IsHermitian.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀",
+  "module":
+  "NLAlib.Matrix.Spectral.PrincipalMinors",
+  "line":
+  91,
+  "kind":
+  "theorem",
+  "doc":
+  "The sum of real principal determinants along all ordered length-`k`\nhistories is `k!` times the elementary sum of the sorted Hermitian spectrum.\nZero, repeated, and oversized histories are all included. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.specNorm"],
   "sorry":
   false,
@@ -14963,6 +15003,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.PosSemidef.one_le_det_one_add.{u_1} {n : Type u_1} [DecidableEq n] [Fintype n] {L : Matrix n n ℝ}\n  (hL : L.PosSemidef) : 1 ≤ (1 + L).det",
+  "name":
+  "Matrix.PosSemidef.one_le_det_one_add",
+  "module":
+  "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
+  "line":
+  49,
+  "kind":
+  "theorem",
+  "doc":
+  "Adding the identity to a PSD matrix gives determinant at least one, including\nsingular matrices and dimension zero. The principal-minor expansion supplies\nnonnegative terms and the empty minor one. Dereziński–Mahoney 2020, §3.\natlas: l-ensemble-law (partial) ",
+  "atlas_partial":
+  ["l-ensemble-law"],
+  "atlas":
+  ["l-ensemble-law"]},
  {"uses":
   ["NLAlib.quadForm"],
   "sorry":
@@ -16582,6 +16642,26 @@
   "sorry":
   false,
   "signature":
+  "Matrix.isUnit_one_sub_of_tendsto_pow_zero.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n]\n  [DecidableEq n] {H : Matrix n n 𝕜} (hH : Filter.Tendsto (fun k => H ^ k) Filter.atTop (nhds 0)) : IsUnit (1 - H)",
+  "name":
+  "Matrix.isUnit_one_sub_of_tendsto_pow_zero",
+  "module":
+  "NLAlib.Matrix.Spectral.MatrixPowerFixedPoint",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "Decaying matrix powers exclude eigenvalue one, so `1 - H` is invertible. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "Matrix.kronecker_le_kronecker_left.{u_1, u_2, u_3} {𝕜 : Type u_1} {m : Type u_2} {n : Type u_3} [RCLike 𝕜] [Fintype m]\n  [Fintype n] [DecidableEq m] [DecidableEq n] {A B : Matrix n n 𝕜} {C : Matrix m m 𝕜} (hAB : A ≤ B)\n  (hC : C.PosSemidef) : Matrix.kroneckerMap (fun x1 x2 => x1 * x2) C A ≤ Matrix.kroneckerMap (fun x1 x2 => x1 * x2) C B",
   "name":
   "Matrix.kronecker_le_kronecker_left",
@@ -17998,6 +18078,26 @@
   "theorem",
   "doc":
   "Matrix normalization transports through each continuous quadratic probe. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "Matrix.tendsto_pow_zero_iff_forall_mulVec.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n]\n  [DecidableEq n] (H : Matrix n n 𝕜) :\n  Filter.Tendsto (fun k => H ^ k) Filter.atTop (nhds 0) ↔\n    ∀ (v : n → 𝕜), Filter.Tendsto (fun k => (H ^ k).mulVec v) Filter.atTop (nhds 0)",
+  "name":
+  "Matrix.tendsto_pow_zero_iff_forall_mulVec",
+  "module":
+  "NLAlib.Matrix.Spectral.MatrixPowerFixedPoint",
+  "line":
+  21,
+  "kind":
+  "theorem",
+  "doc":
+  "In finite dimensions, matrix powers decay exactly when they decay on every vector. ",
   "atlas_partial":
   [],
   "atlas":
@@ -23309,7 +23409,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  83,
+  84,
   "kind":
   "theorem",
   "doc":
@@ -23318,6 +23418,29 @@
   [],
   "atlas":
   ["gmres-arnoldi-form"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.fomIterate",
+   "NLAlib.IsFOMIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.eq_fomIterate_of_isFOMIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) (hH : IsUnit D.H) {x : n → ℝ}\n  (hx : NLAlib.IsFOMIterate A c x₀ q x) : x = D.fomIterate x₀",
+  "name":
+  "NLAlib.ArnoldiDecomp.eq_fomIterate_of_isFOMIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  122,
+  "kind":
+  "theorem",
+  "doc":
+  "Every FOM iterate equals the explicit inverse-Hessenberg iterate when\nthe compression is invertible. Saad (2003), Algorithm 6.4.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
  {"uses":
   ["NLAlib.ArnoldiDecomp",
    "NLAlib.ArnoldiDecomp.Q",
@@ -23342,6 +23465,93 @@
   []},
  {"uses":
   ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.IsFOMIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_iff_det_ne_zero.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) :\n  (∃! x, NLAlib.IsFOMIterate A c x₀ q x) ↔ D.H.det ≠ 0",
+  "name":
+  "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_iff_det_ne_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  113,
+  "kind":
+  "theorem",
+  "doc":
+  "The FOM existence-and-uniqueness criterion in determinant form.\nSaad (2003), §6.4.1.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.IsFOMIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_iff_isUnit.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) :\n  (∃! x, NLAlib.IsFOMIterate A c x₀ q x) ↔ IsUnit D.H",
+  "name":
+  "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_iff_isUnit",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  81,
+  "kind":
+  "theorem",
+  "doc":
+  "A FOM iterate exists uniquely exactly when the actual Hessenberg\ncompression is invertible. Uniqueness for one right-hand side already forces\ninjectivity of its linear system. Saad (2003), §6.4.1.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.IsFOMIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_of_posDef.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) (hA : A.PosDef) :\n  ∃! x, NLAlib.IsFOMIterate A c x₀ q x",
+  "name":
+  "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_of_posDef",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  259,
+  "kind":
+  "theorem",
+  "doc":
+  "Every SPD system has a unique FOM iterate in each actual Arnoldi space,\nsince orthonormal compression preserves positive definiteness.\nSaad (2003), §6.7.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.Q",
+   "NLAlib.IsFOMIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.exists_eq_add_mulVec_of_isFOMIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) {x : n → ℝ}\n  (hx : NLAlib.IsFOMIterate A c x₀ q x) : ∃ y, x = x₀ + D.Q.mulVec y",
+  "name":
+  "NLAlib.ArnoldiDecomp.exists_eq_add_mulVec_of_isFOMIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  60,
+  "kind":
+  "theorem",
+  "doc":
+  "Every FOM iterate has coordinates in the actual Arnoldi basis.\nThis includes the zero-dimensional Krylov space. Saad (2003), §6.4.1. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
    "NLAlib.ArnoldiDecomp.Q",
    "NLAlib.ArnoldiDecomp.restrict",
    "NLAlib.IsGMRESIterate"],
@@ -23354,7 +23564,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  162,
+  163,
   "kind":
   "theorem",
   "doc":
@@ -23377,7 +23587,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  104,
+  105,
   "kind":
   "theorem",
   "doc":
@@ -23408,6 +23618,49 @@
   "atlas":
   ["graded-krylov-basis-def"]},
  {"uses":
+  ["NLAlib.ArnoldiDecomp"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.fomIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}\n  (D : NLAlib.ArnoldiDecomp A b q) (x₀ : n → ℝ) : n → ℝ",
+  "name":
+  "NLAlib.ArnoldiDecomp.fomIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  37,
+  "kind":
+  "def",
+  "doc":
+  "The total inverse formula for the Arnoldi FOM iterate. It is a FOM iterate\nwhen `D.H` is invertible; otherwise the total matrix inverse is zero and the\nformula returns the initial vector. Saad (2003), Algorithm 6.4.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.Q",
+   "NLAlib.ArnoldiDecomp.fomIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.fomIterate_eq_of_pos.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  {b : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A b q) (hq : 0 < q) (hD : 0 < D.Q.col ⟨0, hq⟩ ⬝ᵥ b) (x₀ : n → ℝ) :\n  D.fomIterate x₀ = x₀ + ‖WithLp.toLp 2 b‖ • D.Q.mulVec (D.H⁻¹.mulVec (Pi.single ⟨0, hq⟩ 1))",
+  "name":
+  "NLAlib.ArnoldiDecomp.fomIterate_eq_of_pos",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  131,
+  "kind":
+  "theorem",
+  "doc":
+  "Under the positive initial Arnoldi orientation, the inverse formula uses\nthe textbook right-hand side `‖r₀‖ e₁`. Saad (2003), Algorithm 6.4.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
   ["NLAlib.ArnoldiDecomp",
    "NLAlib.ArnoldiDecomp.H",
    "NLAlib.ArnoldiDecomp.Q",
@@ -23421,11 +23674,11 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  189,
+  190,
   "kind":
   "theorem",
   "doc":
-  "**FOM is the square system**: for `D : ArnoldiDecomp A r₀ q`, the residual of `x₀ + Q_q y` is\northogonal to `K_q(A, r₀)` (the Galerkin / FOM condition) iff `H_q y = Q_qᵀ r₀` (`= ±‖r₀‖ e₁`).\nNo hypothesis on `A`. Source: Saad (2011) [`saad11`], §6.4.1 (Alg. 6.4, `y_m = H_m⁻¹ (β e₁)`);\nSaad (2003) [`saad03`], §6.4.1. Deviation: no FOM predicate is introduced; the Galerkin\ncondition is stated directly.\natlas: fom-def (partial) ",
+  "**FOM is the square system**: for `D : ArnoldiDecomp A r₀ q`, the residual of `x₀ + Q_q y` is\northogonal to `K_q(A, r₀)` (the Galerkin / FOM condition) iff `H_q y = Q_qᵀ r₀` (`= ±‖r₀‖ e₁`).\nNo hypothesis on `A`. Source: Saad (2011) [`saad11`], §6.4.1 (Alg. 6.4, `y_m = H_m⁻¹ (β e₁)`);\nSaad (2003) [`saad03`], §6.4.1. This identity states the Galerkin condition directly;\nthe full FOM predicate and its inverse and residual formulas are in\n`NLAlib.Krylov.Solvers.FOM`.\natlas: fom-def (partial) ",
   "atlas_partial":
   ["fom-def"],
   "atlas":
@@ -23488,11 +23741,79 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  214,
+  216,
   "kind":
   "theorem",
   "doc":
   "**For SPD `A` the FOM iterate is the CG iterate**: if `H_q y = Q_qᵀ r₀` then `x₀ + Q_q y`\nsatisfies `IsCGIterate A c x₀ q`. Source: Saad (2003) [`saad03`], §6.7 (CG as the symmetric\nFOM / Lanczos method); Saad (2011) [`saad11`], §6.7.1. Uses atlas `cg-convergence`.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.fomIterate",
+   "NLAlib.IsCGIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.isCGIterate_fomIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) (hA : A.PosDef) :\n  NLAlib.IsCGIterate A c x₀ q (D.fomIterate x₀)",
+  "name":
+  "NLAlib.ArnoldiDecomp.isCGIterate_fomIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  284,
+  "kind":
+  "theorem",
+  "doc":
+  "The concrete inverse-Hessenberg FOM formula is the native CG iterate\nfor every SPD system. Its small compression is automatically invertible.\nSaad (2003), §6.7.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.Q",
+   "NLAlib.IsFOMIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.isFOMIterate_add_mulVec_iff.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) (y : Fin q → ℝ) :\n  NLAlib.IsFOMIterate A c x₀ q (x₀ + D.Q.mulVec y) ↔ D.H.mulVec y = D.Q.transpose.mulVec (c - A.mulVec x₀)",
+  "name":
+  "NLAlib.ArnoldiDecomp.isFOMIterate_add_mulVec_iff",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  44,
+  "kind":
+  "theorem",
+  "doc":
+  "FOM in an actual Arnoldi basis is exactly the square Galerkin system.\nThe affine-space membership follows from the basis range identity.\nSaad (2003), §6.4.1.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.fomIterate",
+   "NLAlib.IsFOMIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.isFOMIterate_fomIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) (hH : IsUnit D.H) :\n  NLAlib.IsFOMIterate A c x₀ q (D.fomIterate x₀)",
+  "name":
+  "NLAlib.ArnoldiDecomp.isFOMIterate_fomIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  72,
+  "kind":
+  "theorem",
+  "doc":
+  "The explicit inverse formula satisfies the FOM Galerkin equations when\nthe small Hessenberg matrix is invertible. Saad (2003), Algorithm 6.4.\natlas: fom-def (partial) ",
   "atlas_partial":
   ["fom-def"],
   "atlas":
@@ -23512,7 +23833,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  119,
+  120,
   "kind":
   "theorem",
   "doc":
@@ -23536,7 +23857,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  144,
+  145,
   "kind":
   "theorem",
   "doc":
@@ -23559,7 +23880,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  171,
+  172,
   "kind":
   "theorem",
   "doc":
@@ -23644,7 +23965,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  47,
+  48,
   "kind":
   "theorem",
   "doc":
@@ -23770,6 +24091,55 @@
   ["arnoldi-relation"]},
  {"uses":
   ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.fomIterate",
+   "NLAlib.ArnoldiDecomp.restrict",
+   "NLAlib.arnoldiDecomp",
+   "NLAlib.krylovGrade"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.norm_sub_mulVec_fomIterate_eq_arnoldiDecomp.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (A : Matrix n n ℝ) (c x₀ : n → ℝ) {q : ℕ} (hq : 0 < q) (hgrade : q + 1 ≤ NLAlib.krylovGrade A (c - A.mulVec x₀))\n  (hH : IsUnit ((NLAlib.arnoldiDecomp A (c - A.mulVec x₀) (q + 1) hgrade).restrict ⋯).H) :\n  have D := NLAlib.arnoldiDecomp A (c - A.mulVec x₀) (q + 1) hgrade;\n  ‖WithLp.toLp 2 (c - A.mulVec ((D.restrict ⋯).fomIterate x₀))‖ =\n    D.H (Fin.last q) ⟨q - 1, ⋯⟩ * |(D.restrict ⋯).H⁻¹.mulVec (Pi.single ⟨0, hq⟩ 1) ⟨q - 1, ⋯⟩| *\n      ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.ArnoldiDecomp.norm_sub_mulVec_fomIterate_eq_arnoldiDecomp",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  216,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual canonical Arnoldi construction supplies both sign conditions\nin the FOM residual norm formula. Thus only the native dimension and small\nHessenberg invertibility hypotheses remain. Saad (2003), Algorithm 6.4 and\nProposition 6.7.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.Q",
+   "NLAlib.ArnoldiDecomp.fomIterate",
+   "NLAlib.ArnoldiDecomp.restrict"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.norm_sub_mulVec_fomIterate_eq_of_pos.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) (q + 1)) (hq : 0 < q)\n  (hD : 0 < (D.restrict ⋯).Q.col ⟨0, hq⟩ ⬝ᵥ (c - A.mulVec x₀)) (hs : 0 ≤ D.H (Fin.last q) ⟨q - 1, ⋯⟩)\n  (hH : IsUnit (D.restrict ⋯).H) :\n  ‖WithLp.toLp 2 (c - A.mulVec ((D.restrict ⋯).fomIterate x₀))‖ =\n    D.H (Fin.last q) ⟨q - 1, ⋯⟩ * |(D.restrict ⋯).H⁻¹.mulVec (Pi.single ⟨0, hq⟩ 1) ⟨q - 1, ⋯⟩| *\n      ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.ArnoldiDecomp.norm_sub_mulVec_fomIterate_eq_of_pos",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  195,
+  "kind":
+  "theorem",
+  "doc":
+  "The FOM residual norm is the nonnegative Arnoldi subdiagonal times the\nlast inverse-Hessenberg coordinate and the initial residual norm. The sign\nconditions are exactly the positive Arnoldi orientation. Saad (2003),\nProposition 6.7.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
    "NLAlib.ArnoldiDecomp.Q",
    "NLAlib.krylovSpace"],
   "sorry":
@@ -23846,7 +24216,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  112,
+  113,
   "kind":
   "theorem",
   "doc":
@@ -23897,6 +24267,76 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.Q",
+   "NLAlib.ArnoldiDecomp.restrict"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.sub_mulVec_add_mulVec_eq_neg_smul.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) (q + 1)) (hq : 0 < q)\n  {y : Fin q → ℝ} (hy : (D.restrict ⋯).H.mulVec y = (D.restrict ⋯).Q.transpose.mulVec (c - A.mulVec x₀)) :\n  c - A.mulVec (x₀ + (D.restrict ⋯).Q.mulVec y) = -(D.H (Fin.last q) ⟨q - 1, ⋯⟩ * y ⟨q - 1, ⋯⟩) • D.Q.col (Fin.last q)",
+  "name":
+  "NLAlib.ArnoldiDecomp.sub_mulVec_add_mulVec_eq_neg_smul",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  141,
+  "kind":
+  "theorem",
+  "doc":
+  "A solved Arnoldi Galerkin system has residual in the next basis direction,\nwith the signed last Hessenberg coefficient. Saad (2003), Proposition 6.7.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.Q",
+   "NLAlib.ArnoldiDecomp.fomIterate",
+   "NLAlib.ArnoldiDecomp.restrict"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.sub_mulVec_fomIterate_eq_neg_smul_of_pos.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) (q + 1)) (hq : 0 < q)\n  (hD : 0 < (D.restrict ⋯).Q.col ⟨0, hq⟩ ⬝ᵥ (c - A.mulVec x₀)) (hH : IsUnit (D.restrict ⋯).H) :\n  c - A.mulVec ((D.restrict ⋯).fomIterate x₀) =\n    -(D.H (Fin.last q) ⟨q - 1, ⋯⟩ * (D.restrict ⋯).H⁻¹.mulVec (Pi.single ⟨0, hq⟩ 1) ⟨q - 1, ⋯⟩ *\n          ‖WithLp.toLp 2 (c - A.mulVec x₀)‖) •\n      D.Q.col (Fin.last q)",
+  "name":
+  "NLAlib.ArnoldiDecomp.sub_mulVec_fomIterate_eq_neg_smul_of_pos",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  174,
+  "kind":
+  "theorem",
+  "doc":
+  "The FOM residual vector in the textbook positive initial orientation.\nThe next Arnoldi coefficient is signed here; its nonnegative orientation is\nused only when taking the norm. Saad (2003), Proposition 6.7.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.ArnoldiDecomp",
+   "NLAlib.ArnoldiDecomp.H",
+   "NLAlib.ArnoldiDecomp.fomIterate",
+   "NLAlib.krylovGrade"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.ArnoldiDecomp.sub_mulVec_fomIterate_eq_zero_of_krylovGrade_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ : n → ℝ} {q : ℕ} (D : NLAlib.ArnoldiDecomp A (c - A.mulVec x₀) q) (hq : 0 < q)\n  (hgrade : NLAlib.krylovGrade A (c - A.mulVec x₀) ≤ q) (hH : IsUnit D.H) : c - A.mulVec (D.fomIterate x₀) = 0",
+  "name":
+  "NLAlib.ArnoldiDecomp.sub_mulVec_fomIterate_eq_zero_of_krylovGrade_le",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  241,
+  "kind":
+  "theorem",
+  "doc":
+  "At the terminal grade, every solvable FOM square system gives the exact\nlinear-system solution. No symmetry assumption is needed. Saad (2003), §6.4.1.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
  {"uses":
   ["NLAlib.ArnoldiDecomp",
    "NLAlib.ArnoldiDecomp.Q"],
@@ -23951,7 +24391,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  55,
+  56,
   "kind":
   "theorem",
   "doc":
@@ -23972,7 +24412,7 @@
   "module":
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "line":
-  67,
+  68,
   "kind":
   "theorem",
   "doc":
@@ -28878,6 +29318,46 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.HasOrthonormalCols.exists_norm_sub_mulVec_add_mulVec_le.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [RCLike 𝕜]\n  {n : Type u_2} {p : Type u_3} {q : Type u_4} [Fintype n] [Fintype p] [Fintype q] [DecidableEq q] {A : Matrix n n 𝕜}\n  {Z : Matrix n p 𝕜} {V : Matrix n q 𝕜} {H : Matrix q p 𝕜} {b x₀ : n → 𝕜} {g : q → 𝕜} (hV : NLAlib.HasOrthonormalCols V)\n  (hAZ : A * Z = V * H) (hr : b - A.mulVec x₀ = V.mulVec g) :\n  ∃ y,\n    ∀ z ∈ Z.mulVecLin.range, ‖WithLp.toLp 2 (b - A.mulVec (x₀ + Z.mulVec y))‖ ≤ ‖WithLp.toLp 2 (b - A.mulVec (x₀ + z))‖",
+  "name":
+  "NLAlib.HasOrthonormalCols.exists_norm_sub_mulVec_add_mulVec_le",
+  "module":
+  "NLAlib.Krylov.Solvers.FlexibleGMRES",
+  "line":
+  76,
+  "kind":
+  "theorem",
+  "doc":
+  "Every finite-dimensional reduced least-squares problem attains its\nminimum, so a realized flexible Arnoldi relation has a full residual\nminimizer on its affine trial space. Empty and rank-deficient reduced\nsystems are included. Source: Saad (2003), Proposition 9.2, with\nfinite-dimensional orthogonal projection providing attainment.\natlas: flexible-gmres-residual-minimization (partial) ",
+  "atlas_partial":
+  ["flexible-gmres-residual-minimization"],
+  "atlas":
+  ["flexible-gmres-residual-minimization"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.HasOrthonormalCols.forall_norm_sub_mulVec_add_mulVec_le_iff.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [RCLike 𝕜]\n  {n : Type u_2} {p : Type u_3} {q : Type u_4} [Fintype n] [Fintype p] [Fintype q] [DecidableEq q] {A : Matrix n n 𝕜}\n  {Z : Matrix n p 𝕜} {V : Matrix n q 𝕜} {H : Matrix q p 𝕜} {b x₀ : n → 𝕜} {g : q → 𝕜} (hV : NLAlib.HasOrthonormalCols V)\n  (hAZ : A * Z = V * H) (hr : b - A.mulVec x₀ = V.mulVec g) (y : p → 𝕜) :\n  (∀ (y' : p → 𝕜), ‖WithLp.toLp 2 (g - H.mulVec y)‖ ≤ ‖WithLp.toLp 2 (g - H.mulVec y')‖) ↔\n    ∀ z ∈ Z.mulVecLin.range, ‖WithLp.toLp 2 (b - A.mulVec (x₀ + Z.mulVec y))‖ ≤ ‖WithLp.toLp 2 (b - A.mulVec (x₀ + z))‖",
+  "name":
+  "NLAlib.HasOrthonormalCols.forall_norm_sub_mulVec_add_mulVec_le_iff",
+  "module":
+  "NLAlib.Krylov.Solvers.FlexibleGMRES",
+  "line":
+  51,
+  "kind":
+  "theorem",
+  "doc":
+  "Reduced least-squares minimization is equivalent to full residual\nminimization on the affine trial space `x₀ + range Z`.\nSource: Saad (2003), Proposition 9.2; the theorem applies equally to\nvarying, nonlinear or inexact preconditioners once their realized\nArnoldi relation is supplied.\natlas: flexible-gmres-residual-minimization (partial) ",
+  "atlas_partial":
+  ["flexible-gmres-residual-minimization"],
+  "atlas":
+  ["flexible-gmres-residual-minimization"]},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.HasOrthonormalCols.fromBlocks_diagonal.{u_1, u_2, u_3, u_4, u_5} {𝕜 : Type u_1} [RCLike 𝕜] {p : Type u_2}\n  {q : Type u_3} {r : Type u_4} {s : Type u_5} [Fintype p] [Fintype q] [Fintype r] [Fintype s] [DecidableEq q]\n  [DecidableEq s] {A : Matrix p q 𝕜} {B : Matrix r s 𝕜} (hA : NLAlib.HasOrthonormalCols A)\n  (hB : NLAlib.HasOrthonormalCols B) : NLAlib.HasOrthonormalCols (Matrix.fromBlocks A 0 0 B)",
   "name":
   "NLAlib.HasOrthonormalCols.fromBlocks_diagonal",
@@ -29098,6 +29578,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.HasOrthonormalCols.norm_sub_mulVec_add_mulVec_eq_of_mul_eq_mul.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [RCLike 𝕜]\n  {n : Type u_2} {p : Type u_3} {q : Type u_4} [Fintype n] [Fintype p] [Fintype q] [DecidableEq q] {A : Matrix n n 𝕜}\n  {Z : Matrix n p 𝕜} {V : Matrix n q 𝕜} {H : Matrix q p 𝕜} {b x₀ : n → 𝕜} {g : q → 𝕜} (hV : NLAlib.HasOrthonormalCols V)\n  (hAZ : A * Z = V * H) (hr : b - A.mulVec x₀ = V.mulVec g) (y : p → 𝕜) :\n  ‖WithLp.toLp 2 (b - A.mulVec (x₀ + Z.mulVec y))‖ = ‖WithLp.toLp 2 (g - H.mulVec y)‖",
+  "name":
+  "NLAlib.HasOrthonormalCols.norm_sub_mulVec_add_mulVec_eq_of_mul_eq_mul",
+  "module":
+  "NLAlib.Krylov.Solvers.FlexibleGMRES",
+  "line":
+  36,
+  "kind":
+  "theorem",
+  "doc":
+  "Orthonormal flexible Arnoldi coordinates preserve the exact residual\n2-norm. No independence of `Z` or invertibility of `A` is required.\nSource: Saad (2003), equations (9.22)--(9.26), Proposition 9.2.\natlas: flexible-gmres-residual-minimization (partial) ",
+  "atlas_partial":
+  ["flexible-gmres-residual-minimization"],
+  "atlas":
+  ["flexible-gmres-residual-minimization"]},
  {"uses":
   ["NLAlib.HasOrthonormalCols"],
   "sorry":
@@ -30826,6 +31326,47 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.IsFOMIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ)\n  (x : n → ℝ) : Prop",
+  "name":
+  "NLAlib.IsFOMIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  25,
+  "kind":
+  "def",
+  "doc":
+  "A FOM iterate lies in the affine Krylov space and has residual orthogonal\nto that Krylov space. This predicate imposes no unnecessary nonsingularity\nassumption on the original system. Saad (2003), §6.4.1.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  ["NLAlib.IsCGIterate",
+   "NLAlib.IsFOMIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsFOMIterate.isCGIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ} {c x₀ x : n → ℝ}\n  {q : ℕ} (hx : NLAlib.IsFOMIterate A c x₀ q x) (hA : A.PosDef) : NLAlib.IsCGIterate A c x₀ q x",
+  "name":
+  "NLAlib.IsFOMIterate.isCGIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.FOM",
+  "line":
+  276,
+  "kind":
+  "theorem",
+  "doc":
+  "On SPD systems, the FOM Galerkin condition is the native CG variational\ncondition. Saad (2003), §6.7.\natlas: fom-def (partial) ",
+  "atlas_partial":
+  ["fom-def"],
+  "atlas":
+  ["fom-def"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.IsFullQR.{u_1} {𝕜 : Type u_1} [RCLike 𝕜] {m n : ℕ} (A : Matrix (Fin m) (Fin n) 𝕜) (Q : Matrix (Fin m) (Fin m) 𝕜)\n  (R : Matrix (Fin m) (Fin n) 𝕜) : Prop",
   "name":
   "NLAlib.IsFullQR",
@@ -31193,6 +31734,106 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_Icc.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {q : ℕ} (hx : NLAlib.IsGMRESIterate A c x₀ q x) (hA : A.IsHermitian) {a b : ℝ}\n  (ha : 0 < a) (hab : a < b) (hspec : ∀ (i : n), hA.eigenvalues i ∈ Set.Icc a b) :\n  ‖WithLp.toLp 2 (c - A.mulVec x)‖ ≤ 2 * ((√b - √a) / (√b + √a)) ^ q * ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_Icc",
+  "module":
+  "NLAlib.Krylov.Solvers.MINRESIntervals",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "The definite MINRES Chebyshev rate in the vector 2-norm.\nSource: Greenbaum (1997), §3.1; Liesen--Strakoš (2013), §5.6.\natlas: minres-bound (partial) ",
+  "atlas_partial":
+  ["minres-bound"],
+  "atlas":
+  ["minres-bound"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_symmetric_intervals.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {c₁ d : ℝ} (hA : A.IsHermitian) (hc : 0 < c₁) (hcd : c₁ < d)\n  (k : ℕ) (hspec : ∀ (i : n), hA.eigenvalues i ∈ Set.Icc (-d) (-c₁) ∪ Set.Icc c₁ d)\n  (hx : NLAlib.IsGMRESIterate A c x₀ (2 * k) x) :\n  ‖WithLp.toLp 2 (c - A.mulVec x)‖ ≤ 2 * ((d - c₁) / (d + c₁)) ^ k * ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_symmetric_intervals",
+  "module":
+  "NLAlib.Krylov.Solvers.MINRESIntervals",
+  "line":
+  74,
+  "kind":
+  "theorem",
+  "doc":
+  "For spectrum in `[-d,-c] ∪ [c,d]`, MINRES contracts at the\nexplicit rate `2 ((d-c)/(d+c))^k` every `2k` steps.\nSource: Greenbaum (1997), §3.1; Liesen--Strakoš (2013), §5.6.\natlas: minres-bound (partial) ",
+  "atlas_partial":
+  ["minres-bound"],
+  "atlas":
+  ["minres-bound"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_symmetric_intervals_ratio.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {c₁ d : ℝ} (hA : A.IsHermitian) (hc : 0 < c₁) (hcd : c₁ < d)\n  (k : ℕ) (hspec : ∀ (i : n), hA.eigenvalues i ∈ Set.Icc (-d) (-c₁) ∪ Set.Icc c₁ d)\n  (hx : NLAlib.IsGMRESIterate A c x₀ (2 * k) x) :\n  ‖WithLp.toLp 2 (c - A.mulVec x)‖ ≤ 2 * ((d / c₁ - 1) / (d / c₁ + 1)) ^ k * ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_symmetric_intervals_ratio",
+  "module":
+  "NLAlib.Krylov.Solvers.MINRESIntervals",
+  "line":
+  89,
+  "kind":
+  "theorem",
+  "doc":
+  "The symmetric two-interval rate expressed using `κ = d/c`.\nSource: Greenbaum (1997), §3.1; Liesen--Strakoš (2013), §5.6.\natlas: minres-bound (partial) ",
+  "atlas_partial":
+  ["minres-bound"],
+  "atlas":
+  ["minres-bound"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_two_intervals.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {a b c₁ d : ℝ} (hA : A.IsHermitian) (hab : a < b) (hb : b < 0)\n  (hc : 0 < c₁) (hcd : c₁ < d) (hlen : d - c₁ = b - a) (k : ℕ)\n  (hspec : ∀ (i : n), hA.eigenvalues i ∈ Set.Icc a b ∪ Set.Icc c₁ d) (hx : NLAlib.IsGMRESIterate A c x₀ (2 * k) x) :\n  ‖WithLp.toLp 2 (c - A.mulVec x)‖ ≤\n    2 * ((√|a * d| - √|b * c₁|) / (√|a * d| + √|b * c₁|)) ^ k * ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_two_intervals",
+  "module":
+  "NLAlib.Krylov.Solvers.MINRESIntervals",
+  "line":
+  53,
+  "kind":
+  "theorem",
+  "doc":
+  "MINRES at step `2k` has the equal-width indefinite two-interval rate.\nSource: Greenbaum (1997), §3.1; Liesen--Strakoš (2013), §5.6. The\npolynomial argument needs no separate invertibility hypothesis: the\nspectral containment already excludes zero in a nonempty dimension.\natlas: minres-bound (partial) ",
+  "atlas_partial":
+  ["minres-bound"],
+  "atlas":
+  ["minres-bound"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_isHermitian.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {q : ℕ} (hx : NLAlib.IsGMRESIterate A c x₀ q x) (hA : A.IsHermitian)\n  {p : Polynomial ℝ} (hp : p.degree ≤ ↑q) (hp0 : Polynomial.eval 0 p = 1) {M : ℝ} (hM0 : 0 ≤ M)\n  (hM : ∀ (i : n), |Polynomial.eval (hA.eigenvalues i) p| ≤ M) :\n  ‖WithLp.toLp 2 (c - A.mulVec x)‖ ≤ M * ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_isHermitian",
+  "module":
+  "NLAlib.Krylov.Solvers.MINRESIntervals",
+  "line":
+  23,
+  "kind":
+  "theorem",
+  "doc":
+  "The symmetric spectral GMRES estimate in the native vector 2-norm.\nSource: Greenbaum (1997), §3.1.\natlas: minres-bound (partial) ",
+  "atlas_partial":
+  ["minres-bound"],
+  "atlas":
+  ["minres-bound"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_normal.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  {c x₀ x : n → ℝ} {q : ℕ} (hx : NLAlib.IsGMRESIterate A c x₀ q x) (hA : A * A.transpose = A.transpose * A)\n  {p : Polynomial ℝ} (hp : p.degree ≤ ↑q) (hp0 : Polynomial.eval 0 p = 1) {M : ℝ}\n  (hM : ∀ z ∈ spectrum ℂ (A.map ⇑(algebraMap ℝ ℂ)), ‖Polynomial.eval₂ (algebraMap ℝ ℂ) z p‖ ≤ M) :\n  ‖WithLp.toLp 2 (c - A.mulVec x)‖ ≤ M * ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
   "name":
   "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_normal",
@@ -31208,6 +31849,52 @@
   ["gmres-diagonalizable"],
   "atlas":
   ["gmres-diagonalizable"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate",
+   "NLAlib.lambdaMin",
+   "NLAlib.matrixHermitianPart",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_posDef_hermitianPart.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {k : ℕ} (hx : NLAlib.IsGMRESIterate A c x₀ k x)\n  (hM : (NLAlib.matrixHermitianPart A).PosDef) :\n  ‖WithLp.toLp 2 (c - A.mulVec x)‖ ≤\n    (1 - NLAlib.lambdaMin (NLAlib.matrixHermitianPart A) ^ 2 / NLAlib.specNorm A ^ 2) ^ (↑k / 2) *\n      ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_posDef_hermitianPart",
+  "module":
+  "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+  "line":
+  165,
+  "kind":
+  "theorem",
+  "doc":
+  "The positive-real GMRES estimate with the exact half-step exponent\nof the standard statement. Source: Eisenstat--Elman--Schultz (1983),\nTheorem 3.3; Saad (2003), §6.11.4.\natlas: gmres-elman (partial) ",
+  "atlas_partial":
+  ["gmres-elman"],
+  "atlas":
+  ["gmres-elman"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate",
+   "NLAlib.lambdaMin",
+   "NLAlib.matrixHermitianPart",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_sqrt_pow_of_posDef_hermitianPart.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {k : ℕ} (hx : NLAlib.IsGMRESIterate A c x₀ k x)\n  (hM : (NLAlib.matrixHermitianPart A).PosDef) :\n  ‖WithLp.toLp 2 (c - A.mulVec x)‖ ≤\n    √(1 - NLAlib.lambdaMin (NLAlib.matrixHermitianPart A) ^ 2 / NLAlib.specNorm A ^ 2) ^ k *\n      ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_sqrt_pow_of_posDef_hermitianPart",
+  "module":
+  "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+  "line":
+  141,
+  "kind":
+  "theorem",
+  "doc":
+  "Positive definiteness of the symmetric part gives the positive-real\nGMRES estimate, with the square-root factor raised to the step count.\nSource: Eisenstat--Elman--Schultz (1983), Theorem 3.3; Saad (2003),\n§6.11.4. Empty dimensions and step zero are included.\natlas: gmres-elman (partial) ",
+  "atlas_partial":
+  ["gmres-elman"],
+  "atlas":
+  ["gmres-elman"]},
  {"uses":
   ["NLAlib.IsGMRESIterate"],
   "sorry":
@@ -40211,6 +40898,31 @@
  {"uses":
   ["NLAlib.LanczosDecomp",
    "NLAlib.LanczosDecomp.T",
+   "NLAlib.LanczosDecomp.beta",
+   "NLAlib.orthogonalPolynomialJacobiMatrix",
+   "NLAlib.polynomialIntegral",
+   "NLAlib.spectralMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.LanczosDecomp.T_eq_orthogonalPolynomialJacobiMatrix_of_beta_nonneg.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ} (D : NLAlib.LanczosDecomp A b q) (hA : A.IsHermitian)\n  (hbeta : ∀ j < q, 0 ≤ D.beta j) :\n  D.T = NLAlib.orthogonalPolynomialJacobiMatrix (NLAlib.polynomialIntegral (NLAlib.spectralMeasure hA b) ⋯) q",
+  "name":
+  "NLAlib.LanczosDecomp.T_eq_orthogonalPolynomialJacobiMatrix_of_beta_nonneg",
+  "module":
+  "NLAlib.Krylov.Quadrature.CanonicalLanczos",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "Nonnegative Lanczos couplings identify the actual compression with the canonical\nmoment Jacobi matrix of its spectral measure. Empty order is included.\nSource: Gautschi (2004), Theorem 1.27 and §2.2.3.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.LanczosDecomp",
+   "NLAlib.LanczosDecomp.T",
    "NLAlib.LanczosDecomp.poly"],
   "sorry":
   false,
@@ -41567,6 +42279,28 @@
   ["quadrature-exactness-characterisation"],
   "atlas":
   ["quadrature-exactness-characterisation"]},
+ {"uses":
+  ["NLAlib.LanczosDecomp",
+   "NLAlib.LanczosDecomp.T",
+   "NLAlib.spectralMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.LanczosDecomp.spectralMeasure_T_first_total_eq_sum_dirac.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ} (D : NLAlib.LanczosDecomp A b q) (hA : A.IsHermitian) :\n  (NLAlib.spectralMeasure ⋯ fun j => if ↑j = 0 then ‖WithLp.toLp 2 b‖ else 0) =\n    ∑ i,\n      ENNReal.ofReal (b ⬝ᵥ b * (⋯.eigenvectorBasis i).ofLp ⟨0, ⋯⟩ ^ 2) • MeasureTheory.Measure.dirac (⋯.eigenvalues i)",
+  "name":
+  "NLAlib.LanczosDecomp.spectralMeasure_T_first_total_eq_sum_dirac",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  238,
+  "kind":
+  "theorem",
+  "doc":
+  "The Gauss spectral-measure identity with a total mass-scaled first vector, including\nthe zero-point empty rule. Each eigenvector index supplies the positive dimension needed\nfor its first coordinate; no nonexistent coordinate is chosen at order zero.\nSource: Gautschi (2004), Corollary to Theorem 3.1.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
  {"uses":
   ["NLAlib.LanczosDecomp",
    "NLAlib.LanczosDecomp.T"],
@@ -43344,7 +44078,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  107,
+  110,
   "kind":
   "def",
   "doc":
@@ -43364,7 +44098,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  128,
+  131,
   "kind":
   "theorem",
   "doc":
@@ -84916,6 +85650,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.SplittingConverges.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] [DecidableEq n]\n  (M N : Matrix n n 𝕜) : Prop",
+  "name":
+  "NLAlib.SplittingConverges",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  104,
+  "kind":
+  "def",
+  "doc":
+  "Every right-hand side has a unique solution, and the actual splitting iteration converges\nto that solution from every initializer. This is the full convergence contract, including\nuniqueness of the linear-system solution.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.Stiefel (n k : ℕ) : Type",
   "name":
   "NLAlib.Stiefel",
@@ -85350,6 +86104,31 @@
   ["unitarily-invariant-norm-def"],
   "atlas":
   ["unitarily-invariant-norm-def"]},
+ {"uses":
+  ["NLAlib.LanczosDecomp.T",
+   "NLAlib.arnoldiDecomp",
+   "NLAlib.krylovGrade",
+   "NLAlib.orthogonalPolynomialJacobiMatrix",
+   "NLAlib.polynomialIntegral",
+   "NLAlib.spectralMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.T_arnoldiDecomp_eq_orthogonalPolynomialJacobiMatrix.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ) {q : ℕ} (hq : q ≤ NLAlib.krylovGrade A b) :\n  NLAlib.LanczosDecomp.T (NLAlib.arnoldiDecomp A b q hq) =\n    NLAlib.orthogonalPolynomialJacobiMatrix (NLAlib.polynomialIntegral (NLAlib.spectralMeasure hA b) ⋯) q",
+  "name":
+  "NLAlib.T_arnoldiDecomp_eq_orthogonalPolynomialJacobiMatrix",
+  "module":
+  "NLAlib.Krylov.Quadrature.CanonicalLanczos",
+  "line":
+  53,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual positively normalized Lanczos algorithm yields the canonical moment Jacobi\nmatrix of its spectral measure, at every order up to grade.\nSource: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
  {"uses":
   [],
   "sorry":
@@ -91635,7 +92414,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  56,
+  59,
   "kind":
   "theorem",
   "doc":
@@ -93234,7 +94013,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  185,
+  188,
   "kind":
   "theorem",
   "doc":
@@ -93322,6 +94101,86 @@
   "theorem",
   "doc":
   "The scalar affine evaluation at actual real coordinates is exactly\nthe ordinary Gaussian matrix series, with its original coefficients. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.affineStationaryIterate.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] (H : Matrix n n 𝕜)\n  (d x₀ : n → 𝕜) : ℕ → n → 𝕜",
+  "name":
+  "NLAlib.affineStationaryIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  25,
+  "kind":
+  "def",
+  "doc":
+  "The stationary affine iteration `xₖ₊₁ = H xₖ + d`, initialized at `x₀`.\nSource: Darve–Wootters (2021), classical iterative methods. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.affineStationaryIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.affineStationaryIterate_sub_eq_pow_mulVec.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n]\n  [DecidableEq n] {H : Matrix n n 𝕜} {d xs : n → 𝕜} (hxs : H.mulVec xs + d = xs) (x₀ : n → 𝕜) (k : ℕ) :\n  NLAlib.affineStationaryIterate H d x₀ k - xs = (H ^ k).mulVec (x₀ - xs)",
+  "name":
+  "NLAlib.affineStationaryIterate_sub_eq_pow_mulVec",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  41,
+  "kind":
+  "theorem",
+  "doc":
+  "Error about any fixed point is exactly the iteration-matrix power applied to initial error.\nSource: Darve, *Splitting Methods and Convergence Theory*, error recursion. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.affineStationaryIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.affineStationaryIterate_succ.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] (H : Matrix n n 𝕜)\n  (d x₀ : n → 𝕜) (k : ℕ) :\n  NLAlib.affineStationaryIterate H d x₀ (k + 1) = H.mulVec (NLAlib.affineStationaryIterate H d x₀ k) + d",
+  "name":
+  "NLAlib.affineStationaryIterate_succ",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  37,
+  "kind":
+  "theorem",
+  "doc":
+  "The stationary recursion applies the iteration matrix and adds its fixed forcing. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.affineStationaryIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.affineStationaryIterate_zero.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] (H : Matrix n n 𝕜)\n  (d x₀ : n → 𝕜) : NLAlib.affineStationaryIterate H d x₀ 0 = x₀",
+  "name":
+  "NLAlib.affineStationaryIterate_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  32,
+  "kind":
+  "theorem",
+  "doc":
+  "The affine stationary iteration starts at the specified initializer. ",
   "atlas_partial":
   [],
   "atlas":
@@ -100747,7 +101606,7 @@
   "module":
   "NLAlib.Krylov.Solvers.PolynomialMethods",
   "line":
-  342,
+  362,
   "kind":
   "theorem",
   "doc":
@@ -100767,11 +101626,32 @@
   "module":
   "NLAlib.Krylov.Solvers.PolynomialMethods",
   "line":
-  323,
+  343,
   "kind":
   "theorem",
   "doc":
   "**First Chebyshev step**: `x_1 = x₀ + r₀/θ`, `θ = (b + a)/2`, for `0 < a < b`.\nSource: Saad (2003) [`saad03`], Alg. 12.1 (`d_0 = r_0/θ`).\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevIterate",
+   "NLAlib.chebyshevResidual"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevIterate_sub.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {a b : ℝ} (ha : 0 < a) (hab : a < b)\n  {A : Matrix n n ℝ} {c xs : n → ℝ} (hxs : A.mulVec xs = c) (x₀ : n → ℝ) (q : ℕ) :\n  NLAlib.chebyshevIterate a b A c x₀ q - xs = ((Polynomial.aeval A) (NLAlib.chebyshevResidual a b q)).mulVec (x₀ - xs)",
+  "name":
+  "NLAlib.chebyshevIterate_sub",
+  "module":
+  "NLAlib.Krylov.Solvers.PolynomialMethods",
+  "line":
+  219,
+  "kind":
+  "theorem",
+  "doc":
+  "About an exact solution, the Chebyshev iterate has the normalized residual polynomial\nas its exact error polynomial. Source: Saad (2003), §12.3.\natlas: chebyshev-iteration (partial) ",
   "atlas_partial":
   ["chebyshev-iteration"],
   "atlas":
@@ -100788,7 +101668,7 @@
   "module":
   "NLAlib.Krylov.Solvers.PolynomialMethods",
   "line":
-  209,
+  229,
   "kind":
   "theorem",
   "doc":
@@ -100808,7 +101688,7 @@
   "module":
   "NLAlib.Krylov.Solvers.PolynomialMethods",
   "line":
-  317,
+  337,
   "kind":
   "theorem",
   "doc":
@@ -101612,6 +102492,150 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.chebyshevRecurrenceDirection.{u_1} {n : Type u_1} [Fintype n] (a b : ℝ) (A : Matrix n n ℝ) (c x₀ : n → ℝ)\n  (k : ℕ) : n → ℝ",
+  "name":
+  "NLAlib.chebyshevRecurrenceDirection",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  103,
+  "kind":
+  "def",
+  "doc":
+  "The direction in the coupled Chebyshev method, initialized by `d₀ = r₀/θ`.\nSource: Saad (2003), Algorithm 12.1. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.chebyshevRecurrenceDirection",
+   "NLAlib.chebyshevRecurrenceIterate",
+   "NLAlib.chebyshevRho"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRecurrenceDirection_succ.{u_1} {n : Type u_1} [Fintype n] (a b : ℝ) (A : Matrix n n ℝ) (c x₀ : n → ℝ)\n  (k : ℕ) :\n  NLAlib.chebyshevRecurrenceDirection a b A c x₀ (k + 1) =\n    (NLAlib.chebyshevRho a b (k + 1) * NLAlib.chebyshevRho a b k) • NLAlib.chebyshevRecurrenceDirection a b A c x₀ k +\n      (4 * NLAlib.chebyshevRho a b (k + 1) / (b - a)) •\n        (c - A.mulVec (NLAlib.chebyshevRecurrenceIterate a b A c x₀ (k + 1)))",
+  "name":
+  "NLAlib.chebyshevRecurrenceDirection_succ",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  128,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual directions satisfy `dₖ₊₁ = ρₖ₊₁ρₖdₖ + (2ρₖ₊₁/δ)rₖ₊₁`.\nSource: Saad (2003), Algorithm 12.1.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRecurrenceDirection"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRecurrenceDirection_zero.{u_1} {n : Type u_1} [Fintype n] (a b : ℝ) (A : Matrix n n ℝ) (c x₀ : n → ℝ) :\n  NLAlib.chebyshevRecurrenceDirection a b A c x₀ 0 = (2 / (b + a)) • (c - A.mulVec x₀)",
+  "name":
+  "NLAlib.chebyshevRecurrenceDirection_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  114,
+  "kind":
+  "theorem",
+  "doc":
+  "The first direction is `r₀/θ`, with `θ = (b+a)/2`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRecurrenceIterate.{u_1} {n : Type u_1} [Fintype n] (a b : ℝ) (A : Matrix n n ℝ) (c x₀ : n → ℝ) (k : ℕ) :\n  n → ℝ",
+  "name":
+  "NLAlib.chebyshevRecurrenceIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  97,
+  "kind":
+  "def",
+  "doc":
+  "The actual coupled Chebyshev iterate, with one matrix-vector residual evaluation per step.\nSource: Saad (2003), Algorithm 12.1.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevIterate",
+   "NLAlib.chebyshevRecurrenceIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRecurrenceIterate_eq_chebyshevIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {a b : ℝ}\n  (ha : 0 < a) (hab : a < b) (A : Matrix n n ℝ) (c x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.chebyshevRecurrenceIterate a b A c x₀ k = NLAlib.chebyshevIterate a b A c x₀ k",
+  "name":
+  "NLAlib.chebyshevRecurrenceIterate_eq_chebyshevIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  201,
+  "kind":
+  "theorem",
+  "doc":
+  "The explicitly implemented coupled `ρₖ,dₖ,xₖ` algorithm realizes the normalized Chebyshev\npolynomial iterate at every step. No matrix positivity assumption is needed for this algebraic\nrealization. Source: Saad (2003), Algorithm 12.1.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRecurrenceDirection",
+   "NLAlib.chebyshevRecurrenceIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRecurrenceIterate_succ.{u_1} {n : Type u_1} [Fintype n] (a b : ℝ) (A : Matrix n n ℝ) (c x₀ : n → ℝ)\n  (k : ℕ) :\n  NLAlib.chebyshevRecurrenceIterate a b A c x₀ (k + 1) =\n    NLAlib.chebyshevRecurrenceIterate a b A c x₀ k + NLAlib.chebyshevRecurrenceDirection a b A c x₀ k",
+  "name":
+  "NLAlib.chebyshevRecurrenceIterate_succ",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  120,
+  "kind":
+  "theorem",
+  "doc":
+  "Each actual coupled step updates `xₖ₊₁ = xₖ + dₖ`.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRecurrenceIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRecurrenceIterate_zero.{u_1} {n : Type u_1} [Fintype n] (a b : ℝ) (A : Matrix n n ℝ) (c x₀ : n → ℝ) :\n  NLAlib.chebyshevRecurrenceIterate a b A c x₀ 0 = x₀",
+  "name":
+  "NLAlib.chebyshevRecurrenceIterate_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  109,
+  "kind":
+  "theorem",
+  "doc":
+  "The coupled Chebyshev method begins at `x₀`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.chebyshevResidual (a b : ℝ) (q : ℕ) : Polynomial ℝ",
   "name":
   "NLAlib.chebyshevResidual",
@@ -101643,6 +102667,106 @@
   "theorem",
   "doc":
   "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRho (a b : ℝ) : ℕ → ℝ",
+  "name":
+  "NLAlib.chebyshevRho",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  20,
+  "kind":
+  "def",
+  "doc":
+  "Scalar coefficients of Chebyshev iteration: `ρ₀ = 1/σ` and\n`ρₖ₊₁ = 1/(2σ - ρₖ)`, where `σ = (b+a)/(b-a)`. Inverses are total; the positive-interval\nhypotheses in the realization theorem exclude zero denominators.\nSource: Saad (2003), Algorithm 12.1.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRho"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRho_eq_eval_T_div_eval_T_succ {a b : ℝ} (ha : 0 < a) (hab : a < b) (k : ℕ) :\n  NLAlib.chebyshevRho a b k =\n    Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑k) /\n      Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑(k + 1))",
+  "name":
+  "NLAlib.chebyshevRho_eq_eval_T_div_eval_T_succ",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  51,
+  "kind":
+  "theorem",
+  "doc":
+  "The recursively computed scalar is the ratio `Tₖ(σ)/Tₖ₊₁(σ)`.\nSource: Saad (2003), Algorithm 12.1 and the Chebyshev three-term identity.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRho"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRho_pos {a b : ℝ} (ha : 0 < a) (hab : a < b) (k : ℕ) : 0 < NLAlib.chebyshevRho a b k",
+  "name":
+  "NLAlib.chebyshevRho_pos",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  73,
+  "kind":
+  "theorem",
+  "doc":
+  "Positive spectral endpoints give positive scalar coefficients at every step.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRho"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRho_succ (a b : ℝ) (k : ℕ) :\n  NLAlib.chebyshevRho a b (k + 1) = (2 * ((b + a) / (b - a)) - NLAlib.chebyshevRho a b k)⁻¹",
+  "name":
+  "NLAlib.chebyshevRho_succ",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  33,
+  "kind":
+  "theorem",
+  "doc":
+  "The scalar coefficient satisfies the advertised reciprocal recursion. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.chebyshevRho"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.chebyshevRho_zero (a b : ℝ) : NLAlib.chebyshevRho a b 0 = ((b + a) / (b - a))⁻¹",
+  "name":
+  "NLAlib.chebyshevRho_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  29,
+  "kind":
+  "theorem",
+  "doc":
+  "Initial scalar coefficient of the Chebyshev recursion. ",
   "atlas_partial":
   [],
   "atlas":
@@ -108882,6 +110006,28 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.frobEnergy",
+   "NLAlib.frobInner",
+   "NLAlib.matrixMultitermLinearMap"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.conjTranspose_multiterm_residual_mul_eq_zero_iff_unique_frobEnergy_minimizer.{u_1, u_2, u_3, u_4, u_5}\n  {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] {ι : Type u_3} [Fintype ι] {p : Type u_4} {q : Type u_5}\n  [Fintype p] [Fintype q] (A : ι → Matrix m m ℝ) (B : ι → Matrix n n ℝ)\n  (hS :\n    ∀ (U V : Matrix m n ℝ),\n      NLAlib.frobInner U ((NLAlib.matrixMultitermLinearMap A B) V) =\n        NLAlib.frobInner ((NLAlib.matrixMultitermLinearMap A B) U) V)\n  (hpos : ∀ (Z : Matrix m n ℝ), Z ≠ 0 → 0 < NLAlib.frobEnergy (NLAlib.matrixMultitermLinearMap A B) Z)\n  (V : Matrix m p ℝ) (W : Matrix n q ℝ) (X F : Matrix m n ℝ) (hX : (NLAlib.matrixMultitermLinearMap A B) X = F)\n  (Y : Matrix p q ℝ) :\n  V.conjTranspose * (F - ∑ i, A i * (V * Y * W.conjTranspose) * B i) * W = 0 ↔\n    (∀ (T : Matrix p q ℝ),\n        NLAlib.frobEnergy (NLAlib.matrixMultitermLinearMap A B) (X - V * Y * W.conjTranspose) ≤\n          NLAlib.frobEnergy (NLAlib.matrixMultitermLinearMap A B) (X - V * T * W.conjTranspose)) ∧\n      ∀ (T : Matrix p q ℝ),\n        NLAlib.frobEnergy (NLAlib.matrixMultitermLinearMap A B) (X - V * T * W.conjTranspose) ≤\n            NLAlib.frobEnergy (NLAlib.matrixMultitermLinearMap A B) (X - V * Y * W.conjTranspose) →\n          V * T * W.conjTranspose = V * Y * W.conjTranspose",
+  "name":
+  "NLAlib.conjTranspose_multiterm_residual_mul_eq_zero_iff_unique_frobEnergy_minimizer",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  203,
+  "kind":
+  "theorem",
+  "doc":
+  "The concrete multiterm Galerkin equation characterizes its unique minimizing\ntrial matrix when the whole operator is Frobenius self-adjoint and positive definite.\nIndividual coefficient matrices need not be positive definite or symmetric.\nSource: Palitta–Simoncini (2019), Proposition 2.2.\natlas: matrix-equation-galerkin-optimality (partial) ",
+  "atlas_partial":
+  ["matrix-equation-galerkin-optimality"],
+  "atlas":
+  ["matrix-equation-galerkin-optimality"]},
+ {"uses":
   ["NLAlib.rectDiag"],
   "sorry":
   false,
@@ -108921,6 +110067,27 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.frobEnergy",
+   "NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.conjTranspose_residual_mul_eq_zero_iff_unique_frobEnergy_minimizer.{u_1, u_2, u_3, u_4} {m : Type u_1}\n  {n : Type u_2} [Fintype m] [Fintype n] {p : Type u_3} {q : Type u_4} [Fintype p] [Fintype q]\n  (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ)\n  (hS : ∀ (U V : Matrix m n ℝ), NLAlib.frobInner U (S V) = NLAlib.frobInner (S U) V)\n  (hpos : ∀ (Z : Matrix m n ℝ), Z ≠ 0 → 0 < NLAlib.frobEnergy S Z) (V : Matrix m p ℝ) (W : Matrix n q ℝ)\n  (X F : Matrix m n ℝ) (hX : S X = F) (Y : Matrix p q ℝ) :\n  V.conjTranspose * (F - S (V * Y * W.conjTranspose)) * W = 0 ↔\n    (∀ (T : Matrix p q ℝ),\n        NLAlib.frobEnergy S (X - V * Y * W.conjTranspose) ≤ NLAlib.frobEnergy S (X - V * T * W.conjTranspose)) ∧\n      ∀ (T : Matrix p q ℝ),\n        NLAlib.frobEnergy S (X - V * T * W.conjTranspose) ≤ NLAlib.frobEnergy S (X - V * Y * W.conjTranspose) →\n          V * T * W.conjTranspose = V * Y * W.conjTranspose",
+  "name":
+  "NLAlib.conjTranspose_residual_mul_eq_zero_iff_unique_frobEnergy_minimizer",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  131,
+  "kind":
+  "theorem",
+  "doc":
+  "The reduced Galerkin equation is equivalent to unique minimum operator-energy\nerror on the two-sided trial space. Orthonormal factors are allowed but unnecessary\nfor this equivalence; uniqueness concerns the represented matrix, not its coefficients.\nSource: Palitta–Simoncini (2019), Definition 2.1 and Proposition 2.2, including unequal\nreduced dimensions and arbitrary Frobenius self-adjoint positive definite operators.\natlas: matrix-equation-galerkin-optimality (partial) ",
+  "atlas_partial":
+  ["matrix-equation-galerkin-optimality"],
+  "atlas":
+  ["matrix-equation-galerkin-optimality"]},
  {"uses":
   ["NLAlib.HasOrthonormalCols",
    "NLAlib.projResidual"],
@@ -111138,7 +112305,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  39,
+  40,
   "kind":
   "theorem",
   "doc":
@@ -111158,7 +112325,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  69,
+  82,
   "kind":
   "theorem",
   "doc":
@@ -117445,7 +118612,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  77,
+  90,
   "kind":
   "theorem",
   "doc":
@@ -118653,6 +119820,319 @@
   "theorem",
   "doc":
   "The actual canonical discrete evaluation matrix also has orthonormal rows,\nbecause it is square. Source: OF20, finite discrete dual orthogonality.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesAlpha.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) (j : ℕ) : ℝ",
+  "name":
+  "NLAlib.discreteStieltjesAlpha",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  68,
+  "kind":
+  "def",
+  "doc":
+  "The diagonal coefficient computed by the weighted Stieltjes procedure. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.discreteStieltjesAlpha",
+   "NLAlib.lanczosAlpha"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesAlpha_eq_lanczosAlpha.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (t w : n → ℝ)\n  (hw : ∀ (r : n), 0 ≤ w r) (j : ℕ) :\n  NLAlib.discreteStieltjesAlpha t w j = NLAlib.lanczosAlpha (Matrix.diagonal t) (fun r => √(w r)) j",
+  "name":
+  "NLAlib.discreteStieltjesAlpha_eq_lanczosAlpha",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  179,
+  "kind":
+  "theorem",
+  "doc":
+  "The literal weighted Stieltjes diagonal coefficient equals the coefficient computed by\nthe actual diagonal Lanczos algorithm. Source: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.discreteStieltjesAlpha",
+   "NLAlib.orthogonalRecurrenceAlpha",
+   "NLAlib.polynomialIntegral",
+   "NLAlib.spectralMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesAlpha_eq_orthogonalRecurrenceAlpha {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t)\n  (hw : ∀ (r : Fin N), 0 < w r) {j : ℕ} (hj : j < N) :\n  NLAlib.discreteStieltjesAlpha t w j =\n    NLAlib.orthogonalRecurrenceAlpha (NLAlib.polynomialIntegral (NLAlib.spectralMeasure ⋯ fun r => √(w r)) ⋯) j",
+  "name":
+  "NLAlib.discreteStieltjesAlpha_eq_orthogonalRecurrenceAlpha",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  112,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual weighted Stieltjes diagonal is the canonical monic moment alpha.\nSource: Gautschi (2004), §2.2.3.1.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesBeta.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) (j : ℕ) : ℝ",
+  "name":
+  "NLAlib.discreteStieltjesBeta",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  72,
+  "kind":
+  "def",
+  "doc":
+  "The normalized nonnegative coupling computed by the weighted Stieltjes procedure. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.discreteStieltjesBeta",
+   "NLAlib.lanczosBeta"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesBeta_eq_lanczosBeta.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (t w : n → ℝ)\n  (hw : ∀ (r : n), 0 ≤ w r) (j : ℕ) :\n  NLAlib.discreteStieltjesBeta t w j = NLAlib.lanczosBeta (Matrix.diagonal t) (fun r => √(w r)) j",
+  "name":
+  "NLAlib.discreteStieltjesBeta_eq_lanczosBeta",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  191,
+  "kind":
+  "theorem",
+  "doc":
+  "The normalized Stieltjes coupling equals the actual Lanczos coupling at every step.\nSource: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.discreteStieltjesBeta"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesBeta_zero.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) :\n  NLAlib.discreteStieltjesBeta t w 0 = 0",
+  "name":
+  "NLAlib.discreteStieltjesBeta_zero",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  200,
+  "kind":
+  "theorem",
+  "doc":
+  "Normalized Stieltjes has zero boundary coupling, before any residual is formed.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.LanczosState"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesInit.{u_1} {n : Type u_1} [Fintype n] (w : n → ℝ) : NLAlib.LanczosState n",
+  "name":
+  "NLAlib.discreteStieltjesInit",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  34,
+  "kind":
+  "def",
+  "doc":
+  "Initial normalized Stieltjes state: the previous values are zero, current values are\nthe reciprocal square-root total mass, and the boundary coupling is zero.\nThe shared three-term state stores values at the nodes instead of Euclidean Lanczos vectors.\nSource: Gautschi (2004), §2.2.3.1. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesMonicBeta.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) (j : ℕ) : ℝ",
+  "name":
+  "NLAlib.discreteStieltjesMonicBeta",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  76,
+  "kind":
+  "def",
+  "doc":
+  "Monic Stieltjes beta uses total mass at index zero and the square of the normalized\ncoupling at positive indices. The mass is not a Jacobi boundary coupling.\nSource: Gautschi (2004), §2.2.3.1.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.discreteStieltjesMonicBeta",
+   "NLAlib.orthogonalRecurrenceBeta",
+   "NLAlib.polynomialIntegral",
+   "NLAlib.spectralMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesMonicBeta_eq_orthogonalRecurrenceBeta {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t)\n  (hw : ∀ (r : Fin N), 0 < w r) {j : ℕ} (hj0 : 0 < j) (hj : j ≤ N) :\n  NLAlib.discreteStieltjesMonicBeta t w j =\n    NLAlib.orthogonalRecurrenceBeta (NLAlib.polynomialIntegral (NLAlib.spectralMeasure ⋯ fun r => √(w r)) ⋯) j",
+  "name":
+  "NLAlib.discreteStieltjesMonicBeta_eq_orthogonalRecurrenceBeta",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  130,
+  "kind":
+  "theorem",
+  "doc":
+  "Positive-index monic Stieltjes betas equal the canonical moment norm ratios, including\nthe zero ratio at terminal order `N`. Index zero is instead the separately stated mass.\nSource: Gautschi (2004), §2.2.3.1.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.discreteStieltjesMonicBeta"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesMonicBeta_zero.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) :\n  NLAlib.discreteStieltjesMonicBeta t w 0 = ∑ r, w r",
+  "name":
+  "NLAlib.discreteStieltjesMonicBeta_zero",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  206,
+  "kind":
+  "theorem",
+  "doc":
+  "The monic beta-zero convention is the total atomic mass, independently of the normalized\nzero Jacobi boundary coupling. Source: Gautschi (2004), §2.2.3.1.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.LanczosState"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesState.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) (j : ℕ) : NLAlib.LanczosState n",
+  "name":
+  "NLAlib.discreteStieltjesState",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  51,
+  "kind":
+  "def",
+  "doc":
+  "The state produced by iterating the actual weighted Stieltjes procedure.\nSource: Gautschi (2004), §2.2.3.1.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.LanczosState",
+   "NLAlib.discreteStieltjesState",
+   "NLAlib.discreteStieltjesStep"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesState_succ.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) (j : ℕ) :\n  NLAlib.discreteStieltjesState t w (j + 1) = NLAlib.discreteStieltjesStep t w (NLAlib.discreteStieltjesState t w j)",
+  "name":
+  "NLAlib.discreteStieltjesState_succ",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  58,
+  "kind":
+  "theorem",
+  "doc":
+  "Each actual Stieltjes state is obtained by applying its weighted three-term step.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.LanczosState"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesStep.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) (s : NLAlib.LanczosState n) :\n  NLAlib.LanczosState n",
+  "name":
+  "NLAlib.discreteStieltjesStep",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  41,
+  "kind":
+  "def",
+  "doc":
+  "The literal normalized Stieltjes step on weighted node values: compute the weighted\nRayleigh diagonal, subtract the previous two terms, and normalize the weighted residual.\nAll square roots and inverses are total; nonnegative weights give the intended norm.\nSource: Gautschi (2004), §2.2.3.1.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesValues.{u_1} {n : Type u_1} [Fintype n] (t w : n → ℝ) (j : ℕ) : n → ℝ",
+  "name":
+  "NLAlib.discreteStieltjesValues",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  64,
+  "kind":
+  "def",
+  "doc":
+  "Actual normalized polynomial values computed at the nodes by Stieltjes iteration. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.LanczosDecomp.poly",
+   "NLAlib.arnoldiDecomp",
+   "NLAlib.discreteStieltjesValues",
+   "NLAlib.krylovGrade"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.discreteStieltjesValues_eq_eval_lanczosPoly {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t)\n  (hw : ∀ (r : Fin N), 0 < w r) {j : ℕ} (hj : j < N) (r : Fin N) :\n  NLAlib.discreteStieltjesValues t w j r =\n    Polynomial.eval (t r) (NLAlib.LanczosDecomp.poly (NLAlib.arnoldiDecomp (Matrix.diagonal t) (fun r => √(w r)) N ⋯) j)",
+  "name":
+  "NLAlib.discreteStieltjesValues_eq_eval_lanczosPoly",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  199,
+  "kind":
+  "theorem",
+  "doc":
+  "Computed Stieltjes values are the actual Lanczos orthonormal polynomials evaluated at\nthe nodes. This identifies the value-only implementation with the polynomial procedure.\nSource: Gautschi (2004), §2.2.3.1.\natlas: discrete-measure-jacobi-matrix (partial) ",
   "atlas_partial":
   ["discrete-measure-jacobi-matrix"],
   "atlas":
@@ -120005,7 +121485,7 @@
   "module":
   "NLAlib.Krylov.Solvers.PolynomialMethods",
   "line":
-  239,
+  259,
   "kind":
   "theorem",
   "doc":
@@ -123052,6 +124532,27 @@
   ["orthogonal-polynomial-zeros"],
   "atlas":
   ["orthogonal-polynomial-zeros"]},
+ {"uses":
+  ["NLAlib.frobEnergy",
+   "NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.eq_of_frobEnergy_sub_le_of_isMinOn.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ)\n  (hS : ∀ (U V : Matrix m n ℝ), NLAlib.frobInner U (S V) = NLAlib.frobInner (S U) V)\n  (hpos : ∀ (Z : Matrix m n ℝ), Z ≠ 0 → 0 < NLAlib.frobEnergy S Z) (U : Submodule ℝ (Matrix m n ℝ))\n  (X Xh : Matrix m n ℝ) (hXh : Xh ∈ U) (hmin : IsMinOn (fun Z => NLAlib.frobEnergy S (X - Z)) (↑U) Xh)\n  {Z : Matrix m n ℝ} (hZ : Z ∈ U) (hle : NLAlib.frobEnergy S (X - Z) ≤ NLAlib.frobEnergy S (X - Xh)) : Z = Xh",
+  "name":
+  "NLAlib.eq_of_frobEnergy_sub_le_of_isMinOn",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  102,
+  "kind":
+  "theorem",
+  "doc":
+  "A minimizing matrix for a positive definite operator is unique as a trial\nmatrix, independently of the coordinates used to represent that matrix. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.HasPolynomialMoments",
    "NLAlib.gaussNodes"],
@@ -131300,6 +132801,27 @@
   ["qr-decomposition"],
   "atlas":
   ["qr-decomposition"]},
+ {"uses":
+  ["NLAlib.IsQR",
+   "NLAlib.IsUpperHessenberg"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.exists_isQR_isUpperHessenberg_not_isUpperHessenberg_mul :\n  ∃ A Q R, NLAlib.IsQR A Q R ∧ NLAlib.IsUpperHessenberg A ∧ ¬NLAlib.IsUpperHessenberg (R * Q)",
+  "name":
+  "NLAlib.exists_isQR_isUpperHessenberg_not_isUpperHessenberg_mul",
+  "module":
+  "NLAlib.Krylov.Spectral.QRAlgorithm",
+  "line":
+  355,
+  "kind":
+  "theorem",
+  "doc":
+  "A valid QR factorization of a Hessenberg matrix need not preserve Hessenberg\nform after swapping the factors. The explicit rational three-by-three example\nexplains the nonzero-diagonal hypothesis for arbitrary QR choices in\n`isUpperHessenberg_qrAlgorithm`; the realized Givens routine needs no such restriction.\nThis is the singular-input precision correction for `qr-algorithm-simultaneous-iteration`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
  {"uses":
   ["NLAlib.IsQR"],
   "sorry":
@@ -142015,6 +143537,129 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.frobEnergy.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ)\n  (X : Matrix m n ℝ) : ℝ",
+  "name":
+  "NLAlib.frobEnergy",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  23,
+  "kind":
+  "def",
+  "doc":
+  "The quadratic Frobenius energy of a linear matrix operator. It is defined\nfor every operator; positivity and symmetry are hypotheses of the projection results. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobEnergy",
+   "NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.frobEnergy_add.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ)\n  (hS : ∀ (U V : Matrix m n ℝ), NLAlib.frobInner U (S V) = NLAlib.frobInner (S U) V) (U V : Matrix m n ℝ) :\n  NLAlib.frobEnergy S (U + V) = NLAlib.frobEnergy S U + 2 * NLAlib.frobInner V (S U) + NLAlib.frobEnergy S V",
+  "name":
+  "NLAlib.frobEnergy_add",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  38,
+  "kind":
+  "theorem",
+  "doc":
+  "Symmetry expands an energy of a sum with a single real cross pairing. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobEnergy"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.frobEnergy_smul.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ) (c : ℝ) (X : Matrix m n ℝ) :\n  NLAlib.frobEnergy S (c • X) = c ^ 2 * NLAlib.frobEnergy S X",
+  "name":
+  "NLAlib.frobEnergy_smul",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  32,
+  "kind":
+  "theorem",
+  "doc":
+  "A real scalar acts quadratically on operator energy. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobEnergy",
+   "NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.frobEnergy_sub.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ)\n  (hS : ∀ (U V : Matrix m n ℝ), NLAlib.frobInner U (S V) = NLAlib.frobInner (S U) V) (U V : Matrix m n ℝ) :\n  NLAlib.frobEnergy S (U - V) = NLAlib.frobEnergy S U - 2 * NLAlib.frobInner V (S U) + NLAlib.frobEnergy S V",
+  "name":
+  "NLAlib.frobEnergy_sub",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  46,
+  "kind":
+  "theorem",
+  "doc":
+  "Symmetry expands an energy of a difference with a single real cross pairing. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobEnergy",
+   "NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.frobEnergy_sub_eq_add_of_frobInner_eq_zero.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ)\n  (hS : ∀ (U V : Matrix m n ℝ), NLAlib.frobInner U (S V) = NLAlib.frobInner (S U) V) (X Xh Z : Matrix m n ℝ)\n  (horth : NLAlib.frobInner (Xh - Z) (S (X - Xh)) = 0) :\n  NLAlib.frobEnergy S (X - Z) = NLAlib.frobEnergy S (X - Xh) + NLAlib.frobEnergy S (Xh - Z)",
+  "name":
+  "NLAlib.frobEnergy_sub_eq_add_of_frobInner_eq_zero",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  54,
+  "kind":
+  "theorem",
+  "doc":
+  "Residual orthogonality gives the exact operator-energy Pythagorean identity. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobEnergy"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.frobEnergy_zero.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ) : NLAlib.frobEnergy S 0 = 0",
+  "name":
+  "NLAlib.frobEnergy_zero",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  28,
+  "kind":
+  "theorem",
+  "doc":
+  "The energy of the zero matrix is zero. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.frobInner.{u_1, u_2, u_3} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} [Fintype m] [Fintype n]\n  (A B : Matrix m n 𝕜) : ℝ",
   "name":
   "NLAlib.frobInner",
@@ -142581,6 +144226,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.frobInner_mul_left.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} {p : Type u_4}\n  [Fintype m] [Fintype n] [Fintype p] (A : Matrix m p 𝕜) (X : Matrix p n 𝕜) (Y : Matrix m n 𝕜) :\n  NLAlib.frobInner (A * X) Y = NLAlib.frobInner X (A.conjTranspose * Y)",
+  "name":
+  "NLAlib.frobInner_mul_left",
+  "module":
+  "NLAlib.Matrix.Norms.FrobeniusProducts",
+  "line":
+  19,
+  "kind":
+  "theorem",
+  "doc":
+  "Left matrix multiplication is adjoint to left multiplication by the adjoint. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.frobInner_mul_left_of_orthonormal.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3}\n  {p : Type u_4} [Fintype m] [Fintype n] [Fintype p] [DecidableEq p] {Q : Matrix m p 𝕜} (hQ : Q.conjTranspose * Q = 1)\n  (X Y : Matrix p n 𝕜) : NLAlib.frobInner (Q * X) (Q * Y) = NLAlib.frobInner X Y",
   "name":
   "NLAlib.frobInner_mul_left_of_orthonormal",
@@ -142612,6 +144277,26 @@
   "theorem",
   "doc":
   "`⟨P X, Q Y⟩_F = ⟨X, (Pᴴ Q) Y⟩_F`. Atlas `norms-frob-spec`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.frobInner_mul_mul_conjTranspose.{u_1, u_2, u_3, u_4, u_5} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3}\n  {p : Type u_4} {q : Type u_5} [Fintype m] [Fintype n] [Fintype p] [Fintype q] (V : Matrix m p 𝕜) (T : Matrix p q 𝕜)\n  (W : Matrix n q 𝕜) (R : Matrix m n 𝕜) :\n  NLAlib.frobInner (V * T * W.conjTranspose) R = NLAlib.frobInner T (V.conjTranspose * R * W)",
+  "name":
+  "NLAlib.frobInner_mul_mul_conjTranspose",
+  "module":
+  "NLAlib.Matrix.Norms.FrobeniusProducts",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "A two-sided trial matrix pairs with a residual through the reduced residual. ",
   "atlas_partial":
   [],
   "atlas":
@@ -142654,6 +144339,26 @@
   "theorem",
   "doc":
   "The residual is Frobenius-orthogonal to every matrix `QX` with columns in `range Q`.\nAtlas `projection-facts`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.frobInner_mul_right.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2} {n : Type u_3} {p : Type u_4}\n  [Fintype m] [Fintype n] [Fintype p] (X : Matrix m p 𝕜) (B : Matrix n p 𝕜) (Y : Matrix m n 𝕜) :\n  NLAlib.frobInner (X * B.conjTranspose) Y = NLAlib.frobInner X (Y * B)",
+  "name":
+  "NLAlib.frobInner_mul_right",
+  "module":
+  "NLAlib.Matrix.Norms.FrobeniusProducts",
+  "line":
+  24,
+  "kind":
+  "theorem",
+  "doc":
+  "Right multiplication by an adjoint is adjoint to ordinary right multiplication. ",
   "atlas_partial":
   [],
   "atlas":
@@ -146378,9 +148083,9 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq.{u_1, u_2, u_3, u_4, u_5, u_6} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2}\n  {n : Type u_3} {r : Type u_4} {r' : Type u_5} {t : Type u_6} [Fintype m] [Fintype n] [Fintype r] [Fintype r']\n  [Fintype t] [DecidableEq r] [DecidableEq r'] {k : ℕ} {A : Matrix m n 𝕜} {U₁ : Matrix m (Fin k) 𝕜} {U₂ : Matrix m r 𝕜}\n  {V₁ : Matrix n (Fin k) 𝕜} {V₂ : Matrix n r' 𝕜} {S₁ : Matrix (Fin k) (Fin k) 𝕜} {S₂ : Matrix r r' 𝕜}\n  (hA : A = U₁ * S₁ * V₁.conjTranspose + U₂ * S₂ * V₂.conjTranspose) (hU₂ : NLAlib.HasOrthonormalCols U₂)\n  (hV₁ : NLAlib.HasOrthonormalCols V₁) (hV₂ : NLAlib.HasOrthonormalCols V₂) (hV : V₁.conjTranspose * V₂ = 0)\n  {Ω : Matrix n t 𝕜} {Ω₁ : Matrix (Fin k) t 𝕜} {Ω₂ : Matrix r' t 𝕜} (hΩ₁ : Ω₁ = V₁.conjTranspose * Ω)\n  (hΩ₂ : Ω₂ = V₂.conjTranspose * Ω) (hunit : IsUnit (Ω₁ * Ω₁.conjTranspose)) :\n  NLAlib.frobSq (A - A * Ω * NLAlib.pinvR Ω₁ * V₁.conjTranspose) =\n    NLAlib.frobSq S₂ + NLAlib.frobSq (S₂ * Ω₂ * NLAlib.pinvR Ω₁)",
+  "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq.{u_1, u_2, u_3, u_4, u_5, u_6} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2}\n  {n : Type u_3} {r : Type u_4} {r' : Type u_5} {t : Type u_6} [Fintype m] [Fintype n] [Fintype r] [Fintype r']\n  [Fintype t] [DecidableEq r] [DecidableEq r'] {k : ℕ} {A : Matrix m n 𝕜} {U₁ : Matrix m (Fin k) 𝕜} {U₂ : Matrix m r 𝕜}\n  {V₁ : Matrix n (Fin k) 𝕜} {V₂ : Matrix n r' 𝕜} {S₁ : Matrix (Fin k) (Fin k) 𝕜} {S₂ : Matrix r r' 𝕜}\n  (hA : A = U₁ * S₁ * V₁.conjTranspose + U₂ * S₂ * V₂.conjTranspose) (hU₂ : NLAlib.HasOrthonormalCols U₂)\n  (hV₁ : NLAlib.HasOrthonormalCols V₁) (hV₂ : NLAlib.HasOrthonormalCols V₂) (hV : V₁.conjTranspose * V₂ = 0)\n  {Ω : Matrix n t 𝕜} {Ω₁ : Matrix (Fin k) t 𝕜} {Ω₂ : Matrix r' t 𝕜} (hΩ₁ : Ω₁ = V₁.conjTranspose * Ω)\n  (hΩ₂ : Ω₂ = V₂.conjTranspose * Ω) (hunit : IsUnit (Ω₁ * Ω₁.conjTranspose)) :\n  NLAlib.frobSq (A - A * Ω * NLAlib.pinvR Ω₁ * V₁.conjTranspose) =\n    NLAlib.frobSq S₂ + NLAlib.frobSq (S₂ * Ω₂ * NLAlib.pinvR Ω₁)",
   "name":
-  "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
+  "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
   "module":
   "NLAlib.LowRank.Structural.RangeFinder",
   "line":
@@ -158899,6 +160604,27 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.HasOrthonormalCols",
+   "NLAlib.lanczosRecurrence"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.hasOrthonormalCols_lanczosRecurrence_diagonal_sqrt {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t)\n  (hw : ∀ (r : Fin N), 0 < w r) :\n  NLAlib.HasOrthonormalCols (Matrix.of fun r j => NLAlib.lanczosRecurrence (Matrix.diagonal t) (fun r => √(w r)) (↑j) r)",
+  "name":
+  "NLAlib.hasOrthonormalCols_lanczosRecurrence_diagonal_sqrt",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  39,
+  "kind":
+  "theorem",
+  "doc":
+  "Actual Lanczos on the diagonal nodes produces an orthonormal square basis of full\norder `N`, including the empty discrete measure.\nSource: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
  {"uses":
   ["NLAlib.HasOrthonormalCols"],
   "sorry":
@@ -177691,7 +179417,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  89,
+  77,
   "kind":
   "theorem",
   "doc":
@@ -180186,7 +181912,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  110,
+  98,
   "kind":
   "theorem",
   "doc":
@@ -180206,7 +181932,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  121,
+  109,
   "kind":
   "theorem",
   "doc":
@@ -189448,7 +191174,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  247,
+  267,
   "kind":
   "theorem",
   "doc":
@@ -190565,6 +192291,27 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.frobEnergy",
+   "NLAlib.frobInner"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.isMinOn_frobEnergy_sub_iff_forall_frobInner_eq_zero.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m]\n  [Fintype n] (S : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ)\n  (hS : ∀ (U V : Matrix m n ℝ), NLAlib.frobInner U (S V) = NLAlib.frobInner (S U) V)\n  (hpos : ∀ (Z : Matrix m n ℝ), Z ≠ 0 → 0 < NLAlib.frobEnergy S Z) (U : Submodule ℝ (Matrix m n ℝ))\n  (X Xh : Matrix m n ℝ) (hXh : Xh ∈ U) :\n  IsMinOn (fun Z => NLAlib.frobEnergy S (X - Z)) (↑U) Xh ↔ ∀ Z ∈ U, NLAlib.frobInner Z (S (X - Xh)) = 0",
+  "name":
+  "NLAlib.isMinOn_frobEnergy_sub_iff_forall_frobInner_eq_zero",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  63,
+  "kind":
+  "theorem",
+  "doc":
+  "For a positive definite self-adjoint matrix operator, a trial matrix minimizes\nenergy error exactly when its residual is Frobenius-orthogonal to the trial subspace.\nSource: Palitta–Simoncini, Proposition 2.2, in an arbitrary linear trial space. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   ["NLAlib.IsMonicOrthogonalPolynomial",
    "NLAlib.christoffelPolynomial",
    "NLAlib.hankelMomentDet",
@@ -191399,7 +193146,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  217,
+  220,
   "kind":
   "theorem",
   "doc":
@@ -192087,7 +193834,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  294,
+  314,
   "kind":
   "theorem",
   "doc":
@@ -192109,7 +193856,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  326,
+  346,
   "kind":
   "theorem",
   "doc":
@@ -192932,6 +194679,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.isUnit_sub_of_tendsto_splitting_pow_zero.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n]\n  [DecidableEq n] {M N : Matrix n n 𝕜} (hM : IsUnit M)\n  (hpow : Filter.Tendsto (fun k => (M⁻¹ * N) ^ k) Filter.atTop (nhds 0)) : IsUnit (M - N)",
+  "name":
+  "NLAlib.isUnit_sub_of_tendsto_splitting_pow_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  113,
+  "kind":
+  "theorem",
+  "doc":
+  "Decaying splitting powers make the original matrix invertible; no existence hypothesis\non a solution is required.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.isUnit_submatrix_of_posDef_selfAdjointPart.{u_1, u_2} {n : Type u_1} {A : Matrix n n ℂ}\n  (hA : (↑((selfAdjointPart ℝ) A)).PosDef) {m : Type u_2} [Fintype m] [DecidableEq m] (e : m → n)\n  (he : Function.Injective e) : IsUnit (A.submatrix e e)",
   "name":
   "NLAlib.isUnit_submatrix_of_posDef_selfAdjointPart",
@@ -193147,7 +194914,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  276,
+  296,
   "kind":
   "theorem",
   "doc":
@@ -193169,7 +194936,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  305,
+  325,
   "kind":
   "theorem",
   "doc":
@@ -193454,7 +195221,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  155,
+  158,
   "kind":
   "theorem",
   "doc":
@@ -194144,6 +195911,56 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.discreteStieltjesAlpha",
+   "NLAlib.discreteStieltjesMonicBeta",
+   "NLAlib.jacobiMatrix",
+   "NLAlib.orthogonalPolynomialJacobiMatrix",
+   "NLAlib.polynomialIntegral",
+   "NLAlib.spectralMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.jacobiMatrix_discreteStieltjesAlpha_sqrt_monicBeta_eq {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t)\n  (hw : ∀ (r : Fin N), 0 < w r) :\n  NLAlib.jacobiMatrix (NLAlib.discreteStieltjesAlpha t w) (fun j => √(NLAlib.discreteStieltjesMonicBeta t w j)) N =\n    NLAlib.orthogonalPolynomialJacobiMatrix (NLAlib.polynomialIntegral (NLAlib.spectralMeasure ⋯ fun r => √(w r)) ⋯) N",
+  "name":
+  "NLAlib.jacobiMatrix_discreteStieltjesAlpha_sqrt_monicBeta_eq",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  175,
+  "kind":
+  "theorem",
+  "doc":
+  "The monic coefficients returned by the normalized Stieltjes procedure assemble the same\nJacobi matrix after square-root conversion. The beta-zero mass is harmless because that\nboundary coefficient is never an off-diagonal entry.\nSource: Gautschi (2004), §§2.2.3.1–2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.discreteStieltjesAlpha",
+   "NLAlib.discreteStieltjesBeta",
+   "NLAlib.jacobiMatrix",
+   "NLAlib.orthogonalPolynomialJacobiMatrix",
+   "NLAlib.polynomialIntegral",
+   "NLAlib.spectralMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.jacobiMatrix_discreteStieltjes_eq_orthogonalPolynomialJacobiMatrix {N : ℕ} (t w : Fin N → ℝ)\n  (ht : Function.Injective t) (hw : ∀ (r : Fin N), 0 < w r) :\n  NLAlib.jacobiMatrix (NLAlib.discreteStieltjesAlpha t w) (NLAlib.discreteStieltjesBeta t w) N =\n    NLAlib.orthogonalPolynomialJacobiMatrix (NLAlib.polynomialIntegral (NLAlib.spectralMeasure ⋯ fun r => √(w r)) ⋯) N",
+  "name":
+  "NLAlib.jacobiMatrix_discreteStieltjes_eq_orthogonalPolynomialJacobiMatrix",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  156,
+  "kind":
+  "theorem",
+  "doc":
+  "The Jacobi matrix returned by the actual weighted Stieltjes procedure is the canonical\nmoment Jacobi matrix of the measure; the empty case is included.\nSource: Gautschi (2004), §§2.2.3.1–2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
   ["NLAlib.jacobiLDLLower",
    "NLAlib.jacobiLDLPivot",
    "NLAlib.jacobiMatrix"],
@@ -194165,6 +195982,31 @@
   ["kernel-polynomials-christoffel"],
   "atlas":
   ["kernel-polynomials-christoffel"]},
+ {"uses":
+  ["NLAlib.LanczosDecomp.T",
+   "NLAlib.arnoldiDecomp",
+   "NLAlib.jacobiMatrix",
+   "NLAlib.krylovGrade",
+   "NLAlib.lanczosAlpha",
+   "NLAlib.lanczosBeta"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.jacobiMatrix_lanczosAlpha_lanczosBeta_eq_T.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) (b : n → ℝ) {q : ℕ} (hq : q ≤ NLAlib.krylovGrade A b) :\n  NLAlib.jacobiMatrix (NLAlib.lanczosAlpha A b) (NLAlib.lanczosBeta A b) q =\n    NLAlib.LanczosDecomp.T (NLAlib.arnoldiDecomp A b q hq)",
+  "name":
+  "NLAlib.jacobiMatrix_lanczosAlpha_lanczosBeta_eq_T",
+  "module":
+  "NLAlib.Krylov.Quadrature.CanonicalLanczos",
+  "line":
+  67,
+  "kind":
+  "theorem",
+  "doc":
+  "The Jacobi matrix assembled from the actual Lanczos recursion's coefficients is the\nactual compression at every valid order. Source: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
  {"uses":
   ["NLAlib.hankelMomentDet",
    "NLAlib.orthogonalPolynomialJacobiMatrix",
@@ -196374,7 +198216,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  71,
+  59,
   "kind":
   "def",
   "doc":
@@ -196394,7 +198236,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  77,
+  65,
   "kind":
   "instance",
   "doc":
@@ -196415,7 +198257,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  99,
+  87,
   "kind":
   "theorem",
   "doc":
@@ -196435,7 +198277,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  83,
+  71,
   "kind":
   "theorem",
   "doc":
@@ -196455,7 +198297,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  60,
+  48,
   "kind":
   "def",
   "doc":
@@ -196475,7 +198317,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  42,
+  30,
   "kind":
   "def",
   "doc":
@@ -196495,7 +198337,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  47,
+  35,
   "kind":
   "theorem",
   "doc":
@@ -197443,6 +199285,46 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.lanczosBeta"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.lanczosBeta_diagonal_sqrt_eq_zero {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t)\n  (hw : ∀ (r : Fin N), 0 < w r) : NLAlib.lanczosBeta (Matrix.diagonal t) (fun r => √(w r)) N = 0",
+  "name":
+  "NLAlib.lanczosBeta_diagonal_sqrt_eq_zero",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  103,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual finite-node Lanczos coupling vanishes at exact order `N`.\nSource: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.lanczosBeta"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.lanczosBeta_diagonal_sqrt_pos {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t) (hw : ∀ (r : Fin N), 0 < w r)\n  {j : ℕ} (hj0 : 0 < j) (hj : j < N) : 0 < NLAlib.lanczosBeta (Matrix.diagonal t) (fun r => √(w r)) j",
+  "name":
+  "NLAlib.lanczosBeta_diagonal_sqrt_pos",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  94,
+  "kind":
+  "theorem",
+  "doc":
+  "Before exact finite-support termination every positive-index actual Lanczos coupling\nis positive. Source: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
   ["NLAlib.LanczosDecomp.beta",
    "NLAlib.arnoldiDecomp",
    "NLAlib.krylovGrade",
@@ -197776,6 +199658,47 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.discreteStieltjesValues",
+   "NLAlib.lanczosRecurrence"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.lanczosRecurrence_diagonal_sqrt_eq_mul_discreteStieltjesValues.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  (t w : n → ℝ) (hw : ∀ (r : n), 0 ≤ w r) (j : ℕ) (r : n) :\n  NLAlib.lanczosRecurrence (Matrix.diagonal t) (fun r => √(w r)) j r = √(w r) * NLAlib.discreteStieltjesValues t w j r",
+  "name":
+  "NLAlib.lanczosRecurrence_diagonal_sqrt_eq_mul_discreteStieltjesValues",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+  "line":
+  169,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual Stieltjes values and actual Lanczos vectors satisfy the weighted evaluation\nidentity `qⱼ(r) = sqrt(wᵣ) pⱼ(tᵣ)` at every step, including termination.\nSource: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.lanczosRecurrence"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.lanczosRecurrence_diagonal_sqrt_mul_conjTranspose_eq_one {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t)\n  (hw : ∀ (r : Fin N), 0 < w r) :\n  have Q := Matrix.of fun r j => NLAlib.lanczosRecurrence (Matrix.diagonal t) (fun r => √(w r)) (↑j) r;\n  Q * Q.conjTranspose = 1",
+  "name":
+  "NLAlib.lanczosRecurrence_diagonal_sqrt_mul_conjTranspose_eq_one",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  51,
+  "kind":
+  "theorem",
+  "doc":
+  "The full basis produced by actual diagonal Lanczos has orthonormal rows as well.\nSource: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
  {"uses":
   ["NLAlib.arnoldiBasis",
    "NLAlib.lanczosRecurrence"],
@@ -206135,6 +208058,46 @@
   "theorem",
   "doc":
   "Testing the largest Hermitian-part eigenvector shows that every\nenergy bound is at least the logarithmic norm. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.matrixMultitermLinearMap.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n] {ι : Type u_3}\n  [Fintype ι] (A : ι → Matrix m m ℝ) (B : ι → Matrix n n ℝ) : Matrix m n ℝ →ₗ[ℝ] Matrix m n ℝ",
+  "name":
+  "NLAlib.matrixMultitermLinearMap",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  188,
+  "kind":
+  "def",
+  "doc":
+  "The actual multiterm matrix operator `X ↦ ∑ i, A i * X * B i` as a real\nlinear map. Symmetry and positivity concern the whole operator, not each coefficient.\nSource: Palitta–Simoncini (2019), equation (2.3). ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.matrixMultitermLinearMap"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.matrixMultitermLinearMap_apply.{u_1, u_2, u_3} {m : Type u_1} {n : Type u_2} [Fintype m] [Fintype n]\n  {ι : Type u_3} [Fintype ι] (A : ι → Matrix m m ℝ) (B : ι → Matrix n n ℝ) (X : Matrix m n ℝ) :\n  (NLAlib.matrixMultitermLinearMap A B) X = ∑ i, A i * X * B i",
+  "name":
+  "NLAlib.matrixMultitermLinearMap_apply",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  198,
+  "kind":
+  "theorem",
+  "doc":
+  "Evaluation of the multiterm operator is the displayed finite matrix sum. ",
   "atlas_partial":
   [],
   "atlas":
@@ -219483,7 +221446,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  177,
+  180,
   "kind":
   "theorem",
   "doc":
@@ -225879,6 +227842,92 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.chebyshevRecurrenceIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_sub_mulVec_chebyshevRecurrenceIterate_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) {a b : ℝ} (ha : 0 < a) (hab : a < b) (hspec : ∀ (i : n), hA.eigenvalues i ∈ Set.Icc a b)\n  (c x₀ : n → ℝ) (k : ℕ) :\n  ‖WithLp.toLp 2 (c - A.mulVec (NLAlib.chebyshevRecurrenceIterate a b A c x₀ k))‖ ≤\n    1 / Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑k) * ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.norm_sub_mulVec_chebyshevRecurrenceIterate_le",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  220,
+  "kind":
+  "theorem",
+  "doc":
+  "The exact reciprocal-Chebyshev residual bound holds for the actual coupled recurrence.\nSource: Saad (2003), §12.3.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRecurrenceIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_sub_mulVec_chebyshevRecurrenceIterate_le_two_mul_pow.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} (hA : A.IsHermitian) {a b : ℝ} (ha : 0 < a) (hab : a < b)\n  (hspec : ∀ (i : n), hA.eigenvalues i ∈ Set.Icc a b) (c x₀ : n → ℝ) (k : ℕ) :\n  ‖WithLp.toLp 2 (c - A.mulVec (NLAlib.chebyshevRecurrenceIterate a b A c x₀ k))‖ ≤\n    2 * ((√b - √a) / (√b + √a)) ^ k * ‖WithLp.toLp 2 (c - A.mulVec x₀)‖",
+  "name":
+  "NLAlib.norm_sub_mulVec_chebyshevRecurrenceIterate_le_two_mul_pow",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  238,
+  "kind":
+  "theorem",
+  "doc":
+  "The explicit coupled recurrence has the usual condition-number residual rate.\nSource: Saad (2003), §12.3.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate",
+   "NLAlib.lambdaMin",
+   "NLAlib.matrixHermitianPart",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_sub_mulVec_le_of_restarted_gmres.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  {c : n → ℝ} (hM : (NLAlib.matrixHermitianPart A).PosDef) (xs : ℕ → n → ℝ) (m : ℕ)\n  (hcycle : ∀ (j : ℕ), NLAlib.IsGMRESIterate A c (xs j) m (xs (j + 1))) (j : ℕ) :\n  ‖WithLp.toLp 2 (c - A.mulVec (xs j))‖ ≤\n    (1 - NLAlib.lambdaMin (NLAlib.matrixHermitianPart A) ^ 2 / NLAlib.specNorm A ^ 2) ^ (↑(j * m) / 2) *\n      ‖WithLp.toLp 2 (c - A.mulVec (xs 0))‖",
+  "name":
+  "NLAlib.norm_sub_mulVec_le_of_restarted_gmres",
+  "module":
+  "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+  "line":
+  214,
+  "kind":
+  "theorem",
+  "doc":
+  "Restarted GMRES with cycle length `m` satisfies the positive-real\nbound after `j*m` total steps. This includes zero cycles and cycle\nlength zero. Source: Saad (2003), §6.11.4.\natlas: gmres-elman (partial) ",
+  "atlas_partial":
+  ["gmres-elman"],
+  "atlas":
+  ["gmres-elman"]},
+ {"uses":
+  ["NLAlib.IsGMRESIterate",
+   "NLAlib.lambdaMin",
+   "NLAlib.matrixHermitianPart",
+   "NLAlib.specNorm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.norm_sub_mulVec_le_sqrt_pow_of_restarted_gmres.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} {c : n → ℝ} (hM : (NLAlib.matrixHermitianPart A).PosDef) (xs : ℕ → n → ℝ) (m : ℕ)\n  (hcycle : ∀ (j : ℕ), NLAlib.IsGMRESIterate A c (xs j) m (xs (j + 1))) (j : ℕ) :\n  ‖WithLp.toLp 2 (c - A.mulVec (xs j))‖ ≤\n    √(1 - NLAlib.lambdaMin (NLAlib.matrixHermitianPart A) ^ 2 / NLAlib.specNorm A ^ 2) ^ (j * m) *\n      ‖WithLp.toLp 2 (c - A.mulVec (xs 0))‖",
+  "name":
+  "NLAlib.norm_sub_mulVec_le_sqrt_pow_of_restarted_gmres",
+  "module":
+  "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+  "line":
+  187,
+  "kind":
+  "theorem",
+  "doc":
+  "Each realized restarted GMRES cycle contributes its full step\ncount to the positive-real contraction exponent. The cycle hypotheses\nrefer to the native GMRES minimizer at every restart, rather than to an\nassumed norm contraction. Source: Saad (2003), §6.11.4.\natlas: gmres-elman (partial) ",
+  "atlas_partial":
+  ["gmres-elman"],
+  "atlas":
+  ["gmres-elman"]},
+ {"uses":
   [],
   "sorry":
   false,
@@ -230058,26 +232107,6 @@
   [],
   "atlas":
   ["condition-number-def"]},
- {"uses":
-  [],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.one_le_det_one_add_of_posSemidef.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {L : Matrix n n ℝ}\n  (hL : L.PosSemidef) : 1 ≤ (1 + L).det",
-  "name":
-  "NLAlib.one_le_det_one_add_of_posSemidef",
-  "module":
-  "NLAlib.Sketching.Sampling.LEnsembleLaw",
-  "line":
-  31,
-  "kind":
-  "theorem",
-  "doc":
-  "The L-ensemble normalizer is at least one, even for a singular or zero\nPSD kernel and in dimension zero. Dereziński–Mahoney 2020, §3.\natlas: l-ensemble-law (partial) ",
-  "atlas_partial":
-  ["l-ensemble-law"],
-  "atlas":
-  ["l-ensemble-law"]},
  {"uses":
   ["NLAlib.chebyshevAmplifier"],
   "sorry":
@@ -239032,7 +241061,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  207,
+  210,
   "kind":
   "theorem",
   "doc":
@@ -239577,6 +241606,107 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.preconditionedRichardsonIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (ω : ℝ) (A P : Matrix n n ℝ)\n  (c x₀ : n → ℝ) : ℕ → n → ℝ",
+  "name":
+  "NLAlib.preconditionedRichardsonIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  24,
+  "kind":
+  "def",
+  "doc":
+  "Preconditioned Richardson iteration, initialized at `x₀`, with iteration matrix\n`I - ω P⁻¹ A` and forcing `ω P⁻¹ c`. Source: Saad (2003), §4.2.\natlas: richardson-iteration (partial) ",
+  "atlas_partial":
+  ["richardson-iteration"],
+  "atlas":
+  ["richardson-iteration"]},
+ {"uses":
+  ["NLAlib.preconditionedRichardsonIterate",
+   "NLAlib.richardsonIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.preconditionedRichardsonIterate_eq_mulVec_richardsonIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A P W : Matrix n n ℝ} (hW : W.transpose * P * W = 1) (ω : ℝ) (c x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.preconditionedRichardsonIterate ω A P c x₀ k =\n    W.mulVec (NLAlib.richardsonIterate ω (W.transpose * A * W) (W.transpose.mulVec c) (W⁻¹.mulVec x₀) k)",
+  "name":
+  "NLAlib.preconditionedRichardsonIterate_eq_mulVec_richardsonIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  60,
+  "kind":
+  "theorem",
+  "doc":
+  "Splitting `P⁻¹ = W Wᵀ` turns the actual preconditioned Richardson recursion into ordinary\nRichardson on `Wᵀ A W`. Source: Saad (2003), split preconditioning.\natlas: richardson-iteration (partial) ",
+  "atlas_partial":
+  ["richardson-iteration"],
+  "atlas":
+  ["richardson-iteration"]},
+ {"uses":
+  ["NLAlib.preconditionedRichardsonIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.preconditionedRichardsonIterate_sub_eq_pow_mulVec.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (ω : ℝ)\n  (A P : Matrix n n ℝ) {c xs : n → ℝ} (hxs : A.mulVec xs = c) (x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.preconditionedRichardsonIterate ω A P c x₀ k - xs = ((1 - ω • (P⁻¹ * A)) ^ k).mulVec (x₀ - xs)",
+  "name":
+  "NLAlib.preconditionedRichardsonIterate_sub_eq_pow_mulVec",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  48,
+  "kind":
+  "theorem",
+  "doc":
+  "Exact error powers for the actual preconditioned Richardson recursion.\nSource: Greenbaum (1997), §2.1.\natlas: richardson-iteration (partial) ",
+  "atlas_partial":
+  ["richardson-iteration"],
+  "atlas":
+  ["richardson-iteration"]},
+ {"uses":
+  ["NLAlib.preconditionedRichardsonIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.preconditionedRichardsonIterate_succ.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (ω : ℝ)\n  (A P : Matrix n n ℝ) (c x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.preconditionedRichardsonIterate ω A P c x₀ (k + 1) =\n    NLAlib.preconditionedRichardsonIterate ω A P c x₀ k +\n      ω • P⁻¹.mulVec (c - A.mulVec (NLAlib.preconditionedRichardsonIterate ω A P c x₀ k))",
+  "name":
+  "NLAlib.preconditionedRichardsonIterate_succ",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  35,
+  "kind":
+  "theorem",
+  "doc":
+  "The implemented update is `xₖ₊₁ = xₖ + ω P⁻¹(c - A xₖ)`.\nSource: Saad (2003), §4.2.\natlas: richardson-iteration (partial) ",
+  "atlas_partial":
+  ["richardson-iteration"],
+  "atlas":
+  ["richardson-iteration"]},
+ {"uses":
+  ["NLAlib.preconditionedRichardsonIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.preconditionedRichardsonIterate_zero.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] (ω : ℝ)\n  (A P : Matrix n n ℝ) (c x₀ : n → ℝ) : NLAlib.preconditionedRichardsonIterate ω A P c x₀ 0 = x₀",
+  "name":
+  "NLAlib.preconditionedRichardsonIterate_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  31,
+  "kind":
+  "theorem",
+  "doc":
+  "Preconditioned Richardson starts at the specified initializer. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.prefixPermutation {k m : ℕ} (σ : Equiv.Perm (Fin k)) (hk : k ≤ m) : Equiv.Perm (Fin m)",
   "name":
   "NLAlib.prefixPermutation",
@@ -239827,7 +241957,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  17,
+  18,
   "kind":
   "def",
   "doc":
@@ -239847,7 +241977,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  48,
+  61,
   "kind":
   "def",
   "doc":
@@ -239868,7 +241998,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  54,
+  67,
   "kind":
   "theorem",
   "doc":
@@ -239888,7 +242018,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  64,
+  77,
   "kind":
   "theorem",
   "doc":
@@ -239968,7 +242098,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  59,
+  72,
   "kind":
   "theorem",
   "doc":
@@ -240048,7 +242178,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  23,
+  24,
   "kind":
   "theorem",
   "doc":
@@ -240068,7 +242198,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  34,
+  35,
   "kind":
   "theorem",
   "doc":
@@ -240088,7 +242218,7 @@
   "module":
   "NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
   "line":
-  28,
+  29,
   "kind":
   "theorem",
   "doc":
@@ -241079,7 +243209,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  71,
+  74,
   "kind":
   "def",
   "doc":
@@ -241099,7 +243229,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  90,
+  93,
   "kind":
   "def",
   "doc":
@@ -241120,7 +243250,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  255,
+  275,
   "kind":
   "theorem",
   "doc":
@@ -241140,7 +243270,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  95,
+  98,
   "kind":
   "def",
   "doc":
@@ -241160,7 +243290,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  101,
+  104,
   "kind":
   "def",
   "doc":
@@ -241182,7 +243312,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  317,
+  337,
   "kind":
   "theorem",
   "doc":
@@ -241203,7 +243333,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  133,
+  136,
   "kind":
   "theorem",
   "doc":
@@ -241225,7 +243355,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  164,
+  167,
   "kind":
   "theorem",
   "doc":
@@ -241246,7 +243376,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  120,
+  123,
   "kind":
   "theorem",
   "doc":
@@ -241266,7 +243396,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  116,
+  119,
   "kind":
   "theorem",
   "doc":
@@ -241614,11 +243744,53 @@
   "module":
   "NLAlib.Krylov.Solvers.PolynomialMethods",
   "line":
-  221,
+  241,
   "kind":
   "theorem",
   "doc":
   "**Chebyshev iteration, `A`-norm rate.** For symmetric `A` with spectrum in `[a, b]`,\n`0 < a < b`, and `A x⋆ = c`,\n`‖x_q − x⋆‖²_A ≤ (2((√b − √a)/(√b + √a))^q)² ‖x₀ − x⋆‖²_A`.\nSource: Saad (2003) [`saad03`], §12.3; Golub–Varga (1961) [`gv61`]. Deviation: squared norms;\nthe iterate is defined by its residual polynomial (no recurrence).\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRecurrenceIterate",
+   "NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.quadForm_chebyshevRecurrenceIterate_sub_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {A : Matrix n n ℝ}\n  (hA : A.IsHermitian) {a b : ℝ} (ha : 0 < a) (hab : a < b) (hspec : ∀ (i : n), hA.eigenvalues i ∈ Set.Icc a b)\n  {c xs : n → ℝ} (hxs : A.mulVec xs = c) (x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.quadForm A (NLAlib.chebyshevRecurrenceIterate a b A c x₀ k - xs) ≤\n    (1 / Polynomial.eval ((b + a) / (b - a)) (Polynomial.Chebyshev.T ℝ ↑k)) ^ 2 * NLAlib.quadForm A (x₀ - xs)",
+  "name":
+  "NLAlib.quadForm_chebyshevRecurrenceIterate_sub_le",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  249,
+  "kind":
+  "theorem",
+  "doc":
+  "The exact reciprocal-Chebyshev factor also bounds squared `A` energy of the actual\nrecurrence error. Source: Saad (2003), §12.3.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRecurrenceIterate",
+   "NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.quadForm_chebyshevRecurrenceIterate_sub_le_two_mul_pow.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A : Matrix n n ℝ} (hA : A.IsHermitian) {a b : ℝ} (ha : 0 < a) (hab : a < b)\n  (hspec : ∀ (i : n), hA.eigenvalues i ∈ Set.Icc a b) {c xs : n → ℝ} (hxs : A.mulVec xs = c) (x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.quadForm A (NLAlib.chebyshevRecurrenceIterate a b A c x₀ k - xs) ≤\n    (2 * ((√b - √a) / (√b + √a)) ^ k) ^ 2 * NLAlib.quadForm A (x₀ - xs)",
+  "name":
+  "NLAlib.quadForm_chebyshevRecurrenceIterate_sub_le_two_mul_pow",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  264,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual recurrence has the usual condition-number rate in squared `A` energy.\nSource: Saad (2003), §12.3.\natlas: chebyshev-iteration (partial) ",
   "atlas_partial":
   ["chebyshev-iteration"],
   "atlas":
@@ -241979,6 +244151,90 @@
   [],
   "atlas":
   ["polynomial-method-def"]},
+ {"uses":
+  ["NLAlib.preconditionedRichardsonIterate",
+   "NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A P : Matrix n n ℝ} (hP : P.PosDef) {a b ω : ℝ} (ha : 0 < a) (hω : 0 ≤ ω) (hlow : a • P ≤ A) (hup : A ≤ b • P)\n  {c xs : n → ℝ} (hxs : A.mulVec xs = c) (x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.quadForm A (NLAlib.preconditionedRichardsonIterate ω A P c x₀ k - xs) ≤\n    (max |1 - ω * a| |1 - ω * b| ^ k) ^ 2 * NLAlib.quadForm A (x₀ - xs)",
+  "name":
+  "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  147,
+  "kind":
+  "theorem",
+  "doc":
+  "The preconditioned Richardson error contracts in the original `A` energy, with the exact\nendpoint factor `max(|1-ωa|, |1-ωb|)`. Squared energy forms avoid choosing a square-root norm.\nSource: Greenbaum (1997), §2.1; Saad (2003), §4.2.\natlas: richardson-iteration (partial) ",
+  "atlas_partial":
+  ["richardson-iteration"],
+  "atlas":
+  ["richardson-iteration"]},
+ {"uses":
+  ["NLAlib.preconditionedRichardsonIterate",
+   "NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_of_optimal.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A P : Matrix n n ℝ} (hP : P.PosDef) {a b : ℝ} (ha : 0 < a) (hab : a ≤ b) (hlow : a • P ≤ A) (hup : A ≤ b • P)\n  {c xs : n → ℝ} (hxs : A.mulVec xs = c) (x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.quadForm A (NLAlib.preconditionedRichardsonIterate (2 / (a + b)) A P c x₀ k - xs) ≤\n    (((b - a) / (b + a)) ^ k) ^ 2 * NLAlib.quadForm A (x₀ - xs)",
+  "name":
+  "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_of_optimal",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  180,
+  "kind":
+  "theorem",
+  "doc":
+  "The optimal preconditioned Richardson step gives the claimed ratio in `A` energy.\nSource: Saad (2003), §4.2.1.\natlas: richardson-iteration (partial) ",
+  "atlas_partial":
+  ["richardson-iteration"],
+  "atlas":
+  ["richardson-iteration"]},
+ {"uses":
+  ["NLAlib.preconditionedRichardsonIterate",
+   "NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_preconditioner.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n]\n  {A P : Matrix n n ℝ} (hP : P.PosDef) {a b ω : ℝ} (ha : 0 < a) (hω : 0 ≤ ω) (hlow : a • P ≤ A) (hup : A ≤ b • P)\n  {c xs : n → ℝ} (hxs : A.mulVec xs = c) (x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.quadForm P (NLAlib.preconditionedRichardsonIterate ω A P c x₀ k - xs) ≤\n    (max |1 - ω * a| |1 - ω * b| ^ k) ^ 2 * NLAlib.quadForm P (x₀ - xs)",
+  "name":
+  "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_preconditioner",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  159,
+  "kind":
+  "theorem",
+  "doc":
+  "The same sharp endpoint contraction holds in the preconditioner `P` energy.\nSource: Greenbaum (1997), §2.1; Saad (2003), §4.2.\natlas: richardson-iteration (partial) ",
+  "atlas_partial":
+  ["richardson-iteration"],
+  "atlas":
+  ["richardson-iteration"]},
+ {"uses":
+  ["NLAlib.preconditionedRichardsonIterate",
+   "NLAlib.quadForm"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_preconditioner_of_optimal.{u_1} {n : Type u_1} [Fintype n]\n  [DecidableEq n] {A P : Matrix n n ℝ} (hP : P.PosDef) {a b : ℝ} (ha : 0 < a) (hab : a ≤ b) (hlow : a • P ≤ A)\n  (hup : A ≤ b • P) {c xs : n → ℝ} (hxs : A.mulVec xs = c) (x₀ : n → ℝ) (k : ℕ) :\n  NLAlib.quadForm P (NLAlib.preconditionedRichardsonIterate (2 / (a + b)) A P c x₀ k - xs) ≤\n    (((b - a) / (b + a)) ^ k) ^ 2 * NLAlib.quadForm P (x₀ - xs)",
+  "name":
+  "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_preconditioner_of_optimal",
+  "module":
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "line":
+  195,
+  "kind":
+  "theorem",
+  "doc":
+  "The optimal preconditioned Richardson step has the same ratio in `P` energy.\nSource: Saad (2003), §4.2.1.\natlas: richardson-iteration (partial) ",
+  "atlas_partial":
+  ["richardson-iteration"],
+  "atlas":
+  ["richardson-iteration"]},
  {"uses":
   ["NLAlib.quadForm"],
   "sorry":
@@ -243595,7 +245851,7 @@
    "NLAlib.qrAlgorithmQ",
    "NLAlib.subspaceIterate"],
   "sorry":
-  true,
+  false,
   "signature":
   "NLAlib.range_qrAlgorithmQ_castLE_eq_subspaceIterate {n : ℕ}\n  {qr : Matrix (Fin n) (Fin n) ℝ → Matrix (Fin n) (Fin n) ℝ × Matrix (Fin n) (Fin n) ℝ} {A : Matrix (Fin n) (Fin n) ℝ}\n  (hA : IsUnit A.det) {k : ℕ} (h : NLAlib.QRAlgorithmSucceeds qr (fun x => 0) A k) {j : ℕ} (hj : j ≤ n) :\n  ((NLAlib.qrAlgorithmQ qr (fun x => 0) A k).submatrix id (Fin.castLE hj)).mulVecLin.range =\n    NLAlib.subspaceIterate A (Matrix.submatrix 1 id (Fin.castLE hj)) k",
   "name":
@@ -243603,11 +245859,11 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  227,
+  230,
   "kind":
   "theorem",
   "doc":
-  "SCAFFOLD: qr-algorithm-simultaneous-iteration\n**The leading columns of `Q^{(k)}` span the subspace iterates of the leading columns of `I`.**\nFor invertible `A` and `j ≤ n`, the first `j` columns of `Q^{(k)}` span\n`S_k(A, I_{:, 1:j}) = range (A^k I_{:, 1:j})`: unshifted QR is simultaneous iteration on all\nleading blocks at once. Source: Trefethen–Bau (1997) [`tb97`], Thm 28.3 and Lect. 28 (the\n\"simultaneous iteration\" interpretation); Golub–Van Loan (2013) [`gvl13`], §7.3.1.\nProof sketch: `A^k E_j = Q^{(k)} R^{(k)} E_j = Q^{(k)}_{:, 1:j} R^{(k)}_{1:j, 1:j}`\n(`pow_eq_qrAlgorithmQ_mul_qrAlgorithmR`, `R^{(k)}` upper triangular), and `R^{(k)}_{1:j, 1:j}`\nis invertible because `R^{(k)}` is (`det A^k = det Q^{(k)} det R^{(k)} ≠ 0` and the leading\nblock of an invertible upper triangular matrix is invertible); then\n`subspaceIterate_mul_of_isUnit`. Without invertibility only `⊇` holds. Difficulty 2.\natlas: qr-algorithm-simultaneous-iteration ",
+  "**The leading columns of `Q^{(k)}` span the subspace iterates of the leading columns of `I`.**\nFor invertible `A` and `j ≤ n`, the first `j` columns of `Q^{(k)}` span\n`S_k(A, I_{:, 1:j}) = range (A^k I_{:, 1:j})`: unshifted QR is simultaneous iteration on all\nleading blocks at once. Source: Trefethen–Bau (1997) [`tb97`], Thm 28.3 and Lect. 28 (the\n\"simultaneous iteration\" interpretation); Golub–Van Loan (2013) [`gvl13`], §7.3.1.\nProof sketch: `A^k E_j = Q^{(k)} R^{(k)} E_j = Q^{(k)}_{:, 1:j} R^{(k)}_{1:j, 1:j}`\n(`pow_eq_qrAlgorithmQ_mul_qrAlgorithmR`, `R^{(k)}` upper triangular), and `R^{(k)}_{1:j, 1:j}`\nis invertible because `R^{(k)}` is (`det A^k = det Q^{(k)} det R^{(k)} ≠ 0` and the leading\nblock of an invertible upper triangular matrix is invertible); then\n`subspaceIterate_mul_of_isUnit`. Without invertibility only `⊇` holds. Difficulty 2.\natlas: qr-algorithm-simultaneous-iteration ",
   "atlas_partial":
   [],
   "atlas":
@@ -268693,6 +270949,166 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.SplittingConverges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.splittingConverges_iff_complex_spectralRadius_lt_one.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n]\n  {M N : Matrix n n ℝ} (hM : IsUnit M) :\n  NLAlib.SplittingConverges M N ↔ spectralRadius ℂ ((M⁻¹ * N).map Complex.ofReal) < 1",
+  "name":
+  "NLAlib.splittingConverges_iff_complex_spectralRadius_lt_one",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  162,
+  "kind":
+  "theorem",
+  "doc":
+  "For real matrices the exact convergence criterion uses the complexified spectral radius,\nso nonreal eigenvalues are covered. Source: Darve, convergence theorem.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  ["NLAlib.SplittingConverges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.splittingConverges_iff_spectralRadius_lt_one.{u_2} {n : Type u_2} [Fintype n] [DecidableEq n]\n  {M N : Matrix n n ℂ} (hM : IsUnit M) : NLAlib.SplittingConverges M N ↔ spectralRadius ℂ (M⁻¹ * N) < 1",
+  "name":
+  "NLAlib.splittingConverges_iff_spectralRadius_lt_one",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  153,
+  "kind":
+  "theorem",
+  "doc":
+  "Complex stationary splitting converges for every system and start exactly when its\niteration matrix has spectral radius below one.\nSource: Darve, *Splitting Methods and Convergence Theory*, convergence theorem.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  ["NLAlib.SplittingConverges"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.splittingConverges_iff_tendsto_pow_zero.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n]\n  [DecidableEq n] {M N : Matrix n n 𝕜} (hM : IsUnit M) :\n  NLAlib.SplittingConverges M N ↔ Filter.Tendsto (fun k => (M⁻¹ * N) ^ k) Filter.atTop (nhds 0)",
+  "name":
+  "NLAlib.splittingConverges_iff_tendsto_pow_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  121,
+  "kind":
+  "theorem",
+  "doc":
+  "The complete all-right-hand-sides splitting convergence contract is equivalent to matrix\npower decay. Source: Darve, *Splitting Methods and Convergence Theory*.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.splittingIterate.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] [DecidableEq n]\n  (M N : Matrix n n 𝕜) (b x₀ : n → 𝕜) : ℕ → n → 𝕜",
+  "name":
+  "NLAlib.splittingIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  53,
+  "kind":
+  "def",
+  "doc":
+  "The actual splitting recursion `xₖ₊₁ = M⁻¹ N xₖ + M⁻¹ b`.\nSource: Darve, *Splitting Methods and Convergence Theory*.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  ["NLAlib.splittingIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.splittingIterate_sub_eq_pow_mulVec.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n]\n  [DecidableEq n] {M N : Matrix n n 𝕜} (hM : IsUnit M) {b xs : n → 𝕜} (hxs : (M - N).mulVec xs = b) (x₀ : n → 𝕜)\n  (k : ℕ) : NLAlib.splittingIterate M N b x₀ k - xs = ((M⁻¹ * N) ^ k).mulVec (x₀ - xs)",
+  "name":
+  "NLAlib.splittingIterate_sub_eq_pow_mulVec",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  96,
+  "kind":
+  "theorem",
+  "doc":
+  "The splitting iteration has the exact advertised error-power identity at every step.\nSource: Darve, *Splitting Methods and Convergence Theory*, error recursion.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  ["NLAlib.splittingIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.splittingIterate_succ.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] [DecidableEq n]\n  (M N : Matrix n n 𝕜) (b x₀ : n → 𝕜) (k : ℕ) :\n  NLAlib.splittingIterate M N b x₀ (k + 1) = (M⁻¹ * N).mulVec (NLAlib.splittingIterate M N b x₀ k) + M⁻¹.mulVec b",
+  "name":
+  "NLAlib.splittingIterate_succ",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  63,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual splitting iteration uses the prescribed affine update.\nSource: Darve, *Splitting Methods and Convergence Theory*.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  ["NLAlib.splittingIterate"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.splittingIterate_zero.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] [DecidableEq n]\n  (M N : Matrix n n 𝕜) (b x₀ : n → 𝕜) : NLAlib.splittingIterate M N b x₀ 0 = x₀",
+  "name":
+  "NLAlib.splittingIterate_zero",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  59,
+  "kind":
+  "theorem",
+  "doc":
+  "A splitting iteration starts at its specified initializer. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.splitting_fixedPoint_iff.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] [DecidableEq n]\n  {M N : Matrix n n 𝕜} (hM : IsUnit M) (b xs : n → 𝕜) : (M⁻¹ * N).mulVec xs + M⁻¹.mulVec b = xs ↔ (M - N).mulVec xs = b",
+  "name":
+  "NLAlib.splitting_fixedPoint_iff",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  70,
+  "kind":
+  "theorem",
+  "doc":
+  "With invertible `M`, the splitting fixed-point equation is the original linear system. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
   [],
   "sorry":
   false,
@@ -271759,6 +274175,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.sub_eq_mul_one_sub_inv_mul.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜] [Fintype n] [DecidableEq n]\n  {M N : Matrix n n 𝕜} (hM : IsUnit M) : M - N = M * (1 - M⁻¹ * N)",
+  "name":
+  "NLAlib.sub_eq_mul_one_sub_inv_mul",
+  "module":
+  "NLAlib.Krylov.Solvers.StationarySplitting",
+  "line":
+  89,
+  "kind":
+  "theorem",
+  "doc":
+  "A splitting factors as `M (I - M⁻¹N)` when `M` is invertible.\natlas: stationary-splitting-convergence (partial) ",
+  "atlas_partial":
+  ["stationary-splitting-convergence"],
+  "atlas":
+  ["stationary-splitting-convergence"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.sub_eval_interpolate_eq_circleIntegral.{u_1} {ι : Type u_1} [DecidableEq ι] (s : Finset ι) (v : ι → ℂ)\n  (hv : Set.InjOn v ↑s) {f : ℂ → ℂ} {c x : ℂ} {R : ℝ} (hR : 0 < R) (hf : DiffContOnCl ℂ f (Metric.ball c R))\n  (hvR : ∀ i ∈ s, v i ∈ Metric.ball c R) (hx : x ∈ Metric.ball c R) :\n  f x - Polynomial.eval x ((Lagrange.interpolate s v) (f ∘ v)) =\n    Polynomial.eval x (Lagrange.nodal s v) * (2 * ↑Real.pi * Complex.I)⁻¹ *\n      ∮ (t : ℂ) in C(c, R), f t / (Polynomial.eval t (Lagrange.nodal s v) * (t - x))",
   "name":
   "NLAlib.sub_eval_interpolate_eq_circleIntegral",
@@ -271877,6 +274313,68 @@
   ["krylov-grade"],
   "atlas":
   ["krylov-grade"]},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sub_mulVec_add_mulVec_eq_mulVec_sub_of_mul_eq_mul.{u_1, u_2, u_3, u_4} {𝕜 : Type u_1} [RCLike 𝕜] {n : Type u_2}\n  {p : Type u_3} {q : Type u_4} [Fintype n] [Fintype p] [Fintype q] {A : Matrix n n 𝕜} {Z : Matrix n p 𝕜}\n  {V : Matrix n q 𝕜} {H : Matrix q p 𝕜} {b x₀ : n → 𝕜} {g : q → 𝕜} (hAZ : A * Z = V * H)\n  (hr : b - A.mulVec x₀ = V.mulVec g) (y : p → 𝕜) : b - A.mulVec (x₀ + Z.mulVec y) = V.mulVec (g - H.mulVec y)",
+  "name":
+  "NLAlib.sub_mulVec_add_mulVec_eq_mulVec_sub_of_mul_eq_mul",
+  "module":
+  "NLAlib.Krylov.Solvers.FlexibleGMRES",
+  "line":
+  27,
+  "kind":
+  "theorem",
+  "doc":
+  "A realized flexible Arnoldi relation gives the full vector residual.\nSource: Saad (2003), §9.4.1; helper for\n`flexible-gmres-residual-minimization`. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  ["NLAlib.chebyshevIterate",
+   "NLAlib.chebyshevResidual"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sub_mulVec_chebyshevIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {a b : ℝ} (ha : 0 < a) (hab : a < b)\n  (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) :\n  c - A.mulVec (NLAlib.chebyshevIterate a b A c x₀ q) =\n    ((Polynomial.aeval A) (NLAlib.chebyshevResidual a b q)).mulVec (c - A.mulVec x₀)",
+  "name":
+  "NLAlib.sub_mulVec_chebyshevIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.PolynomialMethods",
+  "line":
+  209,
+  "kind":
+  "theorem",
+  "doc":
+  "The polynomial Chebyshev iterate has exactly the normalized Chebyshev residual.\nSource: Saad (2003), §12.3; this bridge is also used by the coupled recurrence realization.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
+ {"uses":
+  ["NLAlib.chebyshevRecurrenceIterate",
+   "NLAlib.chebyshevResidual"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sub_mulVec_chebyshevRecurrenceIterate.{u_1} {n : Type u_1} [Fintype n] [DecidableEq n] {a b : ℝ} (ha : 0 < a)\n  (hab : a < b) (A : Matrix n n ℝ) (c x₀ : n → ℝ) (k : ℕ) :\n  c - A.mulVec (NLAlib.chebyshevRecurrenceIterate a b A c x₀ k) =\n    ((Polynomial.aeval A) (NLAlib.chebyshevResidual a b k)).mulVec (c - A.mulVec x₀)",
+  "name":
+  "NLAlib.sub_mulVec_chebyshevRecurrenceIterate",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  210,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual recurrence has exactly the normalized Chebyshev residual polynomial.\nSource: Saad (2003), §12.3.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
  {"uses":
   ["NLAlib.polyIterate"],
   "sorry":
@@ -272027,9 +274525,9 @@
   "sorry":
   false,
   "signature":
-  "NLAlib.sub_mul_pinvR_mul_transpose_eq.{u_1, u_2, u_3, u_4, u_5, u_6} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2}\n  {n : Type u_3} {r : Type u_4} {r' : Type u_5} {t : Type u_6} [Fintype n] [Fintype r] [Fintype r'] [Fintype t] {k : ℕ}\n  {A : Matrix m n 𝕜} {U₁ : Matrix m (Fin k) 𝕜} {U₂ : Matrix m r 𝕜} {V₁ : Matrix n (Fin k) 𝕜} {V₂ : Matrix n r' 𝕜}\n  {S₁ : Matrix (Fin k) (Fin k) 𝕜} {S₂ : Matrix r r' 𝕜}\n  (hA : A = U₁ * S₁ * V₁.conjTranspose + U₂ * S₂ * V₂.conjTranspose) {Ω : Matrix n t 𝕜} {Ω₁ : Matrix (Fin k) t 𝕜}\n  {Ω₂ : Matrix r' t 𝕜} (hΩ₁ : Ω₁ = V₁.conjTranspose * Ω) (hΩ₂ : Ω₂ = V₂.conjTranspose * Ω)\n  (hunit : IsUnit (Ω₁ * Ω₁.conjTranspose)) :\n  A - A * Ω * NLAlib.pinvR Ω₁ * V₁.conjTranspose =\n    U₂ * (S₂ * V₂.conjTranspose - S₂ * Ω₂ * NLAlib.pinvR Ω₁ * V₁.conjTranspose)",
+  "NLAlib.sub_mul_pinvR_mul_conjTranspose_eq.{u_1, u_2, u_3, u_4, u_5, u_6} {𝕜 : Type u_1} [RCLike 𝕜] {m : Type u_2}\n  {n : Type u_3} {r : Type u_4} {r' : Type u_5} {t : Type u_6} [Fintype n] [Fintype r] [Fintype r'] [Fintype t] {k : ℕ}\n  {A : Matrix m n 𝕜} {U₁ : Matrix m (Fin k) 𝕜} {U₂ : Matrix m r 𝕜} {V₁ : Matrix n (Fin k) 𝕜} {V₂ : Matrix n r' 𝕜}\n  {S₁ : Matrix (Fin k) (Fin k) 𝕜} {S₂ : Matrix r r' 𝕜}\n  (hA : A = U₁ * S₁ * V₁.conjTranspose + U₂ * S₂ * V₂.conjTranspose) {Ω : Matrix n t 𝕜} {Ω₁ : Matrix (Fin k) t 𝕜}\n  {Ω₂ : Matrix r' t 𝕜} (hΩ₁ : Ω₁ = V₁.conjTranspose * Ω) (hΩ₂ : Ω₂ = V₂.conjTranspose * Ω)\n  (hunit : IsUnit (Ω₁ * Ω₁.conjTranspose)) :\n  A - A * Ω * NLAlib.pinvR Ω₁ * V₁.conjTranspose =\n    U₂ * (S₂ * V₂.conjTranspose - S₂ * Ω₂ * NLAlib.pinvR Ω₁ * V₁.conjTranspose)",
   "name":
-  "NLAlib.sub_mul_pinvR_mul_transpose_eq",
+  "NLAlib.sub_mul_pinvR_mul_conjTranspose_eq",
   "module":
   "NLAlib.LowRank.Structural.RangeFinder",
   "line":
@@ -274234,26 +276732,6 @@
   "atlas":
   []},
  {"uses":
-  [],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.sum_det_principal_minors_eq_sum_prod_of_isHermitian.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜]\n  [Fintype n] [DecidableEq n] {G : Matrix n n 𝕜} (hG : G.IsHermitian) (k : ℕ) :\n  ∑ S ∈ Finset.powersetCard k Finset.univ, (G.submatrix Subtype.val Subtype.val).det =\n    ∑ S ∈ Finset.powersetCard k Finset.univ, ∏ i ∈ S, ↑(hG.eigenvalues i)",
-  "name":
-  "NLAlib.sum_det_principal_minors_eq_sum_prod_of_isHermitian",
-  "module":
-  "NLAlib.Matrix.Spectral.PrincipalMinors",
-  "line":
-  74,
-  "kind":
-  "theorem",
-  "doc":
-  "The sum of fixed-order Hermitian principal determinants is the elementary\nsum of the actual eigenvalues, over either scalar field. The spectral theorem\nand the generic determinant-coefficient identity prove the assertion without\na positivity or invertibility assumption. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
- {"uses":
   ["NLAlib.rowSubsetCrossGram"],
   "sorry":
   false,
@@ -274422,6 +276900,26 @@
   ["gaussian-free-spectrum-two-sided"],
   "atlas":
   ["gaussian-free-spectrum-two-sided"]},
+ {"uses":
+  ["NLAlib.discreteStieltjesValues"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.sum_discreteStieltjesValues_mul_eq_div_weight {N : ℕ} (t w : Fin N → ℝ) (ht : Function.Injective t)\n  (hw : ∀ (r : Fin N), 0 < w r) (r s : Fin N) :\n  ∑ j, NLAlib.discreteStieltjesValues t w (↑j) r * NLAlib.discreteStieltjesValues t w (↑j) s =\n    (if r = s then 1 else 0) / w r",
+  "name":
+  "NLAlib.sum_discreteStieltjesValues_mul_eq_div_weight",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  221,
+  "kind":
+  "theorem",
+  "doc":
+  "Values produced by the actual Stieltjes procedure obey the exact reciprocal-weight\ndual orthogonality identity. Source: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
  {"uses":
   ["NLAlib.unitarySpectralProjector"],
   "sorry":
@@ -275301,7 +277799,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  53,
+  41,
   "kind":
   "theorem",
   "doc":
@@ -276504,7 +279002,7 @@
   "module":
   "NLAlib.Sketching.Sampling.LEnsembleLaw",
   "line":
-  24,
+  23,
   "kind":
   "theorem",
   "doc":
@@ -276794,26 +279292,6 @@
   ["volume-sampling"],
   "atlas":
   ["volume-sampling"]},
- {"uses":
-  [],
-  "sorry":
-  false,
-  "signature":
-  "NLAlib.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀.{u_1, u_2} {𝕜 : Type u_1} {n : Type u_2} [RCLike 𝕜]\n  [Fintype n] [DecidableEq n] {A : Matrix n n 𝕜} (hA : A.IsHermitian) (k : ℕ) :\n  ∑ h, RCLike.re (A.submatrix h h).det =\n    ↑k.factorial * ∑ S ∈ Finset.powersetCard k Finset.univ, ∏ i ∈ S, hA.eigenvalues₀ i",
-  "name":
-  "NLAlib.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀",
-  "module":
-  "NLAlib.Matrix.Spectral.PrincipalMinors",
-  "line":
-  91,
-  "kind":
-  "theorem",
-  "doc":
-  "The sum of real principal determinants along all ordered length-`k`\nhistories is `k!` times the elementary sum of the sorted Hermitian spectrum.\nZero, repeated, and oversized histories are all included. ",
-  "atlas_partial":
-  [],
-  "atlas":
-  []},
  {"uses":
   ["NLAlib.bilinearSquareMass",
    "NLAlib.quadForm"],
@@ -286664,6 +289142,50 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.discreteStieltjesMonicBeta",
+   "NLAlib.lanczosRecurrence"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.transpose_lanczosRecurrence_diagonal_sqrt_mulVec_sqrt_eq_single {N : ℕ} (t w : Fin N → ℝ)\n  (ht : Function.Injective t) (hw : ∀ (r : Fin N), 0 < w r) (hN : 0 < N) :\n  have Q := Matrix.of fun r j => NLAlib.lanczosRecurrence (Matrix.diagonal t) (fun r => √(w r)) (↑j) r;\n  (Q.transpose.mulVec fun r => √(w r)) = Pi.single ⟨0, hN⟩ √(NLAlib.discreteStieltjesMonicBeta t w 0)",
+  "name":
+  "NLAlib.transpose_lanczosRecurrence_diagonal_sqrt_mulVec_sqrt_eq_single",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  78,
+  "kind":
+  "theorem",
+  "doc":
+  "The full actual Lanczos basis has the positive bordered mass identity, with monic\nStieltjes beta zero equal to total mass. The first coordinate is used only in positive order.\nSource: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
+  ["NLAlib.lanczosRecurrence",
+   "NLAlib.orthogonalPolynomialJacobiMatrix",
+   "NLAlib.polynomialIntegral",
+   "NLAlib.spectralMeasure"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.transpose_lanczosRecurrence_diagonal_sqrt_mul_diagonal_mul_eq_jacobi {N : ℕ} (t w : Fin N → ℝ)\n  (ht : Function.Injective t) (hw : ∀ (r : Fin N), 0 < w r) :\n  have Q := Matrix.of fun r j => NLAlib.lanczosRecurrence (Matrix.diagonal t) (fun r => √(w r)) (↑j) r;\n  Q.transpose * Matrix.diagonal t * Q =\n    NLAlib.orthogonalPolynomialJacobiMatrix (NLAlib.polynomialIntegral (NLAlib.spectralMeasure ⋯ fun r => √(w r)) ⋯) N",
+  "name":
+  "NLAlib.transpose_lanczosRecurrence_diagonal_sqrt_mul_diagonal_mul_eq_jacobi",
+  "module":
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+  "line":
+  61,
+  "kind":
+  "theorem",
+  "doc":
+  "The actual full Lanczos basis conjugates the diagonal nodes to the canonical moment\nJacobi matrix of the atomic measure. Source: Gautschi (2004), §2.2.3.2.\natlas: discrete-measure-jacobi-matrix (partial) ",
+  "atlas_partial":
+  ["discrete-measure-jacobi-matrix"],
+  "atlas":
+  ["discrete-measure-jacobi-matrix"]},
+ {"uses":
   ["NLAlib.HasOrthonormalCols",
    "NLAlib.krylovSpace"],
   "sorry":
@@ -286979,7 +289501,7 @@
   "module":
   "NLAlib.Krylov.Spectral.QRAlgorithm",
   "line":
-  143,
+  146,
   "kind":
   "theorem",
   "doc":
@@ -287683,6 +290205,26 @@
   "sorry":
   false,
   "signature":
+  "NLAlib.twoSidedTrialMap.{u_1, u_2, u_3, u_4} {m : Type u_1} {n : Type u_2} {p : Type u_3} {q : Type u_4} [Fintype p]\n  [Fintype q] (V : Matrix m p ℝ) (W : Matrix n q ℝ) : Matrix p q ℝ →ₗ[ℝ] Matrix m n ℝ",
+  "name":
+  "NLAlib.twoSidedTrialMap",
+  "module":
+  "NLAlib.Matrix.Equations.EnergyProjection",
+  "line":
+  124,
+  "kind":
+  "def",
+  "doc":
+  "The real-linear two-sided matrix trial map, with arbitrary rectangular factors. ",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "NLAlib.twoSided_compression_trace_reindex.{u_3, u_4, u_5, u_6, u_7, u_8} {m : Type u_3} {n : Type u_4} {r : Type u_5}\n  {p : Type u_6} {q : Type u_7} {s : Type u_8} [Fintype m] [Fintype n] [Fintype r] [Fintype p] [Fintype q] [Fintype s]\n  (A : Matrix m n ℝ) (U : Matrix m r ℝ) (V : Matrix n r ℝ) (em : m ≃ p) (en : n ≃ q) (er : r ≃ s) :\n  (((Matrix.reindex em er) U).transpose * (Matrix.reindex em en) A * (Matrix.reindex en er) V).trace =\n    (U.transpose * A * V).trace",
   "name":
   "NLAlib.twoSided_compression_trace_reindex",
@@ -287818,6 +290360,26 @@
   [],
   "atlas":
   []},
+ {"uses":
+  ["NLAlib.chebyshevRho"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.two_mul_div_sub_chebyshevRho_pos {a b : ℝ} (ha : 0 < a) (hab : a < b) (k : ℕ) :\n  0 < 2 * ((b + a) / (b - a)) - NLAlib.chebyshevRho a b k",
+  "name":
+  "NLAlib.two_mul_div_sub_chebyshevRho_pos",
+  "module":
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+  "line":
+  80,
+  "kind":
+  "theorem",
+  "doc":
+  "Every denominator in the scalar Chebyshev recursion is positive on a positive interval.\natlas: chebyshev-iteration (partial) ",
+  "atlas_partial":
+  ["chebyshev-iteration"],
+  "atlas":
+  ["chebyshev-iteration"]},
  {"uses":
   ["NLAlib.GaussianPairings",
    "NLAlib.gaussianPairingEdges"],

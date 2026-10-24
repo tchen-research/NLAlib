@@ -74,7 +74,7 @@ private theorem measureReal_trace_ge_le_factorial_elementary_div
       apply Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ E)
       intro h _ _
       exact (RCLike.nonneg_iff.mp (hA.submatrix h).det_nonneg).1
-    _ = _ := by rw [sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀ hA.isHermitian]
+    _ = _ := by rw [hA.isHermitian.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀]
 
 private theorem measureReal_trace_ge_le_factorialTraceTail
     {A : Matrix n n 𝕜} (hA : A.PosSemidef) {k r : ℕ} (hrk : r ≤ k)

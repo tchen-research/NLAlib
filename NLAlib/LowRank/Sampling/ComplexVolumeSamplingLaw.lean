@@ -131,7 +131,7 @@ theorem sum_re_det_complex_gram_principal_minors_eq (A : Matrix m n ℂ) (k : �
       (Subtype.val : S → n) (Subtype.val : S → n)).det.re) =
       complexGramElementary A k := by
   have h := congrArg Complex.re
-    (sum_det_principal_minors_eq_sum_prod_of_isHermitian
+    (Matrix.IsHermitian.sum_det_principal_minors_eq_sum_prod
       (Matrix.isHermitian_conjTranspose_mul_self A) k)
   simpa [complexGramElementary, ← Complex.ofReal_prod] using h
 

@@ -71,7 +71,7 @@ omit [Fintype m] [Fintype q] [DecidableEq r] [DecidableEq r'] [DecidableEq q] in
 /-- The competitor identity of the range-finder proof: `A − AΩΩ₁†V₁ᴴ = U₂(Σ₂V₂ᴴ − Σ₂Ω₂Ω₁†V₁ᴴ)`
 when `A = U₁Σ₁V₁ᴴ + U₂Σ₂V₂ᴴ`, `Ω₁ = V₁ᴴΩ` has full row rank and `Ω₂ = V₂ᴴΩ`. HMT 2011, proof of
 Thm 9.1 (§9.2). Atlas `hmt-9-1-spectral`, `hmt-9-1-frobenius`. -/
-theorem sub_mul_pinvR_mul_transpose_eq {A : Matrix m n 𝕜} {U₁ : Matrix m (Fin k) 𝕜}
+theorem sub_mul_pinvR_mul_conjTranspose_eq {A : Matrix m n 𝕜} {U₁ : Matrix m (Fin k) 𝕜}
     {U₂ : Matrix m r 𝕜} {V₁ : Matrix n (Fin k) 𝕜} {V₂ : Matrix n r' 𝕜}
     {S₁ : Matrix (Fin k) (Fin k) 𝕜} {S₂ : Matrix r r' 𝕜}
     (hA : A = U₁ * S₁ * V₁ᴴ + U₂ * S₂ * V₂ᴴ)
@@ -90,7 +90,7 @@ omit [Fintype q] [DecidableEq q] in
 and hence `‖A − Z‖_F² = ‖Σ₂‖_F² + ‖Σ₂Ω₂Ω₁†‖_F²` (HMT 2011, proof of Thm 9.1; Chen–Persson,
 proof of `prop:hmt-struct`). Atlas `hmt-9-1-frobenius`.
 atlas: hmt-9-1-frobenius -/
-theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n 𝕜} {U₁ : Matrix m (Fin k) 𝕜}
+theorem frobSq_sub_mul_pinvR_mul_conjTranspose_eq {A : Matrix m n 𝕜} {U₁ : Matrix m (Fin k) 𝕜}
     {U₂ : Matrix m r 𝕜} {V₁ : Matrix n (Fin k) 𝕜} {V₂ : Matrix n r' 𝕜}
     {S₁ : Matrix (Fin k) (Fin k) 𝕜} {S₂ : Matrix r r' 𝕜}
     (hA : A = U₁ * S₁ * V₁ᴴ + U₂ * S₂ * V₂ᴴ) (hU₂ : HasOrthonormalCols U₂)
@@ -102,7 +102,7 @@ theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n 𝕜} {U₁ : Matr
     rw [← frobInner_conjTranspose]
     simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose]
     exact frobInner_mul_mul_eq_zero _ _ _ _ (conjTranspose_mul_eq_zero_comm.1 hV)
-  rw [sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit,
+  rw [sub_mul_pinvR_mul_conjTranspose_eq hA hΩ₁ hΩ₂ hunit,
     frobSq_mul_left_of_orthonormal hU₂.conjTranspose_mul_self,
     frobSq_sub_of_frobInner_eq_zero _ _ horth,
     frobSq_mul_right_of_orthonormal hV₂.conjTranspose_mul_self,
@@ -143,7 +143,7 @@ theorem frobSq_residual_le_of_range_subset {A : Matrix m n 𝕜} {U₁ : Matrix 
         frobSq_residual_le_frobSq_sub_mul hQo A _
     _ = frobSq (A - A * Ω * pinvR Ω₁ * V₁ᴴ) := by rw [mul_transpose_mul_competitor hQ]
     _ = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) :=
-        frobSq_sub_mul_pinvR_mul_transpose_eq hA hU₂ hV₁ hV₂ hV hΩ₁ hΩ₂ hunit
+        frobSq_sub_mul_pinvR_mul_conjTranspose_eq hA hU₂ hV₁ hV₂ hV hΩ₁ hΩ₂ hunit
 
 /-- The actual sampled-range projector satisfies the deterministic Frobenius graph bound,
 over real or complex scalars. This avoids selecting a random orthonormal frame.
@@ -174,7 +174,7 @@ theorem frobSq_sub_rangeProjector_mul_le_of_svd_blocks
     _ = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) := by
       change frobSq (A - (A * Ω) * (pinvR Ω₁ * V₁ᴴ)) = _
       rw [← Matrix.mul_assoc]
-      exact frobSq_sub_mul_pinvR_mul_transpose_eq hA hU₂ hV₁ hV₂ hV hΩ₁ hΩ₂ hunit
+      exact frobSq_sub_mul_pinvR_mul_conjTranspose_eq hA hU₂ hV₁ hV₂ hV hΩ₁ hΩ₂ hunit
 
 /-- The actual sampled-range projector satisfies the unsquared spectral graph bound over
 real or complex scalars. Source: HMT (2011), proof of Theorem 9.1; supports `rsvd-tail`. -/
@@ -200,7 +200,7 @@ theorem specNorm_sub_rangeProjector_mul_le_of_svd_blocks
   have hc : A - C = U₂ * (S₂ * V₂ᴴ - S₂ * Ω₂ * pinvR Ω₁ * V₁ᴴ) := by
     dsimp only [C]
     rw [← Matrix.mul_assoc]
-    exact sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit
+    exact sub_mul_pinvR_mul_conjTranspose_eq hA hΩ₁ hΩ₂ hunit
   calc
     specNorm (A - rangeProjector (A * Ω) * A) =
         specNorm ((A - C) - rangeProjector (A * Ω) * (A - C)) := congrArg specNorm he
@@ -235,7 +235,7 @@ theorem frobSq_sub_mul_le_of_isBestFrobRankApprox_of_range_subset {A : Matrix m 
         frobSq_sub_mul_le_of_isBestFrobRankApprox hQo hY _ hZrank
     _ = frobSq (A - A * Ω * pinvR Ω₁ * V₁ᴴ) := by rw [mul_transpose_mul_competitor hQ]
     _ = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁) :=
-        frobSq_sub_mul_pinvR_mul_transpose_eq hA hU₂ hV₁ hV₂ hV hΩ₁ hΩ₂ hunit
+        frobSq_sub_mul_pinvR_mul_conjTranspose_eq hA hU₂ hV₁ hV₂ hV hΩ₁ hΩ₂ hunit
 
 end RangeFinder
 

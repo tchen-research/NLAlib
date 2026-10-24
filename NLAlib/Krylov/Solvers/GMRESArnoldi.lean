@@ -21,10 +21,11 @@ canonical sign), and the residual norms agree.
 * `ArnoldiDecomp.transpose_Q_mulVec_eq_sqrt_smul_single` and
   `ArnoldiDecomp.isGMRESIterate_add_mulVec_iff_of_pos`: the textbook `‖r₀‖ e₁` form for a
   decomposition with `q₁ᵀ r₀ > 0` (e.g. `arnoldiDecomp`).
-* FOM (partial, `fom-def`): `ArnoldiDecomp.forall_dotProduct_sub_mulVec_eq_zero_iff`
+* FOM ingredients (`fom-def`): `ArnoldiDecomp.forall_dotProduct_sub_mulVec_eq_zero_iff`
   (Galerkin condition ⟺ the square system `H_q y = Q_qᵀ r₀`) and
   `ArnoldiDecomp.isCGIterate_add_mulVec_of_mulVec_eq` (for SPD `A` the FOM iterate is the CG
-  iterate).
+  iterate). The full FOM predicate, inverse formula, existence criterion and residual API
+  are in `NLAlib.Krylov.Solvers.FOM`.
 
 Source: Saad–Schultz (1986) [`ss86`], §3; Trefethen–Bau (1997) [`tb97`], Lect. 35, Alg. 35.1;
 Saad (2011) [`saad11`], §6.5.3, Prop. 6.9 and §6.4.1. Atlas: `gmres-arnoldi-form`,
@@ -189,8 +190,9 @@ theorem isLeast_dotProduct_of_isGMRESIterate (D : ArnoldiDecomp A (c - A *ᵥ x�
 /-- **FOM is the square system**: for `D : ArnoldiDecomp A r₀ q`, the residual of `x₀ + Q_q y` is
 orthogonal to `K_q(A, r₀)` (the Galerkin / FOM condition) iff `H_q y = Q_qᵀ r₀` (`= ±‖r₀‖ e₁`).
 No hypothesis on `A`. Source: Saad (2011) [`saad11`], §6.4.1 (Alg. 6.4, `y_m = H_m⁻¹ (β e₁)`);
-Saad (2003) [`saad03`], §6.4.1. Deviation: no FOM predicate is introduced; the Galerkin
-condition is stated directly.
+Saad (2003) [`saad03`], §6.4.1. This identity states the Galerkin condition directly;
+the full FOM predicate and its inverse and residual formulas are in
+`NLAlib.Krylov.Solvers.FOM`.
 atlas: fom-def (partial) -/
 theorem forall_dotProduct_sub_mulVec_eq_zero_iff (D : ArnoldiDecomp A (c - A *ᵥ x₀) q)
     (y : Fin q → ℝ) :

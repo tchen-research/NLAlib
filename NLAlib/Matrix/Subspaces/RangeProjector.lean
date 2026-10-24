@@ -81,7 +81,7 @@ theorem rank_rangeProjector (B : Matrix m n 𝕜) : (rangeProjector B).rank = B.
   unfold Matrix.rank
   rw [range_mulVecLin_rangeProjector]
 
-omit [DecidableEq m] [DecidableEq n] in
+omit [DecidableEq m] [DecidableEq n] [DecidableEq k] in
 /-- `rangeProjector B` fixes every matrix whose range lies in `range B`. -/
 theorem rangeProjector_mul_of_range_le {B : Matrix m n 𝕜} {Y : Matrix m k 𝕜}
     (h : LinearMap.range Y.mulVecLin ≤ LinearMap.range B.mulVecLin) :
@@ -110,6 +110,32 @@ theorem rangeProjector_eq_mul_conjTranspose_of_hasOrthonormalCols {Q : Matrix m 
     exact isUnit_one
   rw [rangeProjector, moorePenroseInverse_eq_pinvL Q hG, pinvL,
     hQ.conjTranspose_mul_self, inv_one, Matrix.one_mul]
+
+omit [DecidableEq m] [DecidableEq n] [DecidableEq k] [DecidableEq l] in
+/-- The canonical orthogonal range projector depends only on the column range,
+including deficient matrices and empty shapes. -/
+theorem rangeProjector_eq_of_range_eq {A : Matrix m n 𝕜} {B : Matrix m k 𝕜}
+    (h : LinearMap.range A.mulVecLin = LinearMap.range B.mulVecLin) :
+    rangeProjector A = rangeProjector B := by
+  classical
+  have hAB : rangeProjector A * rangeProjector B = rangeProjector B :=
+    rangeProjector_mul_rangeProjector_of_mul_eq (rangeProjector_mul_of_range_le h.ge)
+  have hBA : rangeProjector B * rangeProjector A = rangeProjector A :=
+    rangeProjector_mul_rangeProjector_of_mul_eq (rangeProjector_mul_of_range_le h.le)
+  have hAdj := congrArg Matrix.conjTranspose hAB
+  simp only [Matrix.conjTranspose_mul, (rangeProjector_isHermitian A).eq,
+    (rangeProjector_isHermitian B).eq] at hAdj
+  exact hBA.symm.trans hAdj
+
+omit [DecidableEq m] [DecidableEq n] [DecidableEq l] in
+/-- Any orthonormal basis of a matrix's column range realizes its canonical range
+projector, so row squared norms in the frame are the actual leverage scores. -/
+theorem rangeProjector_eq_mul_conjTranspose_of_range_eq {A : Matrix m n 𝕜}
+    {Q : Matrix m k 𝕜} (hQ : HasOrthonormalCols Q)
+    (h : LinearMap.range A.mulVecLin = LinearMap.range Q.mulVecLin) :
+    rangeProjector A = Q * Qᴴ :=
+  (rangeProjector_eq_of_range_eq h).trans
+    (rangeProjector_eq_mul_conjTranspose_of_hasOrthonormalCols hQ)
 
 omit [DecidableEq m] in
 /-- For full column rank the range projector is the inverse-Gram formula `B(BᴴB)⁻¹Bᴴ`.

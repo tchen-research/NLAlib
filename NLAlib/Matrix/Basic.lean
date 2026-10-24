@@ -3,7 +3,9 @@ import NLAlib.Matrix.Basic.CauchyBinetAdjoint
 import NLAlib.Matrix.Basic.ColumnSpaceFactorization
 import NLAlib.Matrix.Basic.ComplementaryNullities
 import NLAlib.Matrix.Basic.ComplementaryRank
+import NLAlib.Matrix.Basic.CoordinateSelector
 import NLAlib.Matrix.Basic.CoordinateUpdates
+import NLAlib.Matrix.Basic.CramerFrobenius
 import NLAlib.Matrix.Basic.DeterminantDiagonalUpdate
 import NLAlib.Matrix.Basic.Dilation
 import NLAlib.Matrix.Basic.GeneralTikhonov
@@ -11,6 +13,8 @@ import NLAlib.Matrix.Basic.GeneralTikhonovEndpoints
 import NLAlib.Matrix.Basic.GeneralTikhonovFilter
 import NLAlib.Matrix.Basic.GeneralizedSchurComplement
 import NLAlib.Matrix.Basic.Gram
+import NLAlib.Matrix.Basic.GramAdjugate
+import NLAlib.Matrix.Basic.GramCentering
 import NLAlib.Matrix.Basic.GramVanishing
 import NLAlib.Matrix.Basic.JacobiBlockMinor
 import NLAlib.Matrix.Basic.JacobiMinor
@@ -26,7 +30,9 @@ import NLAlib.Matrix.Basic.MoorePenroseProjector
 import NLAlib.Matrix.Basic.MoorePenroseRank
 import NLAlib.Matrix.Basic.MoorePenroseTransformations
 import NLAlib.Matrix.Basic.NormalizedTrace
+import NLAlib.Matrix.Basic.OrderedPrincipalMinors
 import NLAlib.Matrix.Basic.Orthonormal
+import NLAlib.Matrix.Basic.OrthonormalColumnReplacement
 import NLAlib.Matrix.Basic.PSDDuality
 import NLAlib.Matrix.Basic.PenroseIdentities
 import NLAlib.Matrix.Basic.PlaneRotation
@@ -45,6 +51,10 @@ import NLAlib.Matrix.Basic.RankOneInverse
 import NLAlib.Matrix.Basic.RealCoordinates
 import NLAlib.Matrix.Basic.RealQuadraticForm
 import NLAlib.Matrix.Basic.ResidualEnergy
+import NLAlib.Matrix.Basic.RowSubsetAdjugate
+import NLAlib.Matrix.Basic.RowSubsetGram
+import NLAlib.Matrix.Basic.RowSubsetLeverage
+import NLAlib.Matrix.Basic.RowSubsetPseudoinverse
 import NLAlib.Matrix.Basic.SchurComplement
 import NLAlib.Matrix.Basic.SchurRank
 import NLAlib.Matrix.Basic.Selection

@@ -1,4 +1,5 @@
 import NLAlib.LowRank.RandomizedSVD.Assembly
+import NLAlib.LowRank.RandomizedSVD.Deviation
 import NLAlib.LowRank.RandomizedSVD.GaussianSketch
 import NLAlib.LowRank.RandomizedSVD.OptimalError
 import NLAlib.LowRank.RandomizedSVD.RSVD

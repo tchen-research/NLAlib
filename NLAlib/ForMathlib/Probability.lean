@@ -3,6 +3,7 @@ import NLAlib.ForMathlib.Probability.ComplexCovariance
 import NLAlib.ForMathlib.Probability.ComplexSecondMoment
 import NLAlib.ForMathlib.Probability.EmpiricalProcessCentering
 import NLAlib.ForMathlib.Probability.ExponentialTailMoments
+import NLAlib.ForMathlib.Probability.FinitePMF
 import NLAlib.ForMathlib.Probability.FiniteProductEvents
 import NLAlib.ForMathlib.Probability.FreeMoments
 import NLAlib.ForMathlib.Probability.GaussianCoordinates

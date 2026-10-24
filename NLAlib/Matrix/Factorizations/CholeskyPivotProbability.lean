@@ -47,6 +47,17 @@ theorem choleskyPivotProbability_nonneg {R : Matrix n n 𝕜} (hR : R.PosSemidef
 
 variable [DecidableEq n]
 
+omit [DecidableEq n] in
+/-- Multiplying the diagonal-over-trace pivot probability by the residual trace
+recovers its diagonal, including the absorbing zero state. CETW 2023, Alg. 1. -/
+theorem choleskyPivotProbability_mul_re_trace {R : Matrix n n 𝕜}
+    (hR : R.PosSemidef) (i : n) :
+    choleskyPivotProbability R i * RCLike.re R.trace = RCLike.re (R i i) := by
+  by_cases ht : RCLike.re R.trace = 0
+  · have hz := (re_trace_eq_zero_iff_of_posSemidef hR).mp ht
+    simp [hz, choleskyPivotProbability]
+  · simp [choleskyPivotProbability, ht]
+
 /-- **One-step mean of RPCholesky**: for a PSD residual with `tr R ≠ 0`, the pivot-law average of
 the elimination step is `R − R² / tr R`. CETW 2023, Lemma 5.3. -/
 theorem sum_choleskyPivotProbability_smul_eliminationStep_eq [Nonempty n]

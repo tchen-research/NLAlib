@@ -46,14 +46,19 @@ import NLAlib.Matrix.Subspaces.PrincipalAngleMaximum
 import NLAlib.Matrix.Subspaces.PrincipalAngleTangent
 import NLAlib.Matrix.Subspaces.PrincipalAngleToolkit
 import NLAlib.Matrix.Subspaces.PrincipalAngles
+import NLAlib.Matrix.Subspaces.ProjectionCosts
 import NLAlib.Matrix.Subspaces.ProjectionFrobeniusGaps
 import NLAlib.Matrix.Subspaces.ProjectionGaps
 import NLAlib.Matrix.Subspaces.Projections
 import NLAlib.Matrix.Subspaces.ProjectorBlocks
+import NLAlib.Matrix.Subspaces.ProjectorCapture
 import NLAlib.Matrix.Subspaces.ProjectorTrace
+import NLAlib.Matrix.Subspaces.RangeIsometry
 import NLAlib.Matrix.Subspaces.RangeProjector
 import NLAlib.Matrix.Subspaces.RectangularGramIsometry
+import NLAlib.Matrix.Subspaces.SingularDirectionProjector
 import NLAlib.Matrix.Subspaces.Stiefel
+import NLAlib.Matrix.Subspaces.SvdTailCapture
 import NLAlib.Matrix.Subspaces.UnitaryBlockCompletion
 
 /-! # `Matrix/Subspaces`

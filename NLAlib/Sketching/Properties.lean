@@ -1,5 +1,7 @@
 import NLAlib.Sketching.Properties.ApproxMatrixMultiplication
 import NLAlib.Sketching.Properties.JL
+import NLAlib.Sketching.Properties.ObliviousSubspaceInjection
+import NLAlib.Sketching.Properties.ProjectionCost
 import NLAlib.Sketching.Properties.SubspaceEmbedding
 
 /-! # `Sketching/Properties`

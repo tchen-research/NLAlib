@@ -2,7 +2,7 @@ import NLAlib.Matrix.Basic.CauchyBinet
 import Mathlib.Analysis.Complex.Basic
 
 /-!
-# Identity and adjoint compounds, and complex Gram minors
+# Identity and adjoint compounds, and Gram minors
 
 These are direct corollaries of the existing arbitrary-ring Cauchy--Binet
 identity. The fixed subset enumerations are reused under the adjoint.
@@ -77,22 +77,22 @@ theorem compoundMatrix_conjTranspose {m n r R : Type*}
     star ((A.submatrix (sizedSubsetIndex T) (sizedSubsetIndex S)).det)
   rw [← Matrix.conjTranspose_submatrix, Matrix.det_conjTranspose]
 
-/-- The complex column-Gram determinant is the sum of squared absolute
+/-- The column-Gram determinant over either scalar field is the sum of squared absolute
 values of all full-column minors. Too few rows, singular matrices and
 empty rows or columns need no separate hypotheses.
 Source: Horn--Johnson (2013), Section 0.8.1.
 atlas: cauchy-binet (partial)
 -/
-theorem det_conjTranspose_mul_self_eq_sum_norm_sq {m r : Type*}
+theorem det_conjTranspose_mul_self_eq_sum_norm_sq {𝕜 m r : Type*} [RCLike 𝕜]
     [Fintype m] [Fintype r] [DecidableEq m] [DecidableEq r]
-    (A : Matrix m r ℂ) :
+    (A : Matrix m r 𝕜) :
     (Aᴴ * A).det = ∑ S : SizedSubset m r,
       (‖(A.submatrix (sizedSubsetIndex S) id).det‖ ^ 2 : ℝ) := by
-  rw [det_mul_eq_sum_det_submatrix_mul_det_submatrix, Complex.ofReal_sum]
+  rw [det_mul_eq_sum_det_submatrix_mul_det_submatrix, RCLike.ofReal_sum]
   apply Finset.sum_congr rfl
   intro S _
   rw [← Matrix.conjTranspose_submatrix, Matrix.det_conjTranspose]
-  simpa only [Complex.normSq_eq_norm_sq, Complex.star_def] using
-    (Complex.normSq_eq_conj_mul_self (z := (A.submatrix (sizedSubsetIndex S) id).det)).symm
+  simpa only [RCLike.ofReal_pow, RCLike.star_def] using
+    (RCLike.conj_mul ((A.submatrix (sizedSubsetIndex S) id).det))
 
 end NLAlib

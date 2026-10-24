@@ -2,7 +2,4 @@
 # `import NLAlib`; `import NLAlib.Experimental` exposes the complete development.
 # Remove an entry once its proofs are complete and the strict audit passes.
 NLAlib.Krylov.Processes.Bidiagonalization
-NLAlib.Krylov.Processes.LanczosRecurrence
-NLAlib.Krylov.Solvers.CGRecurrence
 NLAlib.Krylov.Spectral.QRAlgorithm
-NLAlib.LowRank.Cholesky.PartialCholesky

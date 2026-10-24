@@ -15,6 +15,7 @@ For an `r × k` standard Gaussian matrix `G` with pseudoinverse `G† = pinvR G 
 * `integrable_and_integral_frobSq_pinvR_sq_gaussianMatrix`:
   `E‖G†‖_F⁴ = (r²(k-r) - 2r(r-1))/((k-r)(k-r-1)(k-r-3))` for `r + 4 ≤ k`
   (Tropp–Webber 2023, Lemma B.2; atlas `pinv-frob-fourth-moment`);
+* `gaussianMatrix_lt_frobSq_pinvR_le_sharp`: the strengthened coefficient-one inverse tail.
 * `gaussianMatrix_lt_frobSq_pinvR_le`: `P[‖G†‖_F² > 12 r t/(k-r)] ≤ 4 t^{-(k-r)/2}` for
   `t ≥ 1`, `r + 4 ≤ k` (HMT 2011, Thm A.6 / Prop 10.4; atlas `pinv-frob-tail`).
 
@@ -223,25 +224,25 @@ private lemma eLpNorm_inv_sum_sq_le {d : ℕ} (hd : 5 ≤ d) :
     _ = 3 / d := by
         rw [← Real.rpow_mul h3, mul_one_div_cancel hq.ne', Real.rpow_one]
 
-/-- **Tail bound for the Frobenius norm of the Gaussian pseudoinverse.** For an `r × k`
+/-- **Sharpened tail bound for the Frobenius norm of the Gaussian pseudoinverse.** For an `r × k`
 standard Gaussian matrix `G` with `r + 4 ≤ k` and `t ≥ 1`,
-`P[‖G†‖_F² > 12 r t/(k-r)] ≤ 4 t^{-(k-r)/2}`, with `G† = pinvR G`.
+`P[‖G†‖_F² > 12 r t/(k-r)] ≤ t^{-(k-r)/2}`, with `G† = pinvR G`.
 
 HMT 2011, Thm A.6 (used in Prop 10.4; HMT state it as `P[‖Ω₁†‖_F ≥ √(12k/p) t] ≤ 4 t^{-p}`
 with `Ω₁` of size `k × (k+p)`, the same bound after `t ↦ √t`). Atlas: `pinv-frob-tail`.
 Proof: each diagonal entry of `(G Gᵀ)⁻¹` is `1/χ²_{k-r+1}`
 (`gaussianMatrix_map_inv_self_mul_transpose_apply_self`), whose `L^{(k-r)/2}` norm is at most
 `3/(k-r+1)` (`integrable_and_integral_rpow_inv_sum_sq_gaussianReal_lt`, atlas
-`chi-square-neg-moment`); Minkowski's inequality bounds `‖tr (G Gᵀ)⁻¹‖_{L^q}` and Markov's
+`chi-square-neg-moment`); The explicit constant `1` sharpens the quoted printed estimate. Minkowski's inequality bounds `‖tr (G Gᵀ)⁻¹‖_{L^q}` and Markov's
 inequality gives the tail. Ported from Prove2me solution `GaussianMatrix.pinv_frobenius_tail`.
 atlas: pinv-frob-tail -/
-theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : ℝ) (ht : 1 ≤ t) :
+theorem gaussianMatrix_lt_frobSq_pinvR_le_sharp {r k : ℕ} (hrk : r + 4 ≤ k) (t : ℝ) (ht : 1 ≤ t) :
     (gaussianMatrix (Fin r) (Fin k)).real
         {G | 12 * (r : ℝ) / ((k : ℝ) - r) * t < frobSq (pinvR G)}
-      ≤ 4 * t ^ (-(((k : ℝ) - r) / 2)) := by
+      ≤ t ^ (-(((k : ℝ) - r) / 2)) := by
   rw [measureReal_def]
   refine ENNReal.toReal_le_of_le_ofReal
-    (mul_nonneg (by norm_num) (Real.rpow_nonneg (by linarith) _)) ?_
+    (Real.rpow_nonneg (by linarith) _) ?_
   have hrk' : (r : ℝ) + 4 ≤ k := by exact_mod_cast hrk
   have hp : (4 : ℝ) ≤ (k : ℝ) - r := by linarith
   have hq : (2 : ℝ) ≤ ((k : ℝ) - r) / 2 := by linarith
@@ -314,7 +315,7 @@ theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : �
         rw [← ENNReal.ofReal_inv_of_pos ha0, ENNReal.ofReal_rpow_of_nonneg (by positivity) hq0.le,
           ENNReal.ofReal_rpow_of_nonneg hc hq0.le, ← ENNReal.ofReal_mul (by positivity),
           Real.mul_rpow (by positivity) hc]
-    _ ≤ ENNReal.ofReal (4 * t ^ (-(((k : ℝ) - r) / 2))) := by
+    _ ≤ ENNReal.ofReal (t ^ (-(((k : ℝ) - r) / 2))) := by
         apply ENNReal.ofReal_le_ofReal
         have hp0 : (0 : ℝ) < (k : ℝ) - r := by linarith
         have hx : a⁻¹ * (r * (3 / ((k : ℝ) - r + 1))) ≤ t⁻¹ := by
@@ -329,9 +330,17 @@ theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : �
         calc (a⁻¹ * (r * (3 / ((k : ℝ) - r + 1)))) ^ (((k : ℝ) - r) / 2)
             ≤ t⁻¹ ^ (((k : ℝ) - r) / 2) := Real.rpow_le_rpow (by positivity) hx hq0.le
           _ = t ^ (-(((k : ℝ) - r) / 2)) := by rw [Real.inv_rpow ht0.le, Real.rpow_neg ht0.le]
-          _ ≤ 4 * t ^ (-(((k : ℝ) - r) / 2)) := by
-              have : 0 ≤ t ^ (-(((k : ℝ) - r) / 2)) := Real.rpow_nonneg ht0.le _
-              linarith
+
+/-- The classical HMT factor-`4` Frobenius inverse tail, preserved as a corollary of the
+sharper native tail. Source: HMT (2011), Theorem A.6; atlas `pinv-frob-tail`.
+atlas: pinv-frob-tail -/
+theorem gaussianMatrix_lt_frobSq_pinvR_le {r k : ℕ} (hrk : r + 4 ≤ k) (t : ℝ) (ht : 1 ≤ t) :
+    (gaussianMatrix (Fin r) (Fin k)).real
+        {G | 12 * (r : ℝ) / ((k : ℝ) - r) * t < frobSq (pinvR G)}
+      ≤ 4 * t ^ (-(((k : ℝ) - r) / 2)) := by
+  have h := gaussianMatrix_lt_frobSq_pinvR_le_sharp hrk t ht
+  have hn := Real.rpow_nonneg (show 0 ≤ t by linarith) (-(((k : ℝ) - r) / 2))
+  linarith
 
 /-- `gaussianMatrix_lt_frobSq_pinvR_le` for a random matrix `X` with
 `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `pinv-frob-tail`. -/

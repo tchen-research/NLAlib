@@ -31,10 +31,12 @@ import NLAlib.Matrix.Norms.LoewnerBounds
 import NLAlib.Matrix.Norms.MatrixVarianceProxy
 import NLAlib.Matrix.Norms.Net
 import NLAlib.Matrix.Norms.NormalizedModulusMoments
+import NLAlib.Matrix.Norms.NuclearConvexity
 import NLAlib.Matrix.Norms.NuclearGram
 import NLAlib.Matrix.Norms.NuclearHermitian
 import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Norms.NuclearPSD
+import NLAlib.Matrix.Norms.NuclearTruncation
 import NLAlib.Matrix.Norms.PositiveImaginaryTrace
 import NLAlib.Matrix.Norms.QuadraticSeries
 import NLAlib.Matrix.Norms.RankNorm

@@ -1,4 +1,6 @@
 import NLAlib.LowRank.Structural.InterpolativeDecomposition
+import NLAlib.LowRank.Structural.InterpolativeDecompositionSearch
+import NLAlib.LowRank.Structural.OSIRangeFinder
 import NLAlib.LowRank.Structural.PowerIteration
 import NLAlib.LowRank.Structural.RangeFinder
 

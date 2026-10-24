@@ -1,5 +1,5 @@
 import NLAlib.LowRank.RandomizedSVD.GaussianSketch
-import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.Matrix.Spectral.SvdBlocks
 import NLAlib.RandomMatrix.Gaussian.Spectral.SketchRank
 import NLAlib.RandomMatrix.Gaussian.Spectral.Chevet
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.SpectralTail
@@ -92,8 +92,9 @@ theorem specNorm_residual_sq_le_of_range_subset {A : Matrix m n ℝ} {U₁ : Mat
     simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using hV₁.conjTranspose_mul_self
   have h2 : specNorm (A - Z) =
       specNorm (S₂ * V₂ᵀ + -(S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ)) := by
-    rw [hZdef, sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit,
-      specNorm_mul_left_of_hasOrthonormalCols hU₂t, sub_eq_add_neg]
+    have he := sub_mul_pinvR_mul_transpose_eq hA hΩ₁ hΩ₂ hunit
+    simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at he
+    rw [hZdef, he, specNorm_mul_left_of_hasOrthonormalCols hU₂t, sub_eq_add_neg]
   -- Step 3: the two summands have orthogonal rows.
   have horth : (S₂ * V₂ᵀ) * (-(S₂ * Ω₂ * pinvR Ω₁ * V₁ᵀ))ᵀ = 0 := by
     have hV' : V₂ᵀ * V₁ = 0 := conjTranspose_mul_eq_zero_comm.1 hV
@@ -291,99 +292,6 @@ theorem integral_specNorm_residual_le_of_gaussian
   refine hmono.trans ?_
   have := hle
   nlinarith [specNorm_nonneg S₂, frobNorm_nonneg S₂]
-
-/-- **SVD right blocks with spectral tail.** For `k ≤ n` every real `A` splits as
-`A = U₁V₁ᵀ + U₂Σ₂V₂ᵀ` with `U₂`, `V₁`, `V₂` orthonormal, `V₁ᵀV₂ = 0`, `‖Σ₂‖ = σ_{k+1}` and
-`‖Σ₂‖_F² = ∑_{j>k} σ_j²` (zero-indexed `singularValues A k`, `bestRankFrobSq A k`). The
-blocks are those of `exists_svd_right_blocks` (`U₁ = AV₁`, `U₂ = U`), with the spectral tail
-identified through `IsSVD.specNorm_sub_truncatedMatrix`. HMT 2011, §2.1 and Thm 9.1.
-Atlas `rsvd-spectral-expected` (helper; uses `svd`, `eckart-young`; belongs in
-`Matrix/SvdBlocks.lean`). -/
-theorem exists_svd_right_blocks_specNorm {m n : ℕ} (A : Matrix (Fin m) (Fin n) ℝ) (k : ℕ)
-    (hkn : k ≤ n) :
-    ∃ (r : ℕ) (U₁ : Matrix (Fin m) (Fin k) ℝ) (U₂ : Matrix (Fin m) (Fin m) ℝ)
-      (V₁ : Matrix (Fin n) (Fin k) ℝ) (V₂ : Matrix (Fin n) (Fin r) ℝ)
-      (S₂ : Matrix (Fin m) (Fin r) ℝ),
-      A = U₁ * (1 : Matrix (Fin k) (Fin k) ℝ) * V₁ᵀ + U₂ * S₂ * V₂ᵀ ∧
-      HasOrthonormalCols U₂ ∧ HasOrthonormalCols V₁ ∧ HasOrthonormalCols V₂ ∧
-      V₁ᵀ * V₂ = 0 ∧ specNorm S₂ = singularValues A k ∧
-      frobSq S₂ = bestRankFrobSq A k := by
-  obtain ⟨r, rfl⟩ : ∃ r, n = k + r := ⟨n - k, by omega⟩
-  obtain ⟨U, V, h⟩ := exists_isSVD A
-  let V₁ : Matrix (Fin (k + r)) (Fin k) ℝ := V.submatrix id (Fin.castAdd r)
-  let V₂ : Matrix (Fin (k + r)) (Fin r) ℝ := V.submatrix id (Fin.natAdd k)
-  let D : Matrix (Fin m) (Fin (k + r)) ℝ := rectDiag (singularValues A)
-  let S₂ : Matrix (Fin m) (Fin r) ℝ := D.submatrix id (Fin.natAdd k)
-  let T : Matrix (Fin m) (Fin (k + r)) ℝ :=
-    rectDiag (fun i => if i < k then 0 else singularValues A i)
-  have hV₁ : HasOrthonormalCols V₁ := by
-    change V₁ᵀ * V₁ = 1
-    have he : V₁ᵀ * V₁ = (Vᵀ * V).submatrix (Fin.castAdd r) (Fin.castAdd r) := rfl
-    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
-    ext i j
-    simp [Matrix.one_apply, Fin.castAdd_inj]
-  have hV₂ : HasOrthonormalCols V₂ := by
-    change V₂ᵀ * V₂ = 1
-    have he : V₂ᵀ * V₂ = (Vᵀ * V).submatrix (Fin.natAdd k) (Fin.natAdd k) := rfl
-    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
-    ext i j
-    simp [Matrix.one_apply, Fin.natAdd_inj]
-  have hcross : V₁ᵀ * V₂ = 0 := by
-    have he : V₁ᵀ * V₂ = (Vᵀ * V).submatrix (Fin.castAdd r) (Fin.natAdd k) := rfl
-    rw [he, show Vᵀ * V = 1 from h.conjTranspose_mul_right]
-    ext i j
-    have hij : Fin.castAdd r i ≠ Fin.natAdd k j := by
-      intro heq
-      have hv := congrArg Fin.val heq
-      simp only [Fin.val_castAdd, Fin.val_natAdd] at hv
-      omega
-    simp [hij]
-  have hcomplete : V₁ * V₁ᵀ + V₂ * V₂ᵀ = 1 := by
-    ext i j
-    have he := congrArg (fun M : Matrix (Fin (k + r)) (Fin (k + r)) ℝ => M i j)
-      (show V * Vᵀ = 1 from h.mul_conjTranspose_right)
-    simpa only [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_add,
-      Matrix.add_apply, V₁, V₂, Matrix.submatrix_apply, id_eq] using he
-  have hAV₂ : A * V₂ = U * S₂ := by
-    have he : A * V₂ = (A * V).submatrix id (Fin.natAdd k) := rfl
-    rw [h.mul_right] at he
-    exact he
-  have hA : A = (A * V₁) * (1 : Matrix (Fin k) (Fin k) ℝ) * V₁ᵀ + U * S₂ * V₂ᵀ := by
-    calc
-      A = A * (V₁ * V₁ᵀ + V₂ * V₂ᵀ) := by rw [hcomplete, Matrix.mul_one]
-      _ = (A * V₁) * (1 : Matrix (Fin k) (Fin k) ℝ) * V₁ᵀ + U * S₂ * V₂ᵀ := by
-        rw [Matrix.mul_add, ← Matrix.mul_assoc A V₁, ← Matrix.mul_assoc A V₂,
-          hAV₂, Matrix.mul_one]
-  -- The tail block equals the tail of the SVD, `U Σ_{≥k} Vᵀ = A − A_k`.
-  have hST : S₂ * V₂ᵀ = T * Vᵀ := by
-    ext i j
-    simp only [Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_add]
-    have hhead : ∑ a : Fin k, T i (Fin.castAdd r a) * V j (Fin.castAdd r a) = 0 := by
-      refine Finset.sum_eq_zero fun a _ => ?_
-      simp only [T, rectDiag_apply, Fin.val_castAdd]
-      split_ifs with h1 h2
-      · exact zero_mul _
-      · exfalso; have := a.isLt; omega
-      · exact zero_mul _
-    rw [hhead, zero_add]
-    refine Finset.sum_congr rfl fun b _ => ?_
-    simp only [S₂, D, V₂, T, Matrix.submatrix_apply, id_eq, rectDiag_apply, Fin.val_natAdd]
-    split_ifs with h1 h2 <;> first | rfl | omega
-  have htail : U * S₂ * V₂ᵀ = A - h.truncatedMatrix k := by
-    have hsplit : A = h.truncatedMatrix k + U * T * Vᵀ := h.eq_head_add_tail k
-    calc U * S₂ * V₂ᵀ = U * T * Vᵀ := by rw [Matrix.mul_assoc, hST, ← Matrix.mul_assoc]
-      _ = (h.truncatedMatrix k + U * T * Vᵀ) - h.truncatedMatrix k := by abel
-      _ = A - h.truncatedMatrix k := by rw [← hsplit]
-  have hspec : specNorm S₂ = singularValues A k := by
-    rw [← h.specNorm_sub_truncatedMatrix k, ← htail,
-      specNorm_mul_transpose_right_of_hasOrthonormalCols (P := V₂) hV₂,
-      specNorm_mul_left_of_hasOrthonormalCols (P := U) h.conjTranspose_mul_left]
-  have hfrob : frobSq S₂ = bestRankFrobSq A k := by
-    rw [← h.frobSq_sub_truncatedMatrix k, ← htail,
-      ← Matrix.conjTranspose_eq_transpose_of_trivial V₂,
-      frobSq_mul_right_of_orthonormal hV₂.conjTranspose_mul_self,
-      frobSq_mul_left_of_orthonormal h.conjTranspose_mul_left]
-  exact ⟨r, A * V₁, U, V₁, V₂, S₂, hA, h.conjTranspose_mul_left, hV₁, hV₂, hcross, hspec, hfrob⟩
 
 /-- **Expected spectral error of the randomized range finder, singular-value form**
 (HMT 2011, Thm 10.6): for `A ∈ ℝ^{m×n}`, `k ≥ 1`, `p ≥ 2`, `k ≤ n`, an `n × (k+p)` standard Gaussian

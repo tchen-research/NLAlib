@@ -2,7 +2,10 @@ import NLAlib.LowRank.Cholesky.CholeskyHistories
 import NLAlib.LowRank.Cholesky.CholeskyPivot
 import NLAlib.LowRank.Cholesky.ComplexCholeskyHistories
 import NLAlib.LowRank.Cholesky.ComplexRandomPivotedCholesky
+import NLAlib.LowRank.Cholesky.FactorialTraceTail
+import NLAlib.LowRank.Cholesky.HistoryDeterminant
 import NLAlib.LowRank.Cholesky.PartialCholesky
+import NLAlib.LowRank.Cholesky.ProjectorHistories
 import NLAlib.LowRank.Cholesky.RandomPivotedCholesky
 import NLAlib.LowRank.Cholesky.TraceDrift
 import NLAlib.LowRank.Cholesky.TracePotential

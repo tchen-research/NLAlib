@@ -1,0 +1,3068 @@
+{
+ "date": "2026-10-24",
+ "backend_base": "7f209dd8a05077a4051241e42098f4beba38e481",
+ "frontend_revision": "6a845a2ec27f37c1a98118c107a06a13ce45273d",
+ "frontend_repository": "https://github.com/NLA-lib/NLAlib",
+ "method": "Read actual definitions, hypotheses and conclusions against the backend card and generated declaration index. Result tags are lookup aids, not proof evidence. Native transfers are checked separately in the backend. This report freezes the 103 non-proved cards at the audit baseline; the later sketching and independent low-rank formalization round is recorded separately.",
+ "source_ci": {
+  "jobs": [
+   {
+    "id": 120220298721,
+    "name": "Extract and publish explore data",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "6a845a2ec27f37c1a98118c107a06a13ce45273d",
+    "html_url": "https://github.com/NLA-lib/NLAlib/actions/runs/39894074334/job/120220298721",
+    "started_at": "2026-10-23T03:15:57Z",
+    "completed_at": "2026-10-23T03:33:26Z"
+   },
+   {
+    "id": 120220298626,
+    "name": "Build, lint, audit",
+    "status": "completed",
+    "conclusion": "failure",
+    "head_sha": "6a845a2ec27f37c1a98118c107a06a13ce45273d",
+    "html_url": "https://github.com/NLA-lib/NLAlib/actions/runs/39894074397/job/120220298626",
+    "started_at": "2026-10-23T03:15:57Z",
+    "completed_at": "2026-10-23T03:35:41Z"
+   }
+  ],
+  "steps": [
+   {
+    "name": "Set up job",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 1
+   },
+   {
+    "name": "Run actions/checkout@v4",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 2
+   },
+   {
+    "name": "Build NLAlib and NLAlibScaffold with the Mathlib cache; warnings are fatal",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 3
+   },
+   {
+    "name": "Root modules are current",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 4
+   },
+   {
+    "name": "Axiom audit (import NLAlib is sorry-free)",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 5
+   },
+   {
+    "name": "Environment linters",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 6
+   },
+   {
+    "name": "Reference keys resolve",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 7
+   },
+   {
+    "name": "Generated rule files are current (docs/rules/rules.toml)",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 8
+   },
+   {
+    "name": "Port-ledger targets exist (rule G2)",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 9
+   },
+   {
+    "name": "Documentation metadata regressions",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 10
+   },
+   {
+    "name": "Named bounds show their current values",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 11
+   },
+   {
+    "name": "Extract the declaration data (about a minute on the built library)",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 12
+   },
+   {
+    "name": "Contribution rules by id, names (N1-N18) included, ratcheted (scripts/check_rules.py)",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 13
+   },
+   {
+    "name": "Run actions/setup-node@v4",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 14
+   },
+   {
+    "name": "Docstring LaTeX renders",
+    "status": "completed",
+    "conclusion": "failure",
+    "number": 15
+   },
+   {
+    "name": "Post Run actions/setup-node@v4",
+    "status": "completed",
+    "conclusion": "skipped",
+    "number": 29
+   },
+   {
+    "name": "Post Run actions/checkout@v4",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 30
+   },
+   {
+    "name": "Complete job",
+    "status": "completed",
+    "conclusion": "success",
+    "number": 31
+   }
+  ],
+  "interpretation": "Lean build, axiom audit and environment linters succeeded; only the final docstring LaTeX rendering step failed. No claim of a fresh whole-front-end local build is made.",
+  "local_rendering_reproduction": {
+   "checker": "scripts/check_latex.mjs from the immutable front-end revision, with only the KaTeX import redirected to the exact 0.16.22 distribution",
+   "katex": "0.16.22",
+   "docstrings": 6953,
+   "math_spans": 27050,
+   "problems": [
+    {
+     "path": "NLAlib/Probability/MatrixConcentration/Bernstein.lean",
+     "line": 285,
+     "problem": "display line starts with Markdown syntax (+ \\frac{L\\log\\lvert n\\rvert}{3}\\,.)"
+    },
+    {
+     "path": "NLAlib/Probability/MatrixConcentration/BernsteinWithoutReplacement.lean",
+     "line": 202,
+     "problem": "display line starts with Markdown syntax (+ \\frac{L\\log\\lvert m\\rvert}{3}, \\qquad)"
+    },
+    {
+     "path": "NLAlib/Sketching/Gaussian/Gaussian.lean",
+     "line": 716,
+     "problem": "display line starts with Markdown syntax (+ 2p(2(4/\\lvert k \\rvert))^{p}\\Gamma(p)}{\\varepsilon^p}\\,,)"
+    },
+    {
+     "path": "NLAlib/Sketching/Gaussian/Haar.lean",
+     "line": 388,
+     "problem": "display line starts with Markdown syntax (+ 2p(2(4/\\lvert k \\rvert))^{p}\\Gamma(p)}{\\varepsilon^p}\\,,)"
+    },
+    {
+     "path": "NLAlib/Sketching/Gaussian/SubGaussian.lean",
+     "line": 674,
+     "problem": "display line starts with Markdown syntax (+ 2p(2(c/(2C\\lvert{k}\\rvert)))^{p}\\Gamma(p)\\,,)"
+    },
+    {
+     "path": "NLAlib/Sketching/Sampling/MatrixMultiplication.lean",
+     "line": 648,
+     "problem": "display line starts with Markdown syntax (- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert...)"
+    },
+    {
+     "path": "NLAlib/Sketching/Sampling/MatrixMultiplication.lean",
+     "line": 650,
+     "problem": "display line starts with Markdown syntax (+ 2\\sqrt{ab}\\,t/3}\\Bigr)\\,.)"
+    },
+    {
+     "path": "NLAlib/Sketching/Sampling/MatrixMultiplication.lean",
+     "line": 712,
+     "problem": "display line starts with Markdown syntax (- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert...)"
+    },
+    {
+     "path": "NLAlib/Sketching/Sampling/MatrixMultiplication.lean",
+     "line": 714,
+     "problem": "display line starts with Markdown syntax (+ 2\\sqrt{ab}\\,t/3}\\Bigr)\\,,)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/Flattening.lean",
+     "line": 44,
+     "problem": "display line starts with Markdown syntax (+ 2\\|\\mathbf{A}\\|_2^2 t)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/Flattening.lean",
+     "line": 70,
+     "problem": "display line starts with Markdown syntax (+ 2\\|\\mathbf{A}\\|_2^2 t\\,.)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/Flattening.lean",
+     "line": 370,
+     "problem": "display line starts with Markdown syntax (+ 2\\|\\mathbf{A}\\|_2^2 t:)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/Flattening.lean",
+     "line": 384,
+     "problem": "display line starts with Markdown syntax (+ 2\\|\\mathbf{A}\\|_2^2 t)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 25,
+     "problem": "display line starts with Markdown syntax (+ \\lvert n\\rvert e^{-t})"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 131,
+     "problem": "display line starts with Markdown syntax (+ \\lvert n\\rvert e^{-t}\\,,)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 204,
+     "problem": "display line starts with Markdown syntax (+ \\lvert n\\rvert e^{-t}\\,,)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 878,
+     "problem": "display line starts with Markdown syntax (- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert...)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 881,
+     "problem": "display line starts with Markdown syntax (+ 2\\lvert n\\rvert e^{-s}\\,,)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 884,
+     "problem": "display line starts with Markdown syntax (+ 2\\|\\mathbf{A}\\|_{\\mathsf{F}}\\|\\mathbf{A}\\|_2\\sqrt{s} + ...)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 933,
+     "problem": "display line starts with Markdown syntax (- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert...)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 936,
+     "problem": "display line starts with Markdown syntax (+ 2\\lvert n\\rvert e^{-s}\\,,)"
+    },
+    {
+     "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+     "line": 939,
+     "problem": "display line starts with Markdown syntax (+ 2\\|\\mathbf{A}\\|_{\\mathsf{F}}\\|\\mathbf{A}\\|_2\\sqrt{s} + ...)"
+    }
+   ],
+   "finding": "All 22 failures are Markdown block starters at the start of continuation lines in displayed math; no KaTeX parser error was reported. A leading empty TeX group before the plus or minus prevents Markdown from treating that line as a list item without changing the formula.",
+   "source_tree_modified": false,
+   "verified_fix": {
+    "target_revision": "6a845a2ec27f37c1a98118c107a06a13ce45273d",
+    "isolated_preview_result": "6953 docstrings, 27050 math spans checked; 0 problems",
+    "changed_lines": 22,
+    "files": 8,
+    "mathematical_content_changed": false,
+    "local_only_patch": "verification/frontend-proof-audit-2026-10-24/frontend-docstring-rendering-fix.patch",
+    "line_edits": [
+     {
+      "path": "NLAlib/Probability/MatrixConcentration/Bernstein.lean",
+      "line": 285,
+      "before": "+ \\frac{L\\log\\lvert n\\rvert}{3}\\,.$$",
+      "after": "{}+ \\frac{L\\log\\lvert n\\rvert}{3}\\,.$$"
+     },
+     {
+      "path": "NLAlib/Probability/MatrixConcentration/BernsteinWithoutReplacement.lean",
+      "line": 202,
+      "before": "+ \\frac{L\\log\\lvert m\\rvert}{3}, \\qquad",
+      "after": "{}+ \\frac{L\\log\\lvert m\\rvert}{3}, \\qquad"
+     },
+     {
+      "path": "NLAlib/Sketching/Gaussian/Gaussian.lean",
+      "line": 716,
+      "before": "+ 2p(2(4/\\lvert k \\rvert))^{p}\\Gamma(p)}{\\varepsilon^p}\\,,$$",
+      "after": "{}+ 2p(2(4/\\lvert k \\rvert))^{p}\\Gamma(p)}{\\varepsilon^p}\\,,$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Gaussian/Haar.lean",
+      "line": 388,
+      "before": "+ 2p(2(4/\\lvert k \\rvert))^{p}\\Gamma(p)}{\\varepsilon^p}\\,,$$",
+      "after": "{}+ 2p(2(4/\\lvert k \\rvert))^{p}\\Gamma(p)}{\\varepsilon^p}\\,,$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Gaussian/SubGaussian.lean",
+      "line": 674,
+      "before": "+ 2p(2(c/(2C\\lvert{k}\\rvert)))^{p}\\Gamma(p)\\,,$$",
+      "after": "{}+ 2p(2(c/(2C\\lvert{k}\\rvert)))^{p}\\Gamma(p)\\,,$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Sampling/MatrixMultiplication.lean",
+      "line": 648,
+      "before": "- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert q\\rvert + \\lvert r\\rvert)",
+      "after": "{}- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert q\\rvert + \\lvert r\\rvert)"
+     },
+     {
+      "path": "NLAlib/Sketching/Sampling/MatrixMultiplication.lean",
+      "line": 650,
+      "before": "+ 2\\sqrt{ab}\\,t/3}\\Bigr)\\,.$$",
+      "after": "{}+ 2\\sqrt{ab}\\,t/3}\\Bigr)\\,.$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Sampling/MatrixMultiplication.lean",
+      "line": 712,
+      "before": "- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert q\\rvert + \\lvert r\\rvert)",
+      "after": "{}- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert q\\rvert + \\lvert r\\rvert)"
+     },
+     {
+      "path": "NLAlib/Sketching/Sampling/MatrixMultiplication.lean",
+      "line": 714,
+      "before": "+ 2\\sqrt{ab}\\,t/3}\\Bigr)\\,,$$",
+      "after": "{}+ 2\\sqrt{ab}\\,t/3}\\Bigr)\\,,$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/Flattening.lean",
+      "line": 44,
+      "before": "+ 2\\|\\mathbf{A}\\|_2^2 t$$",
+      "after": "{}+ 2\\|\\mathbf{A}\\|_2^2 t$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/Flattening.lean",
+      "line": 70,
+      "before": "  + 2\\|\\mathbf{A}\\|_2^2 t\\,.$$",
+      "after": "  {}+ 2\\|\\mathbf{A}\\|_2^2 t\\,.$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/Flattening.lean",
+      "line": 370,
+      "before": "+ 2\\|\\mathbf{A}\\|_2^2 t:$$",
+      "after": "{}+ 2\\|\\mathbf{A}\\|_2^2 t:$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/Flattening.lean",
+      "line": 384,
+      "before": "+ 2\\|\\mathbf{A}\\|_2^2 t$$",
+      "after": "{}+ 2\\|\\mathbf{A}\\|_2^2 t$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 25,
+      "before": "  + \\lvert n\\rvert e^{-t}$$",
+      "after": "  {}+ \\lvert n\\rvert e^{-t}$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 131,
+      "before": "+ \\lvert n\\rvert e^{-t}\\,,$$",
+      "after": "{}+ \\lvert n\\rvert e^{-t}\\,,$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 204,
+      "before": "+ \\lvert n\\rvert e^{-t}\\,,$$",
+      "after": "{}+ \\lvert n\\rvert e^{-t}\\,,$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 878,
+      "before": "- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert q\\rvert + \\lvert r\\rvert)",
+      "after": "{}- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert q\\rvert + \\lvert r\\rvert)"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 881,
+      "before": "+ 2\\lvert n\\rvert e^{-s}\\,,$$",
+      "after": "{}+ 2\\lvert n\\rvert e^{-s}\\,,$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 884,
+      "before": "+ 2\\|\\mathbf{A}\\|_{\\mathsf{F}}\\|\\mathbf{A}\\|_2\\sqrt{s} + 2\\|\\mathbf{A}\\|_2^2 s$$",
+      "after": "{}+ 2\\|\\mathbf{A}\\|_{\\mathsf{F}}\\|\\mathbf{A}\\|_2\\sqrt{s} + 2\\|\\mathbf{A}\\|_2^2 s$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 933,
+      "before": "- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert q\\rvert + \\lvert r\\rvert)",
+      "after": "{}- \\mathbf{A}^{\\mathsf{H}}\\mathbf{B}\\|_2\\bigr] \\le (\\lvert q\\rvert + \\lvert r\\rvert)"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 936,
+      "before": "+ 2\\lvert n\\rvert e^{-s}\\,,$$",
+      "after": "{}+ 2\\lvert n\\rvert e^{-s}\\,,$$"
+     },
+     {
+      "path": "NLAlib/Sketching/Structured/SRHTMultiplication.lean",
+      "line": 939,
+      "before": "+ 2\\|\\mathbf{A}\\|_{\\mathsf{F}}\\|\\mathbf{A}\\|_2\\sqrt{s} + 2\\|\\mathbf{A}\\|_2^2 s$$",
+      "after": "{}+ 2\\|\\mathbf{A}\\|_{\\mathsf{F}}\\|\\mathbf{A}\\|_2\\sqrt{s} + 2\\|\\mathbf{A}\\|_2^2 s$$"
+     }
+    ]
+   }
+  }
+ },
+ "status_policy": "An external proof does not promote a backend card. A native theorem or reviewed native proof family must cover the whole card, including its domains, algorithm realization and retained side clauses.",
+ "later_formalization_scope": {
+  "frozen_candidates": 37,
+  "excluded_by_user": [
+   "truncation-lemma",
+   "tgn-expected-error",
+   "etrsvd",
+   "etgn"
+  ],
+  "exclusion": "Four Chen–Persson LRA items are excluded; block-Krylov is deferred by the user. The 32 retained targets comprise 19 sketching and 13 independent low-rank cards.",
+  "retained": 32,
+  "sketching": 19,
+  "lowrank": 13,
+  "deferred_by_user": [
+   "block-krylov-lra"
+  ]
+ },
+ "records": [
+  {
+   "id": "abs-best-approx-asymptotics",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "abs-best-approx-asymptotics",
+      "backend_status": "candidate",
+      "title": "Best approximation of |x|: Bernstein's constant and Newman–Stahl rational rate (ATAP Thm 25.1)",
+      "group": "sharp_rational",
+      "verdict": "no_full_sharp_asymptotics",
+      "promote": false,
+      "reason": "Frontend Polynomial has Chebyshev residuals, Jackson approximation, Bernstein ellipses and Stieltjes interpolation. It does not formalize the Newman-Stahl prefactor 8 or the diagonal Halphen asymptotic. Existing backend polynomial-Bernstein and reciprocal type-(0,n) partial components remain partial; scalar approximation bounds cannot close either bundled sharp card.",
+      "frontend_files_reviewed": [
+       "NLAlib/Polynomial/Approximation/Jackson.lean",
+       "NLAlib/Polynomial/Approximation/AnalyticApproximation.lean",
+       "NLAlib/Polynomial/Interpolation/Stieltjes.lean"
+      ],
+      "backend_formalizations_existing": [
+       {
+        "decl": "NLAlib.absoluteMinimaxError_odd_eq_even",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.one_div_eighteen_pi_le_bernsteinConstant",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.bernsteinConstant_pos",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.exists_pos_tendsto_nat_mul_absoluteMinimaxError",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.bernsteinConstant_mem_Icc",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.tendsto_nat_mul_absoluteMinimaxError",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.bernsteinConstant_le_two_div_pi",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.absoluteFejerDual_eval_eq_zero",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.abs_absoluteFejerDual_le",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.div_le_neg_absoluteFejerDual_abs",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.one_div_eighteen_pi_mul_succ_le_absoluteMinimaxError",
+        "partial": true
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "adaptive-gaussian-residual-certification",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "adaptive-gaussian-residual-certification",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "adaptive-pivoting-projection-dpp",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "adaptive-pivoting-projection-dpp",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "arnoldi-fa-error",
+   "source_reviews": [
+    {
+     "group": "root-readback",
+     "finding": "No actual nonnormal Arnoldi matrix-function error theorem was found. The missing numerical-range spectral-set theorem remains a genuine dependency."
+    }
+   ]
+  },
+  {
+   "id": "block-krylov-lra",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "block-krylov-lra",
+      "decision": "partial_mismatch",
+      "source": [
+       {
+        "file": "NLAlib/LowRank/Gaussian/BlockKrylovGapless.lean",
+        "line": 395,
+        "declaration": "NLAlib.exists_forall_integral_specNorm_sub_truncatedSVD_rbki_sq_le_of_hasLaw_gaussianMatrix"
+       }
+      ],
+      "native": [],
+      "audit": "Source proves actual block Krylov truncated output expectation at same iteration scale; doc explicitly distinguishes source99/100 probability. Backend card asks high-probability spectral relative error and orthonormal rank-k output. A Markov excess argument plus deterministic best error could derive constant probability after tightening epsilon, but neither direct exported conclusion nor exact rank/frame contract is supplied.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "cg-recurrence",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "cg-recurrence",
+      "verdict": "complete_source_proof_native_transfer_required",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Krylov/LinearSystems/CGRecurrence.lean",
+        "declarations": [
+         "Matrix.PosDef.cgState_x_eq",
+         "Matrix.PosDef.star_cgState_r_dotProduct_eq_zero",
+         "Matrix.PosDef.star_cgState_p_dotProduct_mulVec_eq_zero",
+         "Matrix.PosDef.span_cgState_p",
+         "Matrix.PosDef.cgState_r_eq_zero_iff"
+        ],
+        "lines": [
+         352,
+         327,
+         338,
+         312,
+         362
+        ]
+       }
+      ],
+      "coverage": "Actual total Hestenes--Stiefel recurrence, orthogonality, conjugacy, direction span and identification with variational CG, including exact grade termination.",
+      "remaining": "Backend state names and iterate predicate differ; real steps coincide after norm-square/dot-product identities. Backend span_cgRecurrence_p_eq_span_r supplies the residual-span clause.",
+      "recommended_action": "Adapt the source joint orthogonality induction to the existing backend state and discharge the two invariant scaffold roots; retain native downstream corollaries."
+     }
+    }
+   ]
+  },
+  {
+   "id": "chebyshev-iteration",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "chebyshev-iteration",
+      "verdict": "no_algorithm_realization_source",
+      "frontend_evidence": [],
+      "coverage": "Frontend scalar Chebyshev bounds and backend polynomially defined iterate/rates are prerequisites.",
+      "remaining": "No explicit rho/d coupled semi-iteration recurrence realization found.",
+      "recommended_action": "Keep candidate."
+     }
+    }
+   ]
+  },
+  {
+   "id": "chebyshev-moment-simplex-regression",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "chebyshev-moment-simplex-regression",
+      "backend_status": "candidate",
+      "title": "Simplex regression reconstructs a measure from noisy moments",
+      "group": "spectral_density",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend has real Hermitian spectral measures, scalar Chebyshev/Jackson approximation and random-start power/Lanczos estimates. It has no joint normal-matrix two-dimensional moment-law/cross-Gram/query theorem, Wasserstein/simplex reconstruction, or the adaptive density-estimation algorithms and complexity guarantees in these cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/SpectralMeasure.lean",
+       "NLAlib/Polynomial/Approximation/Jackson.lean",
+       "NLAlib/Estimation/Spectral/RandomStart.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "chebyshev-spectral-density-query",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "chebyshev-spectral-density-query",
+      "backend_status": "candidate",
+      "title": "Adaptive probe counts reduce Hermitian spectral-density queries",
+      "group": "spectral_density",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend has real Hermitian spectral measures, scalar Chebyshev/Jackson approximation and random-start power/Lanczos estimates. It has no joint normal-matrix two-dimensional moment-law/cross-Gram/query theorem, Wasserstein/simplex reconstruction, or the adaptive density-estimation algorithms and complexity guarantees in these cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/SpectralMeasure.lean",
+       "NLAlib/Polynomial/Approximation/Jackson.lean",
+       "NLAlib/Estimation/Spectral/RandomStart.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "christoffel-uvarov-modification",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "christoffel-uvarov-modification",
+      "verdict": "no_new_source_completion",
+      "frontend_evidence": [],
+      "coverage": "Backend has broad native coefficient/determinant and modified-measure partial family.",
+      "remaining": "Frontend has no rational-modification module; no new algorithmic factor/divisor realization.",
+      "recommended_action": "Keep current status, preserve recorded native proofs."
+     }
+    }
+   ]
+  },
+  {
+   "id": "clenshaw-recurrence",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "clenshaw-recurrence",
+      "verdict": "native_algebra_already_present_but_cost_open",
+      "frontend_evidence": [],
+      "coverage": "Backend already proves exact backward recurrence for arbitrary module-valued sequences and scalar Chebyshev specialization.",
+      "remaining": "Informal exactly-n matrix-vector products claim lacks actual cost/implementation realization; no frontend Clenshaw module found.",
+      "recommended_action": "Keep candidate per prior audit."
+     }
+    }
+   ]
+  },
+  {
+   "id": "covariance-loss-tail-bound",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "covariance-loss-tail-bound",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "crouzeix-palencia",
+   "source_reviews": [
+    {
+     "group": "root-readback",
+     "finding": "No polynomial numerical-range spectral-set theorem with constant 1+sqrt(2) was found; related scalar holomorphic/CFC results do not prove this matrix theorem."
+    }
+   ]
+  },
+  {
+   "id": "discrete-measure-jacobi-matrix",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "discrete-measure-jacobi-matrix",
+      "verdict": "native_mathematical_family_already_present_but_procedure_open",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Krylov/Functions/Quadrature.lean"
+       }
+      ],
+      "coverage": "Backend DiscreteCanonical/DiscreteMeasure already prove the atomic spectral measure, full grade, canonical evaluation orthogonality, Jacobi conjugacy, positive first vector and Gauss spectral measure.",
+      "remaining": "Informal Stieltjes-procedure returns same coefficients clause and procedural costs remain explicitly retained by docs/audit/2026-10-14-discrete-canonical-proof-inventory.json; frontend lacks that algorithm too.",
+      "recommended_action": "Keep candidate; do not install the mathematical-only inventory as a full proof family."
+     }
+    }
+   ]
+  },
+  {
+   "id": "etgn",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "etgn",
+      "decision": "frontend_full_native_port_needed",
+      "source": [
+       {
+        "file": "NLAlib/LowRank/Gaussian/EarlyTruncation.lean",
+        "line": 993,
+        "declaration": "NLAlib.integral_frobNorm_sub_earlyTruncatedGeneralizedNystrom_sq_le_one_add_mul_of_hasLaw_gaussianMatrix"
+       }
+      ],
+      "native": [],
+      "audit": "Actual early rank-k test subspace, Gaussian independence and completion theorem; relative guarantee for ell>=3600k/epsilon^2 and p>=k+1+(2+epsilon)k/epsilon; implies broad expected constant-times-OPT card, with size conditions made explicit. Native early-truncated algorithm, Gaussian clipped singular-value inverse moments and PCP structural analysis absent: broad port rather than wrapper.",
+      "port_modules": [
+       "NLAlib.LowRank.Structural.EarlyTruncation (new)",
+       "NLAlib.LowRank.Gaussian.EarlyTruncation (new)",
+       "Gaussian clipped inverse moments (new)"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "etrsvd",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "etrsvd",
+      "decision": "frontend_substantial_but_original_interface_unverified",
+      "source": [
+       {
+        "file": "NLAlib/LowRank/Gaussian/EarlyTruncation.lean",
+        "line": 886,
+        "declaration": "NLAlib.integral_frobNorm_sub_earlyTruncatedRSVD_sq_le_of_hasLaw_gaussianMatrix"
+       },
+       {
+        "file": "NLAlib/LowRank/Gaussian/EarlyTruncation.lean",
+        "line": 925,
+        "declaration": "NLAlib.integral_frobNorm_sub_earlyTruncatedRSVD_sq_le_one_add_mul_of_hasLaw_gaussianMatrix"
+       }
+      ],
+      "native": [],
+      "audit": "Source actual early-truncation projector algorithm, all ranks, Gaussian HasLaw, explicit factor and 900k/epsilon^2 relative guarantee. Backend card asks historical decoupled w,chi moments and smin-tail factor but old full statement unavailable. Source is independently derived bound with different displayed factor, size hypotheses100k<=ell and900<=ell. Cannot claim original historical formula exactly from tag alone.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "exp-rational-halfline",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "exp-rational-halfline",
+      "backend_status": "candidate",
+      "title": "Rational approximation of e^{x} on (−∞,0]: geometric rates (ATAP Thm 25.2)",
+      "group": "sharp_rational",
+      "verdict": "no_full_sharp_asymptotics",
+      "promote": false,
+      "reason": "Frontend Polynomial has Chebyshev residuals, Jackson approximation, Bernstein ellipses and Stieltjes interpolation. It does not formalize the Newman-Stahl prefactor 8 or the diagonal Halphen asymptotic. Existing backend polynomial-Bernstein and reciprocal type-(0,n) partial components remain partial; scalar approximation bounds cannot close either bundled sharp card.",
+      "frontend_files_reviewed": [
+       "NLAlib/Polynomial/Approximation/Jackson.lean",
+       "NLAlib/Polynomial/Approximation/AnalyticApproximation.lean",
+       "NLAlib/Polynomial/Interpolation/Stieltjes.lean"
+      ],
+      "backend_formalizations_existing": [
+       {
+        "decl": "NLAlib.posDef_aeval_reciprocalExponentialDenominator",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.specNorm_matrixExp_neg_sub_inv_aeval_reciprocalExponentialDenominator_le",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.abs_exp_quarter_sub_doubleResolventExponentialDenominator_le",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.abs_exp_quarter_div_four_sub_derivative_doubleResolventExponentialDenominator_le",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.doubleResolventExponentialDenominator_pos_on_tail",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.doubleResolventExponentialDenominator_pos_halfLine",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.doubleResolventExponentialDenominator_monotoneOn_halfLine",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.eval_doubleResolventExponentialDenominator_pos_of_le_four_mul",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.derivative_doubleResolventExponentialDenominator_pos_of_le_four_mul",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.doubleResolventExponentialDenominator_pos_small_degrees",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.one_half_le_uniform_exp_neg_error",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.isLeast_uniform_polynomial_exp_neg_error",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.one_half_le_uniform_exp_error_negative_halfLine",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.isLeast_uniform_polynomial_exp_error_negative_halfLine",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.type_zero_rational_exp_error_ge_geometric_lower_bound",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.reciprocalExponentialMinimaxError_ge_geometric_lower_bound",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.reciprocalExponentialMinimaxError_le_geometric_upper_bound",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.negativeHalfLineExponentialUniformErrorBounds_eq",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.negativeHalfLineExponentialMinimaxError_eq",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.negativeHalfLineExponentialMinimaxError_ge_geometric_lower_bound",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.negativeHalfLineExponentialMinimaxError_le_geometric_upper_bound",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.tendsto_rpow_negativeHalfLineExponentialMinimaxError_inv_nat",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.laguerreResidual_le_reciprocal_error_truncation_bound",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.reciprocal_exp_quarter_error_ge_laguerre_lower_bound",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.reciprocal_exp_neg_error_ge_geometric_lower_bound",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.reciprocalExponentialMinimaxError_pos",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.tendsto_log_reciprocalExponentialMinimaxError_div_nat",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.tendsto_rpow_reciprocalExponentialMinimaxError_inv_nat",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.integral_exp_quarter_sub_eval_sq_eq_laguerreResidual_add",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.laguerreResidual_le_integral_exp_quarter_sub_eval_sq",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.shifted_laguerreExponentialProjection_coeff_certificate",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.iterate_derivative_laguerreExponentialProjection_eval_nonneg",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.laguerreExponentialProjection_eval_pos",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.laguerreExponentialProjection_derivative_eval_pos",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.abs_exp_quarter_sub_laguerreExponentialResolvent_le",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.natDegree_reciprocalExponentialDenominator",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.reciprocalExponentialDenominator_eval_pos",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.reciprocalExponentialDenominator_derivative_eval_pos",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.reciprocalExponentialDenominator_strictMonoOn_halfLine",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.abs_exp_neg_sub_inv_reciprocalExponentialDenominator_le",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.abs_exp_neg_sub_inv_reciprocalExponentialDenominator_le_sqrt_two",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.eval_pos_le_exp_and_derivative_nonneg_of_interpolation",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.exponentialPolynomialMoment_laguerrePolynomial_mul_laguerrePolynomial",
+        "partial": true
+       },
+       {
+        "decl": "NLAlib.integral_laguerrePolynomial_mul_laguerrePolynomial",
+        "partial": true
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "finite-free-additive-convolution",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "finite-free-additive-convolution",
+      "backend_status": "candidate",
+      "title": "Finite free additive convolution: matrix identity and root barriers",
+      "group": "finite_free",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend has no finite-free convolution operation, Haar characteristic-polynomial expectation identity, real-rootedness/root-barrier theorem or additive equality characterization. Ordinary characteristic polynomials and interlacing do not supply the full cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+       "NLAlib/RandomMatrix/Haar/Moments.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "finite-free-multiplicative-convolution",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "finite-free-multiplicative-convolution",
+      "backend_status": "candidate",
+      "title": "Finite free multiplicative convolution preserves nonnegative roots",
+      "group": "finite_free",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend has no finite-free convolution operation, Haar characteristic-polynomial expectation identity, real-rootedness/root-barrier theorem or additive equality characterization. Ordinary characteristic polynomials and interlacing do not supply the full cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+       "NLAlib/RandomMatrix/Haar/Moments.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "flexible-gmres-residual-minimization",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "flexible-gmres-residual-minimization",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "No frontend flexible Arnoldi process/reduced least-squares bridge; ordinary GMRES is not flexible GMRES.",
+      "recommended_action": "Keep current candidate status."
+     }
+    }
+   ]
+  },
+  {
+   "id": "fom-def",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "fom-def",
+      "verdict": "no_full_source_proof",
+      "frontend_evidence": [],
+      "coverage": "Frontend Galerkin.lean proves SPD Galerkin energy minimization, a prerequisite. Backend real Arnoldi Galerkin system characterization already partial.",
+      "remaining": "No full arbitrary nonsymmetric FOM iterate, det(H) iff existence/uniqueness, or exact last-coordinate residual formula found.",
+      "recommended_action": "Keep open; do not label SPD Galerkin as the full FOM theorem."
+     }
+    }
+   ]
+  },
+  {
+   "id": "frame-spectral-partition",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "frame-spectral-partition",
+      "backend_status": "candidate",
+      "title": "A Parseval frame admits a spectral partition",
+      "group": "interlacing_selection",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend interlacing and its converse concern Hermitian matrix compressions, bordering and rank-one updates; these are not common-interlacing polynomial families, MSS mixed-characteristic root bounds, random-frame outcome selection, Parseval spectral partition or either quantitative restricted-invertibility theorem. Frames/Leverage supply orthogonality and frame API only.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/Interlacing.lean",
+       "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+       "NLAlib/Matrix/Subspaces/Frames.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "frequent-directions-mergeability",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "frequent-directions-mergeability",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "frequent-directions-streaming-realization",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "frequent-directions-streaming-realization",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "gaussian-haar-sketch-solve-exact",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "gaussian-haar-sketch-solve-exact",
+      "decision": "partial_real_only",
+      "source": [
+       {
+        "file": "NLAlib/Regression/SketchAndSolve.lean",
+        "line": 50,
+        "declaration": "file explicitly says Real throughout"
+       },
+       {
+        "file": "NLAlib/Regression/SketchAndSolve.lean",
+        "line": 81,
+        "declaration": "variable S : Omega -> Matrix p m R"
+       }
+      ],
+      "native": [],
+      "audit": "Actual Gaussian/Haar exact unbiasedness and finite Haar correction are fully formalized for REAL matrices only. Backend whole card explicitly real AND complex with alphaR1/alphaC0. Complex case unsupported by this file and not found elsewhere; keep card partial, not full.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "gaussian-polynomial-growing-coefficients",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "gaussian-polynomial-growing-coefficients",
+      "backend_status": "candidate",
+      "title": "Gaussian polynomial norm bounds with growing matrix coefficients",
+      "group": "free_probability_growth",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend RandomMatrix covers standard real Gaussian matrices and Haar frames, not reduced free-Haar/GUE semicircular comparison for matrix-coefficient polynomials, higher-order signed-permutation corrections or their quantitative growing-coefficient tails. Frontend has no corresponding free-polynomial infrastructure. These retained hard targets stay open.",
+      "frontend_files_reviewed": [
+       "NLAlib/RandomMatrix/Gaussian/SpectralNorm.lean",
+       "NLAlib/RandomMatrix/Haar/Basic.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "gaussian-residual-certificate",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "gaussian-residual-certificate",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "gmres-any-convergence-curve",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "gmres-any-convergence-curve",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "No frontend prescribed-spectrum/prescribed-residual-curve construction.",
+      "recommended_action": "Keep current candidate status."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gmres-bgt",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "gmres-bgt",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "No frontend lens/Faber BGT spectral-set theorem.",
+      "recommended_action": "Keep current candidate status."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gmres-def",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "gmres-def",
+      "verdict": "partial_native_and_broader_source",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Krylov/LinearSystems/GMRES.lean",
+        "lines": [
+         82,
+         110,
+         146,
+         163,
+         176,
+         198,
+         225
+        ]
+       },
+       {
+        "file": "NLAlib/Krylov/LinearSystems/GMRESArnoldi.lean",
+        "lines": [
+         73,
+         104,
+         151,
+         209
+        ]
+       }
+      ],
+      "coverage": "Frontend generic RCLike canonical minimum-length GMRES, projection residual, polynomial optimum, monotonicity, termination, actual Arnoldi/Givens algorithm identities. Backend already has the real variational family and reduced Arnoldi least squares.",
+      "remaining": "Backend advertised complex form and real-complex identification require native object/bridge; source theorem statements are on frontend canonical gmresIterate, not backend real IsGMRESIterate. General singular-system minimizer/residual uniqueness must be matched explicitly.",
+      "recommended_action": "Keep candidate until native generic interface and all bridge clauses are checked; do not promote from unrelated Result IDs alone."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gmres-diagonalizable",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "gmres-diagonalizable",
+      "verdict": "complete_matrix_bound_source_routine_native_consumer",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Krylov/LinearSystems/GMRES.lean",
+        "declarations": [
+         "NLAlib.norm_sub_mulVec_gmresIterate_le_pseudoConditionNumber_mul"
+        ],
+        "lines": [
+         243
+        ]
+       },
+       {
+        "file": "NLAlib/Matrix/Functions/Polynomial.lean",
+        "declarations": [
+         "NLAlib.specNorm_aeval_le_pseudoConditionNumber_mul"
+        ],
+        "lines": [
+         302
+        ]
+       }
+      ],
+      "coverage": "Generic complex diagonalization bound with actual norm condition factor and polynomial probe.",
+      "remaining": "Backend card is real A with complex eigenvectors and real residual polynomial, whereas backend existing IsGMRESIterate bound is real diagonalization only.",
+      "recommended_action": "Port matrix polynomial diagonalization bound and compose existing real GMRES polynomial bound through specNorm_map_ofReal plus aeval scalar-extension identity; no need to port all complex GMRES."
+     }
+    }
+   ]
+  },
+  {
+   "id": "gmres-elman",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "gmres-elman",
+      "verdict": "single_cycle_source_only",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Krylov/LinearSystems/GMRES.lean",
+        "declarations": [
+         "NLAlib.norm_sub_mulVec_gmresIterate_le_sqrt_one_sub_sq_pow"
+        ],
+        "lines": [
+         261
+        ]
+       },
+       {
+        "file": "NLAlib/Matrix/Spectral/HermitianPart.lean",
+        "declarations": [
+         "NLAlib.specNorm_one_sub_smul_le_of_smul_one_le_hermitianPart"
+        ],
+        "lines": [
+         117
+        ]
+       }
+      ],
+      "coverage": "Actual Elman single-cycle bound for any RCLike field.",
+      "remaining": "Backend composite card also advertises restarted cycles; no frontend restart recursion/result found.",
+      "recommended_action": "Port actual one-step norm helper and native residual-polynomial consumer; prove a genuine restart recurrence bound before full status."
+     }
+    }
+   ]
+  },
+  {
+   "id": "golub-kahan-bidiagonalization",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "golub-kahan-bidiagonalization",
+      "verdict": "no_relevant_source_completion",
+      "frontend_evidence": [],
+      "coverage": "No frontend Golub--Kahan recurrence or bidiagonalization implementation found.",
+      "remaining": "Backend native grade and realization scaffold roots remain.",
+      "recommended_action": "Keep scaffold."
+     }
+    }
+   ]
+  },
+  {
+   "id": "golub-kahan-recurrence",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "golub-kahan-recurrence",
+      "verdict": "no_relevant_source_completion",
+      "frontend_evidence": [],
+      "coverage": "No frontend Golub--Kahan recurrence or bidiagonalization implementation found.",
+      "remaining": "Backend native grade and realization scaffold roots remain.",
+      "recommended_action": "Keep scaffold."
+     }
+    }
+   ]
+  },
+  {
+   "id": "haar-polynomial-growing-coefficients",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "haar-polynomial-growing-coefficients",
+      "backend_status": "candidate",
+      "title": "Haar polynomial norm bounds with growing matrix coefficients",
+      "group": "free_probability_growth",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend RandomMatrix covers standard real Gaussian matrices and Haar frames, not reduced free-Haar/GUE semicircular comparison for matrix-coefficient polynomials, higher-order signed-permutation corrections or their quantitative growing-coefficient tails. Frontend has no corresponding free-polynomial infrastructure. These retained hard targets stay open.",
+      "frontend_files_reviewed": [
+       "NLAlib/RandomMatrix/Gaussian/SpectralNorm.lean",
+       "NLAlib/RandomMatrix/Haar/Basic.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "heterogeneous-gaussian-schatten-moments",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "heterogeneous-gaussian-schatten-moments",
+      "backend_status": "candidate",
+      "title": "Sharp Schatten moments for heterogeneous Gaussian entries",
+      "group": "heterogeneous_gaussian",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend Chevet and sub-Gaussian extreme singular-value inequalities apply to standard Gaussian matrices or isotropic/sub-Gaussian rows. They do not prove the dimension-free variance-profile Schatten row tail comparison/moments, or the fine t^(3/2) small-deviation bound with the source scale and full independent-entry moment domination. Backend main already added Gaussian extremum/moment comparison, but none of the full statements in these three candidate cards is indexed.",
+      "frontend_files_reviewed": [
+       "NLAlib/RandomMatrix/Gaussian/SpectralNorm.lean",
+       "NLAlib/RandomMatrix/SubGaussian/ExtremeSingularValues.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "heterogeneous-gaussian-schatten-row-comparison",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "heterogeneous-gaussian-schatten-row-comparison",
+      "backend_status": "candidate",
+      "title": "Gaussian Schatten norms are controlled by Euclidean row lengths",
+      "group": "heterogeneous_gaussian",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend Chevet and sub-Gaussian extreme singular-value inequalities apply to standard Gaussian matrices or isotropic/sub-Gaussian rows. They do not prove the dimension-free variance-profile Schatten row tail comparison/moments, or the fine t^(3/2) small-deviation bound with the source scale and full independent-entry moment domination. Backend main already added Gaussian extremum/moment comparison, but none of the full statements in these three candidate cards is indexed.",
+      "frontend_files_reviewed": [
+       "NLAlib/RandomMatrix/Gaussian/SpectralNorm.lean",
+       "NLAlib/RandomMatrix/SubGaussian/ExtremeSingularValues.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hutchpp",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "hutchpp",
+      "decision": "frontend_full_native_port_needed",
+      "source": [
+       {
+        "file": "NLAlib/Estimation/Trace/HutchPlusPlusTail.lean",
+        "line": 607,
+        "declaration": "NLAlib.exists_forall_measureReal_abs_trace_sub_hutchpp_gt_mul_nuclearNorm_le_of_isSubgaussianVector"
+       }
+      ],
+      "native": [
+       {
+        "file": "NLAlib/Estimation/Trace/Unbiased.lean",
+        "line": 166,
+        "declaration": "NLAlib.integral_hutchPlusPlusEstimate_eq_trace"
+       }
+      ],
+      "audit": "Source actual independent isotropic subgaussian sketch/residual law and actual estimator; full relative failure guarantee with O(sqrt(log(1/delta))/epsilon+log(1/delta)) matvecs; stronger than card loose O(log(1/delta)/epsilon). Must instantiate concrete Gaussian/sign law, bridge actual backend basis estimator and port concentration; backend only unbiasedness is not enough.",
+      "port_modules": [
+       "Trace Hutch++ tail",
+       "Subgaussian vector sketch AMM",
+       "Low-rank random range-finder tail"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "independent-control-variate-variance",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "independent-control-variate-variance",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "independent-entry-small-deviation",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "independent-entry-small-deviation",
+      "backend_status": "candidate",
+      "title": "Variance-profile spectral-norm tails at the small-deviation scale",
+      "group": "heterogeneous_gaussian",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend Chevet and sub-Gaussian extreme singular-value inequalities apply to standard Gaussian matrices or isotropic/sub-Gaussian rows. They do not prove the dimension-free variance-profile Schatten row tail comparison/moments, or the fine t^(3/2) small-deviation bound with the source scale and full independent-entry moment domination. Backend main already added Gaussian extremum/moment comparison, but none of the full statements in these three candidate cards is indexed.",
+      "frontend_files_reviewed": [
+       "NLAlib/RandomMatrix/Gaussian/SpectralNorm.lean",
+       "NLAlib/RandomMatrix/SubGaussian/ExtremeSingularValues.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "interlacing-family-root-selection",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "interlacing-family-root-selection",
+      "backend_status": "candidate",
+      "title": "Interlacing families select a leaf below the average largest root",
+      "group": "interlacing_selection",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend interlacing and its converse concern Hermitian matrix compressions, bordering and rank-one updates; these are not common-interlacing polynomial families, MSS mixed-characteristic root bounds, random-frame outcome selection, Parseval spectral partition or either quantitative restricted-invertibility theorem. Frames/Leverage supply orthogonality and frame API only.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/Interlacing.lean",
+       "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+       "NLAlib/Matrix/Subspaces/Frames.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "interpolative-decomposition",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "interpolative-decomposition",
+      "decision": "native_full_ready",
+      "source": [
+       {
+        "file": "NLAlib/Matrix/Factorizations/RankRevealing.lean",
+        "line": 368,
+        "declaration": "NLAlib.exists_embedding_isLocalMaxVolume"
+       },
+       {
+        "file": "NLAlib/Matrix/Factorizations/RankRevealing.lean",
+        "line": 378,
+        "declaration": "NLAlib.exists_embedding_eq_mul_pinv_mul"
+       }
+      ],
+      "native": [
+       {
+        "file": "NLAlib/LowRank/Structural/InterpolativeDecomposition.lean",
+        "line": 26,
+        "declaration": "NLAlib.exists_interpolative_decomposition"
+       },
+       {
+        "file": "NLAlib/LowRank/Structural/InterpolativeDecomposition.lean",
+        "line": 104,
+        "declaration": "NLAlib.exists_exact_interpolative_decomposition"
+       }
+      ],
+      "audit": "Native theorem includes distinct selection, T(:,J)=I, coefficients bounded by one and exact maximum-volume error factor for all k<=rank A. Partial tags are stale; whole current informal card is covered.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "l-ensemble-law",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "l-ensemble-law",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "l-ensemble-marginals",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "l-ensemble-marginals",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "lanczos-recurrence-algorithm",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "lanczos-recurrence-algorithm",
+      "verdict": "complete_source_variant_native_transfer_required",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Krylov/Processes/LanczosRecurrence.lean",
+        "declarations": [
+         "Matrix.IsHermitian.lanczosMatrix_eq_arnoldiMatrix",
+         "Matrix.IsHermitian.lanczosTridiagonal_eq",
+         "Matrix.IsHermitian.lanczosState_beta_eq_zero_iff"
+        ],
+        "lines": [
+         363,
+         378,
+         404
+        ]
+       }
+      ],
+      "coverage": "Actual total Lanczos recurrence constructs the canonical Arnoldi basis and compression for every step, with breakdown exactly at grade.",
+      "remaining": "Frontend uses Paige order alpha=Re<q,Aq-beta*p>; backend alpha=<q,Aq>. They agree on the orthogonal canonical trajectory, not arbitrary states. Also frontend arnoldiMatrix API differs from backend arnoldiBasis.",
+      "recommended_action": "Adapt canonical-source proof to exact existing backend recurrence; preserve zero/breakdown behavior and prove trajectory equivalence or direct native canonical-state update."
+     }
+    }
+   ]
+  },
+  {
+   "id": "lyapunov-projection-residual-certificate",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "lyapunov-projection-residual-certificate",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "No frontend reduced Lyapunov residual norm/certified dissipativity theorem.",
+      "recommended_action": "Keep current candidate status."
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "lyapunov-projection-residual-certificate",
+      "backend_status": "candidate",
+      "title": "Projected Lyapunov equations: small residual norms and certified error bounds",
+      "group": "matrix_equations",
+      "verdict": "related_vector_or_separation_results_only",
+      "promote": false,
+      "reason": "Frontend Galerkin optimum concerns vectors with a positive definite coefficient matrix; it has no native matrix linear-operator/Frobenius tensor trial-space realization of the full matrix-equation card. Sylvester solvability/separation does not establish low-rank Lyapunov residual identities from AV=VH+UT, the small TY certificate, and strict-dissipativity forward-error constants. Backend Lyapunov-ADI results are about a different algorithm and do not fill this gap.",
+      "frontend_files_reviewed": [
+       "NLAlib/Krylov/LinearSystems/Galerkin.lean",
+       "NLAlib/Matrix/Spectral/SylvesterEquation.lean",
+       "NLAlib/Matrix/Perturbation/Sylvester.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "matrix-equation-galerkin-optimality",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "matrix-equation-galerkin-optimality",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "Frontend vector SPD Galerkin theorem is not the general Frobenius-self-adjoint multiterm matrix-equation operator theorem.",
+      "recommended_action": "Keep current candidate status."
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "matrix-equation-galerkin-optimality",
+      "backend_status": "candidate",
+      "title": "Galerkin matrix-equation projection minimizes the SPD operator energy error",
+      "group": "matrix_equations",
+      "verdict": "related_vector_or_separation_results_only",
+      "promote": false,
+      "reason": "Frontend Galerkin optimum concerns vectors with a positive definite coefficient matrix; it has no native matrix linear-operator/Frobenius tensor trial-space realization of the full matrix-equation card. Sylvester solvability/separation does not establish low-rank Lyapunov residual identities from AV=VH+UT, the small TY certificate, and strict-dissipativity forward-error constants. Backend Lyapunov-ADI results are about a different algorithm and do not fill this gap.",
+      "frontend_files_reviewed": [
+       "NLAlib/Krylov/LinearSystems/Galerkin.lean",
+       "NLAlib/Matrix/Spectral/SylvesterEquation.lean",
+       "NLAlib/Matrix/Perturbation/Sylvester.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "matvec-query-model",
+   "source_reviews": [
+    {
+     "group": "root-readback",
+     "finding": "No adaptive interaction-tree matvec syntax, cost, semantics and algorithm-realization family was found; numerical algorithms alone do not provide this query model."
+    }
+   ]
+  },
+  {
+   "id": "minres-bound",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "minres-bound",
+      "verdict": "strict_specialization_only",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Krylov/LinearSystems/MINRES.lean",
+        "declarations": [
+         "Matrix.IsHermitian.norm_sub_mulVec_gmresIterate_le",
+         "Matrix.IsHermitian.norm_sub_mulVec_gmresIterate_le_two_mul_pow",
+         "Matrix.IsHermitian.norm_sub_mulVec_gmresIterate_le_two_mul_pow_div_two"
+        ],
+        "lines": [
+         73,
+         96,
+         115
+        ]
+       }
+      ],
+      "coverage": "Polynomial spectral bound, definite Chebyshev rate and symmetric two-interval rate.",
+      "remaining": "Frontend intervals are [-aPrime,-a] union [a,aPrime]. Backend demands general equal-width separated [a,b] union [c,d] and exact sqrt(|ad|),sqrt(|bc|) rate.",
+      "recommended_action": "Do not promote from the symmetric specialization. Existing backend two-interval-minimax polynomial prerequisite may support a small exact native consumer, but it must be compiled."
+     }
+    }
+   ]
+  },
+  {
+   "id": "mixed-characteristic-polynomial-roots",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "mixed-characteristic-polynomial-roots",
+      "backend_status": "candidate",
+      "title": "Mixed characteristic polynomials: expectation identity and root bound",
+      "group": "interlacing_selection",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend interlacing and its converse concern Hermitian matrix compressions, bordering and rank-one updates; these are not common-interlacing polynomial families, MSS mixed-characteristic root bounds, random-frame outcome selection, Parseval spectral partition or either quantitative restricted-invertibility theorem. Frames/Leverage supply orthogonality and frame API only.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/Interlacing.lean",
+       "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+       "NLAlib/Matrix/Subspaces/Frames.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "modified-chebyshev-algorithm",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "modified-chebyshev-algorithm",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "No frontend modified Chebyshev moment-recursion realization.",
+      "recommended_action": "Keep current candidate status."
+     }
+    }
+   ]
+  },
+  {
+   "id": "normal-matrix-mixed-chebyshev-moments",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "normal-matrix-mixed-chebyshev-moments",
+      "backend_status": "candidate",
+      "title": "Mixed spectral moments of a normal matrix form a cross-Gram matrix",
+      "group": "spectral_density",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend has real Hermitian spectral measures, scalar Chebyshev/Jackson approximation and random-start power/Lanczos estimates. It has no joint normal-matrix two-dimensional moment-law/cross-Gram/query theorem, Wasserstein/simplex reconstruction, or the adaptive density-estimation algorithms and complexity guarantees in these cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/SpectralMeasure.lean",
+       "NLAlib/Polynomial/Approximation/Jackson.lean",
+       "NLAlib/Estimation/Spectral/RandomStart.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "normal-spectral-density-query",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "normal-spectral-density-query",
+      "backend_status": "candidate",
+      "title": "A random start estimates the spectral density of a normal matrix",
+      "group": "spectral_density",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend has real Hermitian spectral measures, scalar Chebyshev/Jackson approximation and random-start power/Lanczos estimates. It has no joint normal-matrix two-dimensional moment-law/cross-Gram/query theorem, Wasserstein/simplex reconstruction, or the adaptive density-estimation algorithms and complexity guarantees in these cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/SpectralMeasure.lean",
+       "NLAlib/Polynomial/Approximation/Jackson.lean",
+       "NLAlib/Estimation/Spectral/RandomStart.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "nuclear-norm-proximal",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "nuclear-norm-proximal",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "nuclear-norm-proximal",
+      "backend_status": "candidate",
+      "title": "The nuclear-norm proximal map is singular-value soft thresholding",
+      "group": "singular_value_proximal",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend defines absolute values, SVD factors and truncations, but has no rectangular general singular-value-transform API, soft thresholding, nuclear-norm proximal minimizer, rank-penalized minimizer or Frequent-Directions shrinkage certificate. Backend index contains no soft-threshold/proximal/shrinkage/rank-penalty declarations. Generic CFC/SVD facts are not these complete cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Functions/AbsoluteValue.lean",
+       "NLAlib/Matrix/Spectral/SVD.lean",
+       "NLAlib/Matrix/Spectral/BestRankApprox.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "nystrom-pcg",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "nystrom-pcg",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "nystrom-randomized",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "nystrom-randomized",
+      "decision": "frontend_full_native_bridge_needed",
+      "source": [
+       {
+        "file": "NLAlib/LowRank/Gaussian/Nystrom.lean",
+        "line": 141,
+        "declaration": "Matrix.PosSemidef.integral_nuclearNorm_sub_nystrom_le_of_hasLaw_gaussianMatrix"
+       }
+      ],
+      "native": [
+       {
+        "file": "NLAlib/LowRank/Nystrom/Structural.lean",
+        "line": 191,
+        "declaration": "NLAlib.integrable_and_integral_trace_sub_nystrom_le"
+       }
+      ],
+      "audit": "Actual Gaussian law and precise factor 1+k/(ell-k-1) agree, including rank deficiency. Native theorem RHS is bestRankFrobSq of Gram factor F while card RHS is nuclear error of top-k truncation of A=FᵀF. Need Gram singular-value square identity and PSD trace/nuclear identification; source Matrix/Functions/AbsoluteValue.lean supplies general Gram-tail bridge.",
+      "port_modules": [
+       "NLAlib.LowRank.Nystrom.Structural",
+       "NLAlib.Matrix.Spectral.EckartYoung",
+       "NLAlib.Matrix.Norms.Schatten"
+      ],
+      "native_completion": {
+       "file": "NLAlib/LowRank/Nystrom/Structural.lean",
+       "declaration": "NLAlib.integrable_and_integral_nuclearNorm_sub_nystrom_le",
+       "helpers": "NLAlib/Matrix/Norms/NuclearTruncation.lean",
+       "check": "Direct Lean core and final wrapper checks passed without warnings",
+       "scope": "FullactualGaussianlawandnativeMoorePenroseNystrom; exactpublishedfactorandnuclearSVDtail; integrabilityproved; no rankor positive-dimension assumptions."
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "nystrom-structural",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "nystrom-structural",
+      "decision": "native_bridge_small",
+      "source": [
+       {
+        "file": "NLAlib/Matrix/Factorizations/Nystrom.lean",
+        "line": 65,
+        "declaration": "Matrix.PosSemidef.sub_submatrix_mul_pinv_mul"
+       }
+      ],
+      "native": [
+       {
+        "file": "NLAlib/LowRank/Nystrom/Structural.lean",
+        "line": 145,
+        "declaration": "NLAlib.posSemidef_nystrom; NLAlib.posSemidef_sub_nystrom; NLAlib.specNorm_sub_nystrom_eq_of_eq_transpose_mul"
+       },
+       {
+        "file": "NLAlib/Matrix/Basic/GeneralizedSchurComplement.lean",
+        "line": 40,
+        "declaration": "NLAlib.generalizedSchurComplement"
+       }
+      ],
+      "audit": "PSD/order and residual spectral equality already native. Full card additionally calls residual a generalized Schur complement. Add algebraic identity A-nystrom A Ω = generalizedSchurComplement (Ωᵀ*A*Ω) (Ωᵀ*A) A using symmetry of A; no probability or new theory.",
+      "port_modules": [
+       "NLAlib.LowRank.Nystrom.Structural",
+       "NLAlib.Matrix.Basic.GeneralizedSchurComplement"
+      ],
+      "draft_native_completions": [
+       {
+        "file": "NLAlib/LowRank/Nystrom/Structural.lean",
+        "line": 170,
+        "declaration": "NLAlib.sub_nystrom_eq_generalizedSchurComplement",
+        "check": "targeted lake build passed"
+       },
+       {
+        "file": "NLAlib/LowRank/Nystrom/Structural.lean",
+        "line": 184,
+        "declaration": "NLAlib.specNorm_sub_nystrom_eq_sqrt_residual",
+        "check": "targeted lake build passed"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "odd-polynomial-composition-minimax",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "odd-polynomial-composition-minimax",
+      "backend_status": "candidate",
+      "title": "Greedy odd minimax updates minimize the error of their composition",
+      "group": "odd_minimax",
+      "verdict": "different_minimax_problem",
+      "promote": false,
+      "reason": "Frontend Chebyshev residual minimax is normalized by p(0)=1, including finite-set residual minimax duality. The cards instead optimize odd polynomials approximating the constant 1 on a positive interval, with endpoint/alternation/explicit cubic or greedy-composition conclusions. The actual coefficient classes and conclusions differ.",
+      "frontend_files_reviewed": [
+       "NLAlib/Polynomial/Chebyshev/Residual.lean",
+       "NLAlib/Polynomial/Chebyshev/ResidualMinimax.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "odd-polynomial-sign-minimax",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "odd-polynomial-sign-minimax",
+      "backend_status": "candidate",
+      "title": "Odd minimax sign polynomials: alternation and the optimal cubic",
+      "group": "odd_minimax",
+      "verdict": "different_minimax_problem",
+      "promote": false,
+      "reason": "Frontend Chebyshev residual minimax is normalized by p(0)=1, including finite-set residual minimax duality. The cards instead optimize odd polynomials approximating the constant 1 on a positive interval, with endpoint/alternation/explicit cubic or greedy-composition conclusions. The actual coefficient classes and conclusions differ.",
+      "frontend_files_reviewed": [
+       "NLAlib/Polynomial/Chebyshev/Residual.lean",
+       "NLAlib/Polynomial/Chebyshev/ResidualMinimax.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "operator-capacity-near-balanced-certificate",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "operator-capacity-near-balanced-certificate",
+      "backend_status": "candidate",
+      "title": "Near doubly stochasticity certifies rank and capacity",
+      "group": "capacity",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Neither frontend nor backend index provides the operator capacity infimum or these scaling/tensorization/near-balance quantitative theorems. Determinant and positive-map facts alone do not prove the cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Structured/Kronecker.lean",
+       "NLAlib/Matrix/Functions/OperatorConvex.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "operator-capacity-scaling-identities",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "operator-capacity-scaling-identities",
+      "backend_status": "candidate",
+      "title": "Operator capacity under invertible scaling and tensor products",
+      "group": "capacity",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Neither frontend nor backend index provides the operator capacity infimum or these scaling/tensorization/near-balance quantitative theorems. Determinant and positive-map facts alone do not prove the cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Structured/Kronecker.lean",
+       "NLAlib/Matrix/Functions/OperatorConvex.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "operator-monotone-schatten-transfer",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "operator-monotone-schatten-transfer",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "operator-monotone-schatten-transfer",
+      "backend_status": "candidate",
+      "title": "Ordered Schatten trace-deficit guarantees transfer to matrix functions",
+      "group": "operator_transfer",
+      "verdict": "special_cases_only",
+      "promote": false,
+      "reason": "Frontend OperatorMonotone proves Loewner-Heinz/log monotonicity and power concavity. It does not prove transfer of a rank-k Schatten trace deficit for an arbitrary continuous nonnegative operator-monotone function, nor the source conclusion comparing f(A) to f(Ahat)_k.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Functions/OperatorMonotone.lean",
+       "NLAlib/Matrix/Functions/TracePowers.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "osi-cross-residual-bound",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "osi-cross-residual-bound",
+      "decision": "partial_joint_event_gap",
+      "source": [
+       {
+        "file": "NLAlib/Regression/Oblivious.lean",
+        "line": 77,
+        "declaration": "NLAlib.IsObliviousSubspaceInjection.measureReal_frobNorm_mul_pinv_sq_gt_le"
+       }
+      ],
+      "native": [],
+      "audit": "Source noise-tail failuredelta+1/t equals1/10 atdelta1/20,t20. Backend additionally requires joint eventrank(Q*Omega)=r. Source proof already works on injection event, so can adapt to joint bad union atsame1/10; cannot union separately afterwards (would yield3/20). No direct matching exported fixed-frame joint theorem found.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "osi-def",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "osi-def",
+      "decision": "frontend_stronger_contract_port_needed",
+      "source": [
+       {
+        "file": "NLAlib/Sketching/Properties/Oblivious.lean",
+        "line": 73,
+        "declaration": "NLAlib.IsObliviousSubspaceInjection"
+       },
+       {
+        "file": "NLAlib/Sketching/Properties/Isotropic.lean",
+        "line": 60,
+        "declaration": "NLAlib.IsIsotropicSketch"
+       }
+      ],
+      "native": [],
+      "audit": "Source real/complex, actual measurableL2 sketch S with ES* S=I, all subspaces rank<=d injection prob1-delta. Backend exactrankr and19/20, norm identity and smin equivalence. Specialize delta1/20 and a=alpha, S=Omega*, prove native exactrank and spectral bridges; source stronger contract alone is not equivalent definition without completion.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "osi-range-finder-frobenius",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "osi-range-finder-frobenius",
+      "decision": "frontend_full_native_port_needed",
+      "source": [
+       {
+        "file": "NLAlib/LowRank/Oblivious/RangeFinder.lean",
+        "line": 165,
+        "declaration": "NLAlib.IsObliviousSubspaceInjection.measureReal_frobNorm_sub_rsvd_sq_gt_le"
+       }
+      ],
+      "native": [],
+      "audit": "Exact actual projected output, rank<=k, factor1+t/a and failuredelta+1/t; t20,delta1/20 gives card1+20/alpha, success.9. Requires new native OSI API plus source deterministic injection/range-finder argument; no just external promotion.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "partial-cholesky-nystrom",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "partial-cholesky-nystrom",
+      "decision": "frontend_full_native_port_needed",
+      "source": [
+       {
+        "file": "NLAlib/Matrix/Factorizations/Nystrom.lean",
+        "line": 143,
+        "declaration": "Matrix.PosSemidef.foldl_eliminationStep_eq_sub"
+       }
+      ],
+      "native": [
+       {
+        "file": "NLAlib/LowRank/Cholesky/PartialCholesky.lean",
+        "line": 139,
+        "declaration": "NLAlib.sub_partialCholeskyFactor_mul_transpose"
+       },
+       {
+        "file": "NLAlib/LowRank/Cholesky/PartialCholesky.lean",
+        "line": 175,
+        "declaration": "NLAlib.partialCholeskyFactor_mul_transpose_eq_nystrom (scaffold)"
+       }
+      ],
+      "audit": "Frontend elimination-list identity is actual PSD Schur residual, permits repeated/zero pivots. Backend already defines identical recursive elimination and factor identity, but needs native port of maximal-residual characterization and induction, then Fin-sequence/list equivalence. This removes an existing sorry rather than adding external metadata.",
+      "port_modules": [
+       "NLAlib.Matrix.Basic.GeneralizedSchurComplement",
+       "NLAlib.LowRank.Cholesky.PartialCholesky"
+      ]
+     }
+    },
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "partial-cholesky-nystrom",
+      "verdict": "one_step_only",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Matrix/Factorizations/Nystrom.lean",
+        "declarations": [
+         "NLAlib.ker_le_ker_eliminationStep",
+         "Matrix.PosSemidef.sum_smul_eliminationStep"
+        ]
+       },
+       {
+        "file": "NLAlib/Matrix/Factorizations/Cholesky.lean",
+        "declarations": [
+         "Matrix.PosSemidef.eq_choleskyLower_mul_conjTranspose"
+        ]
+       }
+      ],
+      "coverage": "Elimination/Nystrom geometry and full Cholesky factorization; random one-step expectation.",
+      "remaining": "No arbitrary partial pivot sequence factor=Nystrom identity found, including zero/repeated pivots as backend requires.",
+      "recommended_action": "Keep scaffold."
+     }
+    }
+   ]
+  },
+  {
+   "id": "permutation-polynomial-norm-comparison",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "permutation-polynomial-norm-comparison",
+      "backend_status": "candidate",
+      "title": "Permutation polynomials: quantitative norm comparison with free Haar unitaries",
+      "group": "free_probability_growth",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend RandomMatrix covers standard real Gaussian matrices and Haar frames, not reduced free-Haar/GUE semicircular comparison for matrix-coefficient polynomials, higher-order signed-permutation corrections or their quantitative growing-coefficient tails. Frontend has no corresponding free-polynomial infrastructure. These retained hard targets stay open.",
+      "frontend_files_reviewed": [
+       "NLAlib/RandomMatrix/Gaussian/SpectralNorm.lean",
+       "NLAlib/RandomMatrix/Haar/Basic.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "projection-cost-optimization-transfer",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "projection-cost-optimization-transfer",
+      "decision": "frontend_stricter_hypothesis_than_card",
+      "source": [
+       {
+        "file": "NLAlib/Sketching/Properties/ProjectionCost.lean",
+        "line": 318,
+        "declaration": "NLAlib.IsProjectionCostPreserving.mul_frobNorm_sub_mul_sq_le"
+       }
+      ],
+      "native": [],
+      "audit": "Source transfer uses global rank<=k PCP. Backend arbitrary feasible family has PCP inequalities only on that family; global hypothesis is stronger. Source proof is3 inequalities and fixedc>=0, so small native family/two-projector adaptation can preserve original full scope, but no direct matching declaration already exists.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "projection-cost-preserving-def",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "projection-cost-preserving-def",
+      "decision": "frontend_stronger_contract_bridge_needed",
+      "source": [
+       {
+        "file": "NLAlib/Sketching/Properties/ProjectionCost.lean",
+        "line": 100,
+        "declaration": "NLAlib.IsProjectionCostPreserving"
+       }
+      ],
+      "native": [],
+      "audit": "Source fixed offset c>=0 and all rank<=k projectors. Backend defines exactrank k projector contract. Source implies backend, but not an iff in general (k=n only projectorI in original). Export specialization or native original definition; do not call definitions identical.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "qr-algorithm-convergence",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "qr-algorithm-convergence",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "No frontend full QR iteration/convergence theorem.",
+      "recommended_action": "Keep current candidate status."
+     }
+    }
+   ]
+  },
+  {
+   "id": "qr-algorithm-simultaneous-iteration",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "qr-algorithm-simultaneous-iteration",
+      "verdict": "one_step_only",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Matrix/Factorizations/QR.lean",
+        "declarations": [
+         "NLAlib.IsQR.mul_eq_conjTranspose_mul_mul",
+         "NLAlib.IsQR.mul_add_smul_one_eq"
+        ]
+       }
+      ],
+      "coverage": "One QR step is a unitary similarity, shifted/unshifted.",
+      "remaining": "No frontend total QR iteration or equality of leading accumulated Q ranges and subspaceIterate found. Backend native final equality scaffold requires IsUnit A.det and success.",
+      "recommended_action": "Keep scaffold; do not equate a one-step identity with complete simultaneous-iteration realization."
+     }
+    }
+   ]
+  },
+  {
+   "id": "random-frame-spectral-selection",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "random-frame-spectral-selection",
+      "backend_status": "candidate",
+      "title": "A finite random frame has a spectrally bounded outcome",
+      "group": "interlacing_selection",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend interlacing and its converse concern Hermitian matrix compressions, bordering and rank-one updates; these are not common-interlacing polynomial families, MSS mixed-characteristic root bounds, random-frame outcome selection, Parseval spectral partition or either quantitative restricted-invertibility theorem. Frames/Leverage supply orthogonality and frame API only.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/Interlacing.lean",
+       "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+       "NLAlib/Matrix/Subspaces/Frames.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rank-penalty-thresholding",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "rank-penalty-thresholding",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "rank-penalty-thresholding",
+      "backend_status": "candidate",
+      "title": "Rank-penalized approximation is singular-value hard thresholding",
+      "group": "singular_value_proximal",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend defines absolute values, SVD factors and truncations, but has no rectangular general singular-value-transform API, soft thresholding, nuclear-norm proximal minimizer, rank-penalized minimizer or Frequent-Directions shrinkage certificate. Backend index contains no soft-threshold/proximal/shrinkage/rank-penalty declarations. Generic CFC/SVD facts are not these complete cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Functions/AbsoluteValue.lean",
+       "NLAlib/Matrix/Spectral/SVD.lean",
+       "NLAlib/Matrix/Spectral/BestRankApprox.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rayleigh-quotient-iteration",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "rayleigh-quotient-iteration",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "No frontend shifted Rayleigh quotient iteration/local cubic convergence theorem.",
+      "recommended_action": "Keep current candidate status."
+     }
+    }
+   ]
+  },
+  {
+   "id": "regular-splitting-inverse-positivity",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "regular-splitting-inverse-positivity",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "No frontend regular-splitting/Perron inverse positivity equivalence or monotone iteration theorem.",
+      "recommended_action": "Keep current candidate status."
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "regular-splitting-inverse-positivity",
+      "backend_status": "candidate",
+      "title": "Regular splittings: inverse positivity is equivalent to convergence",
+      "group": "splittings",
+      "verdict": "components_exist_full_bridge_absent",
+      "promote": false,
+      "reason": "Frontend proves the Richardson fixed-point error power identity and powers-to-zero iff spectral radius<1, but does not assemble the original arbitrary affine stationary splitting, all-right-hand-side/initializer convergence equivalence, or nonnegative regular-splitting inverse positivity and monotone iterates. Backend source/index have no native splitting interface or full splitting theorem. These cards cannot be promoted merely by relabeling the components.",
+      "frontend_files_reviewed": [
+       "NLAlib/Krylov/LinearSystems/Richardson.lean",
+       "NLAlib/Matrix/Spectral/PowerBounds.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "regularized-approximation-range-error",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "regularized-approximation-range-error",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "resistance-sampling-spectral-sparsifier",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "resistance-sampling-spectral-sparsifier",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "richardson-iteration",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "richardson-iteration",
+      "verdict": "partial_source_only",
+      "frontend_evidence": [
+       {
+        "file": "NLAlib/Krylov/LinearSystems/Richardson.lean",
+        "declarations": [
+         "NLAlib.sub_richardsonIterate_eq",
+         "Matrix.PosDef.re_quadForm_sub_richardsonIterate_le",
+         "Matrix.PosDef.re_quadForm_sub_richardsonIterate_smul_le"
+        ],
+        "lines": [
+         109,
+         180,
+         229
+        ]
+       }
+      ],
+      "coverage": "Actual total preconditioned recursion; exact error powers; A-energy spectral interval rate and optimal step.",
+      "remaining": "Backend composite additionally demands P-energy norm rate and conversion from Loewner aP<=A<=bP to product spectral enclosure; not exposed by listed source theorems.",
+      "recommended_action": "Retain candidate until both norm clauses and interval/preconditioner interpretation are natively bridged."
+     }
+    }
+   ]
+  },
+  {
+   "id": "ridge-effective-dimension-tail",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "ridge-effective-dimension-tail",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "ridge-leverage-effective-dimension",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "ridge-leverage-effective-dimension",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "ridge-sampling-regularized-approximation",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "ridge-sampling-regularized-approximation",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "row-volume-inverse-moment",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "row-volume-inverse-moment",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "row-volume-pseudoinverse-unbiased",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "row-volume-pseudoinverse-unbiased",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "row-volume-regression-error",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "row-volume-regression-error",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "row-volume-sampling-deletion-law",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "row-volume-sampling-deletion-law",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rpcholesky-factorial-trace-tail",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "rpcholesky-factorial-trace-tail",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rsvd-tail",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "rsvd-tail",
+      "decision": "partial_mismatch",
+      "source": [
+       {
+        "file": "NLAlib/LowRank/Gaussian/RangeFinderTail.lean",
+        "line": 463,
+        "declaration": "NLAlib.measureReal_frobNorm_sub_rsvd_sq_gt_gaussianPinvSpecNormBound_le_of_hasLaw_gaussianMatrix"
+       }
+      ],
+      "native": [],
+      "audit": "Source explicitly warns does not reach HMT printed tail/constants. Source has gamma tail term and spectral t exponent different from original. Backend card literal failure2*t^-p+exp(-u^2/2) may itself differ from HMT published5*t^-p constants. Keep open; audit citation separately, never weaken to mark proved.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "saddle-point-schur-preconditioner-spectrum",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "saddle-point-schur-preconditioner-spectrum",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "Frontend block inertia only counts signs; it does not prove the actual preconditioned lambda-plus/minus eigenvalue enclosure or termination bound.",
+      "recommended_action": "Keep current candidate status."
+     }
+    }
+   ]
+  },
+  {
+   "id": "shifted-qr-rapid-decoupling",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "shifted-qr-rapid-decoupling",
+      "backend_status": "candidate",
+      "title": "A deterministic shifted-QR strategy rapidly decouples a Hessenberg matrix",
+      "group": "shifted_qr",
+      "verdict": "no_strategy_or_complexity_formalization",
+      "promote": false,
+      "reason": "Frontend has QR/Hessenberg factorizations, but no native Sh_{k,B} shifted strategy, OptRitz/net oracle, decoupling bound or source per-iteration arithmetic-cost result.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Factorizations/QR.lean",
+       "NLAlib/Matrix/Factorizations/Hessenberg.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "singular-tail-restricted-invertibility",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "singular-tail-restricted-invertibility",
+      "backend_status": "candidate",
+      "title": "Restricted invertibility controlled by singular-value tails",
+      "group": "interlacing_selection",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend interlacing and its converse concern Hermitian matrix compressions, bordering and rank-one updates; these are not common-interlacing polynomial families, MSS mixed-characteristic root bounds, random-frame outcome selection, Parseval spectral partition or either quantitative restricted-invertibility theorem. Frames/Leverage supply orthogonality and frame API only.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/Interlacing.lean",
+       "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+       "NLAlib/Matrix/Subspaces/Frames.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "singular-value-shrinkage-certificate",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "singular-value-shrinkage-certificate",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "singular-value-shrinkage-certificate",
+      "backend_status": "candidate",
+      "title": "Singular-value shrinkage: Loewner and trace-loss identities",
+      "group": "singular_value_proximal",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend defines absolute values, SVD factors and truncations, but has no rectangular general singular-value-transform API, soft thresholding, nuclear-norm proximal minimizer, rank-penalized minimizer or Frequent-Directions shrinkage certificate. Backend index contains no soft-threshold/proximal/shrinkage/rank-penalty declarations. Generic CFC/SVD facts are not these complete cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Functions/AbsoluteValue.lean",
+       "NLAlib/Matrix/Spectral/SVD.lean",
+       "NLAlib/Matrix/Spectral/BestRankApprox.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "singular-value-shrinkage-def",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "singular-value-shrinkage-def",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "singular-value-shrinkage-def",
+      "backend_status": "candidate",
+      "title": "Singular-value transforms and independence of the chosen SVD",
+      "group": "singular_value_proximal",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend defines absolute values, SVD factors and truncations, but has no rectangular general singular-value-transform API, soft thresholding, nuclear-norm proximal minimizer, rank-penalized minimizer or Frequent-Directions shrinkage certificate. Backend index contains no soft-threshold/proximal/shrinkage/rank-penalty declarations. Generic CFC/SVD facts are not these complete cards.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Functions/AbsoluteValue.lean",
+       "NLAlib/Matrix/Spectral/SVD.lean",
+       "NLAlib/Matrix/Spectral/BestRankApprox.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "sketch-and-precondition",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "sketch-and-precondition",
+      "decision": "frontend_full_small_deterministic_port",
+      "source": [
+       {
+        "file": "NLAlib/Regression/Embedding.lean",
+        "line": 162,
+        "declaration": "NLAlib.IsSubspaceEmbedding.pseudoConditionNumber_mul_sq_le"
+       },
+       {
+        "file": "NLAlib/Regression/Embedding.lean",
+        "line": 189,
+        "declaration": "NLAlib.IsSubspaceEmbedding.pseudoConditionNumber_mul_inv_sq_le_of_isQR"
+       }
+      ],
+      "native": [
+       {
+        "file": "NLAlib/Matrix/Factorizations/QRSpectral.lean",
+        "line": 37,
+        "declaration": "NLAlib.moorePenroseConditionNumber_eq_of_qr"
+       }
+      ],
+      "audit": "Exact QR embedding theorem proves squared rectangular pseudocondition<=b/a, with a=1-epsilon,b=1+epsilon and R unit. Full-column-rank makes this genuine usual rectangular condition number. Backend conditionNumber is square-only; use moorePenroseConditionNumber or precise singular ratio, not square-only function. Small proof uses norm lower/upper bound of A R^-1 from S A R^-1 orthonormal.",
+      "port_modules": [
+       "NLAlib.Matrix.Perturbation.ConditionNumber",
+       "NLAlib.Matrix.Factorizations.QR",
+       "Subspace embedding definition (native bridge)"
+      ],
+      "native_completion": {
+       "file": "NLAlib/Sketching/Properties/SubspaceEmbedding/Preconditioning.lean",
+       "declarations": [
+        "NLAlib.IsSubspaceEmbedding.moorePenroseConditionNumber_mul_le",
+        "NLAlib.IsSubspaceEmbedding.moorePenroseConditionNumber_mul_inv_le_of_isQR"
+       ],
+       "check": "direct Lean passed without warnings",
+       "scope": "Nativeepsilonembedding; exactoriginalsqrtconditionbound; arbitraryfiniteindicesandemptydimensions; actualnativeQR."
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "sketch-and-solve-ls",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "sketch-and-solve-ls",
+      "decision": "frontend_full_two_components_port_needed",
+      "source": [
+       {
+        "file": "NLAlib/Regression/Embedding.lean",
+        "line": 75,
+        "declaration": "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_sq_le"
+       },
+       {
+        "file": "NLAlib/Regression/Oblivious.lean",
+        "line": 436,
+        "declaration": "NLAlib.HasJLMoment sketch-and-solve relative-error theorem family"
+       }
+      ],
+      "native": [],
+      "audit": "Embedding deterministic bound is even sqrt((1+epsilon)/(1-epsilon)) in unsquared norm, so implies displayed ratio. Whole card also claims AMM improvement1+epsilon with O(d/epsilon) rows: requires the separate JLMoment/AMM component. Original generic embedding alone must not be tagged full for both clauses.",
+      "port_modules": [
+       "NLAlib.Regression.Embedding",
+       "NLAlib.Regression.Oblivious",
+       "Subspace embedding/AMM definitions"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sketched-regression",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "sketched-regression",
+      "decision": "native_bridge_small",
+      "source": [],
+      "native": [
+       {
+        "file": "NLAlib/LowRank/Nystrom/SketchedRegression.lean",
+        "line": 155,
+        "declaration": "NLAlib.frobSq_error"
+       },
+       {
+        "file": "NLAlib/LowRank/Nystrom/SketchedRegression.lean",
+        "line": 187,
+        "declaration": "NLAlib.sketchedCore_eq_add_coreNoise"
+       },
+       {
+        "file": "NLAlib/Matrix/Norms/Core.lean",
+        "line": 232,
+        "declaration": "NLAlib.specNorm_conjTranspose_mul_of_eq_mul"
+       }
+      ],
+      "audit": "Core identity and Pythagorean decomposition are already exact. Generic card requires Frobenius and spectral norms preserved for every E with columns in range Qperp. Existing module proves only E=projResidual Q A, but existing generic isometry lemmas already imply arbitrary E after expressing E=Qperp*(Qperpᵀ E). Small exported bridge completes entire card.",
+      "port_modules": [
+       "NLAlib.LowRank.Nystrom.SketchedRegression"
+      ],
+      "draft_native_completions": [
+       {
+        "file": "NLAlib/Matrix/Subspaces/RangeIsometry.lean",
+        "line": 28,
+        "declaration": "NLAlib.frobSq_conjTranspose_mul_of_range_le",
+        "check": "targeted lake build passed"
+       },
+       {
+        "file": "NLAlib/Matrix/Subspaces/RangeIsometry.lean",
+        "line": 40,
+        "declaration": "NLAlib.frobNorm_conjTranspose_mul_of_range_le",
+        "check": "targeted lake build passed"
+       },
+       {
+        "file": "NLAlib/Matrix/Subspaces/RangeIsometry.lean",
+        "line": 48,
+        "declaration": "NLAlib.specNorm_conjTranspose_mul_of_range_le",
+        "check": "targeted lake build passed"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "stable-rank-restricted-invertibility",
+   "source_reviews": [
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "stable-rank-restricted-invertibility",
+      "backend_status": "candidate",
+      "title": "Stable-rank restricted invertibility for an identity decomposition",
+      "group": "interlacing_selection",
+      "verdict": "no_matching_full_formalization",
+      "promote": false,
+      "reason": "Frontend interlacing and its converse concern Hermitian matrix compressions, bordering and rank-one updates; these are not common-interlacing polynomial families, MSS mixed-characteristic root bounds, random-frame outcome selection, Parseval spectral partition or either quantitative restricted-invertibility theorem. Frames/Leverage supply orthogonality and frame API only.",
+      "frontend_files_reviewed": [
+       "NLAlib/Matrix/Spectral/Interlacing.lean",
+       "NLAlib/Matrix/Spectral/InterlacingConverse.lean",
+       "NLAlib/Matrix/Subspaces/Frames.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "stationary-splitting-convergence",
+   "source_reviews": [
+    {
+     "group": "krylov",
+     "finding": {
+      "id": "stationary-splitting-convergence",
+      "verdict": "no_source_completion",
+      "frontend_evidence": [],
+      "coverage": "",
+      "remaining": "Frontend matrix-power convergence criterion is a prerequisite, not the native splitting iteration/fixed-point equivalence.",
+      "recommended_action": "Keep current candidate status."
+     }
+    },
+    {
+     "group": "matrix-probability",
+     "finding": {
+      "id": "stationary-splitting-convergence",
+      "backend_status": "candidate",
+      "title": "Stationary splitting: exact error powers and the spectral-radius convergence criterion",
+      "group": "splittings",
+      "verdict": "components_exist_full_bridge_absent",
+      "promote": false,
+      "reason": "Frontend proves the Richardson fixed-point error power identity and powers-to-zero iff spectral radius<1, but does not assemble the original arbitrary affine stationary splitting, all-right-hand-side/initializer convergence equivalence, or nonnegative regular-splitting inverse positivity and monotone iterates. Backend source/index have no native splitting interface or full splitting theorem. These cards cannot be promoted merely by relabeling the components.",
+      "frontend_files_reviewed": [
+       "NLAlib/Krylov/LinearSystems/Richardson.lean",
+       "NLAlib/Matrix/Spectral/PowerBounds.lean"
+      ],
+      "backend_formalizations_existing": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "tail-averaged-kaczmarz",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "tail-averaged-kaczmarz",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "tgn-expected-error",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "tgn-expected-error",
+      "decision": "frontend_full_native_port_needed",
+      "source": [
+       {
+        "file": "NLAlib/LowRank/Gaussian/TruncatedGeneralizedNystrom.lean",
+        "line": 625,
+        "declaration": "NLAlib.integral_frobNorm_sub_truncatedSVD_generalizedNystrom_sq_le_one_add_mul_of_hasLaw_gaussianMatrix"
+       },
+       {
+        "file": "NLAlib/LowRank/Gaussian/TruncatedGeneralizedNystrom.lean",
+        "line": 494,
+        "declaration": "NLAlib.integrable_frobNorm_sub_truncatedSVD_generalizedNystrom_sq_of_hasLaw_gaussianMatrix"
+       }
+      ],
+      "native": [
+       {
+        "file": "NLAlib/LowRank/Nystrom/RawNystromBridge.lean",
+        "line": 76,
+        "declaration": "NLAlib.rawGeneralizedNystrom; actual-Gaussian GN expectation"
+       },
+       {
+        "file": "NLAlib/LowRank/RandomizedSVD/OptimalError.lean",
+        "line": 1,
+        "declaration": "native truncated RSVD expectation"
+       }
+      ],
+      "audit": "Source uses actual independent Gaussian matrices; late truncated actual GN; all ranks; epsilon in (0,1]; ell>=6k/epsilon; p>=8000ell/epsilon. Thus original backend 12500 premise is sufficient and must be retained. Source explicitly says new bound proved without matching literature source, not CP25 Remark2.9 core-truncated estimator. Port needs deterministic perturbed truncation, second spectral core-noise bound, residual second spectral bound, actual raw/polar-frame bridge and measurable truncation choice. Backend existing native GN expectation alone does not imply 1+epsilon truncated error.",
+      "port_modules": [
+       "NLAlib.LowRank.Structural.PerturbedTruncation (new adaptation)",
+       "NLAlib.LowRank.Nystrom.TruncatedGaussianNystrom (new adaptation)",
+       "NLAlib.LowRank.Nystrom.RawGaussianNystrom",
+       "NLAlib.LowRank.RandomizedSVD.OptimalError",
+       "NLAlib.RandomMatrix.Gaussian.Spectral.SpectralSecondMoment",
+       "NLAlib.RandomMatrix.Gaussian.InverseMoments.SpectralProbe"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "truncated-svd-projection-cost-sketch",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "truncated-svd-projection-cost-sketch",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "truncation-lemma",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "truncation-lemma",
+      "decision": "partial_mismatch",
+      "source": [
+       {
+        "file": "NLAlib/LowRank/Structural/Truncation.lean",
+        "line": 139,
+        "declaration": "NLAlib.frobNorm_sub_truncatedSVD_rsvd_sq_le_frobNorm_sub_rsvd_sq_add"
+       }
+      ],
+      "native": [],
+      "audit": "Ordinary projected truncation is fully covered and stronger factor1 instead of2 is proved natively. Whole backend card also requests an exact identity for early-truncating sketch; frontend early-truncation module proves inequalities, not that unspecified exact historical identity. Do not silently delete this clause or promote full card.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "two-sided-gaussian-frobenius-variance",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "two-sided-gaussian-frobenius-variance",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "two-sided-sketch-centered-error",
+   "source_reviews": [
+    {
+     "group": "lowrank-sketching",
+     "finding": {
+      "id": "two-sided-sketch-centered-error",
+      "decision": "not_found",
+      "source": [],
+      "native": [],
+      "audit": "No full theorem for this original card found in immutable frontend snapshot by source filename/tag/statement-term audit. Nearby generic linear algebra or other sampling laws do not discharge the actual algorithm/law/complete statement. Keep open.",
+      "port_modules": []
+     }
+    }
+   ]
+  }
+ ],
+ "subsequent_native_release": {
+  "report": "docs/audit/2026-10-24-sketching-lowrank.json",
+  "retained_targets": 32,
+  "additional_audit_ports": 4,
+  "deferred_target": "block-krylov-lra"
+ }
+}

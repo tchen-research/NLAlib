@@ -61,6 +61,7 @@ import NLAlib.Matrix.Spectral.InterlacingStrictConstruction
 import NLAlib.Matrix.Spectral.InterlacingSymmetricConverse
 import NLAlib.Matrix.Spectral.InterlacingTrace
 import NLAlib.Matrix.Spectral.IrreducibleDiagonalDominance
+import NLAlib.Matrix.Spectral.LeadingRightProjector
 import NLAlib.Matrix.Spectral.LowRankInterlacing
 import NLAlib.Matrix.Spectral.MatrixPowerBounded
 import NLAlib.Matrix.Spectral.MatrixPowerBounds

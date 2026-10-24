@@ -5,7 +5,10 @@ import NLAlib.Matrix.Factorizations.CholeskyDefinite
 import NLAlib.Matrix.Factorizations.CholeskyPivotProbability
 import NLAlib.Matrix.Factorizations.DEIMGreedy
 import NLAlib.Matrix.Factorizations.DEIMProjection
+import NLAlib.Matrix.Factorizations.EliminationHistory
+import NLAlib.Matrix.Factorizations.EliminationProjector
 import NLAlib.Matrix.Factorizations.EliminationStep
+import NLAlib.Matrix.Factorizations.EliminationTraceProduct
 import NLAlib.Matrix.Factorizations.GeneralizedSVD
 import NLAlib.Matrix.Factorizations.Givens
 import NLAlib.Matrix.Factorizations.GramColumnExchange
@@ -27,6 +30,7 @@ import NLAlib.Matrix.Factorizations.PolarDecomposition
 import NLAlib.Matrix.Factorizations.PolarIntertwining
 import NLAlib.Matrix.Factorizations.Procrustes
 import NLAlib.Matrix.Factorizations.ProcrustesRotations
+import NLAlib.Matrix.Factorizations.ProjectionPivoting
 import NLAlib.Matrix.Factorizations.QR
 import NLAlib.Matrix.Factorizations.QRCompletion
 import NLAlib.Matrix.Factorizations.QRConsequences

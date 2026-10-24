@@ -28,12 +28,6 @@
   "christoffel-uvarov-modification": "General rational modification finite determinant formula, including denominator degree greater than polynomial order"
  },
  "scope_changes": {
-  "nystrom-structural": {
-   "reason": "The structural projector, rank and positivity clauses are proved. The card itself records its Schur-complement clause as not yet formalized."
-  },
-  "sketched-regression": {
-   "reason": "The residual Frobenius endpoint is proved. The additional arbitrary complementary-range error-matrix clause is not the statement of that theorem."
-  },
   "clenshaw-recurrence": {
    "reason": "The scalar recurrence and matrix polynomial identity are proved. A recursion and cost theorem for the advertised matrix-vector algorithm remain separate obligations."
   }
@@ -216,5 +210,23 @@
    "audit_output": "docs/audit/2026-10-14-validation.md",
    "note": "Full kernel audits passed; final metadata-only atlas tag repairs were rebuilt and reindexed. No theorem statements or proof terms changed in those repairs."
   }
- ]
+ ],
+ "completed_scope_changes": {
+  "nystrom-structural": {
+   "baseline": {
+    "reason": "The structural projector, rank and positivity clauses are proved. The card itself records its Schur-complement clause as not yet formalized."
+   },
+   "date": "2026-10-24",
+   "resolution": "Audit 2026-10-24: the native PSD/order theorems, arbitrary-sketch generalized-Schur identity and square-root spectral equality cover all displayed clauses; no sketch-rank or invertibility assumption was added.",
+   "report": "docs/audit/2026-10-24-frontend-proof-reconciliation.json"
+  },
+  "sketched-regression": {
+   "baseline": {
+    "reason": "The residual Frobenius endpoint is proved. The additional arbitrary complementary-range error-matrix clause is not the statement of that theorem."
+   },
+   "date": "2026-10-24",
+   "resolution": "Audit 2026-10-24: the native completion identity and error decomposition are supplemented by frame-coordinate isometries for every range-contained error matrix, in both Frobenius and spectral norm. The independent Tropp–Webber result remains in scope under the Chen–Persson-only exclusion.",
+   "report": "docs/audit/2026-10-24-frontend-proof-reconciliation.json"
+  }
+ }
 }

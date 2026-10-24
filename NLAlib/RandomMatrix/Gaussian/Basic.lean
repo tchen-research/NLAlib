@@ -8,6 +8,7 @@ import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
 import NLAlib.RandomMatrix.Gaussian.Basic.LipschitzConcentration
 import NLAlib.RandomMatrix.Gaussian.Basic.PolynomialGrowth
 import NLAlib.RandomMatrix.Gaussian.Basic.RowSplitting
+import NLAlib.RandomMatrix.Gaussian.Basic.SandwichDeviation
 
 /-! # `RandomMatrix/Gaussian/Basic`
 

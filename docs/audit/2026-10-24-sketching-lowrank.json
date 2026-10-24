@@ -1,0 +1,2991 @@
+{
+ "date": "2026-10-24",
+ "backend_base": "7f209dd8a05077a4051241e42098f4beba38e481",
+ "scope": "Thirty-two retained sketching and independent low-rank targets, plus four small frontend-audit reconciliations. User deferred block-Krylov and excluded four Chen–Persson LRA targets.",
+ "retained_count": 32,
+ "completed_count": 32,
+ "extra_audit_port_count": 4,
+ "excluded_unchanged": [
+  "truncation-lemma",
+  "tgn-expected-error",
+  "etrsvd",
+  "etgn",
+  "block-krylov-lra"
+ ],
+ "native_status_counts": {
+  "proved": 446,
+  "candidate": 63,
+  "assumed": 1,
+  "scaffold": 3
+ },
+ "deferred_work": {
+  "id": "block-krylov-lra",
+  "status": "candidate",
+  "archive": "DeferredBlockKrylov-2026-10-24, outside this repository",
+  "detached_new_sources": 12,
+  "preservation": "Full source snapshot, two mixed owners, partial drafts, hashes and verification reports preserved locally. No block-only source is included in this release."
+ },
+ "derivation_snapshot": [
+  {
+   "file": "main.tex",
+   "sha256": "9d942118ed6e74fdc6735196802a1886005045900cc20aae11108e795c27bd1e"
+  },
+  {
+   "file": "design.tex",
+   "sha256": "ec7989e52da4c0d24b14420f7ab26e68610aba65f0c38381300293701f9fd522"
+  },
+  {
+   "file": "deterministic_lra.tex",
+   "sha256": "7f7ffb3e2f42ac1f3c03fcbf2882952471969fd0681e4a3a55a0792508acc080"
+  },
+  {
+   "file": "sketching.tex",
+   "sha256": "13a872fd1e291078bf85d0fda5a7c15b7d8bebbb6e251b1ce0956fc81d7ff990"
+  },
+  {
+   "file": "determinantal.tex",
+   "sha256": "f6a046c41cd7703d17c8d32f4c0a4571d7301baa7c50ced47d52d5045b6369ed"
+  },
+  {
+   "file": "randomized_lra.tex",
+   "sha256": "b470067b741958a2d5d106625546c183040ba1cd214f263e4b5c9433915e5960"
+  },
+  {
+   "file": "coverage.tex",
+   "sha256": "19fb75d1561690cd7d6247e2ea20ea2b09b37484d1cec996810d2ad965b21fe2"
+  }
+ ],
+ "review": {
+  "method": "Independent readback of actual informal hypotheses/conclusions and Lean capstone signatures/proofs; source tags and compilation alone were not treated as equivalence evidence.",
+  "retained_cards_reviewed": 32,
+  "unresolved_mathematical_findings": [],
+  "clarifications": [
+   "Projection-DPP determinant mass is explicitly restricted to size-k subsets; every other size has zero mass.",
+   "RSVD Frobenius and spectral guarantees are explicitly separate probability statements.",
+   "Row-volume inverse moments retain the PSD singular-adjugate defect; equalities require size-s full support.",
+   "The RPCholesky nonstrict tail requires positive optimal tail; the strict tail includes zero-tail exact termination."
+  ]
+ },
+ "library_structure": [
+  "One generic SVD-block construction; actual Moore–Penrose and range-projector interfaces reused at every rank.",
+  "Shared singular-value transforms below proximal, thresholding and streaming consumers.",
+  "Existing coordinate selector and coordinate-frame owners extended, with no parallel selector/frame implementation.",
+  "Finite counting moved from LowRank into ForMathlib; generic Hermitian principal-minor spectrum moved into Matrix.",
+  "Deterministic Gram, adjugate, projector and factorization identities below actual sampling/history-law consumers."
+ ],
+ "required_checks": [
+  {
+   "check": "full-build",
+   "exit_code": 0
+  },
+  {
+   "check": "trusted-import-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "lint",
+   "exit_code": 0
+  },
+  {
+   "check": "axiom-inventory",
+   "exit_code": 0
+  },
+  {
+   "check": "layers",
+   "exit_code": 0
+  },
+  {
+   "check": "extract-declarations",
+   "exit_code": 0
+  },
+  {
+   "check": "sync-atlas",
+   "exit_code": 0
+  },
+  {
+   "check": "import-surface",
+   "exit_code": 0
+  },
+  {
+   "check": "names",
+   "exit_code": 0
+  },
+  {
+   "check": "atlas",
+   "exit_code": 0
+  },
+  {
+   "check": "downstream-example",
+   "exit_code": 0
+  },
+  {
+   "check": "probability-example",
+   "exit_code": 0
+  },
+  {
+   "check": "script-tests",
+   "exit_code": 0
+  },
+  {
+   "check": "polynomial-example",
+   "exit_code": 0
+  },
+  {
+   "check": "khatri-rao-example",
+   "exit_code": 0
+  },
+  {
+   "check": "ritz-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "subspaces-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "gaussian-inverse-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "new-proofs-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "khatri-rao-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "polynomial-matrix-scope",
+   "exit_code": 0
+  },
+  {
+   "check": "card-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "coverage",
+   "exit_code": 0
+  },
+  {
+   "check": "site-math",
+   "exit_code": 0
+  },
+  {
+   "check": "site-build",
+   "exit_code": 0
+  },
+  {
+   "check": "working-whitespace",
+   "exit_code": 0
+  },
+  {
+   "check": "staged-whitespace",
+   "exit_code": 0
+  }
+ ],
+ "trusted_import_audit": "audited 28603 declarations reachable through import NLAlib",
+ "experimental_axiom_inventory": "audited 28712 declarations (14167 public theorems) in [NLAlib]; 4 theorems depend on sorry: [NLAlib.dotProduct_golubKahan_eq,\n NLAlib.golubKahanSucceeds_iff,\n NLAlib.isGradedKrylovBasis_golubKahanU_V,\n NLAlib.range_qrAlgorithmQ_castLE_eq_subspaceIterate]\nOK: no axioms beyond propext / Classical.choice / Quot.sound (and sorryAx in scaffolds)",
+ "records": [
+  {
+   "id": "projection-cost-preserving-def",
+   "status": "proved",
+   "scope_readback": "One nonnegative offset precedes every exact-rank orthogonal projector; general constants specialize to both card forms.",
+   "reviewed_clauses": [],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsProjectionCostPreservingWithOffset",
+     "kind": "def",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.Basic",
+     "line": 23,
+     "sorry": false,
+     "partial": false,
+     "usage": "Unfold this definition to use its native contract: A fixed nonnegative offset certifies the costs of every rank-exactly-`k` orthogonal projector."
+    },
+    {
+     "decl": "NLAlib.IsProjectionCostPreserving",
+     "kind": "def",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.Basic",
+     "line": 34,
+     "sorry": false,
+     "partial": false,
+     "usage": "Unfold this definition to use its native contract: A projection-cost-preserving sketch has a single nonnegative offset working uniformly for all rank-exactly-`k` orthogonal projectors."
+    }
+   ]
+  },
+  {
+   "id": "projection-cost-optimization-transfer",
+   "status": "proved",
+   "scope_readback": "Actual unshifted sketch objective, fixed nonnegative offset, gamma>=1, exact two-sided and one-sided factors; competitor form is stronger than an attained minimum.",
+   "reviewed_clauses": [
+    {
+     "statement": "The two-sided fixed-offset inequalities on an arbitrary feasible family transfer an unshifted sketch comparison by gamma(1+epsilon)/(1-epsilon).",
+     "decls": [
+      "NLAlib.frobSq_one_sub_mul_le_of_projection_cost_preserving_of_sInf"
+     ]
+    },
+    {
+     "statement": "The one-sided fixed-offset inequalities transfer the comparison by gamma(1+epsilon).",
+     "decls": [
+      "NLAlib.frobSq_one_sub_mul_le_of_one_sided_projection_cost_preserving_of_sInf"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.frobSq_one_sub_mul_le_of_projection_cost_preserving",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.Optimization",
+     "line": 43,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: For any feasible family, a two-sided PCP certificate transfers comparison with every competitor by `γ (1 + ε) / (1 - ε)`."
+    },
+    {
+     "decl": "NLAlib.frobSq_one_sub_mul_le_of_one_sided_projection_cost_preserving",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.Optimization",
+     "line": 65,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The one-sided PCP contract transfers any feasible-family comparison by `γ (1 + ε)`, with the same fixed offset."
+    },
+    {
+     "decl": "NLAlib.frobSq_one_sub_mul_le_of_projection_cost_preserving_of_sInf",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.Optimization",
+     "line": 95,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: A `γ`-approximate minimizer of the unshifted sketch cost over any feasible family satisfies the original cost bound relative to any feasible competitor, in particular an attained original minimum."
+    },
+    {
+     "decl": "NLAlib.frobSq_one_sub_mul_le_of_one_sided_projection_cost_preserving_of_sInf",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.Optimization",
+     "line": 115,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The corresponding infimum-based optimizer guarantee for one-sided PCP has factor `γ (1 + ε)`."
+    }
+   ]
+  },
+  {
+   "id": "singular-value-shrinkage-certificate",
+   "status": "proved",
+   "scope_readback": "Actual drop-U thin-frame output; exact ell*delta trace loss; ell>=1 and ell<=d; zero loss and arbitrary ties allowed.",
+   "reviewed_clauses": [
+    {
+     "statement": "Every full SVD realizes the drop-U FD row output, with covariance loss equal to delta times the thin right-frame projector and bounded between zero and delta times the identity.",
+     "decls": [
+      "NLAlib.IsSVD.fdShrinkage_gram_loss",
+      "NLAlib.IsSVD.fdShrinkage_gram_loss_bounds"
+     ]
+    },
+    {
+     "statement": "The squared Frobenius loss is exactly capacity times delta.",
+     "decls": [
+      "NLAlib.IsSVD.fdShrinkage_frobSq_loss"
+     ]
+    },
+    {
+     "statement": "The actual output last row is zero, and a deficient-rank input has zero shrinkage loss.",
+     "decls": [
+      "NLAlib.fdShrinkageRows_last_eq_zero",
+      "NLAlib.fdShrinkageLoss_eq_zero_of_rank_lt"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsSVD.fdShrinkage_gram_loss",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.SingularValueShrinkage",
+     "line": 69,
+     "sorry": false,
+     "partial": true,
+     "usage": "Every full SVD realizes the drop-U FD row output, with covariance loss equal to delta times the thin right-frame projector and bounded between zero and delta times the identity."
+    },
+    {
+     "decl": "NLAlib.IsSVD.fdShrinkage_gram_loss_bounds",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.SingularValueShrinkage",
+     "line": 104,
+     "sorry": false,
+     "partial": true,
+     "usage": "Every full SVD realizes the drop-U FD row output, with covariance loss equal to delta times the thin right-frame projector and bounded between zero and delta times the identity."
+    },
+    {
+     "decl": "NLAlib.IsSVD.fdShrinkage_frobSq_loss",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.SingularValueShrinkage",
+     "line": 130,
+     "sorry": false,
+     "partial": true,
+     "usage": "The squared Frobenius loss is exactly capacity times delta."
+    },
+    {
+     "decl": "NLAlib.fdShrinkageRows_last_eq_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.SingularValueShrinkage",
+     "line": 146,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual output last row is zero, and a deficient-rank input has zero shrinkage loss."
+    },
+    {
+     "decl": "NLAlib.fdShrinkageLoss_eq_zero_of_rank_lt",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.SingularValueShrinkage",
+     "line": 154,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual output last row is zero, and a deficient-rank input has zero shrinkage loss."
+    }
+   ]
+  },
+  {
+   "id": "covariance-loss-tail-bound",
+   "status": "proved",
+   "scope_readback": "Certificate contains exactly the stated PSD upper bound and trace budget; exact ell/(ell-k) bound for every true leading SVD projector, zero tails included.",
+   "reviewed_clauses": [
+    {
+     "statement": "A native covariance-loss certificate gives Δ≤OPT_k²/(ℓ−k) and the same spectral Gram-error bound for k<ℓ and k≤width; ℓ itself need not be at most the width.",
+     "decls": [
+      "NLAlib.CovarianceLossCertificate.loss_le_bestRankFrobSq_div",
+      "NLAlib.CovarianceLossCertificate.specNorm_sub_gram_le_bestRankFrobSq_div"
+     ]
+    },
+    {
+     "statement": "Every actual maximizing rank-k sketch-Gram projector gives Frobenius projection error at most OPT_k²+kΔ and hence ℓ/(ℓ−k) OPT_k².",
+     "decls": [
+      "NLAlib.CovarianceLossCertificate.frobSq_error_le_bestRankFrobSq_add",
+      "NLAlib.CovarianceLossCertificate.frobSq_error_le_capacity_mul_bestRankFrobSq_div"
+     ]
+    },
+    {
+     "statement": "Every leading-right projector of every actual full SVD of the returned sketch realizes the maximizing projector contract.",
+     "decls": [
+      "NLAlib.CovarianceLossCertificate.frobSq_error_le_capacity_mul_bestRankFrobSq_div_of_isSVD"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.CovarianceLossCertificate.loss_le_bestRankFrobSq_div",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.CovarianceLoss",
+     "line": 86,
+     "sorry": false,
+     "partial": true,
+     "usage": "A native covariance-loss certificate gives Δ≤OPT_k²/(ℓ−k) and the same spectral Gram-error bound for k<ℓ and k≤width; ℓ itself need not be at most the width."
+    },
+    {
+     "decl": "NLAlib.CovarianceLossCertificate.specNorm_sub_gram_le_bestRankFrobSq_div",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.CovarianceLoss",
+     "line": 126,
+     "sorry": false,
+     "partial": true,
+     "usage": "A native covariance-loss certificate gives Δ≤OPT_k²/(ℓ−k) and the same spectral Gram-error bound for k<ℓ and k≤width; ℓ itself need not be at most the width."
+    },
+    {
+     "decl": "NLAlib.CovarianceLossCertificate.frobSq_error_le_bestRankFrobSq_add",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.CovarianceLoss",
+     "line": 135,
+     "sorry": false,
+     "partial": true,
+     "usage": "Every actual maximizing rank-k sketch-Gram projector gives Frobenius projection error at most OPT_k²+kΔ and hence ℓ/(ℓ−k) OPT_k²."
+    },
+    {
+     "decl": "NLAlib.CovarianceLossCertificate.frobSq_error_le_capacity_mul_bestRankFrobSq_div",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.CovarianceLoss",
+     "line": 176,
+     "sorry": false,
+     "partial": true,
+     "usage": "Every actual maximizing rank-k sketch-Gram projector gives Frobenius projection error at most OPT_k²+kΔ and hence ℓ/(ℓ−k) OPT_k²."
+    },
+    {
+     "decl": "NLAlib.CovarianceLossCertificate.frobSq_error_le_capacity_mul_bestRankFrobSq_div_of_isSVD",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.CovarianceLoss",
+     "line": 199,
+     "sorry": false,
+     "partial": true,
+     "usage": "Every leading-right projector of every actual full SVD of the returned sketch realizes the maximizing projector contract."
+    }
+   ]
+  },
+  {
+   "id": "ridge-leverage-effective-dimension",
+   "status": "proved",
+   "scope_readback": "Literal inverse regularized Gram row scores, positive regularization, arbitrary rank; spectral formula/rank bound read in RidgeSpectral.lean.",
+   "reviewed_clauses": [
+    {
+     "statement": "For positive regularization, the actual row quadratic-form score equals its ridge-kernel diagonal and lies between zero and one.",
+     "decls": [
+      "NLAlib.ridgeLeverageScore_eq_ridgeKernel_apply",
+      "NLAlib.ridgeLeverageScore_nonneg",
+      "NLAlib.ridgeLeverageScore_le_one"
+     ]
+    },
+    {
+     "statement": "The finite sum of row scores equals the trace, the zero-padded singular-value filter sum, and is at most the matrix rank.",
+     "decls": [
+      "NLAlib.ridgeEffectiveDimension_eq_trace",
+      "NLAlib.ridgeEffectiveDimension_eq_sum_singularValues",
+      "NLAlib.ridgeEffectiveDimension_le_rank"
+     ]
+    },
+    {
+     "statement": "Each score and their total decrease when the positive regularization parameter increases.",
+     "decls": [
+      "NLAlib.ridgeLeverageScore_antitone",
+      "NLAlib.ridgeEffectiveDimension_antitone"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.ridgeGram",
+     "kind": "def",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 26,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: The regularized column Gram matrix `Aᵀ A + ρ I`."
+    },
+    {
+     "decl": "NLAlib.ridgeKernel",
+     "kind": "def",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 31,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: The ridge kernel `A (Aᵀ A + ρ I)⁻¹ Aᵀ`."
+    },
+    {
+     "decl": "NLAlib.ridgeLeverageScore",
+     "kind": "def",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 38,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: The ridge leverage score of row `i`: its quadratic form under `(Aᵀ A + ρ I)⁻¹`."
+    },
+    {
+     "decl": "NLAlib.ridgeEffectiveDimension",
+     "kind": "def",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 45,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: The ridge effective dimension is the finite sum of the actual row ridge scores."
+    },
+    {
+     "decl": "NLAlib.ridgeLeverageScore_eq_ridgeKernel_apply",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 61,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive regularization, the actual row quadratic-form score equals its ridge-kernel diagonal and lies between zero and one."
+    },
+    {
+     "decl": "NLAlib.ridgeEffectiveDimension_eq_trace",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 75,
+     "sorry": false,
+     "partial": true,
+     "usage": "The finite sum of row scores equals the trace, the zero-padded singular-value filter sum, and is at most the matrix rank."
+    },
+    {
+     "decl": "NLAlib.ridgeLeverageScore_nonneg",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 88,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive regularization, the actual row quadratic-form score equals its ridge-kernel diagonal and lies between zero and one."
+    },
+    {
+     "decl": "NLAlib.ridgeLeverageScore_antitone",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 133,
+     "sorry": false,
+     "partial": true,
+     "usage": "Each score and their total decrease when the positive regularization parameter increases."
+    },
+    {
+     "decl": "NLAlib.ridgeEffectiveDimension_antitone",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 143,
+     "sorry": false,
+     "partial": true,
+     "usage": "Each score and their total decrease when the positive regularization parameter increases."
+    },
+    {
+     "decl": "NLAlib.ridgeLeverageScore_le_one",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeKernel",
+     "line": 186,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive regularization, the actual row quadratic-form score equals its ridge-kernel diagonal and lies between zero and one."
+    },
+    {
+     "decl": "NLAlib.ridgeEffectiveDimension_eq_sum_singularValues",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeSpectral",
+     "line": 68,
+     "sorry": false,
+     "partial": true,
+     "usage": "The finite sum of row scores equals the trace, the zero-padded singular-value filter sum, and is at most the matrix rank."
+    },
+    {
+     "decl": "NLAlib.ridgeEffectiveDimension_le_rank",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeSpectral",
+     "line": 85,
+     "sorry": false,
+     "partial": true,
+     "usage": "The finite sum of row scores equals the trace, the zero-padded singular-value filter sum, and is at most the matrix rank."
+    }
+   ]
+  },
+  {
+   "id": "ridge-effective-dimension-tail",
+   "status": "proved",
+   "scope_readback": "Original k+tail/rho and 2k constants; positive-tail specialization excludes division by zero; general bound stronger for all k.",
+   "reviewed_clauses": [
+    {
+     "statement": "For positive regularization the effective dimension is at most target rank plus the genuine optimal squared Frobenius tail divided by regularization.",
+     "decls": [
+      "NLAlib.ridgeEffectiveDimension_le_rank_add_div_bestRankFrobSq"
+     ]
+    },
+    {
+     "statement": "For positive target rank and positive optimal tail, regularization equal to tail divided by rank gives effective dimension at most twice the target rank.",
+     "decls": [
+      "NLAlib.ridgeEffectiveDimension_tail_div_rank_le_two_mul"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.ridgeEffectiveDimension_le_rank_add_div_bestRankFrobSq",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeEffectiveDimension",
+     "line": 24,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive regularization the effective dimension is at most target rank plus the genuine optimal squared Frobenius tail divided by regularization."
+    },
+    {
+     "decl": "NLAlib.ridgeEffectiveDimension_tail_div_rank_le_two_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RidgeEffectiveDimension",
+     "line": 76,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive target rank and positive optimal tail, regularization equal to tail divided by rank gives effective dimension at most twice the target rank."
+    }
+   ]
+  },
+  {
+   "id": "ridge-sampling-regularized-approximation",
+   "status": "proved",
+   "scope_readback": "Actual iid finite original-row sampler, p=u/sum u, correct whitening and 2d Bernstein tail; exact 3t/eps^2 log(2d/delta) corollary, zero-score rows justified.",
+   "reviewed_clauses": [
+    {
+     "statement": "Independent finite samples with probabilities proportional to upper ridge scores satisfy the actual whitened Gram tail with exact prefactor 2d and exponent s epsilon²/[2t(1+epsilon/3)].",
+     "decls": [
+      "NLAlib.measureReal_specNorm_ridge_sampled_gram_sub_le_of_upper_scores"
+     ]
+    },
+    {
+     "statement": "At sample count at least 3t epsilon⁻² log(2d/delta), the literal sampled-row matrix satisfies the full two-sided regularized Loewner sandwich except with probability delta.",
+     "decls": [
+      "NLAlib.measureReal_ridge_sampling_failure_le_of_sample_size"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.measureReal_specNorm_ridge_sampled_gram_sub_le_of_upper_scores",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RidgeLeverageSampling",
+     "line": 80,
+     "sorry": false,
+     "partial": true,
+     "usage": "Independent finite samples with probabilities proportional to upper ridge scores satisfy the actual whitened Gram tail with exact prefactor 2d and exponent s epsilon²/[2t(1+epsilon/3)]."
+    },
+    {
+     "decl": "NLAlib.measureReal_ridge_sampling_failure_le_of_sample_size",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RidgeLeverageSampling",
+     "line": 133,
+     "sorry": false,
+     "partial": true,
+     "usage": "At sample count at least 3t epsilon⁻² log(2d/delta), the literal sampled-row matrix satisfies the full two-sided regularized Loewner sandwich except with probability delta."
+    }
+   ]
+  },
+  {
+   "id": "regularized-approximation-range-error",
+   "status": "proved",
+   "scope_readback": "Actual deficient-range projector; inverse-order chain constructed, exact rho/(1-eps) and (k*rho+tail)/(1-eps); epsilon=1/2 specializes directly.",
+   "reviewed_clauses": [
+    {
+     "statement": "A lower regularized Loewner approximation with positive regularization and distortion below one bounds the actual sampled-range spectral error by regularization divided by one minus distortion.",
+     "decls": [
+      "NLAlib.specNorm_one_sub_rangeProjector_mul_sq_le_of_regularized_le"
+     ]
+    },
+    {
+     "statement": "The actual range-projector squared Frobenius error is at most regularization times the effective dimension divided by one minus distortion.",
+     "decls": [
+      "NLAlib.frobSq_one_sub_rangeProjector_mul_le_ridgeEffectiveDimension_of_regularized_le"
+     ]
+    },
+    {
+     "statement": "The effective-dimension estimate gives the exact target-rank/optimal-tail Frobenius corollary.",
+     "decls": [
+      "NLAlib.frobSq_one_sub_rangeProjector_mul_le_bestRankFrobSq_of_regularized_le"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.specNorm_one_sub_rangeProjector_mul_sq_le_of_regularized_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RidgeLeverageRangeError",
+     "line": 51,
+     "sorry": false,
+     "partial": true,
+     "usage": "A lower regularized Loewner approximation with positive regularization and distortion below one bounds the actual sampled-range spectral error by regularization divided by one minus distortion."
+    },
+    {
+     "decl": "NLAlib.frobSq_one_sub_rangeProjector_mul_le_ridgeEffectiveDimension_of_regularized_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RidgeLeverageRangeError",
+     "line": 73,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual range-projector squared Frobenius error is at most regularization times the effective dimension divided by one minus distortion."
+    },
+    {
+     "decl": "NLAlib.frobSq_one_sub_rangeProjector_mul_le_bestRankFrobSq_of_regularized_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RidgeLeverageRangeError",
+     "line": 99,
+     "sorry": false,
+     "partial": true,
+     "usage": "The effective-dimension estimate gives the exact target-rank/optimal-tail Frobenius corollary."
+    }
+   ]
+  },
+  {
+   "id": "l-ensemble-law",
+   "status": "proved",
+   "scope_readback": "Actual all-subsets PMF, real PSD kernel, empty minor included, det(I+L)>=1; generating identity permits every real z.",
+   "reviewed_clauses": [
+    {
+     "statement": "The normalizer is the sum of all principal minors, including the empty minor, and is at least one for every PSD kernel.",
+     "decls": [
+      "NLAlib.sum_principalMinor_eq_det_one_add",
+      "NLAlib.one_le_det_one_add_of_posSemidef"
+     ]
+    },
+    {
+     "statement": "The actual finite-subset measure is a probability measure with exactly the normalized determinant masses.",
+     "decls": [
+      "NLAlib.lEnsembleLaw_univ",
+      "NLAlib.lEnsembleLaw_singleton"
+     ]
+    },
+    {
+     "statement": "For every real row-weight vector its generating function is the normalized determinant.",
+     "decls": [
+      "NLAlib.integral_prod_lEnsembleLaw"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.sum_principalMinor_eq_det_one_add",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleLaw",
+     "line": 24,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The L-ensemble normalizer is the sum of every principal minor, including the empty minor one."
+    },
+    {
+     "decl": "NLAlib.one_le_det_one_add_of_posSemidef",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleLaw",
+     "line": 31,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The L-ensemble normalizer is at least one, even for a singular or zero PSD kernel and in dimension zero."
+    },
+    {
+     "decl": "NLAlib.lEnsemblePMF",
+     "kind": "def",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleLaw",
+     "line": 60,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: The variable-size determinantal PMF on every finite subset of the index set."
+    },
+    {
+     "decl": "NLAlib.lEnsembleLaw",
+     "kind": "def",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleLaw",
+     "line": 71,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: The variable-size L-ensemble probability measure associated with a real PSD kernel."
+    },
+    {
+     "decl": "NLAlib.lEnsembleLaw_univ",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleLaw",
+     "line": 83,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The L-ensemble assigns total mass one to all finite subsets."
+    },
+    {
+     "decl": "NLAlib.lEnsembleLaw_singleton",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleLaw",
+     "line": 99,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The mass of each finite subset is exactly its normalized principal minor."
+    },
+    {
+     "decl": "NLAlib.integral_prod_lEnsembleLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleLaw",
+     "line": 110,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The L-ensemble generating function is the normalized multivariate principal-minor determinant, for arbitrary real row weights including negative and zero weights."
+    }
+   ]
+  },
+  {
+   "id": "l-ensemble-marginals",
+   "status": "proved",
+   "scope_readback": "All inclusion minors read in LEnsembleMarginals, singleton/covariance/cardinality mean and variance here, native ridge specialization in LEnsembleRidge; real scope matches card.",
+   "reviewed_clauses": [
+    {
+     "statement": "Every prescribed inclusion event has probability equal to the matching principal minor of L(I+L)⁻¹.",
+     "decls": [
+      "NLAlib.measureReal_subset_lEnsembleLaw"
+     ]
+    },
+    {
+     "statement": "Singleton probabilities equal kernel diagonals and expected cardinality equals kernel trace.",
+     "decls": [
+      "NLAlib.measureReal_mem_lEnsembleLaw",
+      "NLAlib.integral_card_lEnsembleLaw"
+     ]
+    },
+    {
+     "statement": "Distinct inclusion indicators have covariance -K_ij² and cardinality variance equals tr(K-K²).",
+     "decls": [
+      "NLAlib.covariance_mem_lEnsembleLaw",
+      "NLAlib.variance_card_lEnsembleLaw"
+     ]
+    },
+    {
+     "statement": "For the scaled row-Gram L-ensemble, singleton probabilities are the native ridge leverage scores and expected size is native effective dimension.",
+     "decls": [
+      "NLAlib.measureReal_mem_lEnsembleRidgeLaw",
+      "NLAlib.integral_card_lEnsembleRidgeLaw"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.lEnsembleKernel",
+     "kind": "def",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleMarginals",
+     "line": 22,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: The marginal kernel `L (I + L)⁻¹` of an L-ensemble."
+    },
+    {
+     "decl": "NLAlib.integral_subset_indicator_lEnsembleLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleMarginals",
+     "line": 56,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Integrating the indicator that a fixed set is included gives the corresponding principal minor of the marginal kernel."
+    },
+    {
+     "decl": "NLAlib.measureReal_subset_lEnsembleLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleMarginals",
+     "line": 79,
+     "sorry": false,
+     "partial": true,
+     "usage": "Every prescribed inclusion event has probability equal to the matching principal minor of L(I+L)⁻¹."
+    },
+    {
+     "decl": "NLAlib.measureReal_mem_lEnsembleLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleMoments",
+     "line": 34,
+     "sorry": false,
+     "partial": true,
+     "usage": "Singleton probabilities equal kernel diagonals and expected cardinality equals kernel trace."
+    },
+    {
+     "decl": "NLAlib.covariance_mem_lEnsembleLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleMoments",
+     "line": 69,
+     "sorry": false,
+     "partial": true,
+     "usage": "Distinct inclusion indicators have covariance -K_ij² and cardinality variance equals tr(K-K²)."
+    },
+    {
+     "decl": "NLAlib.integral_card_lEnsembleLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleMoments",
+     "line": 90,
+     "sorry": false,
+     "partial": true,
+     "usage": "Singleton probabilities equal kernel diagonals and expected cardinality equals kernel trace."
+    },
+    {
+     "decl": "NLAlib.variance_card_lEnsembleLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleMoments",
+     "line": 100,
+     "sorry": false,
+     "partial": true,
+     "usage": "Distinct inclusion indicators have covariance -K_ij² and cardinality variance equals tr(K-K²)."
+    },
+    {
+     "decl": "NLAlib.lEnsembleKernel_scaled_rowGram",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleRidge",
+     "line": 23,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The L-ensemble marginal kernel of a scaled row Gram matrix is exactly the inverse-Gram ridge kernel."
+    },
+    {
+     "decl": "NLAlib.measureReal_mem_lEnsembleRidgeLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleRidge",
+     "line": 57,
+     "sorry": false,
+     "partial": true,
+     "usage": "For the scaled row-Gram L-ensemble, singleton probabilities are the native ridge leverage scores and expected size is native effective dimension."
+    },
+    {
+     "decl": "NLAlib.integral_card_lEnsembleRidgeLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.LEnsembleRidge",
+     "line": 67,
+     "sorry": false,
+     "partial": true,
+     "usage": "For the scaled row-Gram L-ensemble, singleton probabilities are the native ridge leverage scores and expected size is native effective dimension."
+    }
+   ]
+  },
+  {
+   "id": "osi-def",
+   "status": "proved",
+   "scope_readback": "Correct per-fixed-subspace probability quantifier, lower Gram event and minimum singular value; entrywise L2 isotropy equivalence read in Isotropic.lean; real/complex.",
+   "reviewed_clauses": [
+    {
+     "statement": "For a sketch with finite entrywise second moments, identity expected Gram matrix is equivalent to preserving every fixed vector’s squared norm in expectation.",
+     "decls": [
+      "NLAlib.isIsotropicSketch_iff"
+     ]
+    },
+    {
+     "statement": "On each fixed orthonormal frame the lower injection is exactly the Gram Loewner inequality and, in positive target dimension, the smallest-singular-value squared inequality.",
+     "decls": [
+      "NLAlib.HasOrthonormalCols.isSubspaceInjection_iff_gram",
+      "NLAlib.HasOrthonormalCols.isSubspaceInjection_iff_le_singularValues_sq"
+     ]
+    },
+    {
+     "statement": "The measurable isotropic OSI law succeeds with probability at least 19/20 on every fixed deterministic target frame; the event may depend on the frame.",
+     "decls": [
+      "NLAlib.IsObliviousSubspaceInjection.measureReal_isSubspaceInjection_ge"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.HasOrthonormalCols.isSubspaceInjection_iff_gram",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ObliviousSubspaceInjection.Basic",
+     "line": 54,
+     "sorry": false,
+     "partial": true,
+     "usage": "On each fixed orthonormal frame the lower injection is exactly the Gram Loewner inequality and, in positive target dimension, the smallest-singular-value squared inequality."
+    },
+    {
+     "decl": "NLAlib.HasOrthonormalCols.isSubspaceInjection_iff_le_singularValues_sq",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ObliviousSubspaceInjection.Basic",
+     "line": 85,
+     "sorry": false,
+     "partial": true,
+     "usage": "On each fixed orthonormal frame the lower injection is exactly the Gram Loewner inequality and, in positive target dimension, the smallest-singular-value squared inequality."
+    },
+    {
+     "decl": "NLAlib.IsObliviousSubspaceInjection",
+     "kind": "inductive",
+     "module": "NLAlib.Sketching.Properties.ObliviousSubspaceInjection.Basic",
+     "line": 114,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: An oblivious subspace injection is an isotropic measurable sketch law whose lower embedding failure is at most `1/20` for every fixed `d`-frame."
+    },
+    {
+     "decl": "NLAlib.IsObliviousSubspaceInjection.measureReal_isSubspaceInjection_ge",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ObliviousSubspaceInjection.Basic",
+     "line": 136,
+     "sorry": false,
+     "partial": true,
+     "usage": "The measurable isotropic OSI law succeeds with probability at least 19/20 on every fixed deterministic target frame; the event may depend on the frame."
+    },
+    {
+     "decl": "NLAlib.IsIsotropicSketch",
+     "kind": "inductive",
+     "module": "NLAlib.Sketching.Properties.ObliviousSubspaceInjection.Isotropic",
+     "line": 48,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: An isotropic sketch has square-integrable entries and second-moment Gram matrix equal to the identity."
+    },
+    {
+     "decl": "NLAlib.isIsotropicSketch_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ObliviousSubspaceInjection.Isotropic",
+     "line": 96,
+     "sorry": false,
+     "partial": true,
+     "usage": "For a sketch with finite entrywise second moments, identity expected Gram matrix is equivalent to preserving every fixed vector’s squared norm in expectation."
+    }
+   ]
+  },
+  {
+   "id": "osi-cross-residual-bound",
+   "status": "proved",
+   "scope_readback": "Exact joint full-row-rank and native MP product event, 9/10 and 20/alpha; Markov plus union needs no independence; empty numerator and B=0 handled.",
+   "reviewed_clauses": [],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsObliviousSubspaceInjection.measureReal_osiCrossSuccessEvent_ge",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ObliviousSubspaceInjection.CrossResidual",
+     "line": 69,
+     "sorry": false,
+     "partial": false,
+     "usage": "Use this result: An OSI satisfies the cross-residual estimate with factor `20/α`, jointly with full row rank, with probability at least `9/10`."
+    }
+   ]
+  },
+  {
+   "id": "frequent-directions-streaming-realization",
+   "status": "proved",
+   "scope_readback": "Actual finite row-insert/SVD fold with exact zero-last-row invariant, accumulated trace equality and tail/projector guarantees; correctness for every permitted SVD witness.",
+   "reviewed_clauses": [
+    {
+     "statement": "The actual finite row fold realizes the arbitrary-SVD shrinkage run relation and its covariance-loss invariant, preserving a zero last row.",
+     "decls": [
+      "NLAlib.FrequentDirectionsRun.invariant",
+      "NLAlib.frequentDirections_runFrom_realizes",
+      "NLAlib.frequentDirections_runMatrix_invariant"
+     ]
+    },
+    {
+     "statement": "The actual stream has exact Frobenius trace loss equal to capacity times the accumulated shrinkage loss.",
+     "decls": [
+      "NLAlib.frequentDirections_runMatrix_frobSq_loss"
+     ]
+    },
+    {
+     "statement": "Its actual final sketch has the stated covariance and actual leading-right-SVD projection tail bounds with the original capacity.",
+     "decls": [
+      "NLAlib.frequentDirections_runMatrix_specNorm_sub_gram_le",
+      "NLAlib.frequentDirections_runMatrix_frobSq_error_le"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.FrequentDirectionsRun.invariant",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirections",
+     "line": 151,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual finite row fold realizes the arbitrary-SVD shrinkage run relation and its covariance-loss invariant, preserving a zero last row."
+    },
+    {
+     "decl": "NLAlib.frequentDirections_runFrom_realizes",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirections",
+     "line": 165,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual finite row fold realizes the arbitrary-SVD shrinkage run relation and its covariance-loss invariant, preserving a zero last row."
+    },
+    {
+     "decl": "NLAlib.frequentDirections_run_invariant",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirections",
+     "line": 176,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The actual chosen-SVD row-stream output satisfies all source invariants."
+    },
+    {
+     "decl": "NLAlib.frequentDirections_runMatrix_invariant",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirections",
+     "line": 186,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual finite row fold realizes the arbitrary-SVD shrinkage run relation and its covariance-loss invariant, preserving a zero last row."
+    },
+    {
+     "decl": "NLAlib.frequentDirections_runMatrix_frobSq_loss",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirections",
+     "line": 195,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual stream has exact Frobenius trace loss equal to capacity times the accumulated shrinkage loss."
+    },
+    {
+     "decl": "NLAlib.frequentDirections_runMatrix_specNorm_sub_gram_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirections",
+     "line": 207,
+     "sorry": false,
+     "partial": true,
+     "usage": "Its actual final sketch has the stated covariance and actual leading-right-SVD projection tail bounds with the original capacity."
+    },
+    {
+     "decl": "NLAlib.frequentDirections_runMatrix_frobSq_error_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirections",
+     "line": 219,
+     "sorry": false,
+     "partial": true,
+     "usage": "Its actual final sketch has the stated covariance and actual leading-right-SVD projection tail bounds with the original capacity."
+    }
+   ]
+  },
+  {
+   "id": "frequent-directions-mergeability",
+   "status": "proved",
+   "scope_readback": "Actual stacked-summary-row recompression and numeric loss counters; finite binary tree preserves capacity independent of depth; no associativity claim.",
+   "reviewed_clauses": [
+    {
+     "statement": "Two-child and arbitrary finite-batch merges recompress the actual stacked summary rows and retain the summed covariance-loss certificate.",
+     "decls": [
+      "NLAlib.frequentDirections_merge_certificate",
+      "NLAlib.frequentDirections_mergeMany_certificate"
+     ]
+    },
+    {
+     "statement": "The actual finite binary merge tree preserves that certificate from its row-stream leaves to its root.",
+     "decls": [
+      "NLAlib.FrequentDirectionsMergeTree.certificate"
+     ]
+    },
+    {
+     "statement": "The root satisfies both stated tail bounds with the original capacity and no tree-depth factor.",
+     "decls": [
+      "NLAlib.FrequentDirectionsMergeTree.specNorm_sub_gram_le",
+      "NLAlib.FrequentDirectionsMergeTree.frobSq_error_le"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.frequentDirections_merge_certificate",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirectionsMerge",
+     "line": 25,
+     "sorry": false,
+     "partial": true,
+     "usage": "Two-child and arbitrary finite-batch merges recompress the actual stacked summary rows and retain the summed covariance-loss certificate."
+    },
+    {
+     "decl": "NLAlib.frequentDirections_mergeMany_certificate",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirectionsMerge",
+     "line": 51,
+     "sorry": false,
+     "partial": true,
+     "usage": "Two-child and arbitrary finite-batch merges recompress the actual stacked summary rows and retain the summed covariance-loss certificate."
+    },
+    {
+     "decl": "NLAlib.FrequentDirectionsMergeTree.certificate",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirectionsMerge",
+     "line": 103,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual finite binary merge tree preserves that certificate from its row-stream leaves to its root."
+    },
+    {
+     "decl": "NLAlib.FrequentDirectionsMergeTree.specNorm_sub_gram_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirectionsMerge",
+     "line": 116,
+     "sorry": false,
+     "partial": true,
+     "usage": "The root satisfies both stated tail bounds with the original capacity and no tree-depth factor."
+    },
+    {
+     "decl": "NLAlib.FrequentDirectionsMergeTree.frobSq_error_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Streaming.FrequentDirectionsMerge",
+     "line": 127,
+     "sorry": false,
+     "partial": true,
+     "usage": "The root satisfies both stated tail bounds with the original capacity and no tree-depth factor."
+    }
+   ]
+  },
+  {
+   "id": "truncated-svd-projection-cost-sketch",
+   "status": "proved",
+   "scope_readback": "Actual ell-column U_ell Sigma_ell factor, ell=min(ceil(k/eps),min dimensions), one discarded-mass offset for all exact-rank projectors; capped and k=0 cases handled.",
+   "reviewed_clauses": [
+    {
+     "statement": "For every full SVD basis the actual leading ℓ-column factor and one discarded-mass offset satisfy the exact projected-tail cost identity.",
+     "decls": [
+      "NLAlib.IsSVD.frobSq_leadingFactor_add_tail_eq"
+     ]
+    },
+    {
+     "statement": "At exactly ℓ=min(ceil(k/ε),min(height,width)), positive target k and 0<ε<1, that factor is one-sided PCP with the fixed Frobenius tail offset, including the capped zero-tail case.",
+     "decls": [
+      "NLAlib.IsSVD.isProjectionCostPreservingWithOffset_leadingFactor"
+     ]
+    },
+    {
+     "statement": "At target rank zero, an empty sketch with the whole input Frobenius mass as offset is an exact PCP sketch.",
+     "decls": [
+      "NLAlib.isProjectionCostPreservingWithOffset_zero_rank"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsSVD.frobSq_leadingFactor_add_tail_eq",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.TruncatedSVD",
+     "line": 19,
+     "sorry": false,
+     "partial": true,
+     "usage": "For every full SVD basis the actual leading ℓ-column factor and one discarded-mass offset satisfy the exact projected-tail cost identity."
+    },
+    {
+     "decl": "NLAlib.IsSVD.isProjectionCostPreservingWithOffset_leadingFactor",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.TruncatedSVD",
+     "line": 74,
+     "sorry": false,
+     "partial": true,
+     "usage": "At exactly ℓ=min(ceil(k/ε),min(height,width)), positive target k and 0<ε<1, that factor is one-sided PCP with the fixed Frobenius tail offset, including the capped zero-tail case."
+    },
+    {
+     "decl": "NLAlib.isProjectionCostPreservingWithOffset_zero_rank",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.ProjectionCost.TruncatedSVD",
+     "line": 120,
+     "sorry": false,
+     "partial": true,
+     "usage": "At target rank zero, an empty sketch with the whole input Frobenius mass as offset is an exact PCP sketch."
+    }
+   ]
+  },
+  {
+   "id": "row-volume-sampling-deletion-law",
+   "status": "proved",
+   "scope_readback": "Actual one-row Markov deletion; determinant normalizer, normalized leverage probabilities, zero mass of deficient states and two-stage composition read in the stable matrix/law/composition owners; real/complex.",
+   "reviewed_clauses": [
+    {
+     "statement": "The full-column Gram normalizer is the exact binomial determinant multiple, positive at all valid sample sizes, and normalized weights define an actual PMF.",
+     "decls": [
+      "NLAlib.sum_rowSubsetVolume_eq_choose_mul",
+      "NLAlib.sum_rowSubsetVolume_pos",
+      "NLAlib.rowVolumeLaw_singleton"
+     ]
+    },
+    {
+     "statement": "Actual one-row deletion probabilities are (1−leverage)/(|T|−d); leverage lies in [0,1], sums to d, and the PMF normalizes the transition.",
+     "decls": [
+      "NLAlib.rowVolumeDeletionStep_toReal_erase",
+      "NLAlib.rowSubsetLeverage_nonneg",
+      "NLAlib.rowSubsetLeverage_le_one",
+      "NLAlib.sum_rowSubsetLeverage"
+     ]
+    },
+    {
+     "statement": "The actual finite reverse-deletion recursion, stopped after |T|−s steps, has precisely the row-volume law and supports only full-rank size-s subsets.",
+     "decls": [
+      "NLAlib.rowVolumeDeletionPMF_sub_eq",
+      "NLAlib.rowVolumeDeletionLaw_sub_eq",
+      "NLAlib.mem_support_rowVolumePMF_iff"
+     ]
+    },
+    {
+     "statement": "Sampling first t rows and then s rows from them gives exactly the direct size-s distribution, retaining singular states as zero-mass cases.",
+     "decls": [
+      "NLAlib.rowVolumePMF_bind_kernel"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.sum_rowSubsetVolume_eq_choose_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Basic.RowSubsetGram",
+     "line": 169,
+     "sorry": false,
+     "partial": true,
+     "usage": "The full-column Gram normalizer is the exact binomial determinant multiple, positive at all valid sample sizes, and normalized weights define an actual PMF."
+    },
+    {
+     "decl": "NLAlib.sum_rowSubsetVolume_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Basic.RowSubsetGram",
+     "line": 205,
+     "sorry": false,
+     "partial": true,
+     "usage": "The full-column Gram normalizer is the exact binomial determinant multiple, positive at all valid sample sizes, and normalized weights define an actual PMF."
+    },
+    {
+     "decl": "NLAlib.rowSubsetLeverage_nonneg",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Basic.RowSubsetLeverage",
+     "line": 26,
+     "sorry": false,
+     "partial": true,
+     "usage": "Actual one-row deletion probabilities are (1−leverage)/(|T|−d); leverage lies in [0,1], sums to d, and the PMF normalizes the transition."
+    },
+    {
+     "decl": "NLAlib.rowSubsetLeverage_le_one",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Basic.RowSubsetLeverage",
+     "line": 50,
+     "sorry": false,
+     "partial": true,
+     "usage": "Actual one-row deletion probabilities are (1−leverage)/(|T|−d); leverage lies in [0,1], sums to d, and the PMF normalizes the transition."
+    },
+    {
+     "decl": "NLAlib.sum_rowSubsetLeverage",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Basic.RowSubsetLeverage",
+     "line": 59,
+     "sorry": false,
+     "partial": true,
+     "usage": "Actual one-row deletion probabilities are (1−leverage)/(|T|−d); leverage lies in [0,1], sums to d, and the PMF normalizes the transition."
+    },
+    {
+     "decl": "NLAlib.rowVolumePMF_bind_kernel",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeComposition",
+     "line": 66,
+     "sorry": false,
+     "partial": true,
+     "usage": "Sampling first t rows and then s rows from them gives exactly the direct size-s distribution, retaining singular states as zero-mass cases."
+    },
+    {
+     "decl": "NLAlib.rowVolumeDeletionStep_toReal_erase",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeDeletion",
+     "line": 31,
+     "sorry": false,
+     "partial": true,
+     "usage": "Actual one-row deletion probabilities are (1−leverage)/(|T|−d); leverage lies in [0,1], sums to d, and the PMF normalizes the transition."
+    },
+    {
+     "decl": "NLAlib.rowVolumeDeletionPMF_eq",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeDeletion",
+     "line": 88,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The actual reverse-deletion recursion has precisely the fixed-size row-volume law."
+    },
+    {
+     "decl": "NLAlib.rowVolumeDeletionPMF_sub_eq",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeDeletion",
+     "line": 105,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual finite reverse-deletion recursion, stopped after |T|−s steps, has precisely the row-volume law and supports only full-rank size-s subsets."
+    },
+    {
+     "decl": "NLAlib.rowVolumeDeletionLaw_sub_eq",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeDeletion",
+     "line": 120,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual finite reverse-deletion recursion, stopped after |T|−s steps, has precisely the row-volume law and supports only full-rank size-s subsets."
+    },
+    {
+     "decl": "NLAlib.mem_support_rowVolumePMF_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeLaw",
+     "line": 78,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual finite reverse-deletion recursion, stopped after |T|−s steps, has precisely the row-volume law and supports only full-rank size-s subsets."
+    },
+    {
+     "decl": "NLAlib.rowVolumeLaw_singleton",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeLaw",
+     "line": 103,
+     "sorry": false,
+     "partial": true,
+     "usage": "The full-column Gram normalizer is the exact binomial determinant multiple, positive at all valid sample sizes, and normalized weights define an actual PMF."
+    }
+   ]
+  },
+  {
+   "id": "row-volume-pseudoinverse-unbiased",
+   "status": "proved",
+   "scope_readback": "Actual padded MP, actual fixed-size law, arbitrary RHS and fitted mean; cross-Gram Jacobi numerator cancels singular zero weights; no general position; real/complex.",
+   "reviewed_clauses": [
+    {
+     "statement": "The actual padded Moore–Penrose inverse is integrable and unbiased under the row-volume law, with HasLaw transport to arbitrary random subsets.",
+     "decls": [
+      "NLAlib.integrable_rowSubsetPseudoinverse",
+      "NLAlib.integral_rowSubsetPseudoinverse",
+      "NLAlib.integral_rowSubsetPseudoinverse_of_hasLaw"
+     ]
+    },
+    {
+     "statement": "For every fixed right-hand side, both the fitted coefficient mean and fitted-data mean are the corresponding full-data least-squares quantities.",
+     "decls": [
+      "NLAlib.integral_rowSubsetPseudoinverse_mul",
+      "NLAlib.integral_mul_rowSubsetPseudoinverse"
+     ]
+    },
+    {
+     "statement": "On every supported restriction the padded inverse times the original design is the identity, giving exact recovery of every consistent right-hand side.",
+     "decls": [
+      "NLAlib.rowSubsetPseudoinverse_mul_eq_one"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.rowSubsetPseudoinverse_mul_eq_one",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Basic.RowSubsetPseudoinverse",
+     "line": 49,
+     "sorry": false,
+     "partial": true,
+     "usage": "On every supported restriction the padded inverse times the original design is the identity, giving exact recovery of every consistent right-hand side."
+    },
+    {
+     "decl": "NLAlib.integrable_rowSubsetPseudoinverse",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumePseudoinverse",
+     "line": 63,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual padded Moore–Penrose inverse is integrable and unbiased under the row-volume law, with HasLaw transport to arbitrary random subsets."
+    },
+    {
+     "decl": "NLAlib.integral_rowSubsetPseudoinverse",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumePseudoinverse",
+     "line": 71,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual padded Moore–Penrose inverse is integrable and unbiased under the row-volume law, with HasLaw transport to arbitrary random subsets."
+    },
+    {
+     "decl": "NLAlib.integral_rowSubsetPseudoinverse_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumePseudoinverse",
+     "line": 85,
+     "sorry": false,
+     "partial": true,
+     "usage": "For every fixed right-hand side, both the fitted coefficient mean and fitted-data mean are the corresponding full-data least-squares quantities."
+    },
+    {
+     "decl": "NLAlib.integral_mul_rowSubsetPseudoinverse",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumePseudoinverse",
+     "line": 101,
+     "sorry": false,
+     "partial": true,
+     "usage": "For every fixed right-hand side, both the fitted coefficient mean and fitted-data mean are the corresponding full-data least-squares quantities."
+    },
+    {
+     "decl": "NLAlib.integral_rowSubsetPseudoinverse_of_hasLaw",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumePseudoinverse",
+     "line": 115,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual padded Moore–Penrose inverse is integrable and unbiased under the row-volume law, with HasLaw transport to arbitrary random subsets."
+    }
+   ]
+  },
+  {
+   "id": "row-volume-inverse-moment",
+   "status": "proved",
+   "scope_readback": "Exact alpha=(N-d+1)/(s-d+1), beta=(N-s)/(s-d+1), PSD singular-adjugate defect, inverse/covariance/Frobenius bounds; equalities only need full rank at selected size s; d=1 retained.",
+   "reviewed_clauses": [
+    {
+     "statement": "The inverse Gram expectation equals alpha times the ambient inverse minus its explicit PSD singular-adjugate defect, hence is bounded in Loewner order.",
+     "decls": [
+      "NLAlib.integral_inv_rowSubsetGram_eq_smul_inv_sub_defect",
+      "NLAlib.integral_inv_rowSubsetGram_le",
+      "NLAlib.posSemidef_rowVolumeAdjugateDefect"
+     ]
+    },
+    {
+     "statement": "The centered padded-inverse covariance has the exact beta-times-inverse-minus-defect formula and corresponding Loewner bound.",
+     "decls": [
+      "NLAlib.integral_centered_rowSubsetPseudoinverse_eq_smul_inv_sub_defect",
+      "NLAlib.integral_centered_rowSubsetPseudoinverse_le"
+     ]
+    },
+    {
+     "statement": "Its squared Frobenius expectation has the exact trace-defect formula and the displayed alpha-times-full-inverse bound.",
+     "decls": [
+      "NLAlib.integral_frobSq_rowSubsetPseudoinverse_eq_sub_defect",
+      "NLAlib.integral_frobSq_rowSubsetPseudoinverse_le"
+     ]
+    },
+    {
+     "statement": "All three bounds are equalities if every size-s restriction has full column rank; no stronger support assumption is imposed.",
+     "decls": [
+      "NLAlib.integral_inv_rowSubsetGram_eq_of_full_support",
+      "NLAlib.integral_centered_rowSubsetPseudoinverse_eq_of_full_support",
+      "NLAlib.integral_frobSq_rowSubsetPseudoinverse_eq_of_full_support"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.posSemidef_rowVolumeAdjugateDefect",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 48,
+     "sorry": false,
+     "partial": true,
+     "usage": "The inverse Gram expectation equals alpha times the ambient inverse minus its explicit PSD singular-adjugate defect, hence is bounded in Loewner order."
+    },
+    {
+     "decl": "NLAlib.integral_inv_rowSubsetGram_eq_smul_inv_sub_defect",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 76,
+     "sorry": false,
+     "partial": true,
+     "usage": "The inverse Gram expectation equals alpha times the ambient inverse minus its explicit PSD singular-adjugate defect, hence is bounded in Loewner order."
+    },
+    {
+     "decl": "NLAlib.integral_inv_rowSubsetGram_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 112,
+     "sorry": false,
+     "partial": true,
+     "usage": "The inverse Gram expectation equals alpha times the ambient inverse minus its explicit PSD singular-adjugate defect, hence is bounded in Loewner order."
+    },
+    {
+     "decl": "NLAlib.integral_centered_rowSubsetPseudoinverse_eq_smul_inv_sub_defect",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 168,
+     "sorry": false,
+     "partial": true,
+     "usage": "The centered padded-inverse covariance has the exact beta-times-inverse-minus-defect formula and corresponding Loewner bound."
+    },
+    {
+     "decl": "NLAlib.integral_centered_rowSubsetPseudoinverse_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 196,
+     "sorry": false,
+     "partial": true,
+     "usage": "The centered padded-inverse covariance has the exact beta-times-inverse-minus-defect formula and corresponding Loewner bound."
+    },
+    {
+     "decl": "NLAlib.integral_inv_rowSubsetGram_eq_of_full_support",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 211,
+     "sorry": false,
+     "partial": true,
+     "usage": "All three bounds are equalities if every size-s restriction has full column rank; no stronger support assumption is imposed."
+    },
+    {
+     "decl": "NLAlib.integral_centered_rowSubsetPseudoinverse_eq_of_full_support",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 225,
+     "sorry": false,
+     "partial": true,
+     "usage": "All three bounds are equalities if every size-s restriction has full column rank; no stronger support assumption is imposed."
+    },
+    {
+     "decl": "NLAlib.integral_frobSq_rowSubsetPseudoinverse_eq_sub_defect",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 241,
+     "sorry": false,
+     "partial": true,
+     "usage": "Its squared Frobenius expectation has the exact trace-defect formula and the displayed alpha-times-full-inverse bound."
+    },
+    {
+     "decl": "NLAlib.integral_frobSq_rowSubsetPseudoinverse_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 266,
+     "sorry": false,
+     "partial": true,
+     "usage": "Its squared Frobenius expectation has the exact trace-defect formula and the displayed alpha-times-full-inverse bound."
+    },
+    {
+     "decl": "NLAlib.integral_frobSq_rowSubsetPseudoinverse_eq_of_full_support",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.RowVolumeInverseMoment",
+     "line": 280,
+     "sorry": false,
+     "partial": true,
+     "usage": "All three bounds are equalities if every size-s restriction has full column rank; no stronger support assumption is imposed."
+    }
+   ]
+  },
+  {
+   "id": "resistance-sampling-spectral-sparsifier",
+   "status": "proved",
+   "scope_readback": "Literal positive input weights and exact wR/r iid law; actual count-weight output, disconnected kernel, rank-r prefactor, exact sample count, <=q edges, rank-zero early return; no nearly-linear claim.",
+   "reviewed_clauses": [
+    {
+     "statement": "For positive Laplacian rank r, the actual independent effective-resistance edge-list law gives full-space spectral failure at most 2r exp(-q epsilon²/(3r)), with the stated sample-count corollary.",
+     "decls": [
+      "NLAlib.GraphEdgeOrientation.measureReal_resistance_sampling_failure_le",
+      "NLAlib.GraphEdgeOrientation.measureReal_resistance_sampling_failure_le_of_sample_size"
+     ]
+    },
+    {
+     "statement": "Accumulated sample-count weights are nonnegative, their Laplacian equals the literal sampled-incidence Gram matrix, and at most q edges have nonzero output weights.",
+     "decls": [
+      "NLAlib.GraphEdgeOrientation.resistanceSampledWeights_nonneg",
+      "NLAlib.GraphEdgeOrientation.laplacian_resistanceSampledWeights_eq_sampled_gram",
+      "NLAlib.GraphEdgeOrientation.card_resistanceSampledWeights_support_le"
+     ]
+    },
+    {
+     "statement": "The zero-Laplacian-rank branch returns the zero Laplacian.",
+     "decls": [
+      "NLAlib.GraphEdgeOrientation.laplacian_resistanceSampledWeights_eq_zero_of_rank_eq_zero"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.GraphEdgeOrientation.resistanceSampledWeights_nonneg",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.ResistanceSampling",
+     "line": 62,
+     "sorry": false,
+     "partial": true,
+     "usage": "Accumulated sample-count weights are nonnegative, their Laplacian equals the literal sampled-incidence Gram matrix, and at most q edges have nonzero output weights."
+    },
+    {
+     "decl": "NLAlib.GraphEdgeOrientation.laplacian_resistanceSampledWeights_eq_sampled_gram",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.ResistanceSampling",
+     "line": 94,
+     "sorry": false,
+     "partial": true,
+     "usage": "Accumulated sample-count weights are nonnegative, their Laplacian equals the literal sampled-incidence Gram matrix, and at most q edges have nonzero output weights."
+    },
+    {
+     "decl": "NLAlib.GraphEdgeOrientation.laplacian_resistanceSampledWeights_eq_zero_of_rank_eq_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.ResistanceSampling",
+     "line": 117,
+     "sorry": false,
+     "partial": true,
+     "usage": "The zero-Laplacian-rank branch returns the zero Laplacian."
+    },
+    {
+     "decl": "NLAlib.GraphEdgeOrientation.card_resistanceSampledWeights_support_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.ResistanceSampling",
+     "line": 124,
+     "sorry": false,
+     "partial": true,
+     "usage": "Accumulated sample-count weights are nonnegative, their Laplacian equals the literal sampled-incidence Gram matrix, and at most q edges have nonzero output weights."
+    },
+    {
+     "decl": "NLAlib.GraphEdgeOrientation.measureReal_resistance_sampling_failure_le",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.ResistanceSampling",
+     "line": 137,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive Laplacian rank r, the actual independent effective-resistance edge-list law gives full-space spectral failure at most 2r exp(-q epsilon²/(3r)), with the stated sample-count corollary."
+    },
+    {
+     "decl": "NLAlib.GraphEdgeOrientation.measureReal_resistance_sampling_failure_le_of_sample_size",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.ResistanceSampling",
+     "line": 218,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive Laplacian rank r, the actual independent effective-resistance edge-list law gives full-space spectral failure at most 2r exp(-q epsilon²/(3r)), with the stated sample-count corollary."
+    }
+   ]
+  },
+  {
+   "id": "nystrom-structural",
+   "status": "proved",
+   "scope_readback": "Native MP formula, both PSD bounds, literal arbitrary-sketch Schur complement, exact square-root-projector spectral equality strengthens card; no rank premise.",
+   "reviewed_clauses": [
+    {
+     "statement": "The Nyström approximation and its residual are PSD for every PSD input and arbitrary sketch.",
+     "decls": [
+      "NLAlib.posSemidef_nystrom",
+      "NLAlib.posSemidef_sub_nystrom"
+     ]
+    },
+    {
+     "statement": "The residual is the generalized Schur complement of the sketched Gram block, without a rank hypothesis.",
+     "decls": [
+      "NLAlib.sub_nystrom_eq_generalizedSchurComplement"
+     ]
+    },
+    {
+     "statement": "The spectral error equals the squared square-root projection residual, strengthening the stated inequality.",
+     "decls": [
+      "NLAlib.specNorm_sub_nystrom_eq_sqrt_residual"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.nystrom",
+     "kind": "def",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 50,
+     "sorry": false,
+     "partial": true,
+     "usage": "The **Nyström approximation** `A⟨Ω⟩ = AΩ (ΩᵀAΩ)⁺ ΩᵀA`, with the Moore–Penrose inverse of the core `ΩᵀAΩ`."
+    },
+    {
+     "decl": "NLAlib.sub_nystrom_eq_of_eq_transpose_mul",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 83,
+     "sorry": false,
+     "partial": true,
+     "usage": "Exact identity: `A = Fᵀ F → A - nystrom A Ω = ((1 - Y Y⁺) F)ᵀ ((1 - Y Y⁺) F)` with `Y = F Ω`."
+    },
+    {
+     "decl": "NLAlib.trace_sub_nystrom_eq_of_eq_transpose_mul",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 128,
+     "sorry": false,
+     "partial": true,
+     "usage": "`trace (A - nystrom A Ω) = frobSq ((1 - YY⁺) F)`."
+    },
+    {
+     "decl": "NLAlib.specNorm_sub_nystrom_eq_of_eq_transpose_mul",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 137,
+     "sorry": false,
+     "partial": true,
+     "usage": "`specNorm (A - nystrom A Ω) = specNorm ((1 - YY⁺) F)^2` (equality)."
+    },
+    {
+     "decl": "NLAlib.posSemidef_nystrom",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 146,
+     "sorry": false,
+     "partial": true,
+     "usage": "For PSD `A`: `(nystrom A Ω).PosSemidef`."
+    },
+    {
+     "decl": "NLAlib.posSemidef_sub_nystrom",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 154,
+     "sorry": false,
+     "partial": true,
+     "usage": "For PSD `A`: `(A - nystrom A Ω).PosSemidef`."
+    },
+    {
+     "decl": "NLAlib.sub_nystrom_eq_generalizedSchurComplement",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 163,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The Nyström residual is the generalized Schur complement of the sketched Gram block `Ωᵀ A Ω` in the bordered matrix with off-diagonal block `Ωᵀ A` and bottom-right block `A`."
+    },
+    {
+     "decl": "NLAlib.specNorm_sub_nystrom_eq_sqrt_residual",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 179,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The spectral error of PSD Nyström is exactly the squared spectral norm of the square-root projection residual."
+    }
+   ]
+  },
+  {
+   "id": "sketched-regression",
+   "status": "proved",
+   "scope_readback": "Literal full-column-rank left inverse and completion decomposition; arbitrary range-contained E isometry in both norms read in Matrix/Subspaces/RangeIsometry, not only one residual.",
+   "reviewed_clauses": [
+    {
+     "statement": "The actual sketched core equals the exact core plus the displayed completion noise.",
+     "decls": [
+      "NLAlib.sketchedCore_eq_add_coreNoise"
+     ]
+    },
+    {
+     "statement": "The actual fitted output has the stated orthogonal Frobenius error decomposition.",
+     "decls": [
+      "NLAlib.frobSq_error"
+     ]
+    },
+    {
+     "statement": "Complementary-frame coordinates preserve Frobenius and spectral norms for every matrix with columns in that range.",
+     "decls": [
+      "NLAlib.frobNorm_conjTranspose_mul_of_range_le",
+      "NLAlib.specNorm_conjTranspose_mul_of_range_le"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.sketchedCore",
+     "kind": "def",
+     "module": "NLAlib.LowRank.Nystrom.SketchedRegression",
+     "line": 61,
+     "sorry": false,
+     "partial": true,
+     "usage": "The sketched core `X̂ = (ΨᵀQ)† ΨᵀA`, with `†` the left pseudoinverse `pinvL` (Chen–Persson, `eq:tGN-fitted-core`; Tropp–Webber 2023 §5)."
+    },
+    {
+     "decl": "NLAlib.sketchedOutput",
+     "kind": "def",
+     "module": "NLAlib.LowRank.Nystrom.SketchedRegression",
+     "line": 67,
+     "sorry": false,
+     "partial": true,
+     "usage": "The sketched output `Â = Q X̂ = Q (ΨᵀQ)† ΨᵀA` (Chen–Persson, `lem:completion`; Tropp–Webber 2023 §5)."
+    },
+    {
+     "decl": "NLAlib.coreNoise",
+     "kind": "def",
+     "module": "NLAlib.LowRank.Nystrom.SketchedRegression",
+     "line": 73,
+     "sorry": false,
+     "partial": true,
+     "usage": "The core noise `E_core = (ΨᵀQ)† Ψᵀ A⊥` with `A⊥ = (I - QQᵀ)A` (Chen–Persson, `eq:tGN-fitted-core`, `lem:tGN-core`)."
+    },
+    {
+     "decl": "NLAlib.frobSq_error",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.SketchedRegression",
+     "line": 155,
+     "sorry": false,
+     "partial": true,
+     "usage": "Pass `hQ : HasOrthonormalCols Q`, the completion `hcomp : Q * Qᵀ + Qp * Qpᵀ = 1` and `hG₁ : IsUnit ((Ψᵀ * Q)ᵀ * (Ψᵀ * Q))`; gives `frobSq (A - sketchedOutput Q Ψ A) = frobSq (residual Q A) + frobSq (pinvL (Ψᵀ * Q) * (Ψᵀ * Qp) * (Qpᵀ * residual Q A))`."
+    },
+    {
+     "decl": "NLAlib.frobSq_transpose_mul_residual",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.SketchedRegression",
+     "line": 168,
+     "sorry": false,
+     "partial": true,
+     "usage": "Pass `hQ : HasOrthonormalCols Q`, `hQp : HasOrthonormalCols Qp` and `hcomp : Q * Qᵀ + Qp * Qpᵀ = 1`; gives `frobSq (Qpᵀ * residual Q A) = frobSq (residual Q A)`."
+    },
+    {
+     "decl": "NLAlib.sketchedCore_eq_add_coreNoise",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.SketchedRegression",
+     "line": 187,
+     "sorry": false,
+     "partial": true,
+     "usage": "Pass `hQ : HasOrthonormalCols Q`, `hcomp : Q * Qᵀ + Qp * Qpᵀ = 1` and `hG₁ : IsUnit ((Ψᵀ * Q)ᵀ * (Ψᵀ * Q))`; gives `sketchedCore Q Ψ A = Qᵀ * A + coreNoise Q Ψ A`."
+    },
+    {
+     "decl": "NLAlib.specNorm_transpose_mul_residual",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.SketchedRegression",
+     "line": 200,
+     "sorry": false,
+     "partial": true,
+     "usage": "Pass `hQ : HasOrthonormalCols Q`, `hQp : HasOrthonormalCols Qp` and `hcomp : Q * Qᵀ + Qp * Qpᵀ = 1`; gives `specNorm (Qpᵀ * residual Q A) = specNorm (residual Q A)`."
+    },
+    {
+     "decl": "NLAlib.frobNorm_conjTranspose_mul_of_range_le",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Subspaces.RangeIsometry",
+     "line": 38,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Orthonormal coordinates preserve Frobenius norm on the frame's range."
+    },
+    {
+     "decl": "NLAlib.specNorm_conjTranspose_mul_of_range_le",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Subspaces.RangeIsometry",
+     "line": 47,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Orthonormal coordinates preserve spectral norm on the frame's range."
+    }
+   ]
+  },
+  {
+   "id": "partial-cholesky-nystrom",
+   "status": "proved",
+   "scope_readback": "Actual existing Fin pivot recursion and scaled columns; two-Loewner-bound proof needs no nonzero-pivot assumption and handles repetitions, empty sequence, singular core, PSD residual and pivot zero rows/columns.",
+   "reviewed_clauses": [],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.partialCholeskyResidual",
+     "kind": "def",
+     "module": "NLAlib.LowRank.Cholesky.PartialCholesky",
+     "line": 48,
+     "sorry": false,
+     "partial": true,
+     "usage": "The **residual of partial Cholesky** after the pivots `s 0, …, s (k−1)`, in this order."
+    },
+    {
+     "decl": "NLAlib.partialCholeskyFactor",
+     "kind": "def",
+     "module": "NLAlib.LowRank.Cholesky.PartialCholesky",
+     "line": 55,
+     "sorry": false,
+     "partial": true,
+     "usage": "The **partial Cholesky factor** `F ∈ ℝ^{n×k}`: column `j` is `R(:, s j) / √R(s j, s j)` with `R` the residual after the first `j` pivots."
+    },
+    {
+     "decl": "NLAlib.posSemidef_partialCholeskyResidual",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.PartialCholesky",
+     "line": 88,
+     "sorry": false,
+     "partial": true,
+     "usage": "The partial Cholesky residual of a PSD matrix is PSD (each step is a Schur complement)."
+    },
+    {
+     "decl": "NLAlib.partialCholeskyResidual_apply_pivot_left",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.PartialCholesky",
+     "line": 112,
+     "sorry": false,
+     "partial": true,
+     "usage": "The partial Cholesky residual of a PSD matrix vanishes on the pivot rows."
+    },
+    {
+     "decl": "NLAlib.partialCholeskyResidual_apply_pivot_right",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.PartialCholesky",
+     "line": 126,
+     "sorry": false,
+     "partial": true,
+     "usage": "The partial Cholesky residual of a PSD matrix vanishes on the pivot columns."
+    },
+    {
+     "decl": "NLAlib.sub_partialCholeskyFactor_mul_transpose",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.PartialCholesky",
+     "line": 140,
+     "sorry": false,
+     "partial": true,
+     "usage": "**Partial Cholesky residual identity**: `A − F Fᵀ` is the residual, for PSD `A` and any pivot sequence."
+    },
+    {
+     "decl": "NLAlib.partialCholeskyFactor_mul_transpose_eq_nystrom",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.PartialCholesky",
+     "line": 262,
+     "sorry": false,
+     "partial": false,
+     "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+    },
+    {
+     "decl": "NLAlib.partialCholeskyResidual_eq_sub_nystrom",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.PartialCholesky",
+     "line": 278,
+     "sorry": false,
+     "partial": false,
+     "usage": "**The partial Cholesky residual is the generalized Schur complement**: `R = A − A(:,S) A(S,S)⁺ A(S,:)`, for PSD `A` and any pivot sequence."
+    }
+   ]
+  },
+  {
+   "id": "interpolative-decomposition",
+   "status": "proved",
+   "scope_readback": "Actual finite lexicographic exact-real-comparison search and Gram-inverse T; entries<=1 hence2, identity selected columns, sharp sqrt(1+k(n-k))*sigma_(k+1), exact-rank case including k=0; no efficient/binary-real claim.",
+   "reviewed_clauses": [
+    {
+     "statement": "Independent selected columns admit exact identity interpolation coefficients, entries bounded by one, and the sharp sqrt(1+k(n−k)) σ_(k+1) spectral error.",
+     "decls": [
+      "NLAlib.exists_interpolative_decomposition"
+     ]
+    },
+    {
+     "statement": "At target rank equal to the actual input rank the selected-column interpolation reconstructs A exactly.",
+     "decls": [
+      "NLAlib.exists_exact_interpolative_decomposition",
+      "NLAlib.interpolativeDecompositionSearch_exact"
+     ]
+    },
+    {
+     "statement": "An explicit finite lexicographic exhaustive search, with first-maximizer tie rule and actual Gram-inverse coefficients, returns a selection satisfying the same bounds, hence the requested coefficient bound two.",
+     "decls": [
+      "NLAlib.maximumVolumeColumnSearch_eq_foldl",
+      "NLAlib.maximumVolumeColumnSearch_tie_first",
+      "NLAlib.interpolativeDecompositionSearch_spec"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.exists_interpolative_decomposition",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Structural.InterpolativeDecomposition",
+     "line": 131,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.exists_interpolative_decomposition` with its displayed hypotheses: Every matrix admits an interpolative decomposition with distinct selected columns, identity interpolation on those columns, coefficients bounded by one, and the maximum-volume spectral error factor."
+    },
+    {
+     "decl": "NLAlib.exists_exact_interpolative_decomposition",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Structural.InterpolativeDecomposition",
+     "line": 147,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.exists_exact_interpolative_decomposition` with its displayed hypotheses: At the matrix rank the selected columns reconstruct the matrix exactly, with identity interpolation and coefficients bounded by one."
+    },
+    {
+     "decl": "NLAlib.maximumVolumeColumnSearch_eq_foldl",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Structural.InterpolativeDecompositionSearch",
+     "line": 69,
+     "sorry": false,
+     "partial": true,
+     "usage": "An explicit finite lexicographic exhaustive search, with first-maximizer tie rule and actual Gram-inverse coefficients, returns a selection satisfying the same bounds, hence the requested coefficient bound two."
+    },
+    {
+     "decl": "NLAlib.maximumVolumeColumnSearch_tie_first",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Structural.InterpolativeDecompositionSearch",
+     "line": 123,
+     "sorry": false,
+     "partial": true,
+     "usage": "An explicit finite lexicographic exhaustive search, with first-maximizer tie rule and actual Gram-inverse coefficients, returns a selection satisfying the same bounds, hence the requested coefficient bound two."
+    },
+    {
+     "decl": "NLAlib.interpolativeDecompositionSearch_spec",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Structural.InterpolativeDecompositionSearch",
+     "line": 140,
+     "sorry": false,
+     "partial": true,
+     "usage": "An explicit finite lexicographic exhaustive search, with first-maximizer tie rule and actual Gram-inverse coefficients, returns a selection satisfying the same bounds, hence the requested coefficient bound two."
+    },
+    {
+     "decl": "NLAlib.interpolativeDecompositionSearch_exact",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Structural.InterpolativeDecompositionSearch",
+     "line": 168,
+     "sorry": false,
+     "partial": true,
+     "usage": "At target rank equal to the actual input rank the selected-column interpolation reconstructs A exactly."
+    }
+   ]
+  },
+  {
+   "id": "operator-monotone-schatten-transfer",
+   "status": "proved",
+   "scope_readback": "Original ordered Schatten trace deficit for every finite real p>=1, real PSD order; every ordered eigenbasis allowed including ties; function BEFORE truncation, positive f(0), k=0 and zero-tail branch retained.",
+   "reviewed_clauses": [],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.schattenNormReal_cfc_sub_spectralFunctionTruncation_rpow_le_of_ordered_eigenbases",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.OperatorMonotoneSchattenTransfer",
+     "line": 75,
+     "sorry": false,
+     "partial": false,
+     "usage": "Use this result: The exact ordered Schatten trace-deficit certificate transfers to a continuous nonnegative operator-monotone function, for every finite real exponent `p ≥ 1` and every supplied ordered orthogonal eigenbasis, including choices within ties."
+    }
+   ]
+  },
+  {
+   "id": "singular-value-shrinkage-def",
+   "status": "proved",
+   "scope_readback": "Actual Gram-CFC transform independent of SVD, all repeated/zero singular values, arbitrary phi(0)=0 without continuity; unitary equivariance; real/complex soft threshold specialization.",
+   "reviewed_clauses": [
+    {
+     "statement": "Every full rectangular SVD gives the intrinsic Gram-functional-calculus singular-value transform, including repeated and zero singular values.",
+     "decls": [
+      "NLAlib.IsSVD.singularValueTransform_eq"
+     ]
+    },
+    {
+     "statement": "The intrinsic transform commutes with left and right unitary multiplication.",
+     "decls": [
+      "NLAlib.singularValueTransform_unitary_mul"
+     ]
+    },
+    {
+     "statement": "Soft thresholding is realized by the displayed nonnegative scalar cutoff for every nonnegative threshold, including threshold zero.",
+     "decls": [
+      "NLAlib.IsSVD.singularValueSoftThreshold_eq",
+      "NLAlib.singularValueSoftThreshold_zero"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.singularValueTransform",
+     "kind": "def",
+     "module": "NLAlib.Matrix.Functions.SingularValueTransform",
+     "line": 25,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: The rectangular singular-value transform `A h(AᴴA)`, where `h(t) = φ(√t)/√t` uses total division at zero."
+    },
+    {
+     "decl": "NLAlib.IsSVD.singularValueTransform_eq",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.SingularValueTransform",
+     "line": 33,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Every full SVD implements the same intrinsic singular-value transform."
+    },
+    {
+     "decl": "NLAlib.singularValueTransform_unitary_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.SingularValueTransform",
+     "line": 66,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Singular-value transforms commute with left and right unitary multiplication."
+    },
+    {
+     "decl": "NLAlib.singularValueSoftThreshold",
+     "kind": "def",
+     "module": "NLAlib.Matrix.Functions.SingularValueTransform",
+     "line": 98,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold this definition to use its native contract: Singular-value soft thresholding, with the scalar rule `(s-τ)₊`."
+    },
+    {
+     "decl": "NLAlib.IsSVD.singularValueSoftThreshold_eq",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.SingularValueTransform",
+     "line": 105,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Every SVD realizes the usual scalar soft-threshold rule, including at zero."
+    },
+    {
+     "decl": "NLAlib.singularValueSoftThreshold_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.SingularValueTransform",
+     "line": 124,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Threshold zero returns the input matrix, independently of its rank or SVD choices."
+    }
+   ]
+  },
+  {
+   "id": "nuclear-norm-proximal",
+   "status": "proved",
+   "scope_readback": "Exact half-Frobenius plus tau*nuclear objective; all competitors over RCLike; scalar optimization plus native trace inequality, uniqueness via strict Frobenius convexity; tau=0 and empty dims.",
+   "reviewed_clauses": [],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.nuclearProxObjective_softThreshold_le",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.NuclearProximal",
+     "line": 79,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Soft thresholding globally minimizes the nuclear proximal objective over real or complex matrices, including `τ=0`, empty dimensions, and repeated singular values."
+    },
+    {
+     "decl": "NLAlib.eq_singularValueSoftThreshold_of_nuclearProxObjective_le",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.NuclearProximal",
+     "line": 99,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: The matrix minimizer of the nuclear proximal objective is unique."
+    },
+    {
+     "decl": "NLAlib.nuclearProxObjective_minimizer_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.NuclearProximal",
+     "line": 133,
+     "sorry": false,
+     "partial": false,
+     "usage": "Use this result: The nuclear-norm proximal map is exactly singular-value soft thresholding, with a unique matrix minimizer over either scalar field and all nonnegative thresholds."
+    }
+   ]
+  },
+  {
+   "id": "rank-penalty-thresholding",
+   "status": "proved",
+   "scope_readback": "Exact sqrt(2*mu) threshold; arbitrary choices at positive-threshold ties; no-tie matrix uniqueness via actual competitor range projector, zero penalty unique Y; real/complex.",
+   "reviewed_clauses": [
+    {
+     "statement": "Every scalar-optimal SVD mask is a global minimizer, with independent retain/discard choices at each threshold tie.",
+     "decls": [
+      "NLAlib.IsSVD.rankPenaltyObjective_selected_le"
+     ]
+    },
+    {
+     "statement": "The strict hard-threshold selector is globally optimal for every nonnegative penalty.",
+     "decls": [
+      "NLAlib.rankPenaltyObjective_hardThreshold_le"
+     ]
+    },
+    {
+     "statement": "Without a threshold tie the hard-threshold matrix is the unique global minimizer; at penalty zero the unique minimizer is the input matrix.",
+     "decls": [
+      "NLAlib.rankPenaltyObjective_hardThreshold_minimizer_iff",
+      "NLAlib.rankPenaltyObjective_zero_minimizer_iff"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsSVD.rankPenaltyObjective_selected_le",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RankThreshold",
+     "line": 152,
+     "sorry": false,
+     "partial": true,
+     "usage": "Every scalar-optimal SVD mask is a global minimizer, with independent retain/discard choices at each threshold tie."
+    },
+    {
+     "decl": "NLAlib.rankPenaltyObjective_hardThreshold_le",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RankThreshold",
+     "line": 281,
+     "sorry": false,
+     "partial": true,
+     "usage": "The strict hard-threshold selector is globally optimal for every nonnegative penalty."
+    },
+    {
+     "decl": "NLAlib.eq_hardThreshold_of_rankPenaltyObjective_le",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RankThreshold",
+     "line": 295,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Away from threshold ties, the strict hard-threshold output is the unique minimizing matrix."
+    },
+    {
+     "decl": "NLAlib.rankPenaltyObjective_hardThreshold_minimizer_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RankThreshold",
+     "line": 313,
+     "sorry": false,
+     "partial": true,
+     "usage": "Without a threshold tie the hard-threshold matrix is the unique global minimizer; at penalty zero the unique minimizer is the input matrix."
+    },
+    {
+     "decl": "NLAlib.rankPenaltyObjective_zero_minimizer_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RankThreshold",
+     "line": 327,
+     "sorry": false,
+     "partial": true,
+     "usage": "Without a threshold tie the hard-threshold matrix is the unique global minimizer; at penalty zero the unique minimizer is the input matrix."
+    },
+    {
+     "decl": "NLAlib.singularValueHardThreshold_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.RankThreshold",
+     "line": 342,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: A zero rank penalty makes the strict hard-threshold selector return the input."
+    }
+   ]
+  },
+  {
+   "id": "rsvd-tail",
+   "status": "proved",
+   "scope_readback": "Actual measurable rangeProjector(A*Gaussian), p>=4, t>=1 and stronger u>=0; exact 2*t^(-p)+exp(-u^2/2), separate norm events. hkn:k<=n capstones plus exact recovery cover k>n. Sharpened inverse moments and actual Gaussian block independence read directly.",
+   "reviewed_clauses": [
+    {
+     "statement": "The actual Gaussian sampled-range Frobenius residual obeys the displayed constants with success probability at least 1−2t^(−p)−exp(−u²/2), including rank-deficient and oversized sketches.",
+     "decls": [
+      "NLAlib.measureReal_frobNorm_rsvd_rangeResidual_le"
+     ]
+    },
+    {
+     "statement": "The actual Gaussian sampled-range spectral residual obeys its displayed constants with the same individual success probability; a joint event at that probability is not asserted.",
+     "decls": [
+      "NLAlib.measureReal_specNorm_rsvd_rangeResidual_le"
+     ]
+    },
+    {
+     "statement": "The sampled range recovers A exactly almost surely when rank(A) is at most the sketch width.",
+     "decls": [
+      "NLAlib.ae_rsvd_rangeProjector_mul_eq_of_rank_le"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.ae_rsvd_rangeProjector_mul_eq_of_rank_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.RandomizedSVD.Deviation",
+     "line": 139,
+     "sorry": false,
+     "partial": true,
+     "usage": "The sampled range recovers A exactly almost surely when rank(A) is at most the sketch width."
+    },
+    {
+     "decl": "NLAlib.measureReal_frobNorm_rsvd_rangeResidual_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.RandomizedSVD.Deviation",
+     "line": 164,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual Gaussian sampled-range Frobenius residual obeys the displayed constants with success probability at least 1−2t^(−p)−exp(−u²/2), including rank-deficient and oversized sketches."
+    },
+    {
+     "decl": "NLAlib.measureReal_specNorm_rsvd_rangeResidual_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.RandomizedSVD.Deviation",
+     "line": 187,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual Gaussian sampled-range spectral residual obeys its displayed constants with the same individual success probability; a joint event at that probability is not asserted."
+    }
+   ]
+  },
+  {
+   "id": "nystrom-randomized",
+   "status": "proved",
+   "scope_readback": "Actual standard-Gaussian primary measure and HasLaw wrapper, integrable actual nuclear residual; exact 1+k/(t-k-1) against native nuclear truncated-SVD tail; PSD square-root tail bridge and all rank/empty cases.",
+   "reviewed_clauses": [],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.integrable_and_integral_trace_sub_nystrom_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 214,
+     "sorry": false,
+     "partial": true,
+     "usage": "With `A = Fᵀ F`, Gaussian `Ω` with `t ≥ k + 2` columns: `𝔼 trace (A - nystrom A Ω) ≤ (1 + k/(t-k-1)) * bestRankFrobSq k F`."
+    },
+    {
+     "decl": "NLAlib.integrable_and_integral_nuclearNorm_sub_nystrom_le_of_hasLaw",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 250,
+     "sorry": false,
+     "partial": false,
+     "usage": "Use this result: Gaussian Nyström has integrable nuclear error with the exact factor `1 + k / (t - k - 1)` times the matrix's best rank-`k` nuclear error."
+    },
+    {
+     "decl": "NLAlib.integrable_and_integral_nuclearNorm_sub_nystrom_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Nystrom.Structural",
+     "line": 280,
+     "sorry": false,
+     "partial": false,
+     "usage": "Use this result: Standard Gaussian Nyström has integrable nuclear error bounded by `1 + k / (t - k - 1)` times the matrix's nuclear singular-value tail."
+    }
+   ]
+  },
+  {
+   "id": "osi-range-finder-frobenius",
+   "status": "proved",
+   "scope_readback": "Actual sampled-range projector, exact 9/10 and 1+20/alpha, arbitrary rank and real/complex; rank bound is sketch width, not falsely target rank; 21/alpha follows for alpha<=1.",
+   "reviewed_clauses": [
+    {
+     "statement": "For a measurable isotropic OSI with positive alpha, the actual projector onto range(A Ω) has squared Frobenius error at most (1+20/alpha) times the optimal target tail with probability at least 9/10.",
+     "decls": [
+      "NLAlib.IsObliviousSubspaceInjection.measureReal_frobSq_osi_rangeResidual_le"
+     ]
+    },
+    {
+     "statement": "The actual projected approximation has rank at most the sketch width, including deficient samples and empty matrices.",
+     "decls": [
+      "NLAlib.rank_rangeProjector_sampled_mul_le"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.rank_rangeProjector_sampled_mul_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Structural.OSIRangeFinder",
+     "line": 29,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual projected approximation has rank at most the sketch width, including deficient samples and empty matrices."
+    },
+    {
+     "decl": "NLAlib.IsObliviousSubspaceInjection.measureReal_frobSq_osi_rangeResidual_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Structural.OSIRangeFinder",
+     "line": 53,
+     "sorry": false,
+     "partial": true,
+     "usage": "For a measurable isotropic OSI with positive alpha, the actual projector onto range(A Ω) has squared Frobenius error at most (1+20/alpha) times the optimal target tail with probability at least 9/10."
+    }
+   ]
+  },
+  {
+   "id": "rpcholesky-factorial-trace-tail",
+   "status": "proved",
+   "scope_readback": "Full mathematical statement corresponds to the Lean proof family; no mathematical coverage gap found.",
+   "reviewed_clauses": [
+    {
+     "statement": "For positive optimal rank-r trace tail, the actual real and complex adaptive history laws have the displayed nonstrict factorial tail bound, capped by one.",
+     "decls": [
+      "NLAlib.measureReal_trace_choleskyHistoryLaw_ge_le_factorialTraceTail",
+      "NLAlib.measureReal_trace_complexCholeskyHistoryLaw_ge_le_factorialTraceTail"
+     ]
+    },
+    {
+     "statement": "With zero optimal tail the actual real and complex residual processes terminate almost surely by every k≥r.",
+     "decls": [
+      "NLAlib.ae_partialCholeskyResidual_eq_zero_of_spectralTraceTail_eq_zero",
+      "NLAlib.ae_complexCholeskyResidualHistory_eq_zero_of_spectralTraceTail_eq_zero"
+     ]
+    },
+    {
+     "statement": "The strict-event factorial trace bound holds for every PSD real or complex input, including the zero-tail endpoint.",
+     "decls": [
+      "NLAlib.measureReal_trace_choleskyHistoryLaw_gt_le_factorialTraceTail",
+      "NLAlib.measureReal_trace_complexCholeskyHistoryLaw_gt_le_factorialTraceTail"
+     ]
+    },
+    {
+     "statement": "The strict result transports to any random history with the actual adaptive law, without an assumed expectation recursion.",
+     "decls": [
+      "NLAlib.measureReal_trace_choleskyHistoryLaw_gt_le_factorialTraceTail_of_hasLaw",
+      "NLAlib.measureReal_trace_complexCholeskyHistoryLaw_gt_le_factorialTraceTail_of_hasLaw"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.measureReal_trace_choleskyHistoryLaw_ge_le_factorialTraceTail",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.FactorialTraceTail",
+     "line": 116,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive optimal rank-r trace tail, the actual real and complex adaptive history laws have the displayed nonstrict factorial tail bound, capped by one."
+    },
+    {
+     "decl": "NLAlib.measureReal_trace_complexCholeskyHistoryLaw_ge_le_factorialTraceTail",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.FactorialTraceTail",
+     "line": 130,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive optimal rank-r trace tail, the actual real and complex adaptive history laws have the displayed nonstrict factorial tail bound, capped by one."
+    },
+    {
+     "decl": "NLAlib.ae_partialCholeskyResidual_eq_zero_of_spectralTraceTail_eq_zero",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.FactorialTraceTail",
+     "line": 144,
+     "sorry": false,
+     "partial": true,
+     "usage": "With zero optimal tail the actual real and complex residual processes terminate almost surely by every k≥r."
+    },
+    {
+     "decl": "NLAlib.ae_complexCholeskyResidualHistory_eq_zero_of_spectralTraceTail_eq_zero",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.FactorialTraceTail",
+     "line": 160,
+     "sorry": false,
+     "partial": true,
+     "usage": "With zero optimal tail the actual real and complex residual processes terminate almost surely by every k≥r."
+    },
+    {
+     "decl": "NLAlib.measureReal_trace_choleskyHistoryLaw_gt_le_factorialTraceTail",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.FactorialTraceTail",
+     "line": 175,
+     "sorry": false,
+     "partial": true,
+     "usage": "The strict-event factorial trace bound holds for every PSD real or complex input, including the zero-tail endpoint."
+    },
+    {
+     "decl": "NLAlib.measureReal_trace_complexCholeskyHistoryLaw_gt_le_factorialTraceTail",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.FactorialTraceTail",
+     "line": 206,
+     "sorry": false,
+     "partial": true,
+     "usage": "The strict-event factorial trace bound holds for every PSD real or complex input, including the zero-tail endpoint."
+    },
+    {
+     "decl": "NLAlib.measureReal_trace_choleskyHistoryLaw_gt_le_factorialTraceTail_of_hasLaw",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.FactorialTraceTail",
+     "line": 237,
+     "sorry": false,
+     "partial": true,
+     "usage": "The strict result transports to any random history with the actual adaptive law, without an assumed expectation recursion."
+    },
+    {
+     "decl": "NLAlib.measureReal_trace_complexCholeskyHistoryLaw_gt_le_factorialTraceTail_of_hasLaw",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.FactorialTraceTail",
+     "line": 252,
+     "sorry": false,
+     "partial": true,
+     "usage": "The strict result transports to any random history with the actual adaptive law, without an assumed expectation recursion."
+    }
+   ]
+  },
+  {
+   "id": "adaptive-pivoting-projection-dpp",
+   "status": "proved",
+   "scope_readback": "All algorithm, law, interpolation mean and sharp risk clauses have source proofs over real and complex matrices. The reviewed subset-size qualifier is explicit in the released card: determinant mass applies to size-k subsets, and all other sizes have probability zero.",
+   "reviewed_clauses": [
+    {
+     "statement": "The actual residual starts at Q-adjoint and each chronological step is precisely the normalized QR column-orthogonalization update; the selected-direction projector has the source rank and invariant.",
+     "decls": [
+      "NLAlib.projectionPivotResidual_nil",
+      "NLAlib.projectionPivotResidual_append_singleton",
+      "NLAlib.projectionPivotProjector_certificate",
+      "NLAlib.rank_projectionPivotProjector_eq_length"
+     ]
+    },
+    {
+     "statement": "On every supported real or complex prefix before completion, the native transition mass is the literal residual column norm square divided by k−t.",
+     "decls": [
+      "NLAlib.choleskyPivotProbability_projection_frame_of_history_pos",
+      "NLAlib.choleskyPivotProbability_complexProjection_frame_of_history_pos"
+     ]
+    },
+    {
+     "statement": "The actual real and complex complete history laws push forward to the native projection row-volume law. Its size-k mass equals the squared selected determinant and row-Gram principal determinant, and other sizes have zero mass.",
+     "decls": [
+      "NLAlib.hasLaw_image_projectionPivotHistoryLaw",
+      "NLAlib.hasLaw_image_complexProjectionPivotHistoryLaw",
+      "NLAlib.projectionRowVolumeLaw_singleton",
+      "NLAlib.rowSubsetVolume_sizedSubset",
+      "NLAlib.re_det_rowGram_sizedSubset_eq_rowSubsetVolume"
+     ]
+    },
+    {
+     "statement": "Actual histories select distinct pivots and a full-rank final row restriction almost surely.",
+     "decls": [
+      "NLAlib.ae_injective_fullRank_projectionPivotHistoryLaw",
+      "NLAlib.ae_injective_fullRank_complexProjectionPivotHistoryLaw"
+     ]
+    },
+    {
+     "statement": "The actual padded interpolant equals the inverse-selected-row fit on supported subsets and has mean Q Q-adjoint A under both actual history laws.",
+     "decls": [
+      "NLAlib.projectionVolumeInterpolant_sizedSubset",
+      "NLAlib.integral_projectionPivotInterpolant",
+      "NLAlib.integral_complexProjectionPivotInterpolant"
+     ]
+    },
+    {
+     "statement": "Its actual-history squared Frobenius error is at most (k+1) times the orthogonal projection residual, with equality when every k-row restriction is nonsingular.",
+     "decls": [
+      "NLAlib.integral_frobSq_projectionPivotInterpolant_error_le",
+      "NLAlib.integral_frobSq_complexProjectionPivotInterpolant_error_le",
+      "NLAlib.integral_frobSq_projectionPivotInterpolant_error_eq_of_full_support",
+      "NLAlib.integral_frobSq_complexProjectionPivotInterpolant_error_eq_of_full_support"
+     ]
+    }
+   ],
+   "native_evidence": [
+    {
+     "decl": "NLAlib.choleskyHistoryPMF_projector_image_toReal",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.ProjectorHistories",
+     "line": 114,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Forgetting the order of a complete real projector pivot history gives exactly its projection-DPP principal-minor mass on each subset."
+    },
+    {
+     "decl": "NLAlib.complexCholeskyHistoryPMF_projector_image_toReal",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.ProjectorHistories",
+     "line": 132,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Forgetting order gives the same projection-DPP law for actual complex adaptive histories, with nonnegative real principal Gram determinants."
+    },
+    {
+     "decl": "NLAlib.choleskyPivotProbability_projection_frame_of_history_pos",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.ProjectorHistories",
+     "line": 224,
+     "sorry": false,
+     "partial": true,
+     "usage": "On every supported real or complex prefix before completion, the native transition mass is the literal residual column norm square divided by k−t."
+    },
+    {
+     "decl": "NLAlib.choleskyPivotProbability_complexProjection_frame_of_history_pos",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Cholesky.ProjectorHistories",
+     "line": 241,
+     "sorry": false,
+     "partial": true,
+     "usage": "On every supported real or complex prefix before completion, the native transition mass is the literal residual column norm square divided by k−t."
+    },
+    {
+     "decl": "NLAlib.hasLaw_image_projectionPivotHistoryLaw",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 77,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual real and complex complete history laws push forward to the native projection row-volume law. Its size-k mass equals the squared selected determinant and row-Gram principal determinant, and other sizes have zero mass."
+    },
+    {
+     "decl": "NLAlib.hasLaw_image_complexProjectionPivotHistoryLaw",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 93,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual real and complex complete history laws push forward to the native projection row-volume law. Its size-k mass equals the squared selected determinant and row-Gram principal determinant, and other sizes have zero mass."
+    },
+    {
+     "decl": "NLAlib.ae_injective_fullRank_projectionPivotHistoryLaw",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 130,
+     "sorry": false,
+     "partial": true,
+     "usage": "Actual histories select distinct pivots and a full-rank final row restriction almost surely."
+    },
+    {
+     "decl": "NLAlib.ae_injective_fullRank_complexProjectionPivotHistoryLaw",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 146,
+     "sorry": false,
+     "partial": true,
+     "usage": "Actual histories select distinct pivots and a full-rank final row restriction almost surely."
+    },
+    {
+     "decl": "NLAlib.integral_projectionPivotInterpolant",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 161,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual padded interpolant equals the inverse-selected-row fit on supported subsets and has mean Q Q-adjoint A under both actual history laws."
+    },
+    {
+     "decl": "NLAlib.integral_complexProjectionPivotInterpolant",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 172,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual padded interpolant equals the inverse-selected-row fit on supported subsets and has mean Q Q-adjoint A under both actual history laws."
+    },
+    {
+     "decl": "NLAlib.integral_frobSq_projectionPivotInterpolant_error_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 182,
+     "sorry": false,
+     "partial": true,
+     "usage": "Its actual-history squared Frobenius error is at most (k+1) times the orthogonal projection residual, with equality when every k-row restriction is nonsingular."
+    },
+    {
+     "decl": "NLAlib.integral_frobSq_complexProjectionPivotInterpolant_error_le",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 194,
+     "sorry": false,
+     "partial": true,
+     "usage": "Its actual-history squared Frobenius error is at most (k+1) times the orthogonal projection residual, with equality when every k-row restriction is nonsingular."
+    },
+    {
+     "decl": "NLAlib.integral_frobSq_projectionPivotInterpolant_error_eq_of_full_support",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 205,
+     "sorry": false,
+     "partial": true,
+     "usage": "Its actual-history squared Frobenius error is at most (k+1) times the orthogonal projection residual, with equality when every k-row restriction is nonsingular."
+    },
+    {
+     "decl": "NLAlib.integral_frobSq_complexProjectionPivotInterpolant_error_eq_of_full_support",
+     "kind": "theorem",
+     "module": "NLAlib.LowRank.Sampling.ProjectionPivotingLaw",
+     "line": 220,
+     "sorry": false,
+     "partial": true,
+     "usage": "Its actual-history squared Frobenius error is at most (k+1) times the orthogonal projection residual, with equality when every k-row restriction is nonsingular."
+    },
+    {
+     "decl": "NLAlib.rowSubsetVolume_sizedSubset",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Basic.CramerFrobenius",
+     "line": 44,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual real and complex complete history laws push forward to the native projection row-volume law. Its size-k mass equals the squared selected determinant and row-Gram principal determinant, and other sizes have zero mass."
+    },
+    {
+     "decl": "NLAlib.re_det_rowGram_sizedSubset_eq_rowSubsetVolume",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Basic.CramerFrobenius",
+     "line": 58,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual real and complex complete history laws push forward to the native projection row-volume law. Its size-k mass equals the squared selected determinant and row-Gram principal determinant, and other sizes have zero mass."
+    },
+    {
+     "decl": "NLAlib.projectionPivotResidual_nil",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Factorizations.ProjectionPivoting",
+     "line": 29,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual residual starts at Q-adjoint and each chronological step is precisely the normalized QR column-orthogonalization update; the selected-direction projector has the source rank and invariant."
+    },
+    {
+     "decl": "NLAlib.projectionPivotResidual_append_singleton",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Factorizations.ProjectionPivoting",
+     "line": 86,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual residual starts at Q-adjoint and each chronological step is precisely the normalized QR column-orthogonalization update; the selected-direction projector has the source rank and invariant."
+    },
+    {
+     "decl": "NLAlib.projectionPivotProjector_certificate",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Factorizations.ProjectionPivoting",
+     "line": 175,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual residual starts at Q-adjoint and each chronological step is precisely the normalized QR column-orthogonalization update; the selected-direction projector has the source rank and invariant."
+    },
+    {
+     "decl": "NLAlib.rank_projectionPivotProjector_eq_length",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Factorizations.ProjectionPivoting",
+     "line": 191,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual residual starts at Q-adjoint and each chronological step is precisely the normalized QR column-orthogonalization update; the selected-direction projector has the source rank and invariant."
+    },
+    {
+     "decl": "NLAlib.projectionRowVolumeLaw_singleton",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.ProjectionVolumeResidual",
+     "line": 57,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual real and complex complete history laws push forward to the native projection row-volume law. Its size-k mass equals the squared selected determinant and row-Gram principal determinant, and other sizes have zero mass."
+    },
+    {
+     "decl": "NLAlib.projectionVolumeInterpolant_sizedSubset",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Sampling.ProjectionVolumeResidual",
+     "line": 177,
+     "sorry": false,
+     "partial": true,
+     "usage": "The actual padded interpolant equals the inverse-selected-row fit on supported subsets and has mean Q Q-adjoint A under both actual history laws."
+    }
+   ]
+  }
+ ],
+ "additional_audit_ports": [
+  {
+   "id": "cg-recurrence",
+   "status": "proved",
+   "native_evidence": [
+    {
+     "decl": "NLAlib.cgRecurrence_r_ne_zero_of_lt_krylovGrade",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.CGRecurrence",
+     "line": 171,
+     "sorry": false,
+     "partial": true,
+     "usage": "**No breakdown before the grade**: `r_k ≠ 0` for `k < ν(A, r₀)`, for every `A` (no definiteness needed)."
+    },
+    {
+     "decl": "NLAlib.dotProduct_cgRecurrence_r_eq_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.CGRecurrence",
+     "line": 371,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+    },
+    {
+     "decl": "NLAlib.dotProduct_cgRecurrence_p_mulVec_eq_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.CGRecurrence",
+     "line": 387,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+    },
+    {
+     "decl": "NLAlib.span_cgRecurrence_r",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.CGRecurrence",
+     "line": 403,
+     "sorry": false,
+     "partial": true,
+     "usage": "**The residuals span the Krylov space**: for `A ≻ 0` and every `k`, `span (r_0, …, r_{k−1}) = K_k(A, r₀)`."
+    },
+    {
+     "decl": "NLAlib.span_cgRecurrence_p",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.CGRecurrence",
+     "line": 490,
+     "sorry": false,
+     "partial": true,
+     "usage": "**The search directions span the Krylov space**: for `A ≻ 0` and every `k`, `span (p_0, …, p_{k−1}) = K_k(A, r₀)`."
+    },
+    {
+     "decl": "NLAlib.isCGIterate_cgRecurrence",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.CGRecurrence",
+     "line": 514,
+     "sorry": false,
+     "partial": false,
+     "usage": "**The recursion realises the CG iterate**: for positive definite `A`, every `c`, `x₀` and every `k`, `x_k = (cgRecurrence A c x₀ k).x` is a `k`-th CG iterate (the `A`-norm-error minimiser over `x₀ + K_k(A, r₀)`)."
+    },
+    {
+     "decl": "NLAlib.cgRecurrence_x_eq_of_krylovGrade_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.CGRecurrence",
+     "line": 531,
+     "sorry": false,
+     "partial": true,
+     "usage": "**Finite termination of the recursion**: for `A ≻ 0` and `A x⋆ = c`, `x_k = x⋆` once `k ≥ ν(A, r₀)`."
+    },
+    {
+     "decl": "NLAlib.cgRecurrence_r_eq_zero_of_krylovGrade_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.CGRecurrence",
+     "line": 540,
+     "sorry": false,
+     "partial": true,
+     "usage": "**The residual vanishes from the grade on**: for `A ≻ 0`, `r_k = 0` when `k ≥ ν(A, r₀)`."
+    }
+   ]
+  },
+  {
+   "id": "lanczos-recurrence-algorithm",
+   "status": "proved",
+   "native_evidence": [
+    {
+     "decl": "NLAlib.lanczosBeta_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Processes.LanczosRecurrence",
+     "line": 379,
+     "sorry": false,
+     "partial": true,
+     "usage": "**`β` is positive below the grade**: for symmetric `A`, `0 < β_j` for `0 < j < ν(A, b)`."
+    },
+    {
+     "decl": "NLAlib.lanczosBeta_eq_zero_of_krylovGrade_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Processes.LanczosRecurrence",
+     "line": 390,
+     "sorry": false,
+     "partial": true,
+     "usage": "**`β` vanishes from the grade on**: for symmetric `A`, `β_j = 0` for `j ≥ ν(A, b)`; with `lanczosBeta_pos`, the recursion breaks down (`β = 0`) exactly at the grade."
+    },
+    {
+     "decl": "NLAlib.lanczosBeta_eq_zero_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Processes.LanczosRecurrence",
+     "line": 403,
+     "sorry": false,
+     "partial": true,
+     "usage": "**Breakdown characterisation**: for symmetric `A` and `j > 0`, `β_j = 0 ↔ ν(A, b) ≤ j`."
+    },
+    {
+     "decl": "NLAlib.lanczosAlpha_eq_alpha",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Processes.LanczosRecurrence",
+     "line": 418,
+     "sorry": false,
+     "partial": true,
+     "usage": "**The recursion's `α` are the diagonal of the canonical Jacobi matrix**: for symmetric `A`, `q ≤ ν(A, b)` and `j < q`, `α_j = (arnoldiDecomp A b q h).alpha j`."
+    },
+    {
+     "decl": "NLAlib.lanczosBeta_eq_beta",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Processes.LanczosRecurrence",
+     "line": 428,
+     "sorry": false,
+     "partial": true,
+     "usage": "**The recursion's `β` are the off-diagonal of the canonical Jacobi matrix**: for symmetric `A`, `q ≤ ν(A, b)` and `j < q`, `β_j = (arnoldiDecomp A b q h).beta j` (both `0` at `j = 0`)."
+    },
+    {
+     "decl": "NLAlib.isGradedKrylovBasis_lanczosRecurrence",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Processes.LanczosRecurrence",
+     "line": 442,
+     "sorry": false,
+     "partial": false,
+     "usage": "**The recursion produces a graded Krylov basis**: for symmetric `A` and `q ≤ ν(A, b)`, the matrix with columns `q_0, …, q_{q−1}` of the recursion is a graded orthonormal Krylov basis (it is `arnoldiMatrix A b q`)."
+    }
+   ]
+  },
+  {
+   "id": "gmres-diagonalizable",
+   "status": "proved",
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsGMRESIterate.dotProduct_le_of_eq_mul_diagonal_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRES",
+     "line": 277,
+     "sorry": false,
+     "partial": true,
+     "usage": "**GMRES bound for real diagonalisable `A`.** If `A = V diag(d) W` with `V W = 1` (so `W = V⁻¹` and the `dᵢ` are the eigenvalues), then for every residual polynomial `p` with `|p(dᵢ)| ≤ M`, `‖r_q‖ ≤ ‖V‖₂ ‖V⁻¹‖₂ M ‖r₀‖` (squared form)."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_complex_diagonalization",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRESComplexDiagonal",
+     "line": 42,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: A real GMRES iterate satisfies the full complex-diagonalization residual bound for every real residual polynomial."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_normal",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRESComplexDiagonal",
+     "line": 61,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: A real normal matrix has the sharp condition-factor-one GMRES bound, using its actual complex spectrum."
+    },
+    {
+     "decl": "NLAlib.specNorm_aeval_le_of_eq_mul_diagonal_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.PolynomialSimilarity",
+     "line": 40,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: Polynomial evaluation through an actual diagonalization has the source eigenvector condition-factor bound, including empty matrices."
+    },
+    {
+     "decl": "NLAlib.specNorm_aeval_le_of_normal",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Functions.PolynomialSimilarity",
+     "line": 79,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this result: A real polynomial on a normal complex matrix is bounded by its values on the actual complex spectrum."
+    }
+   ]
+  },
+  {
+   "id": "sketch-and-precondition",
+   "status": "proved",
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsSubspaceEmbedding.moorePenroseConditionNumber_mul_inv_le_of_isQR",
+     "kind": "theorem",
+     "module": "NLAlib.Sketching.Properties.SubspaceEmbedding.Preconditioning",
+     "line": 91,
+     "sorry": false,
+     "partial": false,
+     "usage": "Use this result: A thin QR factorization of a subspace embedding preconditions `A` with condition number at most `sqrt ((1 + ε) / (1 - ε))`."
+    }
+   ]
+  }
+ ],
+ "post_report_checks": [
+  {
+   "check": "final-sync-atlas",
+   "exit_code": 0
+  },
+  {
+   "check": "final-atlas",
+   "exit_code": 0
+  },
+  {
+   "check": "final-card-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "final-site-math",
+   "exit_code": 0
+  },
+  {
+   "check": "final-site-build",
+   "exit_code": 0
+  },
+  {
+   "check": "final-working-whitespace",
+   "exit_code": 0
+  }
+ ]
+}

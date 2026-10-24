@@ -3,6 +3,7 @@ import NLAlib.Krylov.Solvers.CGRecurrence
 import NLAlib.Krylov.Solvers.ChristoffelDirections
 import NLAlib.Krylov.Solvers.GMRES
 import NLAlib.Krylov.Solvers.GMRESArnoldi
+import NLAlib.Krylov.Solvers.GMRESComplexDiagonal
 import NLAlib.Krylov.Solvers.Minimizer
 import NLAlib.Krylov.Solvers.PolynomialMethods
 import NLAlib.Krylov.Solvers.Preconditioned

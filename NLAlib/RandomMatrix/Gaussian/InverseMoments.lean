@@ -1,5 +1,6 @@
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.CutoffDerivativeIntegrability
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.CutoffIntegrability
+import NLAlib.RandomMatrix.Gaussian.InverseMoments.DeviationInputs
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.DiagonalLaw
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.FrobeniusMoments
 import NLAlib.RandomMatrix.Gaussian.InverseMoments.GammaBounds

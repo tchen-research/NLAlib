@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Functions.PolynomialCalculus
+import NLAlib.Matrix.Basic.OrderedPrincipalMinors
 
 /-!
 # Principal minors and elementary spectral sums
@@ -63,5 +64,51 @@ theorem sum_det_principal_minors_eq_sum_prod_of_diagonalization
     simp [Matrix.submatrix_apply, Matrix.diagonal_apply]
   rw [hD, Matrix.det_diagonal]
   exact Finset.prod_coe_sort S d
+
+end NLAlib
+
+namespace NLAlib
+
+open scoped Matrix
+
+/-- The sum of fixed-order Hermitian principal determinants is the elementary
+sum of the actual eigenvalues, over either scalar field. The spectral theorem
+and the generic determinant-coefficient identity prove the assertion without
+a positivity or invertibility assumption. -/
+theorem sum_det_principal_minors_eq_sum_prod_of_isHermitian
+    {𝕜 n : Type*} [RCLike 𝕜] [Fintype n] [DecidableEq n]
+    {G : Matrix n n 𝕜} (hG : G.IsHermitian) (k : ℕ) :
+    (∑ S ∈ Finset.univ.powersetCard k, (G.submatrix
+      (Subtype.val : S → n) (Subtype.val : S → n)).det) =
+      ∑ S ∈ Finset.univ.powersetCard k, ∏ i ∈ S, (hG.eigenvalues i : 𝕜) := by
+  have hd : G = (hG.eigenvectorUnitary : Matrix n n 𝕜) *
+      Matrix.diagonal (fun i => (hG.eigenvalues i : 𝕜)) *
+      star (hG.eigenvectorUnitary : Matrix n n 𝕜) := by
+    simpa [Unitary.conjStarAlgAut_apply, Function.comp_def] using hG.spectral_theorem
+  exact sum_det_principal_minors_eq_sum_prod_of_diagonalization
+    (Unitary.coe_star_mul_self hG.eigenvectorUnitary) hd k
+
+/-- The sum of real principal determinants along all ordered length-`k`
+histories is `k!` times the elementary sum of the sorted Hermitian spectrum.
+Zero, repeated, and oversized histories are all included. -/
+theorem sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀
+    {𝕜 n : Type*} [RCLike 𝕜] [Fintype n] [DecidableEq n]
+    {A : Matrix n n 𝕜} (hA : A.IsHermitian) (k : ℕ) :
+    (∑ h : Fin k → n, RCLike.re (A.submatrix h h).det) =
+      (k.factorial : ℝ) *
+        ∑ S ∈ (Finset.univ : Finset (Fin (Fintype.card n))).powersetCard k,
+          ∏ i ∈ S, hA.eigenvalues₀ i := by
+  let e : Fin (Fintype.card n) ≃ n := Fintype.equivOfCardEq (Fintype.card_fin _)
+  have hSort :
+      (∑ S ∈ (Finset.univ : Finset (Fin (Fintype.card n))).powersetCard k,
+        ∏ i ∈ S, (hA.eigenvalues₀ i : 𝕜)) =
+      ∑ S ∈ (Finset.univ : Finset n).powersetCard k, ∏ i ∈ S, (hA.eigenvalues i : 𝕜) := by
+    simpa only [Matrix.IsHermitian.eigenvalues, e, Equiv.symm_apply_apply] using
+      Finset.sum_powersetCard_prod_equiv e (fun i => (hA.eigenvalues i : 𝕜)) k
+  have hm := sum_det_submatrix_eq_factorial_mul_sum_principalMinors A k
+  rw [sum_det_principal_minors_eq_sum_prod_of_isHermitian hA, ← hSort] at hm
+  have hh := congrArg RCLike.re hm
+  simpa only [map_sum, RCLike.mul_re, RCLike.natCast_re, RCLike.natCast_im, zero_mul,
+    sub_zero, ← RCLike.ofReal_prod, RCLike.ofReal_re] using hh
 
 end NLAlib

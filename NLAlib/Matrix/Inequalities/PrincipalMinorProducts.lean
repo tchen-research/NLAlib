@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Basic.PositiveDefiniteClosure
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.PrincipalMinorExpansion
 /-!
 # Principal minors and their fixed-cardinality products
 
@@ -44,6 +45,18 @@ Horn--Johnson (2013), Section 7.8; immediate determinant continuity. -/
   fun_prop
 
 variable [Fintype n]
+
+/-- Adding the identity to a PSD matrix gives determinant at least one, including
+singular matrices and dimension zero. The principal-minor expansion supplies
+nonnegative terms and the empty minor one. Dereziński–Mahoney 2020, §3.
+atlas: l-ensemble-law (partial) -/
+theorem _root_.Matrix.PosSemidef.one_le_det_one_add {L : Matrix n n ℝ}
+    (hL : L.PosSemidef) : 1 ≤ (1 + L).det := by
+  classical
+  rw [Matrix.det_one_add_eq_sum_principal_minors]
+  have h := Finset.single_le_sum (fun S (_ : S ∈ (Finset.univ : Finset (Finset n))) =>
+    (hL.submatrix (Subtype.val : S → n)).det_nonneg) (Finset.mem_univ (∅ : Finset n))
+  simpa only [Matrix.det_isEmpty] using h
 
 /-- Product of every principal minor of a specified cardinality.
 The empty product convention also defines it outside the dimension range.

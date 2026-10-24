@@ -28,7 +28,7 @@ def lEnsembleKernel (L : Matrix n n ℝ) : Matrix n n ℝ := L * (1 + L)⁻¹
 private theorem isUnit_det_one_add {L : Matrix n n ℝ} (hL : L.PosSemidef) :
     IsUnit (1 + L).det :=
   isUnit_iff_ne_zero.mpr (ne_of_gt (zero_lt_one.trans_le
-    (one_le_det_one_add_of_posSemidef hL)))
+    (hL.one_le_det_one_add)))
 
 /-- The marginal kernel solves the regularized linear equation without
 requiring an inverse of the kernel `L` itself. -/

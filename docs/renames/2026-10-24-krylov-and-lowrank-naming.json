@@ -1,0 +1,7 @@
+{
+ "NLAlib.sub_mul_pinvR_mul_transpose_eq": "NLAlib.sub_mul_pinvR_mul_conjTranspose_eq",
+ "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
+ "NLAlib.one_le_det_one_add_of_posSemidef": "Matrix.PosSemidef.one_le_det_one_add",
+ "NLAlib.sum_det_principal_minors_eq_sum_prod_of_isHermitian": "Matrix.IsHermitian.sum_det_principal_minors_eq_sum_prod",
+ "NLAlib.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀": "Matrix.IsHermitian.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀"
+}

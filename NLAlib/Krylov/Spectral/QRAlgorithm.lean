@@ -1,6 +1,9 @@
 import NLAlib.Matrix.Factorizations.Givens
+import NLAlib.Matrix.Factorizations.GramSchmidtClassical
 import NLAlib.Matrix.Structured.Hessenberg
 import NLAlib.Krylov.Spaces.Block
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Tactic.FinCases
 /-!
 # The QR algorithm is simultaneous iteration
 
@@ -20,7 +23,7 @@ The (shifted) QR algorithm, driven by any QR routine `qr` and any shift sequence
   `∏_{j<k} (A − μ_j I) = Q^{(k)} R^{(k)}` (`aeval_prod_eq_qrAlgorithmQ_mul_qrAlgorithmR`);
   unshifted, `A^k = Q^{(k)} R^{(k)}` is a QR factorization of `A^k` (`isQR_pow_qrAlgorithm`),
   and the leading columns of `Q^{(k)}` span the subspace iterates of the leading columns of `I`
-  (`range_qrAlgorithmQ_castLE_eq_subspaceIterate`, scaffold).
+  (`range_qrAlgorithmQ_castLE_eq_subspaceIterate`).
 * One shifted step is an orthogonal similarity (`add_smul_one_eq_transpose_mul_mul_of_isQR`).
 * Structure: symmetry is preserved (`isHermitian_qrAlgorithm`); upper Hessenberg form is preserved
   when every `R_j` is invertible (`isUpperHessenberg_qrAlgorithm`, e.g. when no shift is an
@@ -224,8 +227,7 @@ theorem isQR_pow_qrAlgorithm {k : ℕ} (h : QRAlgorithmSucceeds qr (fun _ => 0) 
   orth := transpose_mul_self_qrAlgorithmQ h
   upper := isUpperTriangular_qrAlgorithmR h
 
-/-- SCAFFOLD: qr-algorithm-simultaneous-iteration
-**The leading columns of `Q^{(k)}` span the subspace iterates of the leading columns of `I`.**
+/-- **The leading columns of `Q^{(k)}` span the subspace iterates of the leading columns of `I`.**
 For invertible `A` and `j ≤ n`, the first `j` columns of `Q^{(k)}` span
 `S_k(A, I_{:, 1:j}) = range (A^k I_{:, 1:j})`: unshifted QR is simultaneous iteration on all
 leading blocks at once. Source: Trefethen–Bau (1997) [`tb97`], Thm 28.3 and Lect. 28 (the
@@ -240,7 +242,25 @@ theorem range_qrAlgorithmQ_castLE_eq_subspaceIterate (hA : IsUnit A.det) {k : �
     (h : QRAlgorithmSucceeds qr (fun _ => 0) A k) {j : ℕ} (hj : j ≤ n) :
     LinearMap.range ((qrAlgorithmQ qr (fun _ => 0) A k).submatrix id (Fin.castLE hj)).mulVecLin =
       subspaceIterate A ((1 : Matrix (Fin n) (Fin n) ℝ).submatrix id (Fin.castLE hj)) k := by
-  sorry
+  have hQR := isQR_pow_qrAlgorithm h
+  have hdet : IsUnit (qrAlgorithmR qr (fun _ => 0) A k).det := by
+    have hprod : IsUnit ((qrAlgorithmQ qr (fun _ => 0) A k).det *
+        (qrAlgorithmR qr (fun _ => 0) A k).det) := by
+      rw [← Matrix.det_mul, ← hQR.eq, Matrix.det_pow]
+      exact hA.pow k
+    exact (IsUnit.mul_iff.mp hprod).2
+  have hR := hQR.isUnit_det_iff.mp hdet
+  have hselect : A ^ k * (1 : Matrix (Fin n) (Fin n) ℝ).submatrix id (Fin.castLE hj) =
+      (A ^ k).submatrix id (Fin.castLE hj) := by
+    simpa only [Equiv.refl_symm, Equiv.coe_refl, Function.id_comp] using
+      Matrix.mul_submatrix_one (Equiv.refl (Fin n)) (Fin.castLE hj) (A ^ k)
+  rw [subspaceIterate, hselect]
+  by_cases hj0 : j = 0
+  · subst j
+    simp [Matrix.range_mulVecLin]
+  obtain ⟨i, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hj0
+  rw [Matrix.range_mulVecLin, Matrix.range_mulVecLin]
+  exact (hQR.isGradedColumnBasis hR).nested ⟨i, by omega⟩
 
 /-! ### Structure preservation -/
 
@@ -331,5 +351,36 @@ theorem isTridiagonal_qrAlgorithm_givensQR (hS : A.IsHermitian) (hA : IsTridiago
     IsTridiagonal (qrAlgorithm givensQR μ A k) :=
   (isUpperHessenberg_qrAlgorithm_givensQR hA.1 k).isTridiagonal_of_isHermitian
     (isHermitian_qrAlgorithm hS (qrAlgorithmSucceeds_givensQR hA.1 k))
+
+/-- A valid QR factorization of a Hessenberg matrix need not preserve Hessenberg
+form after swapping the factors. The explicit rational three-by-three example
+explains the nonzero-diagonal hypothesis for arbitrary QR choices in
+`isUpperHessenberg_qrAlgorithm`; the realized Givens routine needs no such restriction.
+This is the singular-input precision correction for `qr-algorithm-simultaneous-iteration`. -/
+theorem exists_isQR_isUpperHessenberg_not_isUpperHessenberg_mul :
+    ∃ A Q R : Matrix (Fin 3) (Fin 3) ℝ,
+      IsQR A Q R ∧ IsUpperHessenberg A ∧ ¬ IsUpperHessenberg (R * Q) := by
+  let A : Matrix (Fin 3) (Fin 3) ℝ := !![0, 0, 0; 0, 1, 0; 0, 0, 2]
+  let Q : Matrix (Fin 3) (Fin 3) ℝ := !![3 / 5, 0, 4 / 5; 0, 1, 0; 4 / 5, 0, -(3 / 5)]
+  let R : Matrix (Fin 3) (Fin 3) ℝ := !![0, 0, 8 / 5; 0, 1, 0; 0, 0, -(6 / 5)]
+  have heq : A = Q * R := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [A, Q, R, Matrix.mul_apply, Fin.sum_univ_succ]
+  have hQ : HasOrthonormalCols Q := by
+    change Qᴴ * Q = 1
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [Q, Matrix.mul_apply, Matrix.conjTranspose_apply, Fin.sum_univ_succ]
+  have hR : R.IsUpperTriangular := by
+    intro i j hij
+    fin_cases i <;> fin_cases j <;> norm_num [R] at *
+  refine ⟨A, Q, R, ⟨heq, hQ, hR⟩, ?_, ?_⟩
+  · intro i j hij
+    fin_cases i <;> fin_cases j <;> norm_num [A] at *
+  · intro h
+    have hbad := h 2 0 (by decide)
+    norm_num [Q, R, Matrix.mul_apply, Fin.sum_univ_succ, Matrix.cons_val_two,
+      Matrix.vecHead, Matrix.vecTail] at hbad
 
 end NLAlib

@@ -66,6 +66,7 @@ import NLAlib.Matrix.Spectral.LowRankInterlacing
 import NLAlib.Matrix.Spectral.MatrixPowerBounded
 import NLAlib.Matrix.Spectral.MatrixPowerBounds
 import NLAlib.Matrix.Spectral.MatrixPowerConvergence
+import NLAlib.Matrix.Spectral.MatrixPowerFixedPoint
 import NLAlib.Matrix.Spectral.MatrixPowerReal
 import NLAlib.Matrix.Spectral.NormalBlocks
 import NLAlib.Matrix.Spectral.NormalCharacterizations

@@ -40,14 +40,14 @@
           "index_signature_sha256": "2ee09c767f09b28a67692d14e46b7c108376035a153d3bd0bb20c7a803d81810"
         },
         {
-          "declared_name": "frobSq_sub_mul_pinvR_mul_transpose_eq",
-          "signature": "theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}\n    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}\n    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}\n    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)\n    (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)\n    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}\n    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :\n    frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)",
-          "source_signature": "theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}\n    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}\n    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}\n    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)\n    (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)\n    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}\n    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :\n    frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)",
+          "declared_name": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
+          "signature": "theorem NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}\n    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}\n    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}\n    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)\n    (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)\n    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}\n    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :\n    frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)",
+          "source_signature": "theorem NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}\n    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}\n    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}\n    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)\n    (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)\n    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}\n    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :\n    frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)",
           "module": "NLAlib.LowRank.Structural.RangeFinder",
           "line": 79,
           "source_path": "NLAlib/LowRank/Structural/RangeFinder.lean",
-          "decl": "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
-          "name": "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
+          "decl": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
+          "name": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
           "evidence_phase": "final_current_source",
           "sorry_dependency_at_index_snapshot": false,
           "index_signature_sha256": "1ce9954a3ded23abccd90ad95853ad291a4bc96831f5f300ece9561ba3f7bf30"
@@ -68,7 +68,7 @@
       ],
       "reviewed_local_declarations": [
         "NLAlib.frobSq_residual_le_of_range_subset",
-        "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
+        "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
         "NLAlib.frobSq_sub_mul_le_of_isBestFrobRankApprox_of_range_subset"
       ],
       "unfinished_local_declarations": [],
@@ -127,7 +127,7 @@
       "coverage_review": "matched_baseline_assessment",
       "evidence": [
         "NLAlib.frobSq_residual_le_of_range_subset",
-        "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
+        "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
         "NLAlib.frobSq_sub_mul_le_of_isBestFrobRankApprox_of_range_subset"
       ],
       "statement_evidence": [
@@ -145,14 +145,14 @@
           "index_signature_sha256": "2ee09c767f09b28a67692d14e46b7c108376035a153d3bd0bb20c7a803d81810"
         },
         {
-          "declared_name": "frobSq_sub_mul_pinvR_mul_transpose_eq",
-          "signature": "theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}\n    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}\n    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}\n    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)\n    (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)\n    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}\n    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :\n    frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)",
-          "source_signature": "theorem frobSq_sub_mul_pinvR_mul_transpose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}\n    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}\n    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}\n    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)\n    (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)\n    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}\n    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :\n    frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)",
+          "declared_name": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
+          "signature": "theorem NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}\n    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}\n    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}\n    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)\n    (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)\n    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}\n    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :\n    frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)",
+          "source_signature": "theorem NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq {A : Matrix m n ℝ} {U₁ : Matrix m (Fin k) ℝ}\n    {U₂ : Matrix m r ℝ} {V₁ : Matrix n (Fin k) ℝ} {V₂ : Matrix n r' ℝ}\n    {S₁ : Matrix (Fin k) (Fin k) ℝ} {S₂ : Matrix r r' ℝ}\n    (hA : A = U₁ * S₁ * V₁ᵀ + U₂ * S₂ * V₂ᵀ) (hU₂ : HasOrthonormalCols U₂)\n    (hV₁ : HasOrthonormalCols V₁) (hV₂ : HasOrthonormalCols V₂) (hV : V₁ᵀ * V₂ = 0)\n    {Ω : Matrix n t ℝ} {Ω₁ : Matrix (Fin k) t ℝ} {Ω₂ : Matrix r' t ℝ}\n    (hΩ₁ : Ω₁ = V₁ᵀ * Ω) (hΩ₂ : Ω₂ = V₂ᵀ * Ω) (hunit : IsUnit (Ω₁ * Ω₁ᵀ)) :\n    frobSq (A - A * Ω * pinvR Ω₁ * V₁ᵀ) = frobSq S₂ + frobSq (S₂ * Ω₂ * pinvR Ω₁)",
           "module": "NLAlib.LowRank.Structural.RangeFinder",
           "line": 79,
           "source_path": "NLAlib/LowRank/Structural/RangeFinder.lean",
-          "decl": "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
-          "name": "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
+          "decl": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
+          "name": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
           "evidence_phase": "final_current_source",
           "sorry_dependency_at_index_snapshot": false,
           "index_signature_sha256": "1ce9954a3ded23abccd90ad95853ad291a4bc96831f5f300ece9561ba3f7bf30"

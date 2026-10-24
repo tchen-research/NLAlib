@@ -1,0 +1,2640 @@
+{
+ "date": "2026-10-24",
+ "backend_base": "ca12c1e8c230718a21fd41cdaebee02672ee57a3",
+ "scope": "Ten selected remaining Krylov/iterative cards, with naming repairs for the previous merged batch.",
+ "selected_count": 10,
+ "completed_count": 10,
+ "baseline_status_counts": {
+  "proved": 446,
+  "candidate": 63,
+  "assumed": 1,
+  "scaffold": 3
+ },
+ "native_status_counts": {
+  "proved": 456,
+  "candidate": 54,
+  "assumed": 1,
+  "scaffold": 2
+ },
+ "total_cards": 513,
+ "exact_promotions": [
+  "minres-bound",
+  "flexible-gmres-residual-minimization",
+  "gmres-elman",
+  "stationary-splitting-convergence",
+  "richardson-iteration",
+  "chebyshev-iteration",
+  "fom-def",
+  "qr-algorithm-simultaneous-iteration",
+  "matrix-equation-galerkin-optimality",
+  "discrete-measure-jacobi-matrix"
+ ],
+ "records": [
+  {
+   "id": "minres-bound",
+   "status": "proved",
+   "hypotheses": [
+    "$A \\in \\mathbb R^{n\\times n}$ symmetric and invertible, $x_k$ a GMRES iterate (gmres-def)",
+    "for the interval clauses: every eigenvalue in $[a,b]\\cup[c,d]$, $a<b<0<c<d$, $d - c = b - a$ (resp. in $[a,b]$, $0<a<b$)"
+   ],
+   "conclusion": "$\\|r_k\\| \\le \\max_i|p(\\lambda_i)|\\,\\|r_0\\|$ for every $p \\in \\mathcal P_k^0$; $\\|r_{2k}\\| \\le 2\\big(\\frac{\\sqrt{|ad|}-\\sqrt{|bc|}}{\\sqrt{|ad|}+\\sqrt{|bc|}}\\big)^k\\|r_0\\|$; definite case $\\|r_k\\| \\le 2\\big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^k\\|r_0\\|$",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "Every residual polynomial with a nonnegative eigenvalue bound gives the Hermitian MINRES residual norm bound.",
+      "decls": [
+       "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_isHermitian"
+      ]
+     },
+     {
+      "statement": "Spectrum in a positive interval gives the definite Chebyshev residual rate.",
+      "decls": [
+       "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_Icc"
+      ]
+     },
+     {
+      "statement": "Two equal-width intervals separated by zero give the explicit indefinite rate at step 2*k.",
+      "decls": [
+       "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_two_intervals"
+      ]
+     },
+     {
+      "statement": "Symmetric intervals give both the outer/inner-radius and kappa=d/c forms of the rate.",
+      "decls": [
+       "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_symmetric_intervals",
+       "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_symmetric_intervals_ratio"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsGMRESIterate.dotProduct_le_sq_mul_of_isHermitian",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRES",
+     "line": 218,
+     "sorry": false,
+     "partial": true,
+     "usage": "**MINRES spectral bound.** For symmetric `A` and every residual polynomial `p` (`deg p ≤ q`, `p(0) = 1`) with `|p(λᵢ)| ≤ M` at every eigenvalue, the GMRES (= MINRES) residual satisfies `‖r_q‖² ≤ M² ‖r₀‖²`."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.dotProduct_le_of_eigenvalues_mem_Icc",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRES",
+     "line": 234,
+     "sorry": false,
+     "partial": true,
+     "usage": "**MINRES, definite case (Chebyshev rate).** If `A` is symmetric with every eigenvalue in `[a, b]`, `0 < a < b`, then `‖r_q‖ ≤ 2 ((√b − √a)/(√b + √a))^q ‖r₀‖` (squared form)."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_isHermitian",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.MINRESIntervals",
+     "line": 23,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply the native GMRES iterate's spectral bound with a residual polynomial, its degree and value-at-zero proofs, and a nonnegative bound at every Hermitian eigenvalue."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_Icc",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.MINRESIntervals",
+     "line": 37,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply to a native GMRES iterate for a Hermitian matrix whose eigenvalues lie in the positive interval to obtain the definite Chebyshev rate."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_two_intervals",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.MINRESIntervals",
+     "line": 53,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply the equal-width negative and positive spectral intervals to obtain the exact indefinite MINRES rate at step 2*k."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_symmetric_intervals",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.MINRESIntervals",
+     "line": 74,
+     "sorry": false,
+     "partial": true,
+     "usage": "Specialize to symmetric intervals to obtain the rate with factor (d-c)/(d+c) at step 2*k."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_eigenvalues_mem_symmetric_intervals_ratio",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.MINRESIntervals",
+     "line": 89,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use symmetric spectral intervals to read the MINRES rate directly in terms of kappa=d/c."
+    }
+   ]
+  },
+  {
+   "id": "flexible-gmres-residual-minimization",
+   "status": "proved",
+   "hypotheses": [
+    "$A,Z,V,\\overline H$ have compatible sizes; V has orthonormal columns",
+    "$AZ=V\\overline H$ and $b-Ax_0=Vg$"
+   ],
+   "conclusion": "$\\|b-A(x_0+Zy)\\|_2=\\|g-\\overline H y\\|_2$; reduced least-squares minimization yields full residual minimization on the trial space.",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "A realized flexible Arnoldi relation with orthonormal test columns preserves the exact residual norm for every reduced vector.",
+      "decls": [
+       "NLAlib.HasOrthonormalCols.norm_sub_mulVec_add_mulVec_eq_of_mul_eq_mul"
+      ]
+     },
+     {
+      "statement": "Reduced least-squares minimization is equivalent to full residual minimization over the affine trial space.",
+      "decls": [
+       "NLAlib.HasOrthonormalCols.forall_norm_sub_mulVec_add_mulVec_le_iff"
+      ]
+     },
+     {
+      "statement": "A reduced minimizer attaining the full trial-space residual minimum exists in every finite dimension.",
+      "decls": [
+       "NLAlib.HasOrthonormalCols.exists_norm_sub_mulVec_add_mulVec_le"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.HasOrthonormalCols.norm_sub_mulVec_add_mulVec_eq_of_mul_eq_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FlexibleGMRES",
+     "line": 36,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use the realized Arnoldi and starting-residual identities to replace the full residual 2-norm by the reduced least-squares residual norm."
+    },
+    {
+     "decl": "NLAlib.HasOrthonormalCols.forall_norm_sub_mulVec_add_mulVec_le_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FlexibleGMRES",
+     "line": 51,
+     "sorry": false,
+     "partial": true,
+     "usage": "Transfer reduced least-squares optimality in either direction to full residual optimality over x0+range Z."
+    },
+    {
+     "decl": "NLAlib.HasOrthonormalCols.exists_norm_sub_mulVec_add_mulVec_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FlexibleGMRES",
+     "line": 76,
+     "sorry": false,
+     "partial": true,
+     "usage": "Obtain an attained full residual minimum on the affine trial space without invertibility or trial-column independence assumptions."
+    }
+   ]
+  },
+  {
+   "id": "gmres-elman",
+   "status": "proved",
+   "hypotheses": [
+    "$A \\in \\mathbb R^{n\\times n}$ with $M = \\tfrac12(A + A^\\top) \\succ 0$, $\\alpha = \\lambda_{\\min}(M) > 0$, $\\beta = \\|A\\|_2$",
+    "$x_k$ a GMRES iterate from $x_0$"
+   ],
+   "conclusion": "$\\|r_k\\| \\le (1 - \\alpha^2/\\beta^2)^{k/2}\\|r_0\\|$; for GMRES($m$) restarted every $m$ steps, $\\|r^{(j)}\\| \\le (1 - \\alpha^2/\\beta^2)^{jm/2}\\|r_0\\|$ after $j$ cycles",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "A positive definite symmetric part gives the exact positive-real GMRES residual estimate with alpha=lambdaMin(matrixHermitianPart A) and beta=specNorm A.",
+      "decls": [
+       "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_posDef_hermitianPart"
+      ]
+     },
+     {
+      "statement": "Native restarted GMRES cycles of length m give the same rate after j*m total steps.",
+      "decls": [
+       "NLAlib.norm_sub_mulVec_le_of_restarted_gmres"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_sqrt_pow_of_posDef_hermitianPart",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+     "line": 141,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply positive definiteness of matrixHermitianPart A to bound the native GMRES residual by the square-root contraction factor raised to the step count."
+    },
+    {
+     "decl": "NLAlib.IsGMRESIterate.norm_sub_mulVec_le_of_posDef_hermitianPart",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+     "line": 165,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use the positive-definite symmetric-part hypothesis to obtain the exact half-step-exponent positive-real GMRES bound."
+    },
+    {
+     "decl": "NLAlib.norm_sub_mulVec_le_sqrt_pow_of_restarted_gmres",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+     "line": 187,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply the native GMRES guarantee at each restart to obtain the square-root contraction factor raised to the total number of steps."
+    },
+    {
+     "decl": "NLAlib.norm_sub_mulVec_le_of_restarted_gmres",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+     "line": 214,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply a sequence of length-m native GMRES cycles to obtain the exact positive-real bound after j*m total steps."
+    }
+   ]
+  },
+  {
+   "id": "stationary-splitting-convergence",
+   "status": "proved",
+   "hypotheses": [
+    "$A,M,N\\in\\mathbb K^{n\\times n}$, $A=M-N$, M invertible",
+    "$x_{k+1}=M^{-1}Nx_k+M^{-1}b$"
+   ],
+   "conclusion": "Exact error-power identity and equivalence between $\\rho(M^{-1}N)<1$ and convergence to the unique solution for every right-hand side and initializer.",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual affine splitting update has exact error powers about any exact solution.",
+      "decls": [
+       "NLAlib.splittingIterate_succ",
+       "NLAlib.splittingIterate_sub_eq_pow_mulVec"
+      ]
+     },
+     {
+      "statement": "M-N=M(I-M^-1N), and decaying powers make M-N invertible without assuming a solution exists.",
+      "decls": [
+       "NLAlib.sub_eq_mul_one_sub_inv_mul",
+       "NLAlib.isUnit_sub_of_tendsto_splitting_pow_zero"
+      ]
+     },
+     {
+      "statement": "For every right-hand side there is a unique solution and the actual iteration converges to it from every initializer iff the iteration matrix has spectral radius below one, over complex scalars and via complexification over real scalars.",
+      "decls": [
+       "NLAlib.splittingConverges_iff_spectralRadius_lt_one",
+       "NLAlib.splittingConverges_iff_complex_spectralRadius_lt_one"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.splittingIterate",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 53,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply the splitting matrices M and N, right-hand side b and initializer to run the update with iteration matrix M inverse times N and offset M inverse times b."
+    },
+    {
+     "decl": "NLAlib.splittingIterate_succ",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 63,
+     "sorry": false,
+     "partial": true,
+     "usage": "Rewrite a successor splitting iterate as M inverse times N applied to the previous iterate plus M inverse applied to the right-hand side."
+    },
+    {
+     "decl": "NLAlib.sub_eq_mul_one_sub_inv_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 89,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given invertibility of M, factor M minus N as M times the identity minus M inverse times N."
+    },
+    {
+     "decl": "NLAlib.splittingIterate_sub_eq_pow_mulVec",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 96,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given invertibility of M and an exact solution of the split system, rewrite the step-k error as the kth power of M inverse times N applied to the initial error."
+    },
+    {
+     "decl": "NLAlib.SplittingConverges",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 104,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use this predicate to require a unique solution for every right-hand side together with convergence of the actual splitting iteration from every initializer."
+    },
+    {
+     "decl": "NLAlib.isUnit_sub_of_tendsto_splitting_pow_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 113,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given invertibility of M and decay to zero of all powers of M inverse times N, deduce invertibility of the system matrix M minus N."
+    },
+    {
+     "decl": "NLAlib.splittingConverges_iff_tendsto_pow_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 121,
+     "sorry": false,
+     "partial": true,
+     "usage": "For an invertible splitting matrix M over real or complex scalars, replace the full every-right-hand-side convergence predicate by decay of the iteration-matrix powers."
+    },
+    {
+     "decl": "NLAlib.splittingConverges_iff_spectralRadius_lt_one",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 153,
+     "sorry": false,
+     "partial": true,
+     "usage": "For complex splitting matrices with M invertible, establish or extract the full unique-solution convergence contract by checking that the spectral radius of M inverse times N is below one."
+    },
+    {
+     "decl": "NLAlib.splittingConverges_iff_complex_spectralRadius_lt_one",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.StationarySplitting",
+     "line": 162,
+     "sorry": false,
+     "partial": true,
+     "usage": "For real splitting matrices with M invertible, establish or extract the full convergence contract using the spectral radius of the complexified iteration matrix."
+    }
+   ]
+  },
+  {
+   "id": "richardson-iteration",
+   "status": "proved",
+   "hypotheses": [
+    "$A, P \\in \\mathbb R^{n\\times n}$ symmetric positive definite, $0 < a \\le b$, $aP \\preceq A \\preceq bP$ (Loewner)",
+    "$Ax_\\star = c$, $\\omega > 0$, $x_{k+1} = x_k + \\omega P^{-1}(c - Ax_k)$"
+   ],
+   "conclusion": "$x_k - x_\\star = (I - \\omega P^{-1}A)^k(x_0 - x_\\star)$; $\\|x_k - x_\\star\\|_A \\le \\max(|1-\\omega a|,|1-\\omega b|)^k\\|x_0 - x_\\star\\|_A$ (same in $\\|\\cdot\\|_P$); with $\\omega = \\frac2{a+b}$ the factor is $\\frac{b-a}{b+a}$",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "The implemented update is x_(k+1)=x_k+omega P^-1(c-Ax_k), and errors are exact powers of I-omega P^-1A.",
+      "decls": [
+       "NLAlib.preconditionedRichardsonIterate_succ",
+       "NLAlib.preconditionedRichardsonIterate_sub_eq_pow_mulVec"
+      ]
+     },
+     {
+      "statement": "The actual recurrence is ordinary Richardson after any split-preconditioning change W with W^T P W=I.",
+      "decls": [
+       "NLAlib.preconditionedRichardsonIterate_eq_mulVec_richardsonIterate"
+      ]
+     },
+     {
+      "statement": "The exact endpoint factor max(|1-omega a|,|1-omega b|)^k bounds error in both the A and P energy forms.",
+      "decls": [
+       "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le",
+       "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_preconditioner"
+      ]
+     },
+     {
+      "statement": "The step omega=2/(a+b) gives the exact factor ((b-a)/(b+a))^k in both energies.",
+      "decls": [
+       "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_of_optimal",
+       "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_preconditioner_of_optimal"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.richardsonIterate",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 98,
+     "sorry": false,
+     "partial": true,
+     "usage": "The Richardson iterate with step `ω`: `x_q = x₀ + ω ∑_{j<q} (I − ωA)^j r₀`, the polynomial method with residual polynomial `(1 − ωX)^q`; it satisfies `x_{q+1} = x_q + ω (c − A x_q)` (`richardsonIterate_succ`)."
+    },
+    {
+     "decl": "NLAlib.quadForm_richardsonIterate_sub_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 138,
+     "sorry": false,
+     "partial": true,
+     "usage": "**Richardson contraction, weighted norm.** For symmetric `A` with spectrum in `[a, b]`, step `ω ≥ 0`, `A x⋆ = c` and a weight `g ≥ 0` on `[a, b]`, `‖x_q − x⋆‖²_{g(A)} ≤ ρ^{2q} ‖x₀ − x⋆‖²_{g(A)}` with `ρ = max(|1 − ωa|, |1 − ωb|)`."
+    },
+    {
+     "decl": "NLAlib.dotProduct_self_sub_mulVec_richardsonIterate_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 155,
+     "sorry": false,
+     "partial": true,
+     "usage": "**Richardson contraction, residual norm.** For symmetric `A` with spectrum in `[a, b]` and step `ω ≥ 0`, `‖c − A x_q‖² ≤ ρ^{2q} ‖r₀‖²`, `ρ = max(|1 − ωa|, |1 − ωb|)`."
+    },
+    {
+     "decl": "NLAlib.quadForm_richardsonIterate_sub_le_of_optimal",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 168,
+     "sorry": false,
+     "partial": true,
+     "usage": "**Richardson with the optimal step** `ω = 2/(a + b)`: for symmetric positive definite `A` with spectrum in `[a, b]`, `0 < a ≤ b`, `‖x_q − x⋆‖²_A ≤ ((b − a)/(b + a))^{2q} ‖x₀ − x⋆‖²_A`."
+    },
+    {
+     "decl": "NLAlib.preconditionedRichardsonIterate",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+     "line": 24,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply the relaxation, system and preconditioner matrices, right-hand side and initializer to obtain the actual preconditioned Richardson iterates."
+    },
+    {
+     "decl": "NLAlib.preconditionedRichardsonIterate_succ",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+     "line": 35,
+     "sorry": false,
+     "partial": true,
+     "usage": "Expand the next iterate into the current iterate plus the relaxed preconditioned residual."
+    },
+    {
+     "decl": "NLAlib.preconditionedRichardsonIterate_sub_eq_pow_mulVec",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+     "line": 48,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given an exact solution of A times x equals c, express the step-k error as the kth power of identity minus the relaxed preconditioned matrix applied to the initial error."
+    },
+    {
+     "decl": "NLAlib.preconditionedRichardsonIterate_eq_mulVec_richardsonIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+     "line": 60,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a split factor W satisfying transpose W times P times W equals identity, identify the preconditioned recurrence with ordinary Richardson on the split system and transform back by W."
+    },
+    {
+     "decl": "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+     "line": 147,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given positive-definite P, a positive lower spectral endpoint, nonnegative relaxation, a Loewner sandwich and an exact solution, bound the squared A-energy error by the kth endpoint contraction squared."
+    },
+    {
+     "decl": "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_preconditioner",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+     "line": 159,
+     "sorry": false,
+     "partial": true,
+     "usage": "Under positive-definite P and the Loewner bounds a times P below A below b times P, bound the squared P-energy error using max of the two relaxed endpoint magnitudes to power twice k."
+    },
+    {
+     "decl": "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_of_optimal",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+     "line": 180,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given positive-definite P, positive ordered endpoints and the Loewner sandwich, use relaxation two over a plus b to bound squared A-energy error by the squared kth power of the endpoint ratio."
+    },
+    {
+     "decl": "NLAlib.quadForm_preconditionedRichardsonIterate_sub_le_preconditioner_of_optimal",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+     "line": 195,
+     "sorry": false,
+     "partial": true,
+     "usage": "For positive ordered endpoints and a positive-definite preconditioner satisfying the Loewner sandwich, obtain the same optimal endpoint-ratio rate for squared P-energy error about an exact solution."
+    }
+   ]
+  },
+  {
+   "id": "chebyshev-iteration",
+   "status": "proved",
+   "hypotheses": [
+    "$A \\in \\mathbb R^{n\\times n}$ symmetric with all eigenvalues in $[a,b]$, $0<a<b$",
+    "$x_0$ arbitrary and $x_k$ produced by the recurrence above (Saad Alg. 12.1)"
+   ],
+   "conclusion": "$b - Ax_k = R_k(A)(b - Ax_0)$ with $R_k = $ `chebyshevResidual a b k`; $\\|r_k\\| \\le 2\\big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^k\\|r_0\\|$ and $\\|x_k - x_\\star\\|_A \\le 2\\big(\\frac{\\sqrt b-\\sqrt a}{\\sqrt b+\\sqrt a}\\big)^k\\|x_0 - x_\\star\\|_A$",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "The recursively computed rho coefficients equal T_k(sigma)/T_(k+1)(sigma), are positive, and all their recursion denominators are positive.",
+      "decls": [
+       "NLAlib.chebyshevRho_eq_eval_T_div_eval_T_succ",
+       "NLAlib.chebyshevRho_pos",
+       "NLAlib.two_mul_div_sub_chebyshevRho_pos"
+      ]
+     },
+     {
+      "statement": "The implemented coupled x/d update realizes the polynomial Chebyshev iterate, including the advertised direction recurrence.",
+      "decls": [
+       "NLAlib.chebyshevRecurrenceIterate_succ",
+       "NLAlib.chebyshevRecurrenceDirection_succ",
+       "NLAlib.chebyshevRecurrenceIterate_eq_chebyshevIterate"
+      ]
+     },
+     {
+      "statement": "The actual recurrence residual is exactly R_k(A)r_0 for the native normalized Chebyshev residual polynomial.",
+      "decls": [
+       "NLAlib.sub_mulVec_chebyshevRecurrenceIterate"
+      ]
+     },
+     {
+      "statement": "The actual recurrence has the exact reciprocal-T residual bound and the usual geometric condition-number residual rate, in the native Euclidean vector norm.",
+      "decls": [
+       "NLAlib.norm_sub_mulVec_chebyshevRecurrenceIterate_le",
+       "NLAlib.norm_sub_mulVec_chebyshevRecurrenceIterate_le_two_mul_pow"
+      ]
+     },
+     {
+      "statement": "The actual recurrence error has both the exact reciprocal-T factor and the usual geometric factor in squared A energy.",
+      "decls": [
+       "NLAlib.quadForm_chebyshevRecurrenceIterate_sub_le",
+       "NLAlib.quadForm_chebyshevRecurrenceIterate_sub_le_two_mul_pow"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.chebyshevRho",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 20,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply the two spectral endpoints and a step index to compute the scalar coefficient by its reciprocal three-term recursion."
+    },
+    {
+     "decl": "NLAlib.chebyshevRho_eq_eval_T_div_eval_T_succ",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 51,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given zero less than a less than b, replace a recursively computed coefficient by the ratio of consecutive Chebyshev polynomials evaluated at the transformed center."
+    },
+    {
+     "decl": "NLAlib.chebyshevRho_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 73,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given zero less than a less than b, deduce strict positivity of every computed coefficient."
+    },
+    {
+     "decl": "NLAlib.two_mul_div_sub_chebyshevRho_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 80,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given zero less than a less than b, certify that every denominator used in the next coefficient update is strictly positive."
+    },
+    {
+     "decl": "NLAlib.chebyshevRecurrenceIterate",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 97,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply endpoints, a matrix, right-hand side and initializer to run the coupled Chebyshev iterate and direction recursion at a chosen step."
+    },
+    {
+     "decl": "NLAlib.chebyshevRecurrenceIterate_succ",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 120,
+     "sorry": false,
+     "partial": true,
+     "usage": "Rewrite a successor coupled Chebyshev iterate as its current iterate plus its current computed direction."
+    },
+    {
+     "decl": "NLAlib.chebyshevRecurrenceDirection_succ",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 128,
+     "sorry": false,
+     "partial": true,
+     "usage": "Expand the next direction into the product of consecutive scalar coefficients times the old direction plus the specified scaled residual at the new iterate."
+    },
+    {
+     "decl": "NLAlib.chebyshevRecurrenceIterate_eq_chebyshevIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 201,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given zero less than a less than b, identify every iterate of the actual coupled recursion with the existing polynomial Chebyshev iterate without requiring matrix symmetry."
+    },
+    {
+     "decl": "NLAlib.sub_mulVec_chebyshevRecurrenceIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 210,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given zero less than a less than b, rewrite the residual of the actual coupled recurrence as the normalized Chebyshev residual polynomial in A applied to the initial residual."
+    },
+    {
+     "decl": "NLAlib.norm_sub_mulVec_chebyshevRecurrenceIterate_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 220,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a real Hermitian matrix with spectrum in a positive nondegenerate interval, bound the Euclidean residual of the actual recurrence by the reciprocal Chebyshev value times its initial residual norm."
+    },
+    {
+     "decl": "NLAlib.norm_sub_mulVec_chebyshevRecurrenceIterate_le_two_mul_pow",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 238,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a real Hermitian matrix with spectrum in a positive nondegenerate interval, obtain the geometric Euclidean residual bound with twice the kth power of the square-root endpoint ratio."
+    },
+    {
+     "decl": "NLAlib.quadForm_chebyshevRecurrenceIterate_sub_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 249,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a real Hermitian matrix with the stated spectral enclosure and an exact solution, bound the squared A-energy error of the actual recurrence by the squared reciprocal Chebyshev value."
+    },
+    {
+     "decl": "NLAlib.quadForm_chebyshevRecurrenceIterate_sub_le_two_mul_pow",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
+     "line": 264,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a real Hermitian matrix with spectrum in a positive nondegenerate interval and an exact solution, obtain the geometric squared A-energy error rate for the actual coupled recurrence."
+    },
+    {
+     "decl": "NLAlib.chebyshevIterate",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 191,
+     "sorry": false,
+     "partial": true,
+     "usage": "The Chebyshev iterate for spectrum in `[a, b]`: the polynomial method whose residual polynomial is `chebyshevResidual a b q = T_q((b + a − 2X)/(b − a)) / T_q((b + a)/(b − a))`, i.e. iteration polynomial `(1 − chebyshevResidual a b q) /ₘ X`."
+    },
+    {
+     "decl": "NLAlib.sub_mulVec_chebyshevIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 209,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given zero less than a less than b, rewrite a polynomial Chebyshev iterate residual as the residual polynomial in A applied to the initial residual."
+    },
+    {
+     "decl": "NLAlib.chebyshevIterate_sub",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 219,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given zero less than a less than b and an exact solution, rewrite the polynomial Chebyshev iterate error as its residual polynomial in A applied to the initial error."
+    },
+    {
+     "decl": "NLAlib.quadForm_chebyshevIterate_sub_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 241,
+     "sorry": false,
+     "partial": true,
+     "usage": "**Chebyshev iteration, `A`-norm rate.** For symmetric `A` with spectrum in `[a, b]`, `0 < a < b`, and `A x⋆ = c`, `‖x_q − x⋆‖²_A ≤ (2((√b − √a)/(√b + √a))^q)² ‖x₀ − x⋆‖²_A`."
+    },
+    {
+     "decl": "NLAlib.dotProduct_self_sub_mulVec_chebyshevIterate_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 259,
+     "sorry": false,
+     "partial": true,
+     "usage": "**Chebyshev iteration, residual rate.** For symmetric `A` with spectrum in `[a, b]`, `0 < a < b`, `‖c − A x_q‖² ≤ (2((√b − √a)/(√b + √a))^q)² ‖r₀‖²`."
+    },
+    {
+     "decl": "NLAlib.chebyshevIterate_one",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 343,
+     "sorry": false,
+     "partial": true,
+     "usage": "**First Chebyshev step**: `x_1 = x₀ + r₀/θ`, `θ = (b + a)/2`, for `0 < a < b`."
+    },
+    {
+     "decl": "NLAlib.chebyshevIterate_add_two",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.PolynomialMethods",
+     "line": 362,
+     "sorry": false,
+     "partial": true,
+     "usage": "**The Chebyshev three-term recurrence** (Saad Alg."
+    }
+   ]
+  },
+  {
+   "id": "fom-def",
+   "status": "proved",
+   "hypotheses": [
+    "$A \\in \\mathbb R^{n\\times n}$, $b, x_0$, $r_0 = b - Ax_0 \\ne 0$, $1 \\le k \\le \\nu(A,r_0)$, Arnoldi data $Q_k, H_k, h_{k+1,k}, q_{k+1}$ in the standard positive normalization ($q_1=r_0/\\|r_0\\|_2$ and nonnegative subdiagonal coefficients); the terminal-grade residual is zero"
+   ],
+   "conclusion": "a FOM iterate exists uniquely iff $\\det H_k \\ne 0$; then $x_k^F = x_0 + \\|r_0\\|Q_kH_k^{-1}e_1$, $\\|r_k^F\\| = h_{k+1,k}\\,|e_k^\\top H_k^{-1}e_1|\\,\\|r_0\\|$; if $A$ is symmetric positive definite, $x_k^F$ satisfies `IsCGIterate A b x₀ k`",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "The affine Krylov membership and Galerkin orthogonality defining FOM are equivalent to the actual small Arnoldi square system.",
+      "decls": [
+       "NLAlib.ArnoldiDecomp.isFOMIterate_add_mulVec_iff"
+      ]
+     },
+     {
+      "statement": "A FOM iterate exists uniquely if and only if the actual Hessenberg compression is invertible, equivalently its determinant is nonzero.",
+      "decls": [
+       "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_iff_isUnit",
+       "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_iff_det_ne_zero"
+      ]
+     },
+     {
+      "statement": "When the compression is invertible, its inverse formula gives a FOM iterate and equals every FOM iterate; positive initial orientation gives the textbook norm-times-first-coordinate formula.",
+      "decls": [
+       "NLAlib.ArnoldiDecomp.isFOMIterate_fomIterate",
+       "NLAlib.ArnoldiDecomp.eq_fomIterate_of_isFOMIterate",
+       "NLAlib.ArnoldiDecomp.fomIterate_eq_of_pos"
+      ]
+     },
+     {
+      "statement": "The actual FOM residual vector is the signed last Hessenberg coefficient times the last inverse-Hessenberg coordinate, initial residual norm and next Arnoldi basis vector.",
+      "decls": [
+       "NLAlib.ArnoldiDecomp.sub_mulVec_add_mulVec_eq_neg_smul",
+       "NLAlib.ArnoldiDecomp.sub_mulVec_fomIterate_eq_neg_smul_of_pos"
+      ]
+     },
+     {
+      "statement": "Positive Arnoldi orientation gives the residual norm formula, and the native canonical construction supplies those signs without extra sign assumptions.",
+      "decls": [
+       "NLAlib.ArnoldiDecomp.norm_sub_mulVec_fomIterate_eq_of_pos",
+       "NLAlib.ArnoldiDecomp.norm_sub_mulVec_fomIterate_eq_arnoldiDecomp"
+      ]
+     },
+     {
+      "statement": "At the terminal Krylov grade, an invertible FOM compression yields zero residual, covering the endpoint where no larger orthonormal basis is available.",
+      "decls": [
+       "NLAlib.ArnoldiDecomp.sub_mulVec_fomIterate_eq_zero_of_krylovGrade_le"
+      ]
+     },
+     {
+      "statement": "For SPD systems, FOM exists uniquely and every FOM iterate, including the actual inverse-Hessenberg formula, is the native CG iterate.",
+      "decls": [
+       "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_of_posDef",
+       "NLAlib.IsFOMIterate.isCGIterate",
+       "NLAlib.ArnoldiDecomp.isCGIterate_fomIterate"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.IsFOMIterate",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 25,
+     "sorry": false,
+     "partial": true,
+     "usage": "Unfold to obtain affine Krylov membership and orthogonality of the actual linear-system residual to that Krylov space."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.fomIterate",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 37,
+     "sorry": false,
+     "partial": true,
+     "usage": "Evaluate the explicit inverse-Hessenberg formula; use its FOM guarantee under IsUnit D.H."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.isFOMIterate_add_mulVec_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 44,
+     "sorry": false,
+     "partial": true,
+     "usage": "Convert the FOM predicate in the actual basis coordinates into D.H *ᵥ y = D.Qᵀ *ᵥ r₀."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.isFOMIterate_fomIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 72,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply the actual inverse-Hessenberg construction as a FOM witness when the compression is invertible."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_iff_isUnit",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 81,
+     "sorry": false,
+     "partial": true,
+     "usage": "Turn unique existence of a FOM iterate into invertibility of the actual Hessenberg compression, or conversely."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_iff_det_ne_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 113,
+     "sorry": false,
+     "partial": true,
+     "usage": "Use the exact determinant-nonzero criterion for unique existence of the FOM iterate."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.eq_fomIterate_of_isFOMIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 122,
+     "sorry": false,
+     "partial": true,
+     "usage": "Rewrite any FOM iterate to the explicit inverse-Hessenberg iterate under compression invertibility."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.fomIterate_eq_of_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 131,
+     "sorry": false,
+     "partial": true,
+     "usage": "Rewrite the Arnoldi right-hand side as the initial residual norm times the first coordinate vector under the positive initial orientation."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.sub_mulVec_add_mulVec_eq_neg_smul",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 141,
+     "sorry": false,
+     "partial": true,
+     "usage": "Obtain the signed rank-one residual from any solution of the actual square Galerkin system."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.sub_mulVec_fomIterate_eq_neg_smul_of_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 174,
+     "sorry": false,
+     "partial": true,
+     "usage": "Read the inverse-Hessenberg last-coordinate formula for the actual FOM residual vector."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.norm_sub_mulVec_fomIterate_eq_of_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 195,
+     "sorry": false,
+     "partial": true,
+     "usage": "Read the residual norm from the nonnegative subdiagonal and inverse-Hessenberg coordinate under positive Arnoldi orientation."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.norm_sub_mulVec_fomIterate_eq_arnoldiDecomp",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 216,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply the norm formula to the native canonical Arnoldi construction; its orientation conditions are proved internally."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.sub_mulVec_fomIterate_eq_zero_of_krylovGrade_le",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 241,
+     "sorry": false,
+     "partial": true,
+     "usage": "At the terminal grade, conclude that an invertible FOM compression gives zero actual residual."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.existsUnique_isFOMIterate_of_posDef",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 259,
+     "sorry": false,
+     "partial": true,
+     "usage": "Obtain unique existence in every actual Arnoldi space of an SPD linear system."
+    },
+    {
+     "decl": "NLAlib.IsFOMIterate.isCGIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 276,
+     "sorry": false,
+     "partial": true,
+     "usage": "Convert a FOM Galerkin iterate for an SPD matrix into the native CG variational predicate."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.isCGIterate_fomIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.FOM",
+     "line": 284,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply the concrete inverse-Hessenberg formula as the native CG iterate for an SPD matrix without separately assuming compression invertibility."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.forall_dotProduct_sub_mulVec_eq_zero_iff",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRESArnoldi",
+     "line": 190,
+     "sorry": false,
+     "partial": true,
+     "usage": "**FOM is the square system**: for `D : ArnoldiDecomp A r₀ q`, the residual of `x₀ + Q_q y` is orthogonal to `K_q(A, r₀)` (the Galerkin / FOM condition) iff `H_q y = Q_qᵀ r₀` (`= ±‖r₀‖ e₁`)."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.isCGIterate_add_mulVec_of_mulVec_eq",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Solvers.GMRESArnoldi",
+     "line": 216,
+     "sorry": false,
+     "partial": true,
+     "usage": "**For SPD `A` the FOM iterate is the CG iterate**: if `H_q y = Q_qᵀ r₀` then `x₀ + Q_q y` satisfies `IsCGIterate A c x₀ q`."
+    }
+   ]
+  },
+  {
+   "id": "qr-algorithm-simultaneous-iteration",
+   "status": "proved",
+   "hypotheses": [
+    "$A\\in\\mathbb R^{n\\times n}$; a successful QR factorization is chosen at each step",
+    "Leading-block range equality additionally assumes invertible $A$",
+    "For arbitrary QR choices, Hessenberg/tridiagonal preservation assumes nonzero diagonal entries of every $R_j$; this additional condition is unnecessary for the Givens routine"
+   ],
+   "conclusion": "$A^k=Q^{(k)}R^{(k)}$ and $A_k=Q^{(k)\\top}AQ^{(k)}$; leading subspace-iterate ranges agree when $A$ is invertible; symmetry is preserved; Hessenberg/tridiagonal form is preserved under the stated triangular-factor condition or unconditionally for the realized Givens routine; shifted steps are similarities.",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual total QR recursion succeeds for a valid QR routine and its accumulated factors are orthogonal/upper triangular.",
+      "decls": [
+       "NLAlib.qrAlgorithmSucceeds_of_forall_isQR",
+       "NLAlib.transpose_mul_self_qrAlgorithmQ",
+       "NLAlib.isUpperTriangular_qrAlgorithmR"
+      ]
+     },
+     {
+      "statement": "The unshifted accumulated factors give a QR factorization of each matrix power.",
+      "decls": [
+       "NLAlib.pow_eq_qrAlgorithmQ_mul_qrAlgorithmR",
+       "NLAlib.isQR_pow_qrAlgorithm"
+      ]
+     },
+     {
+      "statement": "Every successful shifted step and accumulated iterate is an orthogonal similarity.",
+      "decls": [
+       "NLAlib.add_smul_one_eq_transpose_mul_mul_of_isQR",
+       "NLAlib.qrAlgorithm_eq_transpose_mul_mul"
+      ]
+     },
+     {
+      "statement": "For invertible A, all leading accumulated-Q column ranges equal their simultaneous subspace iterates.",
+      "decls": [
+       "NLAlib.range_qrAlgorithmQ_castLE_eq_subspaceIterate"
+      ]
+     },
+     {
+      "statement": "Symmetry is preserved; arbitrary QR choices preserve Hessenberg/tridiagonal form when every R diagonal is nonzero.",
+      "decls": [
+       "NLAlib.isHermitian_qrAlgorithm",
+       "NLAlib.isUpperHessenberg_qrAlgorithm",
+       "NLAlib.isTridiagonal_qrAlgorithm"
+      ]
+     },
+     {
+      "statement": "The realized Givens routine succeeds on Hessenberg inputs and preserves Hessenberg and symmetric tridiagonal form without a nonsingularity assumption.",
+      "decls": [
+       "NLAlib.qrAlgorithmSucceeds_givensQR",
+       "NLAlib.isUpperHessenberg_qrAlgorithm_givensQR",
+       "NLAlib.isTridiagonal_qrAlgorithm_givensQR"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.add_smul_one_eq_transpose_mul_mul_of_isQR",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 59,
+     "sorry": false,
+     "partial": false,
+     "usage": "**A shifted QR step is an orthogonal similarity.** If `H − μI = QR` is a (square) QR factorization then `RQ + μI = QᵀHQ`."
+    },
+    {
+     "decl": "NLAlib.qrAlgorithm",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 74,
+     "sorry": false,
+     "partial": false,
+     "usage": "The **shifted QR algorithm** driven by a QR routine `qr` and shifts `μ`: `A₀ = A`, `A_{k+1} = R Q + μ_k I` where `(Q, R) = qr (A_k − μ_k I)`."
+    },
+    {
+     "decl": "NLAlib.QRAlgorithmSucceeds",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 110,
+     "sorry": false,
+     "partial": false,
+     "usage": "**Success predicate**: each of the first `k` factor pairs is a QR factorization of the matrix it was computed from, `A_j − μ_j I = Q_{j+1} R_{j+1}` with `Q_{j+1}` orthogonal and `R_{j+1}` upper triangular."
+    },
+    {
+     "decl": "NLAlib.qrAlgorithmSucceeds_of_forall_isQR",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 136,
+     "sorry": false,
+     "partial": false,
+     "usage": "A routine that returns a QR factorization of every matrix makes the algorithm succeed for every `k` (such routines exist: `exists_isFullQR`, Householder)."
+    },
+    {
+     "decl": "NLAlib.transpose_mul_self_qrAlgorithmQ",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 146,
+     "sorry": false,
+     "partial": false,
+     "usage": "`Q^{(k)}` is orthogonal."
+    },
+    {
+     "decl": "NLAlib.isUpperTriangular_qrAlgorithmR",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 158,
+     "sorry": false,
+     "partial": false,
+     "usage": "`R^{(k)}` is upper triangular."
+    },
+    {
+     "decl": "NLAlib.qrAlgorithm_eq_transpose_mul_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 167,
+     "sorry": false,
+     "partial": false,
+     "usage": "**The QR iterates are orthogonally similar to `A`**: `A_k = Q^{(k)ᵀ} A Q^{(k)}`, for any shifts."
+    },
+    {
+     "decl": "NLAlib.aeval_prod_eq_qrAlgorithmQ_mul_qrAlgorithmR",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 188,
+     "sorry": false,
+     "partial": false,
+     "usage": "**Shifted simultaneous iteration**: `∏_{j<k} (A − μ_j I) = Q^{(k)} R^{(k)}` (the product of the shifted matrices, written as the polynomial `∏_{j<k} (X − μ_j)` evaluated at `A`)."
+    },
+    {
+     "decl": "NLAlib.pow_eq_qrAlgorithmQ_mul_qrAlgorithmR",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 210,
+     "sorry": false,
+     "partial": false,
+     "usage": "**The unshifted QR algorithm is simultaneous iteration**: `A^k = Q^{(k)} R^{(k)}`."
+    },
+    {
+     "decl": "NLAlib.isQR_pow_qrAlgorithm",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 220,
+     "sorry": false,
+     "partial": false,
+     "usage": "**`A^k = Q^{(k)} R^{(k)}` is a QR factorization of `A^k`**: the unshifted QR algorithm computes the QR factorization of the powers of `A` (simultaneous iteration from `I`)."
+    },
+    {
+     "decl": "NLAlib.range_qrAlgorithmQ_castLE_eq_subspaceIterate",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 230,
+     "sorry": false,
+     "partial": false,
+     "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+    },
+    {
+     "decl": "NLAlib.isHermitian_qrAlgorithm",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 267,
+     "sorry": false,
+     "partial": false,
+     "usage": "Apply `NLAlib.isHermitian_qrAlgorithm` with its displayed hypotheses: **Symmetry is preserved**: if `A` is symmetric then so is every `A_k`."
+    },
+    {
+     "decl": "NLAlib.isUpperHessenberg_qrAlgorithm",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 296,
+     "sorry": false,
+     "partial": false,
+     "usage": "**Hessenberg form is preserved** when every `R_j` is invertible: if `A` is upper Hessenberg, so is every `A_k`."
+    },
+    {
+     "decl": "NLAlib.isTridiagonal_qrAlgorithm",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 314,
+     "sorry": false,
+     "partial": false,
+     "usage": "**Symmetric tridiagonal form is preserved** when every `R_j` is invertible."
+    },
+    {
+     "decl": "NLAlib.isUpperHessenberg_qrAlgorithm_givensQR",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 325,
+     "sorry": false,
+     "partial": false,
+     "usage": "**The Givens QR algorithm keeps Hessenberg form** with no invertibility hypothesis: if `A` is upper Hessenberg then so is every `A_k` computed with `qr = givensQR`."
+    },
+    {
+     "decl": "NLAlib.qrAlgorithmSucceeds_givensQR",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 337,
+     "sorry": false,
+     "partial": false,
+     "usage": "**Realisation for the Givens routine**: on an upper Hessenberg `A`, every factor pair of the Givens QR algorithm is a QR factorization, so all the identities above apply (`A_k = Q^{(k)ᵀ} A Q^{(k)}`, `∏ (A − μ_j I) = Q^{(k)} R^{(k)}`)."
+    },
+    {
+     "decl": "NLAlib.isTridiagonal_qrAlgorithm_givensQR",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+     "line": 346,
+     "sorry": false,
+     "partial": false,
+     "usage": "**The Givens QR algorithm keeps symmetric tridiagonal form**: if `A` is symmetric tridiagonal then so is every `A_k` computed with `qr = givensQR`."
+    }
+   ]
+  },
+  {
+   "id": "matrix-equation-galerkin-optimality",
+   "status": "proved",
+   "hypotheses": [
+    "$\\mathcal S$ is linear, Frobenius self-adjoint, and $\\langle Z,\\mathcal S(Z)\\rangle_F>0$ for every nonzero Z",
+    "$\\mathcal S(X)=F$; V,W have orthonormal columns; $X_h\\in\\{VYW^T\\}$"
+   ],
+   "conclusion": "Galerkin residual orthogonality is equivalent to unique minimum error in the $\\mathcal S$ energy quadratic form on the tensor-product trial space.",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "For an arbitrary self-adjoint positive definite real linear matrix operator, the reduced Galerkin residual is zero exactly when the represented trial matrix uniquely minimizes energy error; unequal reduced dimensions are allowed.",
+      "decls": [
+       "NLAlib.conjTranspose_residual_mul_eq_zero_iff_unique_frobEnergy_minimizer"
+      ]
+     },
+     {
+      "statement": "The actual finite multiterm operator X↦Σ A_j X B_j has the same exact Galerkin/unique-energy-minimum equivalence under positivity and symmetry of the whole operator.",
+      "decls": [
+       "NLAlib.conjTranspose_multiterm_residual_mul_eq_zero_iff_unique_frobEnergy_minimizer"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.conjTranspose_residual_mul_eq_zero_iff_unique_frobEnergy_minimizer",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Equations.EnergyProjection",
+     "line": 131,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply the whole operator’s Frobenius self-adjointness and strict positivity, an exact solution, and rectangular trial factors to convert the reduced residual equation into unique energy minimization."
+    },
+    {
+     "decl": "NLAlib.conjTranspose_multiterm_residual_mul_eq_zero_iff_unique_frobEnergy_minimizer",
+     "kind": "theorem",
+     "module": "NLAlib.Matrix.Equations.EnergyProjection",
+     "line": 203,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply to the explicit finite sum A_j X B_j, assuming symmetry and positivity of that whole operator, to obtain the Galerkin energy-optimality equivalence."
+    }
+   ]
+  },
+  {
+   "id": "discrete-measure-jacobi-matrix",
+   "status": "proved",
+   "hypotheses": [
+    "distinct $t_\\nu\\in\\mathbb R$, $w_\\nu>0$; or $A$ symmetric, $\\mu_b=\\sum_i (u_i^\\top b)^2\\delta_{\\lambda_i}$ the spectral measure of symmetric $A$ and $b$ (`NLAlib.spectralMeasure`), $q\\le\\operatorname{grade}(A,b)$"
+   ],
+   "conclusion": "$\\sum_\\nu w_\\nu\\delta_{t_\\nu}=\\mu_{\\sqrt w}(\\operatorname{diag}t)$; grade $=N$; $Q^\\top\\operatorname{diag}(t)Q=T_N$, $Q^\\top\\sqrt w=\\|\\sqrt w\\|e_1$; $QQ^\\top=I$ gives dual orthogonality; $\\mu_{\\|b\\|e_1}(T_q)=\\sum_iw_i\\delta_{\\theta_i}$.",
+   "reviewed_proof_family": {
+    "clauses": [
+     {
+      "statement": "The finite atomic measure is exactly the spectral measure of the diagonal nodes and square-root weight vector, and positive weights/distinct nodes give grade N.",
+      "decls": [
+       "NLAlib.spectralMeasure_diagonal_sqrt_eq_sum_dirac",
+       "NLAlib.krylovGrade_diagonal_sqrt_eq_card"
+      ]
+     },
+     {
+      "statement": "Actual native Lanczos has positive couplings at every positive index below N and zero coupling at exact order N.",
+      "decls": [
+       "NLAlib.lanczosBeta_diagonal_sqrt_pos",
+       "NLAlib.lanczosBeta_diagonal_sqrt_eq_zero"
+      ]
+     },
+     {
+      "statement": "The actual full Lanczos vector matrix is orthogonal, compresses the diagonal nodes to the canonical moment Jacobi matrix, and sends square-root weights to the positive first vector scaled by square-root monic beta0=total mass.",
+      "decls": [
+       "NLAlib.hasOrthonormalCols_lanczosRecurrence_diagonal_sqrt",
+       "NLAlib.lanczosRecurrence_diagonal_sqrt_mul_conjTranspose_eq_one",
+       "NLAlib.transpose_lanczosRecurrence_diagonal_sqrt_mul_diagonal_mul_eq_jacobi",
+       "NLAlib.transpose_lanczosRecurrence_diagonal_sqrt_mulVec_sqrt_eq_single"
+      ]
+     },
+     {
+      "statement": "The implemented weighted Stieltjes step iterates its actual state; its computed values satisfy q_j(r)=sqrt(w_r)*p_j(t_r), and its computed diagonal/coupling coefficients agree with actual Lanczos at every step, including breakdown.",
+      "decls": [
+       "NLAlib.discreteStieltjesState_succ",
+       "NLAlib.lanczosRecurrence_diagonal_sqrt_eq_mul_discreteStieltjesValues",
+       "NLAlib.discreteStieltjesAlpha_eq_lanczosAlpha",
+       "NLAlib.discreteStieltjesBeta_eq_lanczosBeta",
+       "NLAlib.discreteStieltjesValues_eq_eval_lanczosPoly"
+      ]
+     },
+     {
+      "statement": "Stieltjes returns the canonical moment alpha and positive-index monic beta norm ratios, including the zero terminal ratio; monic beta0 is mass and normalized beta0 is zero. Both normalized and monic-square-root assembly return the canonical Jacobi matrix.",
+      "decls": [
+       "NLAlib.discreteStieltjesAlpha_eq_orthogonalRecurrenceAlpha",
+       "NLAlib.discreteStieltjesMonicBeta_eq_orthogonalRecurrenceBeta",
+       "NLAlib.discreteStieltjesMonicBeta_zero",
+       "NLAlib.discreteStieltjesBeta_zero",
+       "NLAlib.jacobiMatrix_discreteStieltjes_eq_orthogonalPolynomialJacobiMatrix",
+       "NLAlib.jacobiMatrix_discreteStieltjesAlpha_sqrt_monicBeta_eq"
+      ]
+     },
+     {
+      "statement": "The actual computed normalized Stieltjes values obey exact reciprocal-weight dual orthogonality at the nodes; the canonical moment-polynomial form is also already checked.",
+      "decls": [
+       "NLAlib.sum_discreteStieltjesValues_mul_eq_div_weight",
+       "NLAlib.sum_eval_orthonormalMomentPolynomial_diagonal_sqrt_mul_eq_div_weight"
+      ]
+     },
+     {
+      "statement": "Conversely the Gauss rule of an actual Lanczos compression is its spectral measure with mass-scaled first vector. The total-vector formulation also covers the zero-point empty rule without choosing a nonexistent coordinate.",
+      "decls": [
+       "NLAlib.LanczosDecomp.spectralMeasure_T_first_total_eq_sum_dirac"
+      ]
+     }
+    ]
+   },
+   "native_evidence": [
+    {
+     "decl": "NLAlib.LanczosDecomp.T_eq_orthogonalPolynomialJacobiMatrix_of_beta_nonneg",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.CanonicalLanczos",
+     "line": 24,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a real Hermitian Lanczos decomposition with nonnegative stored couplings, identify its compression matrix exactly with the canonical moment Jacobi matrix of the input spectral measure."
+    },
+    {
+     "decl": "NLAlib.T_arnoldiDecomp_eq_orthogonalPolynomialJacobiMatrix",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.CanonicalLanczos",
+     "line": 53,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a real Hermitian matrix and a requested order no greater than the input Krylov grade, identify the actual positively normalized compression with the canonical moment Jacobi matrix."
+    },
+    {
+     "decl": "NLAlib.jacobiMatrix_lanczosAlpha_lanczosBeta_eq_T",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.CanonicalLanczos",
+     "line": 67,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a real Hermitian matrix and a valid truncation order, assemble the actual recursive alpha and beta coefficients into its Lanczos compression matrix."
+    },
+    {
+     "decl": "NLAlib.hasOrthonormalCols_discreteOrthogonalPolynomialEvaluationMatrix",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteCanonical",
+     "line": 53,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.hasOrthonormalCols_discreteOrthogonalPolynomialEvaluationMatrix` with its displayed hypotheses: The actual canonical normalized polynomial evaluation matrix has orthonormal columns for distinct finite nodes and positive weights, including the empty discrete measure."
+    },
+    {
+     "decl": "NLAlib.discreteOrthogonalPolynomialEvaluationMatrix_mul_conjTranspose_eq_one",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteCanonical",
+     "line": 87,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.discreteOrthogonalPolynomialEvaluationMatrix_mul_conjTranspose_eq_one` with its displayed hypotheses: The actual canonical discrete evaluation matrix also has orthonormal rows, because it is square."
+    },
+    {
+     "decl": "NLAlib.conjTranspose_discreteOrthogonalPolynomialEvaluationMatrix_mul_diagonal_mul_eq_jacobi",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteCanonical",
+     "line": 96,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.conjTranspose_discreteOrthogonalPolynomialEvaluationMatrix_mul_diagonal_mul_eq_jacobi` with its displayed hypotheses: The actual canonical polynomial evaluation matrix conjugates the diagonal atomic node matrix to the actual normalized multiplication Jacobi matrix."
+    },
+    {
+     "decl": "NLAlib.conjTranspose_discreteOrthogonalPolynomialEvaluationMatrix_mulVec_sqrt_eq_single",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteCanonical",
+     "line": 122,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.conjTranspose_discreteOrthogonalPolynomialEvaluationMatrix_mulVec_sqrt_eq_single` with its displayed hypotheses: The actual square-root atomic-weight vector transforms to the first coordinate scaled by the square-root total mass, in positive dimension."
+    },
+    {
+     "decl": "NLAlib.sum_eval_orthonormalMomentPolynomial_diagonal_sqrt_mul_eq_div_weight",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteCanonical",
+     "line": 155,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes and positive weights, evaluate the canonical orthonormal moment polynomials at two nodes and sum their products to obtain the reciprocal-weight dual orthogonality identity."
+    },
+    {
+     "decl": "NLAlib.hasOrthonormalCols_lanczosRecurrence_diagonal_sqrt",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 39,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes and positive weights, certify orthonormal columns of the full matrix formed by the actual diagonal Lanczos vectors."
+    },
+    {
+     "decl": "NLAlib.lanczosRecurrence_diagonal_sqrt_mul_conjTranspose_eq_one",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 51,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes and positive weights, deduce orthonormal rows of the square matrix of actual diagonal Lanczos vectors."
+    },
+    {
+     "decl": "NLAlib.transpose_lanczosRecurrence_diagonal_sqrt_mul_diagonal_mul_eq_jacobi",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 61,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes and positive weights, conjugate the diagonal node matrix by its actual full Lanczos basis to obtain the canonical moment Jacobi matrix."
+    },
+    {
+     "decl": "NLAlib.transpose_lanczosRecurrence_diagonal_sqrt_mulVec_sqrt_eq_single",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 78,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a nonempty set of distinct nodes with positive weights, transform the square-root weight vector by the actual Lanczos basis transpose into the first vector scaled by square-root total mass."
+    },
+    {
+     "decl": "NLAlib.lanczosBeta_diagonal_sqrt_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 94,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes, positive weights and a positive index below the number of nodes, deduce strict positivity of the actual diagonal Lanczos coupling."
+    },
+    {
+     "decl": "NLAlib.lanczosBeta_diagonal_sqrt_eq_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 103,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes and positive weights, identify the actual Lanczos coupling at the full node count as zero."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesAlpha_eq_orthogonalRecurrenceAlpha",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 112,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes, positive weights and an index below the full order, identify the computed Stieltjes diagonal coefficient with the canonical moment recurrence coefficient."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesMonicBeta_eq_orthogonalRecurrenceBeta",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 130,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes, positive weights and a positive index at most the full order, identify the computed monic Stieltjes coefficient with the canonical moment norm ratio, including the zero terminal ratio."
+    },
+    {
+     "decl": "NLAlib.jacobiMatrix_discreteStieltjes_eq_orthogonalPolynomialJacobiMatrix",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 156,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes and positive weights, assemble the computed normalized Stieltjes coefficients into exactly the canonical full moment Jacobi matrix."
+    },
+    {
+     "decl": "NLAlib.jacobiMatrix_discreteStieltjesAlpha_sqrt_monicBeta_eq",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 175,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes and positive weights, assemble the computed diagonal coefficients and square roots of computed monic beta coefficients into the canonical full Jacobi matrix."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesValues_eq_eval_lanczosPoly",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 199,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes, positive weights and a degree below the full order, identify each computed Stieltjes node value with the corresponding actual Lanczos polynomial evaluation."
+    },
+    {
+     "decl": "NLAlib.sum_discreteStieltjesValues_mul_eq_div_weight",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 221,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct nodes and positive weights, sum products of the computed normalized Stieltjes values over all degrees to obtain the node Kronecker delta divided by its weight."
+    },
+    {
+     "decl": "NLAlib.LanczosDecomp.spectralMeasure_T_first_total_eq_sum_dirac",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteLanczos",
+     "line": 238,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given a Lanczos decomposition of a real Hermitian matrix, express the spectral measure of its compression with the mass-scaled first vector as the Gauss atomic rule, also covering zero order."
+    },
+    {
+     "decl": "NLAlib.spectralMeasure_diagonal_sqrt_eq_sum_dirac",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+     "line": 26,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given finite nodes and nonnegative weights, identify the diagonal matrix spectral measure of the square-root weight vector with the weighted sum of Dirac masses."
+    },
+    {
+     "decl": "NLAlib.krylovGrade_diagonal_eq_card",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+     "line": 47,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.krylovGrade_diagonal_eq_card` with its displayed hypotheses: The grade of a diagonal matrix at a nonzero-coordinate vector is its full dimension when the diagonal entries are distinct."
+    },
+    {
+     "decl": "NLAlib.krylovGrade_diagonal_sqrt_eq_card",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+     "line": 71,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given distinct finite nodes and strictly positive weights, obtain full Krylov grade for the diagonal node matrix and square-root weight vector."
+    },
+    {
+     "decl": "NLAlib.LanczosDecomp.Q_apply_diagonal_sqrt_eq_eval_poly_mul",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+     "line": 83,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.LanczosDecomp.Q_apply_diagonal_sqrt_eq_eval_poly_mul` with its displayed hypotheses: For a diagonal spectral problem, each Lanczos column is the corresponding polynomial evaluated at each node, multiplied by its square-root weight."
+    },
+    {
+     "decl": "NLAlib.LanczosDecomp.sum_eval_poly_mul_eval_poly_eq_div_weight",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+     "line": 95,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.LanczosDecomp.sum_eval_poly_mul_eval_poly_eq_div_weight` with its displayed hypotheses: At full dimension the polynomial evaluations obey dual orthogonality at the atomic nodes."
+    },
+    {
+     "decl": "NLAlib.ArnoldiDecomp.transpose_Q_mulVec_eq_single_of_pos",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+     "line": 133,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.ArnoldiDecomp.transpose_Q_mulVec_eq_single_of_pos` with its displayed hypotheses: A positively oriented first Krylov vector gives the bordered starting-vector identity."
+    },
+    {
+     "decl": "NLAlib.transpose_arnoldiMatrix_mulVec_eq_single",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+     "line": 154,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.transpose_arnoldiMatrix_mulVec_eq_single` with its displayed hypotheses: The canonical Arnoldi construction has the positively oriented bordered starting-vector identity, including a complete discrete spectral problem."
+    },
+    {
+     "decl": "NLAlib.spectralMeasure_T_first_eq_sum_dirac",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+     "line": 164,
+     "sorry": false,
+     "partial": true,
+     "usage": "Apply `NLAlib.spectralMeasure_T_first_eq_sum_dirac` with its displayed hypotheses: The spectral measure of a Jacobi matrix and the mass-scaled first coordinate vector is its Gauss atomic rule."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesStep",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 41,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply nodes, weights and a three-field state to compute the weighted Rayleigh coefficient, remove the two previous components and normalize the resulting next values."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesState",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 51,
+     "sorry": false,
+     "partial": true,
+     "usage": "Supply nodes, weights and a step index to iterate the actual weighted Stieltjes update from its normalized constant initial state."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesState_succ",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 58,
+     "sorry": false,
+     "partial": true,
+     "usage": "Rewrite a successor computed Stieltjes state as one literal weighted update applied to the current state."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesMonicBeta",
+     "kind": "def",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 76,
+     "sorry": false,
+     "partial": true,
+     "usage": "Obtain the monic Stieltjes coefficient sequence by taking total mass at index zero and squaring the computed normalized coupling at positive indices."
+    },
+    {
+     "decl": "NLAlib.lanczosRecurrence_diagonal_sqrt_eq_mul_discreteStieltjesValues",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 169,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given nonnegative weights, identify every actual diagonal Lanczos coordinate with the square-root weight times the computed Stieltjes value, including steps at or after breakdown."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesAlpha_eq_lanczosAlpha",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 179,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given nonnegative weights, replace every computed weighted Stieltjes diagonal coefficient by the actual diagonal Lanczos alpha coefficient."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesBeta_eq_lanczosBeta",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 191,
+     "sorry": false,
+     "partial": true,
+     "usage": "Given nonnegative weights, replace every computed normalized Stieltjes coupling by the actual diagonal Lanczos beta coefficient."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesBeta_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 200,
+     "sorry": false,
+     "partial": true,
+     "usage": "Simplify the normalized Stieltjes coupling at index zero to zero for the supplied nodes and weights."
+    },
+    {
+     "decl": "NLAlib.discreteStieltjesMonicBeta_zero",
+     "kind": "theorem",
+     "module": "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
+     "line": 206,
+     "sorry": false,
+     "partial": true,
+     "usage": "Simplify the monic Stieltjes coefficient at index zero to the total supplied weight."
+    }
+   ]
+  }
+ ],
+ "statement_precision": [
+  {
+   "id": "qr-algorithm-simultaneous-iteration",
+   "original_informal": "Let $A_0 = A$, $A_{j-1} = Q_j R_j$ (QR), $A_j = R_j Q_j$, and $\\underline{Q}^{(k)} = Q_1\\cdots Q_k$, $\\underline{R}^{(k)} = R_k \\cdots R_1$. Then $A^k = \\underline{Q}^{(k)} \\underline{R}^{(k)}$ and $A_k = \\underline{Q}^{(k)\\top} A \\underline{Q}^{(k)}$: the QR algorithm is simultaneous (subspace) iteration started from $I$, and each $A_k$ is orthogonally similar to $A$. A QR step preserves upper Hessenberg form and symmetry (hence tridiagonality), and the shifted step $A - \\mu I = QR$, $A_+ = RQ + \\mu I$ is again a similarity.",
+   "finding": "Arbitrary valid QR choices need not preserve Hessenberg form for singular inputs.",
+   "resolution": "The card explicitly distinguishes arbitrary-factor power/similarity identities, invertible-A leading ranges, nonzero-R-diagonal arbitrary-QR structure preservation, and unconditional realized Givens structure preservation.",
+   "kernel_checked_counterexample": {
+    "decl": "NLAlib.exists_isQR_isUpperHessenberg_not_isUpperHessenberg_mul",
+    "module": "NLAlib.Krylov.Spectral.QRAlgorithm",
+    "line": 355,
+    "example": "A=diag(0,1,2); Q=[[3/5,0,4/5],[0,1,0],[4/5,0,-3/5]]; R=[[0,0,8/5],[0,1,0],[0,0,-6/5]]; (RQ)_(3,1)=-24/25."
+   }
+  },
+  {
+   "id": "fom-def",
+   "resolution": "The textbook inverse/norm formula states the standard positive Arnoldi normalization explicitly. Native canonical Arnoldi supplies those signs; arbitrary signed residuals and terminal-grade zero residual are also proved."
+  }
+ ],
+ "naming": {
+  "renames": {
+   "NLAlib.sub_mul_pinvR_mul_transpose_eq": "NLAlib.sub_mul_pinvR_mul_conjTranspose_eq",
+   "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
+   "NLAlib.one_le_det_one_add_of_posSemidef": "Matrix.PosSemidef.one_le_det_one_add",
+   "NLAlib.sum_det_principal_minors_eq_sum_prod_of_isHermitian": "Matrix.IsHermitian.sum_det_principal_minors_eq_sum_prod",
+   "NLAlib.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀": "Matrix.IsHermitian.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀"
+  },
+  "rename_map": "docs/renames/2026-10-24-krylov-and-lowrank-naming.json",
+  "previous_batch": {
+   "date": "2026-10-24",
+   "reviewed_commit": "53ba5fc3613370dc630fddf2b86fed45d28e7edb",
+   "base": "7f209dd8a05077a4051241e42098f4beba38e481",
+   "method": "Reviewed added declaration names and changed signatures against docs/STANDARDS.md, then inspected relevant actual source statements and direct callers. Mechanical regex success was not treated as a semantic naming audit.",
+   "indexed_additions": 595,
+   "changed_signatures": 23,
+   "added_kind_counts": {
+    "theorem": 496,
+    "def": 79,
+    "inductive": 7,
+    "constructor": 9,
+    "instance": 4
+   },
+   "mechanical_prior_index_check": "scripts/check_names.py passed (14225 declarations); run again after final extraction for the new source names.",
+   "findings": [
+    {
+     "old": "NLAlib.sub_mul_pinvR_mul_transpose_eq",
+     "new": "NLAlib.sub_mul_pinvR_mul_conjTranspose_eq",
+     "file": "NLAlib/LowRank/Structural/RangeFinder.lean",
+     "line": 74,
+     "reason": "Generalized RCLike formula uses conjugate transpose, so its name must say conjTranspose.",
+     "policy": "docs/STANDARDS.md §2",
+     "source_fix_applied": true
+    },
+    {
+     "old": "NLAlib.frobSq_sub_mul_pinvR_mul_transpose_eq",
+     "new": "NLAlib.frobSq_sub_mul_pinvR_mul_conjTranspose_eq",
+     "file": "NLAlib/LowRank/Structural/RangeFinder.lean",
+     "line": 93,
+     "reason": "Generalized RCLike formula uses conjugate transpose, so its name must say conjTranspose.",
+     "policy": "docs/STANDARDS.md §2",
+     "source_fix_applied": true
+    },
+    {
+     "old": "NLAlib.one_le_det_one_add_of_posSemidef",
+     "new": "Matrix.PosSemidef.one_le_det_one_add",
+     "file": "NLAlib/Matrix/Inequalities/PrincipalMinorProducts.lean",
+     "line": 53,
+     "reason": "This is a pure matrix-property fact whose primary subject is the Hermitian/PSD hypothesis; its owning namespace enables dot notation.",
+     "policy": "docs/STANDARDS.md §2",
+     "source_fix_applied": true
+    },
+    {
+     "old": "NLAlib.sum_det_principal_minors_eq_sum_prod_of_isHermitian",
+     "new": "Matrix.IsHermitian.sum_det_principal_minors_eq_sum_prod",
+     "file": "NLAlib/Matrix/Spectral/PrincipalMinors.lean",
+     "line": 78,
+     "reason": "This is a pure matrix-property fact whose primary subject is the Hermitian/PSD hypothesis; its owning namespace enables dot notation.",
+     "policy": "docs/STANDARDS.md §2",
+     "source_fix_applied": true
+    },
+    {
+     "old": "NLAlib.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀",
+     "new": "Matrix.IsHermitian.sum_re_det_submatrix_eq_factorial_mul_sum_prod_eigenvalues₀",
+     "file": "NLAlib/Matrix/Spectral/PrincipalMinors.lean",
+     "line": 94,
+     "reason": "This is a pure matrix-property fact whose primary subject is the Hermitian/PSD hypothesis; its owning namespace enables dot notation.",
+     "policy": "docs/STANDARDS.md §2",
+     "source_fix_applied": true
+    }
+   ],
+   "applied_rename_map": "docs/renames/2026-10-24-krylov-and-lowrank-naming.json",
+   "valid_exceptions": [
+    "Real-only ridge/sampling identities retain transpose names because their actual matrices are real.",
+    "RSVD, FrequentDirections, Nyström, Cramer and standard mathematical acronyms denote algorithms or mathematical constructions, rather than a paper citation label.",
+    "Lean-generated constructor/eliminator/projection names follow Lean-generated conventions; no handwritten names were changed to imitate generated names.",
+    "Algorithm and NLAlib-specific object theorems may remain in their domain namespaces when a PSD/Hermitian hypothesis only supplies their domain; the three moved facts are pure matrix-property extensions."
+   ],
+   "file_name_case_findings": [],
+   "source_prefix_findings": [],
+   "stale_active_source_references": [],
+   "coverage_updated": [
+    "docs/coverage/hj13.json",
+    "docs/coverage/hj13.md"
+   ],
+   "normalizer_owner": "Matrix.PosSemidef.one_le_det_one_add was also moved out of Sketching into existing Matrix/Inequalities/PrincipalMinorProducts.lean; its proof uses Matrix.det_one_add_eq_sum_principal_minors directly and creates no upward dependency.",
+   "preserved_historical_material": "Older audit ledgers, dedup notes and historical rename maps retain their pinned old names; the new rename map records the API transition.",
+   "compatibility": "Both local git tag --list v0.1* and remote git ls-remote --tags origin refs/tags/v0.1* returned no tags; the direct-rename policy applies, so deprecated aliases are not required.",
+   "remaining_root_actions": [
+    "Apply rename map to current atlas entries/proof-family clauses while preserving usages.",
+    "Build modified modules/dependants and regenerate declaration index after other proof agents stop compiling.",
+    "Run final repository naming check and acceptance sequence."
+   ],
+   "lean_commands_run_by_reviewer": [
+    {
+     "command": "build NLAlib.Matrix.Inequalities.PrincipalMinorProducts",
+     "exit_code": 0
+    },
+    {
+     "command": "env lean NLAlib/Sketching/Sampling/LEnsembleLaw.lean",
+     "exit_code": 0
+    }
+   ]
+  },
+  "current_batch": {
+   "date": "2026-10-24",
+   "base": "ca12c1e8c230718a21fd41cdaebee02672ee57a3",
+   "scope": "The ten-target Krylov release: all public contracts in thirteen new mathematical leaves and new/changed contracts in the two extended owners PolynomialMethods and QRAlgorithm, with existing owner context and proof-local helper names also inspected. The five previous-batch API repairs are documented separately.",
+   "target_ids": [
+    "minres-bound",
+    "flexible-gmres-residual-minimization",
+    "gmres-elman",
+    "stationary-splitting-convergence",
+    "richardson-iteration",
+    "chebyshev-iteration",
+    "fom-def",
+    "qr-algorithm-simultaneous-iteration",
+    "matrix-equation-galerkin-optimality",
+    "discrete-measure-jacobi-matrix"
+   ],
+   "mathematical_leaves_reviewed": 15,
+   "public_headers_inspected_including_existing_owner_context": 166,
+   "private_headers_inspected": 30,
+   "method": "Semantic readback of actual source signatures and relevant definitions/proofs against docs/STANDARDS.md §1–§2, using source-header extraction only as an inventory. Names were checked against their mathematical conclusion, source-free descriptions, native object ownership, scalar/generalized transpose scope, and layer/concept placement; regex checks alone were not treated as sufficient.",
+   "resolved_findings": [
+    {
+     "kind": "proof_local_helper_placement",
+     "file": "NLAlib/Krylov/Quadrature/DiscreteLanczos.lean",
+     "declaration": "norm_toLp_sqrt_eq_sqrt_sum",
+     "status": "resolved",
+     "finding": "A generic vector-norm identity with one local caller was initially exported from the consumer-specific Lanczos module and tagged as atlas evidence.",
+     "resolution": "The author made it private and removed its atlas tag and ledger anchor. The actual bordered identity and public monic-beta-zero normalization retain the card contract.",
+     "source_confirmation": "Final source contains a private, untagged helper; author confirmed a successful rebuild of the stable leaf (3605 jobs, exit0).",
+     "policy": "docs/STANDARDS.md §2: private proof-local details; reusable generic norm facts belong with their norm owner."
+    }
+   ],
+   "unresolved_findings": [],
+   "case_findings": [],
+   "source_flavored_prefix_findings": [],
+   "file_case_findings": [],
+   "layer_findings": [],
+   "namespace_readback": [
+    {
+     "objects": [
+      "IsGMRESIterate",
+      "HasOrthonormalCols"
+     ],
+     "files": [
+      "NLAlib/Krylov/Solvers/MINRESIntervals.lean",
+      "NLAlib/Krylov/Solvers/GMRESPositiveReal.lean",
+      "NLAlib/Krylov/Solvers/FlexibleGMRES.lean"
+     ],
+     "verdict": "Methods extend the native iterate or orthonormal-column predicate; Hermitian/PSD conditions are domain assumptions of algorithm guarantees rather than misplaced pure matrix-property facts."
+    },
+    {
+     "objects": [
+      "ArnoldiDecomp",
+      "IsFOMIterate"
+     ],
+     "files": [
+      "NLAlib/Krylov/Solvers/FOM.lean"
+     ],
+     "verdict": "The FOM data constructor is lowerCamelCase, the predicate is UpperCamelCase, and decomposition/iterate methods live in their owning domain namespaces."
+    },
+    {
+     "objects": [
+      "LanczosDecomp",
+      "discreteStieltjesState",
+      "discreteStieltjesMonicBeta"
+     ],
+     "files": [
+      "NLAlib/Krylov/Quadrature/CanonicalLanczos.lean",
+      "NLAlib/Krylov/Quadrature/DiscreteStieltjes.lean",
+      "NLAlib/Krylov/Quadrature/DiscreteLanczos.lean"
+     ],
+     "verdict": "Native decomposition methods and descriptive root construction/realization theorems distinguish normalized couplings from monic mass coefficients; module placement follows their Krylov dependencies."
+    },
+    {
+     "objects": [
+      "Matrix",
+      "frobEnergy",
+      "twoSidedTrialMap",
+      "matrixMultitermLinearMap"
+     ],
+     "files": [
+      "NLAlib/Matrix/Spectral/MatrixPowerFixedPoint.lean",
+      "NLAlib/Matrix/Norms/FrobeniusProducts.lean",
+      "NLAlib/Matrix/Equations/EnergyProjection.lean"
+     ],
+     "verdict": "Generic fixed-point facts extend Matrix below their stationary consumer; pairing facts live in Matrix/Norms and matrix-equation energy/trial-space API in Matrix/Equations."
+    },
+    {
+     "objects": [
+      "affineStationaryIterate",
+      "splittingIterate",
+      "SplittingConverges",
+      "preconditionedRichardsonIterate",
+      "chebyshevRho",
+      "chebyshevRecurrenceIterate"
+     ],
+     "files": [
+      "NLAlib/Krylov/Solvers/StationarySplitting.lean",
+      "NLAlib/Krylov/Solvers/PreconditionedRichardson.lean",
+      "NLAlib/Krylov/Solvers/ChebyshevRecurrence.lean",
+      "NLAlib/Krylov/Solvers/PolynomialMethods.lean"
+     ],
+     "verdict": "Data names use lowerCamelCase, the convergence contract uses UpperCamelCase, and recurrence/power/rate theorem names describe their actual conclusions in the existing solver and polynomial owners."
+    },
+    {
+     "objects": [
+      "qrAlgorithm",
+      "QRAlgorithmSucceeds"
+     ],
+     "files": [
+      "NLAlib/Krylov/Spectral/QRAlgorithm.lean"
+     ],
+     "verdict": "Existing native QR names are retained; the completed range identity and explicit factor-swap counterexample names accurately state their conclusions and hypotheses."
+    }
+   ],
+   "valid_exceptions": [
+    "Transpose-named discrete Lanczos identities are explicitly real-only and use Qᵀ; they are not generic RCLike formulas mislabeled as transpose.",
+    "Chebyshev, Richardson, Stieltjes, Lanczos, Givens, GMRES, MINRES and FOM name established mathematical constructions or native algorithms, not bibliography labels.",
+    "The native Lanczos symbol T appears as a theorem-name token; it refers to the existing compression definition and is not a newly introduced incorrectly cased data definition.",
+    "Algorithm guarantees with a Hermitian or PSD domain assumption remain in their native algorithm/predicate namespace, while pure matrix extensions use the appropriate matrix owner."
+   ],
+   "doc_only_integration_reviewed": {
+    "file": "NLAlib/Krylov/Solvers/GMRESArnoldi.lean",
+    "verdict": "Its module and direct-Galerkin documentation point to the complete new FOM API without changing the old helper signatures."
+   },
+   "stable_author_confirmation": "The Lanczos author confirmed final declaration stability after the private-helper fix and successful leaf rebuild; no further public edits planned.",
+   "source_records": [
+    {
+     "file": "NLAlib/Krylov/Quadrature/CanonicalLanczos.lean",
+     "sha256": "0cdcafc6861398c7bceb78f6aca91daafe53f0417653c2e4970b1a54d4db908c",
+     "lines": 84,
+     "public_source_headers_reviewed": 3,
+     "private_source_headers_reviewed": 0,
+     "imports": [
+      "NLAlib.Krylov.Quadrature.MonicLanczosCoefficients",
+      "NLAlib.Krylov.Processes.LanczosRecurrence",
+      "NLAlib.Polynomial.OrthogonalPolynomials.JacobiCoefficients"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Quadrature/DiscreteLanczos.lean",
+     "sha256": "69ffcb7677114b42010560ef6c35da73b9a459f5f9c610c579b4adde30983f71",
+     "lines": 262,
+     "public_source_headers_reviewed": 13,
+     "private_source_headers_reviewed": 2,
+     "imports": [
+      "NLAlib.Krylov.Quadrature.DiscreteStieltjes"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Quadrature/DiscreteStieltjes.lean",
+     "sha256": "2bc341198c520bc5126da8200543b96b8b6fc9d420c3d25978ccc33650ab35bb",
+     "lines": 213,
+     "public_source_headers_reviewed": 13,
+     "private_source_headers_reviewed": 10,
+     "imports": [
+      "NLAlib.Krylov.Quadrature.CanonicalLanczos",
+      "NLAlib.Krylov.Quadrature.DiscreteCanonical"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Solvers/ChebyshevRecurrence.lean",
+     "sha256": "4de14f96358d54836ee09b78c3b64ec9a84f388e4b7f9adb5c9982b0e03011e3",
+     "lines": 276,
+     "public_source_headers_reviewed": 18,
+     "private_source_headers_reviewed": 5,
+     "imports": [
+      "NLAlib.Krylov.Solvers.PolynomialMethods"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Solvers/FOM.lean",
+     "sha256": "1b77130b13452c1044aeda300e9d4711babe9b0db77f3d66d150fba55bda534e",
+     "lines": 295,
+     "public_source_headers_reviewed": 17,
+     "private_source_headers_reviewed": 0,
+     "imports": [
+      "NLAlib.Krylov.Solvers.GMRESArnoldi",
+      "NLAlib.Krylov.Processes.ArnoldiProcess"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Solvers/FlexibleGMRES.lean",
+     "sha256": "209ac5ad3737fd8fa62d690561ff6f5ca1c27e02cf61053962e7f8d9de095db7",
+     "lines": 101,
+     "public_source_headers_reviewed": 4,
+     "private_source_headers_reviewed": 0,
+     "imports": [
+      "NLAlib.Matrix.Subspaces.OrthogonalProducts"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Solvers/GMRESPositiveReal.lean",
+     "sha256": "9a766c96df26ca64696f37915926603071e48b3540cec75d99d1fe6b6b60a955",
+     "lines": 237,
+     "public_source_headers_reviewed": 4,
+     "private_source_headers_reviewed": 5,
+     "imports": [
+      "NLAlib.Krylov.Solvers.GMRES",
+      "NLAlib.Matrix.Functions.NearestPSD",
+      "NLAlib.Matrix.Spectral.HermitianMinimum"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Solvers/MINRESIntervals.lean",
+     "sha256": "5cda3ecbfa4bc2c06580e3eb40b0666cc73e2554e380acd5ff9feeedf316db3a",
+     "lines": 104,
+     "public_source_headers_reviewed": 5,
+     "private_source_headers_reviewed": 0,
+     "imports": [
+      "NLAlib.Krylov.Solvers.GMRES",
+      "NLAlib.Polynomial.FunctionApproximation.TwoIntervals"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Solvers/PolynomialMethods.lean",
+     "sha256": "ce1031bfa41bca9999109a74c7622492026419e8e5d2edfe55ea00fd63df6ae6",
+     "lines": 402,
+     "public_source_headers_reviewed": 21,
+     "private_source_headers_reviewed": 6,
+     "imports": [
+      "NLAlib.Krylov.Spaces.Polynomial",
+      "NLAlib.Matrix.Functions.PolynomialCalculus",
+      "NLAlib.Polynomial.FunctionApproximation.Approximation"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Solvers/PreconditionedRichardson.lean",
+     "sha256": "8833c84417d11e55853c58fe4349a7367e945159690485379566a994653fca34",
+     "lines": 210,
+     "public_source_headers_reviewed": 9,
+     "private_source_headers_reviewed": 2,
+     "imports": [
+      "NLAlib.Krylov.Solvers.StationarySplitting",
+      "NLAlib.Krylov.Solvers.Preconditioned",
+      "NLAlib.Krylov.Solvers.PolynomialMethods"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Solvers/StationarySplitting.lean",
+     "sha256": "3e4d30a912847ce3a7d8ca5518a4b6a8c5db7332c67bee144be84bc0f073e408",
+     "lines": 171,
+     "public_source_headers_reviewed": 15,
+     "private_source_headers_reviewed": 0,
+     "imports": [
+      "NLAlib.Matrix.Spectral.MatrixPowerFixedPoint",
+      "NLAlib.Matrix.Spectral.MatrixPowerReal"
+     ]
+    },
+    {
+     "file": "NLAlib/Krylov/Spectral/QRAlgorithm.lean",
+     "sha256": "85f061feea554f33076052b78811deb80f1c62252371e5565eac5d6b10d8a01a",
+     "lines": 386,
+     "public_source_headers_reviewed": 26,
+     "private_source_headers_reviewed": 0,
+     "imports": [
+      "NLAlib.Matrix.Factorizations.Givens",
+      "NLAlib.Matrix.Factorizations.GramSchmidtClassical",
+      "NLAlib.Matrix.Structured.Hessenberg",
+      "NLAlib.Krylov.Spaces.Block"
+     ]
+    },
+    {
+     "file": "NLAlib/Matrix/Equations/EnergyProjection.lean",
+     "sha256": "eb236d7831ae6bcbc475a5360efcf78a80e5cc6067eab90aeb4f8d471be99b1e",
+     "lines": 229,
+     "public_source_headers_reviewed": 13,
+     "private_source_headers_reviewed": 0,
+     "imports": [
+      "NLAlib.Matrix.Norms.FrobeniusProducts"
+     ]
+    },
+    {
+     "file": "NLAlib/Matrix/Norms/FrobeniusProducts.lean",
+     "sha256": "cbe78dc0fff173eafc4e57a1d196a80c9e223290b7c09ae49f75abb316a560ce",
+     "lines": 37,
+     "public_source_headers_reviewed": 3,
+     "private_source_headers_reviewed": 0,
+     "imports": [
+      "NLAlib.Matrix.Norms.Frobenius"
+     ]
+    },
+    {
+     "file": "NLAlib/Matrix/Spectral/MatrixPowerFixedPoint.lean",
+     "sha256": "b83969f50d52894a2d6efb7fbfb49deb517555518dd55cdc57760a00cd2d4742",
+     "lines": 55,
+     "public_source_headers_reviewed": 2,
+     "private_source_headers_reviewed": 0,
+     "imports": []
+    }
+   ],
+   "mechanical_check_status": "Source-case/source-prefix/file-case and import-layer inventory checks in this readback passed. Root still runs repository check_names.py on the refreshed declaration index as part of final acceptance.",
+   "public_edits_by_reviewer_in_this_review": [],
+   "lean_commands_by_reviewer_in_this_review": []
+  },
+  "mechanical_check": "names OK (14347 declarations)"
+ },
+ "mathematical_readback": {
+  "root": "Direct readback of native MINRES, Elman/restarted GMRES, flexible residual/attainment and full FOM proofs; root implemented and checked QR and matrix-equation energy proofs.",
+  "independent_other_cards": {
+   "method": "Independent read-only comparison of actual atlas informal/hypotheses/conclusions with native source signatures and proof bodies; completion ledgers were used only to locate declarations. No compiler was run and no public source or metadata was edited by this review.",
+   "approved_without_mathematical_findings": [
+    "stationary-splitting-convergence",
+    "richardson-iteration",
+    "chebyshev-iteration",
+    "matrix-equation-galerkin-optimality"
+   ],
+   "naming_findings": [],
+   "naming_readback": "New definitions use lowerCamelCase, the SplittingConverges predicate uses UpperCamelCase, theorem names describe their mathematical conclusions, no names use source/author prefixes, and generic Matrix extensions in MatrixPowerFixedPoint use their owning Matrix namespace. Native vector norms, quadForm and frobInner/frobEnergy are used explicitly. Frobenius adjoint products use conjugate transpose over RCLike, while real-only QR transpose names remain mathematically accurate. Focused leaf/module placement follows the matrix/Krylov layer split.",
+   "cards": [
+    {
+     "id": "stationary-splitting-convergence",
+     "verdict": "Full card covered, without a convergence-to-some-limit weakening.",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Solvers/StationarySplitting.lean",
+       "lines": [
+        27,
+        56,
+        66,
+        71,
+        91,
+        99
+       ],
+       "readback": "An actual recursive affine update is instantiated by the literal matrix splitting. Invertible M identifies fixed points with solutions of (M-N)x=b, gives the exact factorization M-N=M(I-M^-1N), and yields the exact matrix-power error identity."
+      },
+      {
+       "file": "NLAlib/Krylov/Solvers/StationarySplitting.lean",
+       "lines": [
+        108,
+        116,
+        124,
+        157,
+        165
+       ],
+       "readback": "SplittingConverges quantifies over every right-hand side, asserts existence and uniqueness of its exact solution, and quantifies convergence from every initializer. The reverse implication correctly uses b=0 and uniqueness to force the limiting solution to zero. Complex and real-complexified spectral-radius criteria cover nonreal eigenvalues and nondiagonalizable matrices."
+      },
+      {
+       "file": "NLAlib/Matrix/Spectral/MatrixPowerFixedPoint.lean",
+       "lines": [
+        22,
+        38
+       ],
+       "readback": "Pointwise decay on every vector is equivalent to matrix-power decay via basis vectors. A nonzero fixed vector contradicts decay, proving invertibility of I-H without assuming solvability."
+      }
+     ],
+     "endpoints": "Arbitrary finite labels including empty dimensions; all algebraic statements use RCLike and exact inverses guarded by IsUnit M. The real convergence criterion explicitly uses complexification rather than the potentially incomplete real spectrum."
+    },
+    {
+     "id": "richardson-iteration",
+     "verdict": "Full preconditioned card covered, including both energies and optimal relaxation.",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Solvers/PreconditionedRichardson.lean",
+       "lines": [
+        27,
+        38,
+        51,
+        63
+       ],
+       "readback": "The implemented affine recurrence is the literal preconditioned Richardson update, its error is the advertised matrix power, and the split-preconditioning identity proves realization as ordinary Richardson under W^T P W=I."
+      },
+      {
+       "file": "NLAlib/Krylov/Solvers/PreconditionedRichardson.lean",
+       "lines": [
+        81,
+        151,
+        162,
+        183,
+        198
+       ],
+       "readback": "The Loewner sandwich is transported to a Hermitian split operator with eigenvalues in [a,b]. Existing weighted polynomial bounds with g=X and g=1 give exactly the A and P energy bounds. The optimal-step calculation gives (b-a)/(b+a), not a condition-number surrogate."
+      }
+     ],
+     "endpoints": "The source norm inequalities follow from the squared native quadratic-form inequalities on the positive-definite domain because the contraction factors are nonnegative. Theorems allow omega=0 in addition to the requested positive steps. a=b, step zero and empty dimensions are covered. A is inferred Hermitian/positive from the Loewner sandwich and positive P instead of adding redundant assumptions. P=I specializes the general split bridge with W=I."
+    },
+    {
+     "id": "chebyshev-iteration",
+     "verdict": "Full coupled rho/d/x implementation and exact/geometric residual and energy clauses covered.",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Solvers/ChebyshevRecurrence.lean",
+       "lines": [
+        25,
+        54,
+        75,
+        82
+       ],
+       "readback": "The recursive rho coefficients have the exact T_k/T_(k+1) formula and positive denominators on 0<a<b, including rho_0=1/sigma."
+      },
+      {
+       "file": "NLAlib/Krylov/Solvers/ChebyshevRecurrence.lean",
+       "lines": [
+        88,
+        100,
+        105,
+        122,
+        131,
+        180,
+        205
+       ],
+       "readback": "The actual state recursion initializes d_0=2r_0/(b+a), updates x_(k+1)=x_k+d_k, then d_(k+1)=rho_(k+1)rho_k d_k+4rho_(k+1)r_(k+1)/(b-a). These are exactly the displayed theta/delta formulas. Simultaneous induction proves this implemented state realizes the polynomial iterate; no recurrence is merely postulated."
+      },
+      {
+       "file": "NLAlib/Krylov/Solvers/ChebyshevRecurrence.lean",
+       "lines": [
+        213,
+        223,
+        241,
+        252,
+        267
+       ],
+       "readback": "The implemented recurrence has the exact residual polynomial, the reciprocal-T residual rate and usual geometric residual rate in the native vector norm, and both matching squared A-energy error rates."
+      },
+      {
+       "file": "NLAlib/Krylov/Solvers/PolynomialMethods.lean",
+       "lines": [
+        212,
+        222
+       ],
+       "readback": "The two new bridges identify the existing polynomial iterate's exact residual and error polynomials without redefining the old method or weakening its specification."
+      }
+     ],
+     "endpoints": "Step zero and empty finite dimensions are included. Algebraic realization needs only 0<a<b, while Hermitian/spectral hypotheses are imposed for rates. The state update uses scalar arithmetic, vector operations and a matrix-vector residual; no vector inner-product evaluation occurs in the recurrence."
+    },
+    {
+     "id": "matrix-equation-galerkin-optimality",
+     "verdict": "Full rectangular Galerkin energy-minimization equivalence covered, including the concrete multiterm operator.",
+     "evidence": [
+      {
+       "file": "NLAlib/Matrix/Equations/EnergyProjection.lean",
+       "lines": [
+        25,
+        39,
+        47,
+        55,
+        66,
+        104
+       ],
+       "readback": "The energy is the literal Frobenius pairing with a real linear operator. Self-adjointness cancels the cross term, strict positivity gives stationarity from minimality and uniqueness of the minimizing trial matrix."
+      },
+      {
+       "file": "NLAlib/Matrix/Equations/EnergyProjection.lean",
+       "lines": [
+        125,
+        137
+       ],
+       "readback": "The two-sided trial map is V T W^H with arbitrary rectangular V,W. The reduced equation is equivalent to minimum energy and uniqueness of the represented trial matrix. No false coefficient uniqueness is asserted when the trial factors are deficient."
+      },
+      {
+       "file": "NLAlib/Matrix/Equations/EnergyProjection.lean",
+       "lines": [
+        191,
+        208
+       ],
+       "readback": "The concrete finite-sum operator X -> sum_i A_i X B_i is defined as a linear map, and its literal reduced residual is specialized from the generic equivalence. Positivity/self-adjointness concern the whole operator; the coefficient matrices are not incorrectly assumed SPD individually."
+      },
+      {
+       "file": "NLAlib/Matrix/Norms/FrobeniusProducts.lean",
+       "lines": [
+        20,
+        25,
+        32
+       ],
+       "readback": "The reusable Frobenius adjoint identities are valid for rectangular matrices over RCLike, using the correct conjugate transposes and rectangular trace cyclicity."
+      }
+     ],
+     "endpoints": "Unequal reduced row/column sizes, empty dimensions and dependent trial factors are included. The theorem is stronger than the card's orthonormal-factor specialization. Real scalars and an exact solution S(X)=F match the card."
+    },
+    {
+     "id": "qr-algorithm-simultaneous-iteration",
+     "verdict": "Lean source correctly distinguishes all cases; original human Hessenberg clause requires explicit correction before promotion.",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Spectral/QRAlgorithm.lean",
+       "lines": [
+        63,
+        171,
+        193,
+        214,
+        224
+       ],
+       "readback": "Every successful shifted QR run has the exact accumulated orthogonal similarity and shifted-product identity; unshifted runs factor A^k. No invertibility of A is assumed for these identities."
+      },
+      {
+       "file": "NLAlib/Krylov/Spectral/QRAlgorithm.lean",
+       "lines": [
+        241
+       ],
+       "readback": "The completed leading-block range equality explicitly assumes invertible A. It obtains nonzero triangular diagonals from the accumulated determinant factorization, then invokes the graded-column QR basis. The j=0 branch and all k are treated."
+      },
+      {
+       "file": "NLAlib/Krylov/Spectral/QRAlgorithm.lean",
+       "lines": [
+        270,
+        278,
+        302,
+        317,
+        329,
+        342,
+        350
+       ],
+       "readback": "Arbitrary-routine Hessenberg/tridiagonal preservation has explicit nonzero R-diagonal hypotheses. The actual Givens routine has unconditional Hessenberg preservation, its success bridge, and unconditional symmetric-tridiagonal preservation. Symmetry alone is unconditional for every successful QR run."
+      },
+      {
+       "file": "NLAlib/Krylov/Spectral/QRAlgorithm.lean",
+       "lines": [
+        360
+       ],
+       "readback": "Root's added rational counterexample uses orthogonal Q with entries 3/5 and 4/5 and triangular R with entries 8/5 and -6/5. Its swapped product has entry -24/25 below the first subdiagonal, exactly confirming the mathematical precision correction. The helper's mathematical name and real-only transpose usage conform to standards."
+      }
+     ],
+     "precision_finding": "The broad informal statement 'A QR step preserves upper Hessenberg form' is false for an arbitrary QR factorization at a singular input. The leading-block simultaneous-subspace wording also needs the invertibility qualification already present in its Lean theorem.",
+     "counterexample": "Take A=diag(0,1,2), c=1/sqrt(2), Q=[[c,0,c],[0,1,0],[c,0,-c]], and R=Q^T A=[[0,0,sqrt(2)],[0,1,0],[0,0,-sqrt(2)]]. This is a valid QR of a diagonal matrix, but RQ=[[1,0,-1],[0,1,0],[-1,0,1]] is not upper Hessenberg.",
+     "required_human_precision": "State unconditional power/similarity identities separately from the invertible-A leading-block range identity; specify nonzero R diagonals for generic QR Hessenberg/tridiagonal preservation and unconditional preservation for the realized Givens routine.",
+     "parent_resolution": "Root confirmed explicit informal/hypothesis/conclusion corrections are being integrated, with a rational kernel-checkable 3x3 negative example added as an untagged helper. Final metadata readback should confirm these conditions before merge."
+    }
+   ]
+  },
+  "independent_discrete": {
+   "id": "discrete-measure-jacobi-matrix",
+   "verdict": "Full retained card corresponds to the actual native definitions and proved source bridges; no mathematical or naming issue found.",
+   "findings": [],
+   "naming_findings": [],
+   "method": "Read all of CanonicalLanczos.lean, DiscreteStieltjes.lean and DiscreteLanczos.lean against the actual current atlas informal, hypotheses, conclusion and reviewed clauses. Followed the actual older atomic-measure, grade, canonical-polynomial, monic-beta, Gauss-exactness and Lanczos-step definitions/proofs. The completion ledger supplied names only and was not treated as mathematical evidence. This review ran no compiler and changed no public source or metadata.",
+   "source_files_read": [
+    "NLAlib/Krylov/Quadrature/CanonicalLanczos.lean",
+    "NLAlib/Krylov/Quadrature/DiscreteStieltjes.lean",
+    "NLAlib/Krylov/Quadrature/DiscreteLanczos.lean",
+    "NLAlib/Krylov/Quadrature/DiscreteMeasure.lean",
+    "NLAlib/Krylov/Quadrature/DiscreteCanonical.lean",
+    "NLAlib/Krylov/Quadrature/MonicLanczosCoefficients.lean",
+    "NLAlib/Krylov/Quadrature/GaussQuadrature.lean",
+    "NLAlib/Krylov/Processes/LanczosRecurrence.lean",
+    "NLAlib/Polynomial/OrthogonalPolynomials/Basic.lean"
+   ],
+   "clauses": [
+    {
+     "meaning": "Actual atomic measure and full grade",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteMeasure.lean",
+       "lines": [
+        30,
+        51,
+        74
+       ],
+       "readback": "The spectral-measure identity is a literal measure equality, proved via all finite-measure integrals, with sqrt(w)^2=w. Full grade is derived from the nonzero weighted Vandermonde determinant under distinct nodes and nonzero square-root weights. No full-grade or decomposition-correctness witness is supplied as a separate hypothesis."
+      }
+     ],
+     "domains": "The measure identity permits repeated nodes and zero nonnegative weights. Full grade uses exactly the retained distinct-node and strictly positive-weight assumptions. The full finite construction uses Fin N node labels and natural step indices; the measure identity itself supports arbitrary finite labels."
+    },
+    {
+     "meaning": "Actual weighted step, initialization and iterated-state identity",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteStieltjes.lean",
+       "lines": [
+        38,
+        46,
+        54,
+        60
+       ],
+       "readback": "The initial current values are the reciprocal square-root total mass, with zero previous values and zero normalized beta. The actual step computes alpha=sum w*t*p^2, subtracts alpha*p and the previous beta term, then normalizes by sqrt(sum w*v^2). State j is explicitly the j-fold iterate of this literal update."
+      },
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteStieltjes.lean",
+       "lines": [
+        83,
+        94,
+        114,
+        141,
+        161,
+        173,
+        182,
+        194
+       ],
+       "readback": "Multiplication by sqrt(w) transforms the actual weighted Rayleigh expression and weighted residual norm into the actual Euclidean Lanczos expressions. The literal step identity and initialization identity are independently proved, then induction on j gives the entire state identity and computed alpha/beta identities at every step. This is an actual algorithm bridge, not an assumed specification. With strictly positive weights the weighting map is invertible; the proved identities also hold as intertwining identities for nonnegative weights."
+      }
+     ],
+     "endpoints": "Total inverses send a zero residual to the zero next vector, agreeing with the native total Lanczos step. The iterated identity covers initial zero mass, early breakdown, terminal breakdown and later zero states. Strictly positive weights/distinct nodes are imposed only where the full N-step basis or division by a weight is needed."
+    },
+    {
+     "meaning": "Canonical alpha, monic norm ratios and beta-zero convention",
+     "evidence": [
+      {
+       "file": "NLAlib/Polynomial/OrthogonalPolynomials/Basic.lean",
+       "lines": [
+        73,
+        80
+       ],
+       "readback": "The native canonical alpha is the moment numerator divided by the squared monic-polynomial norm; its positive-index beta is H_j/H_(j-1), while native beta at zero is the off-diagonal boundary convention zero."
+      },
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteStieltjes.lean",
+       "lines": [
+        73,
+        80,
+        202,
+        209
+       ],
+       "readback": "The new monic Stieltjes output explicitly uses total mass at index zero and squared actual normalized coupling at every positive index. Its normalized initial coupling is separately proved zero. There is no false identification of monic beta0=mass with the normalized/native boundary beta0=0."
+      },
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteLanczos.lean",
+       "lines": [
+        115,
+        134,
+        160,
+        180
+       ],
+       "readback": "Computed alpha is identified with the canonical alpha for j<N. Computed monic beta is identified with the canonical norm ratio only for 0<j<=N. The terminal j=N branch explicitly uses full grade and the proven vanishing moment norm, rather than extending a normalized last vector incorrectly. Both normalized and square-root-monic assembly give exactly the canonical Jacobi matrix."
+      },
+      {
+       "file": "NLAlib/Krylov/Quadrature/MonicLanczosCoefficients.lean",
+       "lines": [
+        117
+       ],
+       "readback": "At exact grade, the final monic moment norm is zero because the full characteristic polynomial vanishes under the spectral measure; division yields zero. This justifies the terminal norm-ratio branch used above, including the zero-grade native boundary convention."
+      }
+     ],
+     "index_readback": "Jacobi diagonal entries use alpha_i; its upper/lower off-diagonal entries use beta at a positive row/column index. Therefore replacing normalized beta0=0 by sqrt(monic beta0)=sqrt(mass) in the separate assembly function changes no matrix entry."
+    },
+    {
+     "meaning": "Canonical matrix equality and actual finite-N basis",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Quadrature/CanonicalLanczos.lean",
+       "lines": [
+        28,
+        57,
+        70
+       ],
+       "readback": "Canonical moment positivity is established up to the actual grade. Nonnegative stored Lanczos couplings select the canonical square roots of their monic squares, proving equality of the actual compression matrix with the canonical moment Jacobi matrix. The native algorithm supplies nonnegativity and exact computed alpha/beta coefficients; the result is matrix equality, not merely isospectrality."
+      },
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteLanczos.lean",
+       "lines": [
+        23,
+        43,
+        54,
+        64,
+        82,
+        97,
+        106
+       ],
+       "readback": "The displayed full Q is built from actual lanczosRecurrence outputs and is identified with the canonical Arnoldi matrix using the existing algorithm realization. Full grade gives Q^H Q=I and Q Q^H=I. Conjugation gives the exact canonical Jacobi matrix. The positive border is sqrt(total mass) times the first coordinate, using the actual positive normalization of the first Lanczos vector. Positive interior couplings and zero coupling at exact N are derived from native recurrence/grade theorems."
+      }
+     ],
+     "endpoints": "All matrix/measure equalities include N=0. The literal first-coordinate bordered formula explicitly requires 0<N. No first coordinate is constructed in an empty basis, and no normalized vector at the terminal order N is asserted. N=1 gives alpha0 equal to its sole node and beta1=0, with the correct arbitrary-mass normalization."
+    },
+    {
+     "meaning": "Actual computed values and reciprocal-weight dual orthogonality",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteLanczos.lean",
+       "lines": [
+        203,
+        224
+       ],
+       "readback": "The computed Stieltjes values are identified with evaluations of the actual Lanczos polynomials for j<N by cancelling a strictly positive square-root weight. The reciprocal-weight dual identity is then obtained from the full actual orthogonal basis. It has the exact factor delta_rs/w_r, with no missing mass normalization."
+      },
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteCanonical.lean",
+       "lines": [
+        58,
+        90,
+        100,
+        126,
+        160
+       ],
+       "readback": "The existing canonical moment-polynomial evaluation matrix is genuinely constructed from the normalized moment polynomials and proven square-orthogonal via its moment functional. Its row orthogonality yields the same reciprocal-weight dual identity for the canonical polynomials, independently of the procedural bridge."
+      }
+     ],
+     "domains": "Strict positivity is used when cancelling sqrt(w_r) or dividing by w_r. The dual formulas quantify r,s:Fin N, so their empty case is correctly vacuous."
+    },
+    {
+     "meaning": "Converse Gauss spectral measure, including zero-point rule",
+     "evidence": [
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteLanczos.lean",
+       "lines": [
+        243
+       ],
+       "readback": "The total first vector is defined by its coordinate condition instead of choosing a Fin q zero index unconditionally. Expanding spectralMeasure gives exactly the Gauss nodes and weights ||b||^2 times the squared first eigenvector coordinate. Each summand index supplies q>0 where a first coordinate is needed, so q=0 is a well-typed empty sum and zero measure."
+      },
+      {
+       "file": "NLAlib/Krylov/Quadrature/DiscreteMeasure.lean",
+       "lines": [
+        168
+       ],
+       "readback": "For positive q, the existing literal Pi.single first-vector formula gives the same finite atomic measure identity."
+      },
+      {
+       "file": "NLAlib/Krylov/Quadrature/GaussQuadrature.lean",
+       "lines": [
+        162
+       ],
+       "readback": "The existing degree<2q exactness theorem for the actual orthonormal Krylov compression identifies those nodes/weights as the Gauss rule of the original spectral measure. At q=0 the allowed polynomial is zero, so the empty-rule convention does not falsely claim reproduction of nonzero total mass."
+      }
+     ],
+     "domains": "A is real Hermitian and D is an actual LanczosDecomp A b q, whose grade constraint is native. No extra supplied quadrature-correctness witness is assumed. The caller can use the canonical arnoldiDecomp for every q<=grade(A,b)."
+    }
+   ],
+   "naming_readback": "All new public data definitions use lowerCamelCase, standard algorithm names identify the mathematical procedures, and theorem names describe their conclusions. The transpose-named compression/border statements are genuinely real-only; conjugate-transpose statements use the native shared matrix API. Proof-local weighting/norm helpers are private. No source-flavored author/chapter prefixes, duplicate predicate spellings, or wrong generic transpose names were found.",
+   "trust_source_scan": "No sorry, admit, axiom declaration or native_decide appears in the three new files. Kernel trust/build acceptance remains the root driver's responsibility; this independent review ran no compiler.",
+   "qr_precision_final_readback": "The current QR card explicitly distinguishes unconditional power/similarity/symmetry identities, the invertible-A leading-block range identity, the nonzero-R-diagonal condition for generic Hessenberg/tridiagonal preservation, and unconditional preservation by the realized Givens routine. The earlier human-statement finding is resolved in informal, hypotheses and conclusion."
+  },
+  "unresolved_findings": []
+ },
+ "structure": [
+  "Native Arnoldi, GMRES and CG predicates/decompositions are reused by their actual solver guarantees.",
+  "The weighted Stieltjes procedure reuses the native Lanczos state and proves literal step/state conjugacy.",
+  "Frobenius adjoint-pairing and operator-energy facts reside under Matrix below the projection consumer.",
+  "The generic PSD determinant normalizer moved from Sketching to its Matrix/Inequalities owner.",
+  "A single-use generic norm helper is private; no parallel core norm API was introduced."
+ ],
+ "retained_exclusions": {
+  "truncation-lemma": "candidate",
+  "tgn-expected-error": "assumed",
+  "etrsvd": "candidate",
+  "etgn": "candidate",
+  "block-krylov-lra": "candidate",
+  "crouzeix-palencia": "candidate"
+ },
+ "required_checks": [
+  {
+   "check": "full-build",
+   "exit_code": 0
+  },
+  {
+   "check": "trusted-import-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "lint",
+   "exit_code": 0
+  },
+  {
+   "check": "axiom-inventory",
+   "exit_code": 0
+  },
+  {
+   "check": "layers",
+   "exit_code": 0
+  },
+  {
+   "check": "extract-declarations",
+   "exit_code": 0
+  },
+  {
+   "check": "sync-atlas",
+   "exit_code": 0
+  },
+  {
+   "check": "import-surface",
+   "exit_code": 0
+  },
+  {
+   "check": "names",
+   "exit_code": 0
+  },
+  {
+   "check": "atlas",
+   "exit_code": 0
+  },
+  {
+   "check": "downstream-example",
+   "exit_code": 0
+  },
+  {
+   "check": "probability-example",
+   "exit_code": 0
+  },
+  {
+   "check": "script-tests",
+   "exit_code": 0
+  },
+  {
+   "check": "polynomial-example",
+   "exit_code": 0
+  },
+  {
+   "check": "khatri-rao-example",
+   "exit_code": 0
+  },
+  {
+   "check": "ritz-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "subspaces-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "gaussian-inverse-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "new-proofs-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "khatri-rao-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "polynomial-matrix-scope",
+   "exit_code": 0
+  },
+  {
+   "check": "card-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "coverage",
+   "exit_code": 0
+  },
+  {
+   "check": "site-math",
+   "exit_code": 0
+  },
+  {
+   "check": "site-build",
+   "exit_code": 0
+  },
+  {
+   "check": "working-whitespace",
+   "exit_code": 0
+  },
+  {
+   "check": "staged-whitespace",
+   "exit_code": 0
+  }
+ ],
+ "trusted_import_audit": "audited 28877 declarations reachable through import NLAlib",
+ "experimental_axiom_inventory": "audited 28941 declarations (14280 public theorems) in [NLAlib]; 3 theorems depend on sorry: [NLAlib.dotProduct_golubKahan_eq,\n NLAlib.golubKahanSucceeds_iff,\n NLAlib.isGradedKrylovBasis_golubKahanU_V]\nOK: no axioms beyond propext / Classical.choice / Quot.sound (and sorryAx in scaffolds)",
+ "new_proof_audit": "PASS: 8356 new/completed theorem declarations (including private helpers); only propext, Classical.choice, Quot.sound",
+ "post_report_checks": [
+  {
+   "check": "final-sync-atlas",
+   "exit_code": 0
+  },
+  {
+   "check": "final-atlas",
+   "exit_code": 0
+  },
+  {
+   "check": "final-card-audit",
+   "exit_code": 0
+  },
+  {
+   "check": "final-site-math",
+   "exit_code": 0
+  },
+  {
+   "check": "final-site-build",
+   "exit_code": 0
+  },
+  {
+   "check": "final-working-whitespace",
+   "exit_code": 0
+  }
+ ]
+}

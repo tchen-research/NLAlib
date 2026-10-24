@@ -2,8 +2,7 @@
  "default_import": "NLAlib",
  "complete_import": "NLAlib.Experimental",
  "experimental_roots": [
-  "NLAlib.Krylov.Processes.Bidiagonalization",
-  "NLAlib.Krylov.Spectral.QRAlgorithm"
+  "NLAlib.Krylov.Processes.Bidiagonalization"
  ],
  "default_modules": [
   "NLAlib.Estimation",
@@ -540,6 +539,7 @@
   "NLAlib.Krylov.Processes.LanczosRecurrence",
   "NLAlib.Krylov.Quadrature",
   "NLAlib.Krylov.Quadrature.AnalyticQuadrature",
+  "NLAlib.Krylov.Quadrature.CanonicalLanczos",
   "NLAlib.Krylov.Quadrature.Christoffel",
   "NLAlib.Krylov.Quadrature.ChristoffelNumbers",
   "NLAlib.Krylov.Quadrature.CoefficientBounds",
@@ -549,7 +549,9 @@
   "NLAlib.Krylov.Quadrature.DilationReduction",
   "NLAlib.Krylov.Quadrature.DilationWeightedMoments",
   "NLAlib.Krylov.Quadrature.DiscreteCanonical",
+  "NLAlib.Krylov.Quadrature.DiscreteLanczos",
   "NLAlib.Krylov.Quadrature.DiscreteMeasure",
+  "NLAlib.Krylov.Quadrature.DiscreteStieltjes",
   "NLAlib.Krylov.Quadrature.EndpointMatrixBounds",
   "NLAlib.Krylov.Quadrature.ExponentialQuadrature",
   "NLAlib.Krylov.Quadrature.GaussQuadrature",
@@ -568,13 +570,20 @@
   "NLAlib.Krylov.Solvers",
   "NLAlib.Krylov.Solvers.CG",
   "NLAlib.Krylov.Solvers.CGRecurrence",
+  "NLAlib.Krylov.Solvers.ChebyshevRecurrence",
   "NLAlib.Krylov.Solvers.ChristoffelDirections",
+  "NLAlib.Krylov.Solvers.FOM",
+  "NLAlib.Krylov.Solvers.FlexibleGMRES",
   "NLAlib.Krylov.Solvers.GMRES",
   "NLAlib.Krylov.Solvers.GMRESArnoldi",
   "NLAlib.Krylov.Solvers.GMRESComplexDiagonal",
+  "NLAlib.Krylov.Solvers.GMRESPositiveReal",
+  "NLAlib.Krylov.Solvers.MINRESIntervals",
   "NLAlib.Krylov.Solvers.Minimizer",
   "NLAlib.Krylov.Solvers.PolynomialMethods",
   "NLAlib.Krylov.Solvers.Preconditioned",
+  "NLAlib.Krylov.Solvers.PreconditionedRichardson",
+  "NLAlib.Krylov.Solvers.StationarySplitting",
   "NLAlib.Krylov.Spaces",
   "NLAlib.Krylov.Spaces.Basic",
   "NLAlib.Krylov.Spaces.Block",
@@ -585,9 +594,11 @@
   "NLAlib.Krylov.Spaces.MinimalPolynomial",
   "NLAlib.Krylov.Spaces.Polynomial",
   "NLAlib.Krylov.Spaces.ScalarExtension",
+  "NLAlib.Krylov.Spectral",
   "NLAlib.Krylov.Spectral.CharacteristicPolynomial",
   "NLAlib.Krylov.Spectral.MeasurableRitz",
   "NLAlib.Krylov.Spectral.PowerMethod",
+  "NLAlib.Krylov.Spectral.QRAlgorithm",
   "NLAlib.Krylov.Spectral.Ritz",
   "NLAlib.Krylov.Spectral.SubspaceIteration",
   "NLAlib.LowRank",
@@ -712,6 +723,7 @@
   "NLAlib.Matrix.Calculus.DeterminantDerivative",
   "NLAlib.Matrix.Calculus.DeterminantDerivativeFinite",
   "NLAlib.Matrix.Equations",
+  "NLAlib.Matrix.Equations.EnergyProjection",
   "NLAlib.Matrix.Equations.SylvesterNormal",
   "NLAlib.Matrix.Equations.SylvesterPerturbation",
   "NLAlib.Matrix.Equations.SylvesterReal",
@@ -1159,6 +1171,7 @@
   "NLAlib.Matrix.Norms.EuclideanOperatorBounds",
   "NLAlib.Matrix.Norms.FanDominance",
   "NLAlib.Matrix.Norms.Frobenius",
+  "NLAlib.Matrix.Norms.FrobeniusProducts",
   "NLAlib.Matrix.Norms.GramDilationWeakParameter",
   "NLAlib.Matrix.Norms.GramSquareMassDeletion",
   "NLAlib.Matrix.Norms.GramSymmetry",
@@ -1356,6 +1369,7 @@
   "NLAlib.Matrix.Spectral.MatrixPowerBounded",
   "NLAlib.Matrix.Spectral.MatrixPowerBounds",
   "NLAlib.Matrix.Spectral.MatrixPowerConvergence",
+  "NLAlib.Matrix.Spectral.MatrixPowerFixedPoint",
   "NLAlib.Matrix.Spectral.MatrixPowerReal",
   "NLAlib.Matrix.Spectral.NormalBlocks",
   "NLAlib.Matrix.Spectral.NormalCharacterizations",
@@ -2604,20 +2618,13 @@
  ],
  "excluded_modules": {
   "NLAlib.Krylov": [
-   "NLAlib.Krylov.Processes.Bidiagonalization",
-   "NLAlib.Krylov.Spectral.QRAlgorithm"
+   "NLAlib.Krylov.Processes.Bidiagonalization"
   ],
   "NLAlib.Krylov.Processes": [
    "NLAlib.Krylov.Processes.Bidiagonalization"
   ],
   "NLAlib.Krylov.Processes.Bidiagonalization": [
    "NLAlib.Krylov.Processes.Bidiagonalization"
-  ],
-  "NLAlib.Krylov.Spectral": [
-   "NLAlib.Krylov.Spectral.QRAlgorithm"
-  ],
-  "NLAlib.Krylov.Spectral.QRAlgorithm": [
-   "NLAlib.Krylov.Spectral.QRAlgorithm"
   ]
  }
 }

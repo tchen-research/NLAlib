@@ -153,8 +153,10 @@ import NLAlib.Matrix.Functions.MultilinearTraceWords
 import NLAlib.Matrix.Functions.MultivariateArakiLiebThirring
 import NLAlib.Matrix.Functions.MultivariateGoldenThompson
 import NLAlib.Matrix.Functions.NearestPSD
+import NLAlib.Matrix.Functions.NuclearProximal
 import NLAlib.Matrix.Functions.OddPolarIteration
 import NLAlib.Matrix.Functions.OperatorJensen
+import NLAlib.Matrix.Functions.OperatorMonotoneSchattenTransfer
 import NLAlib.Matrix.Functions.OrderedComplexPowers
 import NLAlib.Matrix.Functions.OrderedExponential
 import NLAlib.Matrix.Functions.OrderedExponentialBounds
@@ -175,6 +177,7 @@ import NLAlib.Matrix.Functions.PolynomialCalculus
 import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Functions.PolynomialLoewnerDerivative
 import NLAlib.Matrix.Functions.PolynomialSeries
+import NLAlib.Matrix.Functions.PolynomialSimilarity
 import NLAlib.Matrix.Functions.PositiveBlockNorm
 import NLAlib.Matrix.Functions.PositiveConeEigenvector
 import NLAlib.Matrix.Functions.PositiveConeNeumann
@@ -187,12 +190,14 @@ import NLAlib.Matrix.Functions.PositiveMapSpectral
 import NLAlib.Matrix.Functions.PositiveSandwichBoundary
 import NLAlib.Matrix.Functions.RankOneBarrierUpdate
 import NLAlib.Matrix.Functions.RankOneWords
+import NLAlib.Matrix.Functions.RankThreshold
 import NLAlib.Matrix.Functions.RationalBlockIdentities
 import NLAlib.Matrix.Functions.RationalBlockMaps
 import NLAlib.Matrix.Functions.RationalBlockOperations
 import NLAlib.Matrix.Functions.RationalBlocks
 import NLAlib.Matrix.Functions.RationalCalculus
 import NLAlib.Matrix.Functions.RationalDerivatives
+import NLAlib.Matrix.Functions.RealCalculus
 import NLAlib.Matrix.Functions.ReciprocalBarrier
 import NLAlib.Matrix.Functions.ReciprocalExponential
 import NLAlib.Matrix.Functions.ResolventCancellation
@@ -215,6 +220,11 @@ import NLAlib.Matrix.Functions.ResolventSeries
 import NLAlib.Matrix.Functions.ResolventWordBounds
 import NLAlib.Matrix.Functions.ResolventWordDerivativeBounds
 import NLAlib.Matrix.Functions.ResolventWordDerivatives
+import NLAlib.Matrix.Functions.RidgeEffectiveDimension
+import NLAlib.Matrix.Functions.RidgeKernel
+import NLAlib.Matrix.Functions.RidgeRange
+import NLAlib.Matrix.Functions.RidgeSpectral
+import NLAlib.Matrix.Functions.RidgeWhitening
 import NLAlib.Matrix.Functions.SchattenDualTest
 import NLAlib.Matrix.Functions.SchattenDualTestMatrix
 import NLAlib.Matrix.Functions.SchattenInterpolation
@@ -225,8 +235,10 @@ import NLAlib.Matrix.Functions.SignNewtonCayley
 import NLAlib.Matrix.Functions.SignNewtonPositive
 import NLAlib.Matrix.Functions.SignProjectors
 import NLAlib.Matrix.Functions.SignSylvester
+import NLAlib.Matrix.Functions.SingularValueTransform
 import NLAlib.Matrix.Functions.SparseFrameCompactness
 import NLAlib.Matrix.Functions.SpectralProjectors
+import NLAlib.Matrix.Functions.SpectralTruncation
 import NLAlib.Matrix.Functions.SteinConvergence
 import NLAlib.Matrix.Functions.SteinFactors
 import NLAlib.Matrix.Functions.SteinGeometricBounds

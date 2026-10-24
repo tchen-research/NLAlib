@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Subspaces.Projections
+import NLAlib.Matrix.Subspaces.RangeIsometry
 import NLAlib.Matrix.Basic.Pseudoinverse
 /-!
 # Deterministic content of the sketched-regression (generalized Nyström) analysis
@@ -41,6 +42,9 @@ are `NLAlib.specNorm_one_le`, `NLAlib.specNorm_le_one_of_orthonormal` and
   `coreNoise Q Ψ A = pinvL (ΨᵀQ) (Ψᵀ A⊥)` is the paper's `E_core`.
 * All index types are arbitrary `Fintype`s (the source's `Fin q`, `Fin r`, `Fin s` are the
   instances used by the Gaussian files).
+* For an arbitrary matrix `E` whose columns lie in `range(Q⊥)`, the imported
+  `frobNorm_conjTranspose_mul_of_range_le` and `specNorm_conjTranspose_mul_of_range_le`
+  give the same norm identities without requiring `E` to be a particular projection residual.
 
 Atlas: `sketched-regression`.
 -/

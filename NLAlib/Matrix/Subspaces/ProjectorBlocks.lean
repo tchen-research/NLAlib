@@ -18,6 +18,28 @@ namespace NLAlib
 variable {𝕜 : Type*} [RCLike 𝕜] {m n : Type*} [Fintype m] [Fintype n] [DecidableEq m]
   [DecidableEq n]
 
+open scoped ComplexOrder in
+omit [DecidableEq n] in
+/-- A Hermitian idempotent is positive semidefinite: it is its own Gram matrix.
+This includes zero-dimensional projectors over either `RCLike` field. -/
+theorem _root_.Matrix.IsHermitian.posSemidef_of_isIdempotentElem {P : Matrix n n 𝕜}
+    (hs : P.IsHermitian) (hp : IsIdempotentElem P) : P.PosSemidef := by
+  have hGram : Pᴴ * P = P := by rw [hs.eq]; exact hp
+  rw [← hGram]
+  exact Matrix.posSemidef_conjTranspose_mul_self _
+
+omit [DecidableEq m] [DecidableEq n] in
+/-- Right projection captures the real trace of the Gram matrix on that projector.
+This is the trace form of Frobenius orthogonal projection. -/
+theorem frobSq_mul_projector_eq_re_trace_mul {P : Matrix n n 𝕜}
+    (hs : P.IsHermitian) (hp : IsIdempotentElem P) (A : Matrix m n 𝕜) :
+    frobSq (A * P) = RCLike.re (P * (Aᴴ * A)).trace := by
+  rw [frobSq, frobInner_eq_trace, Matrix.conjTranspose_mul, hs.eq]
+  calc
+    _ = RCLike.re ((P * (Aᴴ * A)) * P).trace := by simp only [Matrix.mul_assoc]
+    _ = RCLike.re (P * (P * (Aᴴ * A))).trace := by rw [Matrix.trace_mul_comm]
+    _ = _ := by rw [← Matrix.mul_assoc P P, show P * P = P from hp]
+
 omit [DecidableEq m] [DecidableEq n] in
 /-- `‖A‖_F² = Re tr(AAᴴ)` (row Gram form of `frobSq_eq_re_trace_conjTranspose_mul_self`). -/
 theorem frobSq_eq_re_trace_mul_conjTranspose (A : Matrix m n 𝕜) :

@@ -1,4 +1,5 @@
 import NLAlib.Matrix.Graph.LaplacianResistance
+import NLAlib.Matrix.Graph.LaplacianSum
 import NLAlib.Matrix.Graph.WeightedIncidence
 
 /-! # `Matrix/Graph`

@@ -2,6 +2,7 @@ import NLAlib.Sketching.Gaussian
 import NLAlib.Sketching.Properties
 import NLAlib.Sketching.Sampling
 import NLAlib.Sketching.Sparse
+import NLAlib.Sketching.Streaming
 import NLAlib.Sketching.Structured
 
 /-! # `Sketching`

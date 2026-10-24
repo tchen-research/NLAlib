@@ -19,6 +19,14 @@ namespace NLAlib
 
 variable {𝕜 : Type*} [RCLike 𝕜] {m n p : Type*} [Fintype m] [Fintype n] [Fintype p]
 
+omit [Fintype p] in
+/-- The Moore–Penrose inverse of an orthonormal frame is its adjoint, including
+zero-width and empty shapes. Horn–Johnson 2013, §7.3. -/
+theorem HasOrthonormalCols.moorePenroseInverse_eq_conjTranspose [DecidableEq n]
+    {Q : Matrix m n 𝕜} (hQ : HasOrthonormalCols Q) : moorePenroseInverse Q = Qᴴ := by
+  rw [moorePenroseInverse_eq_pinvL Q (by rw [hQ.conjTranspose_mul_self]; exact isUnit_one),
+    pinvL, hQ.conjTranspose_mul_self, inv_one, Matrix.one_mul]
+
 /-- Scaling the Moore–Penrose inverse by the inverse scalar: `(c A)⁺ = c⁻¹ A⁺`.
 Horn--Johnson 2013, Problem 7.3.P7; supports `condition-number-def`, including rank zero. -/
 theorem moorePenroseInverse_smul (c : 𝕜) (A : Matrix m n 𝕜) :

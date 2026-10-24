@@ -19,7 +19,8 @@ namespace NLAlib
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 800000
 
-/-- Maximum volume gives a full orthogonal QR block factorization with an
+/-- Every supplied positive-volume maximal column embedding gives a full orthogonal
+QR block factorization whose selected coordinates are exactly that embedding, with an
 invertible upper-triangular leading block, interpolation entries bounded by
 one, and the joint budget `‖T‖F² + ‖R⁻¹‖F² ‖D‖F² ≤ k(n-k)`.
 The requested leading size may be any `k ≤ rank A`, including zero and full
@@ -27,14 +28,18 @@ rank. The column equivalence is a permutation into the selected and
 remaining coordinate blocks. Gu–Eisenstat 1996, Theorem 3.2; derivations
 equations alg:rrqr-block through alg:rrqr-budget.
 Supports `rank-revealing-qr`. -/
-theorem exists_maximum_volume_qr_blocks {m n : Type*}
+theorem exists_maximum_volume_qr_blocks_of_embedding {m n : Type*}
     [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
-    (A : Matrix m n ℝ) (k : ℕ) (hk : k ≤ A.rank) :
+    (A : Matrix m n ℝ) (k : ℕ) (hk : k ≤ A.rank) (e : Fin k ↪ n)
+    (hCpos : 0 < ((A.submatrix id e)ᵀ * A.submatrix id e).det)
+    (hMax : ∀ f : Fin k → n, ((A.submatrix id f)ᵀ * A.submatrix id f).det ≤
+      ((A.submatrix id e)ᵀ * A.submatrix id e).det) :
     ∃ π : (Fin k ⊕ Fin (Fintype.card n - k)) ≃ n,
     ∃ Q : Matrix m (Fin k ⊕ Fin (Fintype.card m - k)) ℝ,
     ∃ R : Matrix (Fin k) (Fin k) ℝ,
     ∃ T : Matrix (Fin k) (Fin (Fintype.card n - k)) ℝ,
     ∃ D : Matrix (Fin (Fintype.card m - k)) (Fin (Fintype.card n - k)) ℝ,
+      (∀ i, π (Sum.inl i) = e i) ∧
       HasOrthonormalCols Q ∧ Q * Qᵀ = 1 ∧ IsUnit R ∧ R.IsUpperTriangular ∧
       A.submatrix id π = Q * Matrix.fromBlocks R (R * T) 0 D ∧
       (∀ i j, |T i j| ≤ 1) ∧
@@ -42,7 +47,6 @@ theorem exists_maximum_volume_qr_blocks {m n : Type*}
   classical
   have hkm : k ≤ Fintype.card m := hk.trans A.rank_le_card_height
   have hkn : k ≤ Fintype.card n := hk.trans A.rank_le_card_width
-  obtain ⟨e, hCpos, hMax⟩ := exists_maximum_volume_column_embedding A k hk
   obtain ⟨π, hπ⟩ := exists_equiv_sum_extending_embedding
     (q := Fin (Fintype.card n - k)) e (by simpa using Nat.add_sub_of_le hkn)
   let C := A.submatrix id e
@@ -117,9 +121,30 @@ theorem exists_maximum_volume_qr_blocks {m n : Type*}
       frobSq, frobInner_eq_trace, RCLike.re_to_real,
       Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.trace_mul_comm]
   rw [hInvTrace, frobSq_mul_left_of_orthonormal hK] at hBudget
-  refine ⟨π, Q, R, T, D, hQ, hQt, hR, hUpper, ?_, hEntry, ?_⟩
+  refine ⟨π, Q, R, T, D, hπ, hQ, hQt, hR, hUpper, ?_, hEntry, ?_⟩
   · rw [hA, hQform, Matrix.fromCols_mul_fromBlocks, Matrix.mul_zero, add_zero,
       hLR, ← Matrix.mul_assoc L R T, hLR, hReconstruct]
   · simpa only [Fintype.card_fin, Nat.cast_sub hkn] using hBudget
+
+/-- Maximum volume gives a full orthogonal QR block factorization with an invertible
+leading block, interpolation entries bounded by one, and the exact shared budget.
+This existence wrapper instantiates the basis-explicit maximal-embedding theorem.
+Gu–Eisenstat 1996, Theorem 3.2; derivations equations alg:rrqr-block–alg:rrqr-budget. -/
+theorem exists_maximum_volume_qr_blocks {m n : Type*}
+    [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n]
+    (A : Matrix m n ℝ) (k : ℕ) (hk : k ≤ A.rank) :
+    ∃ π : (Fin k ⊕ Fin (Fintype.card n - k)) ≃ n,
+    ∃ Q : Matrix m (Fin k ⊕ Fin (Fintype.card m - k)) ℝ,
+    ∃ R : Matrix (Fin k) (Fin k) ℝ,
+    ∃ T : Matrix (Fin k) (Fin (Fintype.card n - k)) ℝ,
+    ∃ D : Matrix (Fin (Fintype.card m - k)) (Fin (Fintype.card n - k)) ℝ,
+      HasOrthonormalCols Q ∧ Q * Qᵀ = 1 ∧ IsUnit R ∧ R.IsUpperTriangular ∧
+      A.submatrix id π = Q * Matrix.fromBlocks R (R * T) 0 D ∧
+      (∀ i j, |T i j| ≤ 1) ∧
+      frobSq T + frobSq R⁻¹ * frobSq D ≤ (k : ℝ) * (Fintype.card n - k) := by
+  obtain ⟨e, hpos, hmax⟩ := exists_maximum_volume_column_embedding A k hk
+  obtain ⟨π, Q, R, T, D, _, hrest⟩ :=
+    exists_maximum_volume_qr_blocks_of_embedding A k hk e hpos hmax
+  exact ⟨π, Q, R, T, D, hrest⟩
 
 end NLAlib

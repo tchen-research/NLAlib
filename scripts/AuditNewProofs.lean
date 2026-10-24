@@ -566,7 +566,7 @@ run_cmd do
     `NLAlib.LowRank.RangeFinding.SubspaceConvergence,
     `NLAlib.LowRank.Cholesky.TraceDrift,
     `NLAlib.LowRank.Cholesky.TracePotential,
-    `NLAlib.LowRank.Sampling.VolumeCounting,
+    `NLAlib.ForMathlib.Combinatorics.SubsetInsertionCount,
     `NLAlib.LowRank.Sampling.VolumeSampling,
     `NLAlib.Matrix.Functions.CFCTrace,
     `NLAlib.Matrix.Subspaces.CanonicalQR,

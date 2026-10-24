@@ -96,6 +96,14 @@ def sampledRowMatrix {𝕜 : Type*} [RCLike 𝕜] {n t : Type*} (B : Matrix n t 
     {c : ℕ} (ω : Fin c → n) : Matrix (Fin c) t 𝕜 :=
   fun j b => (Real.sqrt ((c : ℝ) * p (ω j)))⁻¹ • B (ω j) b
 
+/-- Selecting and rescaling rows commutes with a deterministic linear map on columns.
+This identity applies to the literal inverse-probability sampling algorithm. -/
+theorem sampledRowMatrix_mul {𝕜 : Type*} [RCLike 𝕜] {m n q : Type*} [Fintype n]
+    (A : Matrix m n 𝕜) (D : Matrix n q 𝕜) (p : m → ℝ≥0) {s : ℕ} (ω : Fin s → m) :
+    sampledRowMatrix (A * D) p ω = sampledRowMatrix A p ω * D := by
+  ext j b
+  simp only [sampledRowMatrix, Matrix.mul_apply, Finset.smul_sum, smul_mul_assoc]
+
 /-- The product of the literally sampled and rescaled columns and rows is
 the average of the inverse-probability outer products, even for zero-mass
 indices. Source: operator re-derivation `sa:amm-theorem`. -/

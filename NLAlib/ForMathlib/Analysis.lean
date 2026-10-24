@@ -8,6 +8,7 @@ import NLAlib.ForMathlib.Analysis.ChebyshevMeasure
 import NLAlib.ForMathlib.Analysis.Complex
 import NLAlib.ForMathlib.Analysis.ComplexCoordinates
 import NLAlib.ForMathlib.Analysis.ComplexWeightedAverage
+import NLAlib.ForMathlib.Analysis.ConcavePowerDeficit
 import NLAlib.ForMathlib.Analysis.ConeRayleigh
 import NLAlib.ForMathlib.Analysis.ContinuousNormBarrier
 import NLAlib.ForMathlib.Analysis.ContinuousSecant
@@ -67,6 +68,7 @@ import NLAlib.ForMathlib.Analysis.LogarithmicMomentFactor
 import NLAlib.ForMathlib.Analysis.LogarithmicMomentOptimization
 import NLAlib.ForMathlib.Analysis.Matrix
 import NLAlib.ForMathlib.Analysis.MetricInfTransform
+import NLAlib.ForMathlib.Analysis.MonotoneTailSum
 import NLAlib.ForMathlib.Analysis.NormSumSq
 import NLAlib.ForMathlib.Analysis.Normed
 import NLAlib.ForMathlib.Analysis.OddSineSeries

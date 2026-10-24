@@ -31,6 +31,15 @@ theorem HasOrthonormalCols.mul {m n p : Type*} [Fintype m] [Fintype n]
   rw [HasOrthonormalCols, Matrix.conjTranspose_mul, Matrix.mul_assoc, ← Matrix.mul_assoc Pᴴ P Q,
     hP.conjTranspose_mul_self, Matrix.one_mul, hQ.conjTranspose_mul_self]
 
+/-- The row Gram matrix of a column isometry is an idempotent. Its Hermitian
+property is the native row-Gram identity, so it is an orthogonal projector. -/
+theorem HasOrthonormalCols.isIdempotentElem_mul_conjTranspose {m n : Type*}
+    [Fintype m] [Fintype n] [DecidableEq n] {Q : Matrix m n 𝕜}
+    (hQ : HasOrthonormalCols Q) : IsIdempotentElem (Q * Qᴴ) := by
+  change (Q * Qᴴ) * (Q * Qᴴ) = Q * Qᴴ
+  rw [Matrix.mul_assoc, ← Matrix.mul_assoc Qᴴ Q Qᴴ, hQ.conjTranspose_mul_self,
+    Matrix.one_mul]
+
 /-- A square matrix with orthonormal columns is unitary: `U Uᴴ = I`. Horn–Johnson 2013, §2.1. -/
 theorem HasOrthonormalCols.mul_conjTranspose_self {n : Type*} [Fintype n] [DecidableEq n]
     {U : Matrix n n 𝕜} (hU : HasOrthonormalCols U) : U * Uᴴ = 1 :=
@@ -104,6 +113,14 @@ theorem rank_isometry_mul_eq {m n p : Type*}
   calc
     A.rank = (Qᴴ * (Q * A)).rank := congrArg Matrix.rank hBack.symm
     _ ≤ (Q * A).rank := Matrix.rank_mul_le_right _ _
+
+/-- An orthonormal frame has rank exactly its number of columns, including
+the zero-width endpoint. -/
+theorem HasOrthonormalCols.rank_eq_card {m n : Type*} [Fintype m] [Fintype n]
+    [DecidableEq n] {Q : Matrix m n 𝕜} (hQ : HasOrthonormalCols Q) :
+    Q.rank = Fintype.card n := by
+  simpa only [Matrix.mul_one, Matrix.rank_one] using
+    rank_isometry_mul_eq hQ (1 : Matrix n n 𝕜)
 
 /-- A matrix with orthonormal columns defines a linear isometry of the corresponding Euclidean
 spaces (the map `Matrix.toEuclideanLin Q`); for a square unitary matrix this is a unitary

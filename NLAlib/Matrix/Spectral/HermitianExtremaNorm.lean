@@ -16,10 +16,12 @@ set_option backward.isDefEq.respectTransparency false
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
 open scoped Matrix.Norms.L2Operator in
-/-- The complex Hermitian norm is the supremum norm of the real eigenvalues. -/
+/-- A real or complex Hermitian matrix has spectral norm equal to the supremum norm of
+its real eigenvalues, including empty dimensions. -/
 theorem _root_.Matrix.IsHermitian.specNorm_eq_norm_eigenvalues
-    {A : Matrix n n ℂ} (hA : A.IsHermitian) : specNorm A = ‖hA.eigenvalues‖ := by
-  let U : Matrix n n ℂ := hA.eigenvectorUnitary
+    {𝕜 : Type*} [RCLike 𝕜] {A : Matrix n n 𝕜} (hA : A.IsHermitian) :
+    specNorm A = ‖hA.eigenvalues‖ := by
+  let U : Matrix n n 𝕜 := hA.eigenvectorUnitary
   have hU : HasOrthonormalCols U := by
     change Uᴴ * U = 1
     exact Unitary.coe_star_mul_self hA.eigenvectorUnitary

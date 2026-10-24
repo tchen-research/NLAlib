@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 NLAlib contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: NLAlib contributors
+-/
 import NLAlib.Matrix.Basic.SchurComplement
 import NLAlib.Matrix.Basic.Selection
 import NLAlib.Matrix.Factorizations.EliminationStep
 import NLAlib.LowRank.Nystrom.Structural
+import NLAlib.LowRank.Cholesky.CholeskyPivot
 /-!
 # Partial (pivoted) Cholesky and the column Nyström approximation
 
@@ -22,8 +28,8 @@ pivots, repeated pivots allowed):
   (`posSemidef_partialCholeskyResidual`, `partialCholeskyResidual_apply_pivot_left/right`);
 * `A − F Fᵀ = residual` (`sub_partialCholeskyFactor_mul_transpose`);
 * `F Fᵀ = A(:,S) A(S,S)⁺ A(S,:)`, the column Nyström approximation
-  `nystrom A (selectionMatrix s)` (`partialCholeskyFactor_mul_transpose_eq_nystrom`, the one
-  scaffold of this file), so the residual is the generalized Schur complement
+  `nystrom A (selectionMatrix s)` (`partialCholeskyFactor_mul_transpose_eq_nystrom`), so the residual is the generalized
+  Schur complement
   `A − A(:,S) A(S,S)⁺ A(S,:)` of `A(S,S)` (`partialCholeskyResidual_eq_sub_nystrom`).
 
 Sources: Chen–Epperly–Tropp–Webber 2023 (RPCholesky), §2 (label to verify); Golub–Van Loan
@@ -32,7 +38,7 @@ Sources: Chen–Epperly–Tropp–Webber 2023 (RPCholesky), §2 (label to verify
 
 noncomputable section
 
-open scoped Matrix
+open scoped Matrix MatrixOrder
 open Matrix
 
 namespace NLAlib
@@ -161,21 +167,113 @@ theorem sub_partialCholeskyFactor_mul_transpose {A : Matrix n n ℝ} (hA : A.Pos
     rw [← sub_sub, hij, div_mul_div_comm, hsq, hsym t j]
     ring
 
-/-- SCAFFOLD: partial-cholesky-nystrom
-**Partial Cholesky is column Nyström**: for PSD `A` and any pivot sequence `s`,
-`F Fᵀ = A(:,S) A(S,S)⁺ A(S,:)`, the Nyström approximation with the selection matrix of `S`.
-CETW 2023, §2 (label to verify); Golub–Van Loan 2013, §4.2.9.
-Proof sketch: write `A = GᵀG` (`exists_eq_transpose_mul_of_posSemidef`). Partial Cholesky on
-`A` is Gram–Schmidt on the columns `G(:, s 0), G(:, s 1), …` in order: by induction the
-residual is `Gᵀ (I − Pⱼ) G` with `Pⱼ` the orthogonal projector onto the span of the first `j`
-pivot columns of `G` (a zero pivot means the column is already in the span). Hence
-`F Fᵀ = Gᵀ P_k G`, and `nystrom_eq_of_eq_transpose_mul` gives `nystrom A Ω = Gᵀ P G` with
-`P` the projector onto `range (G Ω) = span {G(:, s j)}`.
+omit [DecidableEq n] [Fintype n] in
+/-- A PSD matrix bordered by its selected rows and columns remains PSD. This is the
+selection case used in the variational proof of the Nyström residual. -/
+private theorem posSemidef_fromBlocks_choleskySelection {A : Matrix n n ℝ}
+    (hA : A.PosSemidef) {k : ℕ} (s : Fin k → n) :
+    (Matrix.fromBlocks (A.submatrix s s) (A.submatrix s id)
+      (A.submatrix s id)ᴴ A).PosSemidef := by
+  have hblock : Matrix.fromBlocks (A.submatrix s s) (A.submatrix s id)
+      (A.submatrix s id)ᴴ A = A.submatrix (Sum.elim s id) (Sum.elim s id) := by
+    rw [Matrix.conjTranspose_submatrix, hA.isHermitian.eq]
+    ext (i | i) (j | j) <;> rfl
+  rw [hblock]
+  exact hA.submatrix _
+
+/-- The native Moore–Penrose compatibility identity makes every selected column of the
+Nyström residual zero, including for singular cores and repeated selections. -/
+private theorem sub_nystrom_choleskySelection_apply {A : Matrix n n ℝ}
+    (hA : A.PosSemidef) {k : ℕ} (s : Fin k → n) (i : n) (j : Fin k) :
+    (A - nystrom A (selectionMatrix s)) i (s j) = 0 := by
+  have h := one_sub_mul_moorePenroseInverse_mul_eq_zero_of_fromBlocks_posSemidef
+    (posSemidef_fromBlocks_choleskySelection hA s)
+  rw [Matrix.sub_mul, Matrix.one_mul, sub_eq_zero] at h
+  have ht := congrArg Matrix.conjTranspose h
+  rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, Matrix.conjTranspose_submatrix,
+    hA.isHermitian.eq, (Matrix.IsHermitian.moorePenroseInverse (hA.submatrix s).isHermitian).eq,
+    (hA.submatrix s).isHermitian.eq, ← Matrix.mul_assoc] at ht
+  rw [nystrom_selectionMatrix, Matrix.sub_apply, sub_eq_zero]
+  exact congrFun₂ ht i j
+
+/-- The Nyström residual is the largest PSD matrix below the input whose selected columns
+vanish. This is the native-Moore–Penrose translation of the frontend variational argument. -/
+private theorem le_sub_nystrom_choleskySelection {A M : Matrix n n ℝ}
+    (hM : M.PosSemidef) {k : ℕ} (s : Fin k → n) (hMA : M ≤ A)
+    (hMe : ∀ i j, M i (s j) = 0) : M ≤ A - nystrom A (selectionMatrix s) := by
+  have hMe' : ∀ j i, M (s j) i = 0 := fun j i => by
+    rw [← hM.isHermitian.apply, hMe, star_zero]
+  have h1 : (A - M).submatrix id s = A.submatrix id s := by
+    ext i j
+    simp [hMe]
+  have h2 : (A - M).submatrix s id = A.submatrix s id := by
+    ext j i
+    simp [hMe']
+  have h3 : (A - M).submatrix s s = A.submatrix s s := by
+    ext j j'
+    simp [hMe]
+  have h := posSemidef_sub_nystrom (Matrix.le_iff.mp hMA) (selectionMatrix s)
+  rw [nystrom_selectionMatrix, h1, h2, h3] at h
+  rw [Matrix.le_iff, nystrom_selectionMatrix]
+  have heq : A - A.submatrix id s * moorePenroseInverse (A.submatrix s s) *
+      A.submatrix s id - M =
+      A - M - A.submatrix id s * moorePenroseInverse (A.submatrix s s) * A.submatrix s id := by
+    abel
+  rw [heq]
+  exact h
+
+/-- Fin-indexed transfer of the frontend elimination-list theorem. The two Loewner bounds
+use only PSD order and vanishing pivot columns; zero and repeated pivots require no exception. -/
+private theorem partialCholeskyResidual_eq_sub_nystrom_selection {A : Matrix n n ℝ}
+    (hA : A.PosSemidef) {k : ℕ} (s : Fin k → n) :
+    partialCholeskyResidual A s = A - nystrom A (selectionMatrix s) := by
+  have hle : ∀ {k : ℕ} (s : Fin k → n), A - nystrom A (selectionMatrix s) ≤ A := by
+    intro k s
+    rw [Matrix.le_iff, sub_sub_cancel]
+    exact posSemidef_nystrom hA _
+  induction k with
+  | zero =>
+    ext i j
+    simp [partialCholeskyResidual, nystrom]
+  | succ k ih =>
+    dsimp only [partialCholeskyResidual]
+    rw [ih]
+    have hR := posSemidef_sub_nystrom hA (selectionMatrix (Fin.init s))
+    have hR' := posSemidef_sub_nystrom hA (selectionMatrix s)
+    apply le_antisymm
+    · refine le_sub_nystrom_choleskySelection (posSemidef_eliminationStep hR _) s
+        ((eliminationStep_le hR _).trans (hle _)) ?_
+      intro i j
+      induction j using Fin.lastCases with
+      | last => exact eliminationStep_apply_pivot_right hR _ i
+      | cast j =>
+        exact eliminationStep_apply_eq_zero_of_col
+          (fun i => sub_nystrom_choleskySelection_apply hA (Fin.init s) i j) _ i
+    · rw [eliminationStep_eq_sub_nystrom]
+      change A - nystrom A (selectionMatrix s) ≤
+        (A - nystrom A (selectionMatrix (Fin.init s))) -
+          nystrom (A - nystrom A (selectionMatrix (Fin.init s)))
+            (selectionMatrix (fun _ : Fin 1 => s (Fin.last k)))
+      refine le_sub_nystrom_choleskySelection hR' (fun _ : Fin 1 => s (Fin.last k)) ?_
+        (fun i _ => sub_nystrom_choleskySelection_apply hA s i (Fin.last k))
+      exact le_sub_nystrom_choleskySelection hR' (Fin.init s) (hle s)
+        (fun i j => sub_nystrom_choleskySelection_apply hA s i j.castSucc)
+
+/-- **Partial Cholesky is column Nyström**: for PSD `A` and every pivot sequence `s`,
+`F Fᵀ = A(:,S) A(S,S)⁺ A(S,:)`, including zero and repeated pivots.
+CETW 2023, §2; Golub–Van Loan 2013, §4.2.9.
+Proof transferred from `Matrix.PosSemidef.foldl_eliminationStep_eq_sub` in
+`NLA-lib/NLAlib`, commit `6a845a2ec27f37c1a98118c107a06a13ce45273d`,
+`NLAlib/Matrix/Factorizations/Nystrom.lean` (Apache 2.0, NLAlib contributors).
+The source list induction is expressed using the existing native `Fin` recursion; the
+variational characterization uses NLAlib's Moore–Penrose inverse without a rank assumption.
 atlas: partial-cholesky-nystrom -/
 theorem partialCholeskyFactor_mul_transpose_eq_nystrom {A : Matrix n n ℝ} (hA : A.PosSemidef)
     {k : ℕ} (s : Fin k → n) :
     partialCholeskyFactor A s * (partialCholeskyFactor A s)ᵀ = nystrom A (selectionMatrix s) := by
-  sorry
+  have h := sub_partialCholeskyFactor_mul_transpose hA s
+  rw [partialCholeskyResidual_eq_sub_nystrom_selection hA s] at h
+  exact sub_right_inj.mp h
 
 /-- **The partial Cholesky residual is the generalized Schur complement**:
 `R = A − A(:,S) A(S,S)⁺ A(S,:)`, for PSD `A` and any pivot sequence. With

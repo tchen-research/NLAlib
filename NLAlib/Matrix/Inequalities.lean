@@ -62,6 +62,7 @@ import NLAlib.Matrix.Inequalities.SeparatingPSDVector
 import NLAlib.Matrix.Inequalities.SingularValueMajorization
 import NLAlib.Matrix.Inequalities.StrictRelativeSpectrum
 import NLAlib.Matrix.Inequalities.SzaszDeterminant
+import NLAlib.Matrix.Inequalities.TraceRankBudget
 import NLAlib.Matrix.Inequalities.TraceTail
 import NLAlib.Matrix.Inequalities.VonNeumann
 import NLAlib.Matrix.Inequalities.Wielandt

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 NLAlib contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: NLAlib contributors
+-/
 import NLAlib.Krylov.Solvers.CG
 /-!
 # The Hestenes–Stiefel recurrence for conjugate gradients
@@ -25,7 +30,7 @@ hypothesis `A.PosDef` plays that role.
   (`x_k − x₀ ∈ K_k`, `r_k, p_k ∈ K_{k+1}`), freezing after a zero projResidual,
   `span_cgRecurrence_p_eq_span_r`, and no breakdown before the grade
   `cgRecurrence_r_ne_zero_of_lt_krylovGrade`.
-* The classical invariants for `A ≻ 0` (scaffolds): `dotProduct_cgRecurrence_r_eq_zero`
+* The classical invariants for `A ≻ 0` (proved): `dotProduct_cgRecurrence_r_eq_zero`
   (`r_iᵀ r_j = 0`) and `dotProduct_cgRecurrence_p_mulVec_eq_zero` (`p_iᵀ A p_j = 0`).
 * From them (proved): `span_cgRecurrence_r`, `span_cgRecurrence_p`
   (`span r_{<k} = span p_{<k} = K_k(A, r₀)`), Galerkin orthogonality, the realisation theorem
@@ -193,32 +198,207 @@ theorem cgRecurrence_r_ne_zero_of_lt_krylovGrade (A : Matrix n n ℝ) (c x₀ : 
   rw [finrank_krylovSpace] at h1 h2
   omega
 
-/-! ### The classical invariants (positive definite `A`) -/
+/-! ### Native orthogonality invariants
 
-/-- SCAFFOLD: cg-recurrence
-**Residuals are mutually orthogonal**: for `A ≻ 0`, `r_iᵀ r_j = 0` for `i ≠ j` (all `i, j`; after
-the grade the residuals are `0`). Source: Trefethen–Bau (1997) [`tb97`], Thm 38.1 (orthogonality
-of the residuals); Saad (2011) [`saad11`], Prop. 6.19. Proof sketch: joint strong induction on
-`k` for `∀ j < k, r_kᵀ r_j = 0 ∧ p_kᵀ A p_j = 0`, using `r_j ∈ span p_{≤j}` and
-`p_j ∈ span r_{≤j}` (from the recurrence), the symmetry `uᵀ A v = vᵀ A u`, the identities
-`r_kᵀ p_k = r_kᵀ r_k` and `p_kᵀ A p_k = r_kᵀ A p_k`, and `A p_j = (r_j − r_{j+1}) / α_j` when
-`α_j ≠ 0`. Degenerate steps: `pᵀAp = 0 → p = 0` (`Matrix.PosDef.dotProduct_mulVec_pos`) and then
-`r = 0` (from `r_kᵀ p_k = r_kᵀ r_k`), after which the state freezes
-(`cgRecurrence_add_of_r_eq_zero`). Deferred: a long case analysis, not hard mathematics. -/
+The invariant argument below is ported from the real specialization of
+`NLA-lib/NLAlib`, `NLAlib/Krylov/LinearSystems/CGRecurrence.lean`, commit
+`6a845a2ec27f37c1a98118c107a06a13ce45273d` (2026, NLAlib contributors,
+Apache-2.0). The backend state and step are unchanged. The frontend's
+squared Euclidean residual norm is exactly the backend self dot product
+by `norm_toLp_sq_eq_dotProduct_self`.
+-/
+
+private lemma cgRecurrence_p_sub_r_mem (A : Matrix n n ℝ) (c x₀ : n → ℝ) (k : ℕ) :
+    (cgRecurrence A c x₀ k).p - (cgRecurrence A c x₀ k).r ∈
+      krylovSpace A (c - A *ᵥ x₀) k := by
+  cases k with
+  | zero => simp [cgInit]
+  | succ k =>
+    rw [cgRecurrence_succ]
+    simp only [cgStep, add_sub_cancel_left]
+    exact Submodule.smul_mem _ _ (cgRecurrence_mem_krylovSpace A c x₀ k).2.2
+
+omit [DecidableEq n] in
+private lemma cgRecurrence_dotProduct_eq_zero_of_mem_sup
+    {M : Submodule ℝ (n → ℝ)} {p w : n → ℝ}
+    (hM : ∀ y ∈ M, y ⬝ᵥ w = 0) (hp : p ⬝ᵥ w = 0) {y : n → ℝ}
+    (hy : y ∈ M ⊔ Submodule.span ℝ {p}) : y ⬝ᵥ w = 0 := by
+  obtain ⟨u, hu, z, hz, rfl⟩ := Submodule.mem_sup.1 hy
+  obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.1 hz
+  rw [add_dotProduct, smul_dotProduct, hM u hu, hp, smul_zero, add_zero]
+
+private lemma cgRecurrence_p_dotProduct_r {k : ℕ}
+    (hr : ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) k,
+      y ⬝ᵥ (cgRecurrence A c x₀ k).r = 0) :
+    (cgRecurrence A c x₀ k).p ⬝ᵥ (cgRecurrence A c x₀ k).r =
+      (cgRecurrence A c x₀ k).r ⬝ᵥ (cgRecurrence A c x₀ k).r := by
+  have h := hr _ (cgRecurrence_p_sub_r_mem A c x₀ k)
+  rwa [sub_dotProduct, sub_eq_zero] at h
+
+private lemma cgRecurrence_r_eq_zero_of_p_eq_zero {k : ℕ}
+    (hr : ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) k,
+      y ⬝ᵥ (cgRecurrence A c x₀ k).r = 0)
+    (hp0 : (cgRecurrence A c x₀ k).p = 0) :
+    (cgRecurrence A c x₀ k).r = 0 := by
+  have h := cgRecurrence_p_dotProduct_r hr
+  rw [hp0, zero_dotProduct] at h
+  exact dotProduct_self_eq_zero.1 h.symm
+
+omit [DecidableEq n] in
+private lemma cgRecurrence_dotProduct_mulVec_comm (hA : A.PosDef) (x y : n → ℝ) :
+    x ⬝ᵥ (A *ᵥ y) = y ⬝ᵥ (A *ᵥ x) := by
+  simpa only [star_trivial] using hA.isHermitian.star_dotProduct_mulVec_comm y x
+
+private lemma cgRecurrence_krylovSpace_succ_eq_sup (hA : A.PosDef) {k : ℕ}
+    (hr : ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) k,
+      y ⬝ᵥ (cgRecurrence A c x₀ k).r = 0)
+    (hp : ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) k,
+      y ⬝ᵥ (A *ᵥ (cgRecurrence A c x₀ k).p) = 0) :
+    krylovSpace A (c - A *ᵥ x₀) (k + 1) =
+      krylovSpace A (c - A *ᵥ x₀) k ⊔
+        Submodule.span ℝ {(cgRecurrence A c x₀ k).p} := by
+  refine le_antisymm ?_ (sup_le (krylovSpace_mono _ _ k.le_succ)
+    ((Submodule.span_singleton_le_iff_mem _ _).2
+      (cgRecurrence_mem_krylovSpace A c x₀ k).2.2))
+  by_cases hν : krylovGrade A (c - A *ᵥ x₀) ≤ k
+  · rw [krylovSpace_eq_of_krylovGrade_le A _ (hν.trans k.le_succ),
+      ← krylovSpace_eq_of_krylovGrade_le A _ hν]
+    exact le_sup_left
+  push Not at hν
+  rw [krylovSpace_succ]
+  refine sup_le le_sup_left ((Submodule.span_singleton_le_iff_mem _ _).2 ?_)
+  have hpk := (cgRecurrence_mem_krylovSpace A c x₀ k).2.2
+  rw [krylovSpace_succ] at hpk
+  obtain ⟨u, hu, z, hz, hpuz⟩ := Submodule.mem_sup.1 hpk
+  obtain ⟨a, rfl⟩ := Submodule.mem_span_singleton.1 hz
+  rcases eq_or_ne a 0 with rfl | ha
+  · exfalso
+    rw [zero_smul, add_zero] at hpuz
+    have hq := hp _ (hpuz ▸ hu)
+    have hp0 : (cgRecurrence A c x₀ k).p = 0 := by
+      by_contra hne
+      exact (hA.dotProduct_mulVec_pos hne).ne' hq
+    exact cgRecurrence_r_ne_zero_of_lt_krylovGrade A c x₀ hν
+      (cgRecurrence_r_eq_zero_of_p_eq_zero hr hp0)
+  · have he : A ^ k *ᵥ (c - A *ᵥ x₀) =
+        a⁻¹ • ((cgRecurrence A c x₀ k).p - u) := by
+      rw [← hpuz, add_sub_cancel_left, smul_smul, inv_mul_cancel₀ ha, one_smul]
+    rw [he]
+    exact Submodule.smul_mem _ _ (Submodule.sub_mem _
+      (Submodule.mem_sup_right (Submodule.mem_span_singleton_self _))
+      (Submodule.mem_sup_left hu))
+
+private lemma cgRecurrence_orthogonality_succ (hA : A.PosDef) {k : ℕ}
+    (hr : ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) k,
+      y ⬝ᵥ (cgRecurrence A c x₀ k).r = 0)
+    (hp : ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) k,
+      y ⬝ᵥ (A *ᵥ (cgRecurrence A c x₀ k).p) = 0) :
+    (∀ y ∈ krylovSpace A (c - A *ᵥ x₀) (k + 1),
+      y ⬝ᵥ (cgRecurrence A c x₀ (k + 1)).r = 0) ∧
+    ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) (k + 1),
+      y ⬝ᵥ (A *ᵥ (cgRecurrence A c x₀ (k + 1)).p) = 0 := by
+  have hsup := cgRecurrence_krylovSpace_succ_eq_sup hA hr hp
+  set s := cgRecurrence A c x₀ k with hs
+  by_cases hr0 : s.r = 0
+  · have h1 : (cgRecurrence A c x₀ (k + 1)).r = 0 := by
+      rw [cgRecurrence_succ, ← hs]
+      simp [cgStep, hr0]
+    have h2 : (cgRecurrence A c x₀ (k + 1)).p = 0 := by
+      rw [cgRecurrence_succ, ← hs]
+      simp [cgStep, hr0]
+    simp [h1, h2]
+  have hp0 : s.p ≠ 0 := fun h => hr0 (cgRecurrence_r_eq_zero_of_p_eq_zero hr h)
+  set ρ := s.r ⬝ᵥ s.r with hρdef
+  set Q := s.p ⬝ᵥ (A *ᵥ s.p) with hQdef
+  have hQ : 0 < Q := hA.dotProduct_mulVec_pos hp0
+  have hρ : 0 < ρ := by
+    rw [hρdef, ← norm_toLp_sq_eq_dotProduct_self]
+    have hn : WithLp.toLp 2 s.r ≠ 0 := by simpa using hr0
+    exact pow_pos (norm_pos_iff.mpr hn) 2
+  set α := ρ / Q with hαdef
+  have hr' : (cgRecurrence A c x₀ (k + 1)).r = s.r - α • (A *ᵥ s.p) := by
+    rw [cgRecurrence_succ, ← hs]
+    rfl
+  have hp' : (cgRecurrence A c x₀ (k + 1)).p =
+      (cgRecurrence A c x₀ (k + 1)).r +
+        (((cgRecurrence A c x₀ (k + 1)).r ⬝ᵥ
+          (cgRecurrence A c x₀ (k + 1)).r) / ρ) • s.p := by
+    rw [cgRecurrence_succ, ← hs]
+    rfl
+  have hpr : s.p ⬝ᵥ s.r = ρ := cgRecurrence_p_dotProduct_r hr
+  have horth : ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) (k + 1),
+      y ⬝ᵥ (cgRecurrence A c x₀ (k + 1)).r = 0 := by
+    intro y hy
+    rw [hsup] at hy
+    refine cgRecurrence_dotProduct_eq_zero_of_mem_sup (fun u hu => ?_) ?_ hy
+    · rw [hr', dotProduct_sub, dotProduct_smul, hr u hu, hp u hu, smul_zero, sub_zero]
+    · rw [hr', dotProduct_sub, dotProduct_smul, hpr]
+      change ρ - α * Q = 0
+      rw [hαdef, div_mul_cancel₀ _ hQ.ne', sub_self]
+  refine ⟨horth, fun y hy => ?_⟩
+  rw [hsup] at hy
+  refine cgRecurrence_dotProduct_eq_zero_of_mem_sup (fun u hu => ?_) ?_ hy
+  · rw [hp', Matrix.mulVec_add, Matrix.mulVec_smul, dotProduct_add, dotProduct_smul,
+      hp u hu, smul_zero, add_zero, cgRecurrence_dotProduct_mulVec_comm hA,
+      dotProduct_comm]
+    exact horth _ (mulVec_mem_krylovSpace_succ A _ hu)
+  · set ρ' := (cgRecurrence A c x₀ (k + 1)).r ⬝ᵥ
+      (cgRecurrence A c x₀ (k + 1)).r with hρ'def
+    have hrr : s.r ⬝ᵥ (cgRecurrence A c x₀ (k + 1)).r = 0 :=
+      horth _ (cgRecurrence_mem_krylovSpace A c x₀ k).2.1
+    have hX : α * (s.p ⬝ᵥ (A *ᵥ (cgRecurrence A c x₀ (k + 1)).r)) = -ρ' := by
+      have he : α • (A *ᵥ s.p) = s.r - (cgRecurrence A c x₀ (k + 1)).r := by
+        rw [hr', sub_sub_cancel]
+      rw [cgRecurrence_dotProduct_mulVec_comm hA, dotProduct_comm, ← smul_eq_mul,
+        ← smul_dotProduct, he, sub_dotProduct, hrr, zero_sub]
+    have hα : α ≠ 0 := (div_pos hρ hQ).ne'
+    rw [hp', Matrix.mulVec_add, Matrix.mulVec_smul, dotProduct_add, dotProduct_smul]
+    change s.p ⬝ᵥ (A *ᵥ (cgRecurrence A c x₀ (k + 1)).r) + ρ' / ρ * Q = 0
+    apply mul_left_cancel₀ hα
+    rw [mul_add, hX, mul_zero, hαdef]
+    field_simp
+    ring
+
+private lemma cgRecurrence_orthogonality (hA : A.PosDef) (c x₀ : n → ℝ) (k : ℕ) :
+    (∀ y ∈ krylovSpace A (c - A *ᵥ x₀) k,
+      y ⬝ᵥ (cgRecurrence A c x₀ k).r = 0) ∧
+    ∀ y ∈ krylovSpace A (c - A *ᵥ x₀) k,
+      y ⬝ᵥ (A *ᵥ (cgRecurrence A c x₀ k).p) = 0 := by
+  induction k with
+  | zero => simp [krylovSpace_zero]
+  | succ k ih => exact cgRecurrence_orthogonality_succ hA ih.1 ih.2
+
+/-- **Residuals are mutually orthogonal**: for positive definite `A`,
+`r_iᵀ r_j = 0` for distinct indices, including after finite termination.
+Source: Trefethen--Bau (1997), Theorem 38.1; Saad (2011), Proposition 6.19.
+The invariant proof is ported from NLA-lib/NLAlib commit `6a845a2ec27f37c1a98118c107a06a13ce45273d`.
+atlas: cg-recurrence (partial) -/
 theorem dotProduct_cgRecurrence_r_eq_zero (hA : A.PosDef) {i j : ℕ} (hij : i ≠ j) :
     (cgRecurrence A c x₀ i).r ⬝ᵥ (cgRecurrence A c x₀ j).r = 0 := by
-  sorry
+  rcases lt_or_gt_of_ne hij with h | h
+  · exact (cgRecurrence_orthogonality hA c x₀ j).1 _
+      (krylovSpace_mono _ _ (Nat.succ_le_of_lt h)
+        (cgRecurrence_mem_krylovSpace A c x₀ i).2.1)
+  · rw [dotProduct_comm]
+    exact (cgRecurrence_orthogonality hA c x₀ i).1 _
+      (krylovSpace_mono _ _ (Nat.succ_le_of_lt h)
+        (cgRecurrence_mem_krylovSpace A c x₀ j).2.1)
 
-/-- SCAFFOLD: cg-recurrence
-**Search directions are `A`-conjugate**: for `A ≻ 0`, `p_iᵀ A p_j = 0` for `i ≠ j`.
-Source: Trefethen–Bau (1997) [`tb97`], Thm 38.1 (conjugacy of the search directions); Saad
-(2011) [`saad11`], Prop. 6.20. Proof sketch: the joint induction of
-`dotProduct_cgRecurrence_r_eq_zero` (the two invariants are proved together; for `j < k`,
-`p_{k+1}ᵀ A p_j = r_{k+1}ᵀ A p_j + β_k p_kᵀ A p_j`, the first term is
-`r_{k+1}ᵀ (r_j − r_{j+1}) / α_j = 0`, and for `j = k` the choice of `β_k` cancels the two terms). -/
+/-- **Search directions are A-conjugate**: for positive definite `A`,
+`p_iᵀ A p_j = 0` for distinct indices, including after finite termination.
+Source: Trefethen--Bau (1997), Theorem 38.1; Saad (2011), Proposition 6.20.
+The invariant proof is ported from NLA-lib/NLAlib commit `6a845a2ec27f37c1a98118c107a06a13ce45273d`.
+atlas: cg-recurrence (partial) -/
 theorem dotProduct_cgRecurrence_p_mulVec_eq_zero (hA : A.PosDef) {i j : ℕ} (hij : i ≠ j) :
     (cgRecurrence A c x₀ i).p ⬝ᵥ (A *ᵥ (cgRecurrence A c x₀ j).p) = 0 := by
-  sorry
+  rcases lt_or_gt_of_ne hij with h | h
+  · exact (cgRecurrence_orthogonality hA c x₀ j).2 _
+      (krylovSpace_mono _ _ (Nat.succ_le_of_lt h)
+        (cgRecurrence_mem_krylovSpace A c x₀ i).2.2)
+  · rw [cgRecurrence_dotProduct_mulVec_comm hA]
+    exact (cgRecurrence_orthogonality hA c x₀ i).2 _
+      (krylovSpace_mono _ _ (Nat.succ_le_of_lt h)
+        (cgRecurrence_mem_krylovSpace A c x₀ j).2.2)
 
 /-- **The residuals span the Krylov space**: for `A ≻ 0` and every `k`,
 `span (r_0, …, r_{k−1}) = K_k(A, r₀)`. Source: Trefethen–Bau (1997) [`tb97`], Thm 38.1,

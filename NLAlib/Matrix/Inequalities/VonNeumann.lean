@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 NLAlib contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: NLAlib contributors
+-/
 import NLAlib.Matrix.Spectral.EckartYoung
 import NLAlib.Matrix.Norms.RankNorm
 import NLAlib.Matrix.Norms.Reindex
@@ -68,6 +73,8 @@ theorem frobInner_le_sqrt_mul_frobNorm_mul_specNorm_of_rank_le {r : ℕ} (X E : 
 
 section TraceInequality
 
+variable {𝕜 : Type*} [RCLike 𝕜]
+
 /-- Abel summation: partial-sum domination `∑_{i<k} dᵢ ≤ ∑_{i<k} tᵢ` (`k ≤ N`) survives
 weighting by a nonnegative non-increasing sequence. Abel summation; Horn–Johnson (1991),
 §3.4, finite core of the von Neumann trace inequality and majorization duality. -/
@@ -100,29 +107,29 @@ theorem sum_range_mul_le_of_partial_le {s d t : ℕ → ℝ} {N : ℕ}
     exact Finset.sum_congr rfl fun i _ => by ring
   linarith
 
-/-- The diagonal of a rectangular matrix as a zero-padded sequence. The coordinate is zero
+/-- The real diagonal of a rectangular matrix as a zero-padded sequence. The coordinate is zero
 when either index is outside the matrix. Horn–Johnson (1991), §3.4; Ky Fan helper. -/
-def diagonalSequence {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ) (i : ℕ) : ℝ :=
-  if h : i < m ∧ i < n then D ⟨i, h.1⟩ ⟨i, h.2⟩ else 0
+def diagonalSequence {m n : ℕ} (D : Matrix (Fin m) (Fin n) 𝕜) (i : ℕ) : ℝ :=
+  if h : i < m ∧ i < n then RCLike.re (D ⟨i, h.1⟩ ⟨i, h.2⟩) else 0
 
-private theorem frobInner_rectDiag {m n : ℕ} (σ : ℕ → ℝ) (D : Matrix (Fin m) (Fin n) ℝ) :
-    frobInner (rectDiag σ : Matrix (Fin m) (Fin n) ℝ) D =
+private theorem frobInner_rectDiag {m n : ℕ} (σ : ℕ → ℝ) (D : Matrix (Fin m) (Fin n) 𝕜) :
+    frobInner (rectDiag σ : Matrix (Fin m) (Fin n) 𝕜) D =
       ∑ i ∈ Finset.range (min m n), σ i * diagonalSequence D i := by
-  have h1 : frobInner (rectDiag σ : Matrix (Fin m) (Fin n) ℝ) D =
+  have h1 : frobInner (rectDiag σ : Matrix (Fin m) (Fin n) 𝕜) D =
       ∑ i : Fin m, σ i * diagonalSequence D i := by
-    rw [frobInner_eq_sum_mul]
+    rw [frobInner, map_sum]
     refine Finset.sum_congr rfl fun i _ => ?_
-    simp only [rectDiag_apply, diagonalSequence]
+    simp only [rectDiag_apply_ofReal, diagonalSequence]
     by_cases hi : (i : ℕ) < n
     · rw [Finset.sum_eq_single ⟨i, hi⟩]
       · simp [hi]
       · intro j _ hj
-        rw [if_neg (fun h => hj (Fin.ext h.symm)), zero_mul]
+        rw [if_neg (fun h => hj (Fin.ext h.symm)), star_zero, zero_mul]
       · simp
     · rw [Finset.sum_eq_zero]
       · simp [hi]
       · intro j _
-        rw [if_neg (fun (h : (i : ℕ) = j) => hi (h ▸ j.isLt)), zero_mul]
+        rw [if_neg (fun (h : (i : ℕ) = j) => hi (h ▸ j.isLt)), star_zero, zero_mul]
   rw [h1, Fin.sum_univ_eq_sum_range (fun i => σ i * diagonalSequence D i) m]
   symm
   apply Finset.sum_subset
@@ -149,41 +156,56 @@ theorem sum_fin_ite_lt_eq_sum_range {N k : ℕ} (hk : k ≤ N) (g : ℕ → ℝ)
   simp only [Finset.mem_filter, Finset.mem_range]
   omega
 
-private theorem sum_sq_col_eq_one {m : ℕ} {P : Matrix (Fin m) (Fin m) ℝ}
-    (hP : HasOrthonormalCols P) (c : Fin m) : ∑ j, P j c ^ 2 = 1 := by
-  have := congrArg (fun M => M c c) hP.conjTranspose_mul_self
-  simp only [Matrix.conjTranspose_eq_transpose_of_trivial] at this
-  simpa [Matrix.mul_apply, sq] using this
+private theorem sum_norm_sq_col_eq_one {m : ℕ} {p : Matrix (Fin m) (Fin m) 𝕜}
+    (hp : HasOrthonormalCols p) (c : Fin m) : ∑ j, ‖p j c‖ ^ 2 = 1 := by
+  have h := congrArg (fun M : Matrix (Fin m) (Fin m) 𝕜 => RCLike.re (M c c))
+    hp.conjTranspose_mul_self
+  simpa only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply_eq,
+    RCLike.star_def, RCLike.conj_mul, map_sum, ← RCLike.ofReal_pow,
+    RCLike.ofReal_re, RCLike.one_re] using h
 
-private theorem sum_sq_row_eq_one {m : ℕ} {P : Matrix (Fin m) (Fin m) ℝ} (hP : P * Pᵀ = 1)
-    (c : Fin m) : ∑ j, P c j ^ 2 = 1 := by
-  have := congrArg (fun M => M c c) hP
-  simpa [Matrix.mul_apply, sq] using this
+private theorem sum_norm_sq_row_eq_one {m : ℕ} {p : Matrix (Fin m) (Fin m) 𝕜}
+    (hp : p * pᴴ = 1) (c : Fin m) : ∑ j, ‖p c j‖ ^ 2 = 1 := by
+  have h := congrArg (fun M : Matrix (Fin m) (Fin m) 𝕜 => RCLike.re (M c c)) hp
+  simpa only [Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply_eq,
+    RCLike.star_def, RCLike.mul_conj, map_sum, ← RCLike.ofReal_pow,
+    RCLike.ofReal_re, RCLike.one_re] using h
 
+set_option maxHeartbeats 800000 in
 /-- **Ky Fan's maximum principle, diagonal form.** The sum of the first `k` diagonal entries of
 `D` is at most the sum of its `k` largest singular values. -/
-theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) ℝ) {k : ℕ}
+theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) 𝕜) {k : ℕ}
     (hk : k ≤ min m n) :
     ∑ i ∈ Finset.range k, diagonalSequence D i ≤ ∑ i ∈ Finset.range k, singularValues D i := by
   obtain ⟨P, R, h⟩ := exists_isSVD D
   have hkm : k ≤ m := hk.trans (min_le_left m n)
   have hkn : k ≤ n := hk.trans (min_le_right m n)
   let p : ℕ → Fin (min m n) → ℝ := fun i l =>
-    if hi : i < m then P ⟨i, hi⟩ (Fin.castLE (min_le_left m n) l) else 0
+    if hi : i < m then ‖P ⟨i, hi⟩ (Fin.castLE (min_le_left m n) l)‖ else 0
   let r : ℕ → Fin (min m n) → ℝ := fun i l =>
-    if hi : i < n then R ⟨i, hi⟩ (Fin.castLE (min_le_right m n) l) else 0
+    if hi : i < n then ‖R ⟨i, hi⟩ (Fin.castLE (min_le_right m n) l)‖ else 0
   let t : Fin (min m n) → ℝ := fun l => singularValues D l
-  have hdiag : ∀ i, diagonalSequence D i = ∑ l, t l * (p i l * r i l) := by
+  have hdiag : ∀ i, diagonalSequence D i ≤ ∑ l, t l * (p i l * r i l) := by
     intro i
     by_cases hi : i < m ∧ i < n
     · simp only [diagonalSequence, dif_pos hi, p, r, dif_pos hi.1, dif_pos hi.2, t]
-      rw [h.apply]
-      simp only [RCLike.ofReal_real_eq_id, id_eq, star_trivial]
-      exact Finset.sum_congr rfl fun l _ => by ring
+      rw [h.apply, map_sum]
+      refine Finset.sum_le_sum fun l _ => ?_
+      calc RCLike.re ((singularValues D l : 𝕜) *
+          P ⟨i, hi.1⟩ (Fin.castLE (min_le_left m n) l) *
+            star (R ⟨i, hi.2⟩ (Fin.castLE (min_le_right m n) l)))
+          ≤ ‖(singularValues D l : 𝕜) *
+              P ⟨i, hi.1⟩ (Fin.castLE (min_le_left m n) l) *
+                star (R ⟨i, hi.2⟩ (Fin.castLE (min_le_right m n) l))‖ :=
+            RCLike.re_le_norm _
+        _ = _ := by
+          rw [norm_mul, norm_mul, norm_star, RCLike.norm_ofReal,
+            abs_of_nonneg (singularValues_nonneg D _)]
+          ring
     · simp only [diagonalSequence, dif_neg hi]
-      symm
-      refine Finset.sum_eq_zero fun l _ => ?_
-      rcases not_and_or.1 hi with h1 | h1 <;> simp [p, r, h1]
+      exact Finset.sum_nonneg fun l _ => mul_nonneg (singularValues_nonneg D _)
+        (mul_nonneg (by simp only [p]; split_ifs <;> positivity)
+          (by simp only [r]; split_ifs <;> positivity))
   have hcol : ∀ l, ∑ i ∈ Finset.range k, p i l ^ 2 ≤ 1 ∧
       ∑ i ∈ Finset.range k, r i l ^ 2 ≤ 1 := by
     intro l
@@ -191,31 +213,35 @@ theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) �
     · calc ∑ i ∈ Finset.range k, p i l ^ 2 ≤ ∑ i ∈ Finset.range m, p i l ^ 2 :=
             Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_subset_range.2 hkm)
               (fun _ _ _ => sq_nonneg _)
-        _ = ∑ j : Fin m, P j (Fin.castLE (min_le_left m n) l) ^ 2 := by
+        _ = ∑ j : Fin m, ‖P j (Fin.castLE (min_le_left m n) l)‖ ^ 2 := by
             rw [← Fin.sum_univ_eq_sum_range (fun i => p i l ^ 2) m]
             simp [p]
-        _ = 1 := sum_sq_col_eq_one h.conjTranspose_mul_left _
+        _ = 1 := sum_norm_sq_col_eq_one h.conjTranspose_mul_left _
     · calc ∑ i ∈ Finset.range k, r i l ^ 2 ≤ ∑ i ∈ Finset.range n, r i l ^ 2 :=
             Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_subset_range.2 hkn)
               (fun _ _ _ => sq_nonneg _)
-        _ = ∑ j : Fin n, R j (Fin.castLE (min_le_right m n) l) ^ 2 := by
+        _ = ∑ j : Fin n, ‖R j (Fin.castLE (min_le_right m n) l)‖ ^ 2 := by
             rw [← Fin.sum_univ_eq_sum_range (fun i => r i l ^ 2) n]
             simp [r]
-        _ = 1 := sum_sq_col_eq_one h.conjTranspose_mul_right _
+        _ = 1 := sum_norm_sq_col_eq_one h.conjTranspose_mul_right _
   have hrow : ∀ i, ∑ l, p i l ^ 2 ≤ 1 ∧ ∑ l, r i l ^ 2 ≤ 1 := by
     intro i
     constructor
     · by_cases hi : i < m
       · calc ∑ l, p i l ^ 2 = ∑ l : Fin (min m n),
-              (fun j => P ⟨i, hi⟩ j ^ 2) (Fin.castLE (min_le_left m n) l) := by simp [p, hi]
-          _ ≤ ∑ j, P ⟨i, hi⟩ j ^ 2 := sum_castLE_le _ _ fun _ => sq_nonneg _
-          _ = 1 := sum_sq_row_eq_one h.mul_conjTranspose_left _
+              (fun j => ‖P ⟨i, hi⟩ j‖ ^ 2) (Fin.castLE (min_le_left m n) l) := by simp [p, hi]
+          _ ≤ ∑ j, ‖P ⟨i, hi⟩ j‖ ^ 2 :=
+            sum_castLE_le (min_le_left m n) (fun j : Fin m => ‖P ⟨i, hi⟩ j‖ ^ 2)
+              (fun _ => sq_nonneg _)
+          _ = 1 := sum_norm_sq_row_eq_one h.mul_conjTranspose_left _
       · simp [p, hi]
     · by_cases hi : i < n
       · calc ∑ l, r i l ^ 2 = ∑ l : Fin (min m n),
-              (fun j => R ⟨i, hi⟩ j ^ 2) (Fin.castLE (min_le_right m n) l) := by simp [r, hi]
-          _ ≤ ∑ j, R ⟨i, hi⟩ j ^ 2 := sum_castLE_le _ _ fun _ => sq_nonneg _
-          _ = 1 := sum_sq_row_eq_one h.mul_conjTranspose_right _
+              (fun j => ‖R ⟨i, hi⟩ j‖ ^ 2) (Fin.castLE (min_le_right m n) l) := by simp [r, hi]
+          _ ≤ ∑ j, ‖R ⟨i, hi⟩ j‖ ^ 2 :=
+            sum_castLE_le (min_le_right m n) (fun j : Fin n => ‖R ⟨i, hi⟩ j‖ ^ 2)
+              (fun _ => sq_nonneg _)
+          _ = 1 := sum_norm_sq_row_eq_one h.mul_conjTranspose_right _
       · simp [r, hi]
   let w : Fin (min m n) → ℝ := fun l => ∑ i ∈ Finset.range k, (p i l ^ 2 + r i l ^ 2) / 2
   have hw0 : ∀ l, 0 ≤ w l := fun l =>
@@ -238,8 +264,10 @@ theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) �
   have hanti : Antitone t := fun a b hab =>
     singularValues_antitone D (show (a : ℕ) ≤ b from hab)
   calc ∑ i ∈ Finset.range k, diagonalSequence D i
-      = ∑ l, t l * ∑ i ∈ Finset.range k, p i l * r i l := by
-        simp_rw [hdiag, Finset.mul_sum]
+      ≤ ∑ i ∈ Finset.range k, ∑ l, t l * (p i l * r i l) :=
+        Finset.sum_le_sum fun i _ => hdiag i
+    _ = ∑ l, t l * ∑ i ∈ Finset.range k, p i l * r i l := by
+        simp_rw [Finset.mul_sum]
         exact Finset.sum_comm
     _ ≤ ∑ l, t l * w l := Finset.sum_le_sum fun l _ =>
         mul_le_mul_of_nonneg_left
@@ -253,24 +281,21 @@ theorem sum_range_diagonalSequence_le {m n : ℕ} (D : Matrix (Fin m) (Fin n) �
 
 /-- `Fin` step of `frobInner_le_sum_singularValues_mul`. -/
 private theorem frobInner_le_sum_singularValues_mul_fin {m n : ℕ}
-    (X E : Matrix (Fin m) (Fin n) ℝ) :
+    (X E : Matrix (Fin m) (Fin n) 𝕜) :
     frobInner X E ≤ ∑ k ∈ Finset.range (min m n), singularValues X k * singularValues E k := by
   obtain ⟨U, V, h⟩ := exists_isSVD X
-  set D : Matrix (Fin m) (Fin n) ℝ := Uᵀ * E * V with hDdef
+  set D : Matrix (Fin m) (Fin n) 𝕜 := Uᴴ * E * V with hDdef
   have hD : singularValues D = singularValues E := by
-    have hU : HasOrthonormalCols Uᵀ := by
-      rw [hasOrthonormalCols_iff_conjTranspose_mul_self,
-        Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.transpose_transpose]
+    have hU : HasOrthonormalCols Uᴴ := by
+      rw [hasOrthonormalCols_iff_conjTranspose_mul_self, Matrix.conjTranspose_conjTranspose]
       exact h.mul_conjTranspose_left
     rw [hDdef, singularValues_mul_unitary _ h.conjTranspose_mul_right,
       singularValues_isometry_mul hU]
   have hinner : frobInner X E =
-      frobInner (rectDiag (singularValues X) : Matrix (Fin m) (Fin n) ℝ) D := by
-    rw [frobInner_eq_trace, RCLike.re_to_real,
-      Matrix.conjTranspose_eq_transpose_of_trivial, frobInner_eq_trace, RCLike.re_to_real,
-      Matrix.conjTranspose_eq_transpose_of_trivial]
-    conv_lhs => rw [h.eq, Matrix.conjTranspose_eq_transpose_of_trivial]
-    simp only [hDdef, Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
+      frobInner (rectDiag (singularValues X) : Matrix (Fin m) (Fin n) 𝕜) D := by
+    rw [frobInner_eq_trace, frobInner_eq_trace]
+    conv_lhs => rw [h.eq]
+    simp only [hDdef, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
     rw [Matrix.trace_mul_comm V]
     simp only [Matrix.mul_assoc]
   rw [hinner, frobInner_rectDiag]
@@ -279,15 +304,18 @@ private theorem frobInner_le_sum_singularValues_mul_fin {m n : ℕ}
   rw [← hD]
   exact sum_range_diagonalSequence_le D hk
 
-/-- **Von Neumann trace inequality.** For real matrices,
-`⟨X, E⟩_F = tr(XᵀE) ≤ ∑_{k < min (card m) (card n)} σ_k(X) σ_k(E)`. Horn–Johnson 2013,
-Thm 7.4.1.1 (real case, `Re tr(X E*) = frobInner X E`); Mirsky 1975. Proof: Ky Fan's maximum
-principle for the diagonal of `UᵀEV` (through the weighted top-`k` inequality
+omit [DecidableEq m] in
+/-- **Von Neumann trace inequality.** For real or complex matrices,
+`⟨X, E⟩_F = Re tr(XᴴE) ≤ ∑_{k < min (card m) (card n)} σ_k(X) σ_k(E)`. Horn–Johnson 2013,
+Thm 7.4.1.1 (the real trace pairing `Re tr(XᴴE) = frobInner X E`); Mirsky 1975.
+Proof: Ky Fan's maximum principle for the real diagonal of `UᴴEV` (through the weighted top-`k` inequality
 `sum_mul_le_sum_ite_lt_of_antitone`) and Abel summation over `σ(X)`; no Birkhoff theorem is
-needed. Stated over `ℝ` because the singular-value invariances `singularValues_isometry_mul`,
-`singularValues_mul_unitary` are real.
+needed. The scalar field is any `RCLike` field; squared moduli supply the
+row and column budgets. The generic proof follows the native Abel-summation argument
+and the generic frontend trace proof at commit
+`6a845a2ec27f37c1a98118c107a06a13ce45273d` (Apache 2.0, NLAlib contributors).
 atlas: von-neumann-trace -/
-theorem frobInner_le_sum_singularValues_mul (X E : Matrix m n ℝ) :
+theorem frobInner_le_sum_singularValues_mul (X E : Matrix m n 𝕜) :
     frobInner X E ≤ ∑ k ∈ Finset.range (min (Fintype.card m) (Fintype.card n)),
       singularValues X k * singularValues E k := by
   have h := frobInner_le_sum_singularValues_mul_fin

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 NLAlib contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: NLAlib contributors
+-/
 import NLAlib.Krylov.Processes.Lanczos
 /-!
 # The three-term Lanczos recursion as an algorithm
@@ -23,7 +28,7 @@ Indexing is 0-based and matches `LanczosDecomp.alpha/beta`: `A q_j = β_j q_{j�
   `lanczosRecurrence A b j = q_j`, `lanczosAlpha A b j = α_j`, `lanczosBeta A b j = β_j`.
 * Hypothesis-free (proved): the three-term relation `lanczosBeta_add_two_smul`
   (`β_{j+2} q_{j+2} = A q_{j+1} − α_{j+1} q_{j+1} − β_{j+1} q_j`) and its `j = 0` form.
-* The realisation theorem (scaffold) `lanczosRecurrence_eq_arnoldiBasis`: for symmetric `A`,
+* The realisation theorem `lanczosRecurrence_eq_arnoldiBasis`: for symmetric `A`,
   `q_j = arnoldiBasis A b j` for every `j` (positive-`β` sign convention, verified below).
 * Consequences (proved from it): `lanczosBeta_succ_eq_dotProduct`, `lanczosBeta_pos`,
   `lanczosBeta_eq_zero_of_krylovGrade_le` (`β` vanishes exactly from the grade on),
@@ -183,27 +188,175 @@ theorem lanczosBeta_succ_eq (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) :
 
 /-! ### Realisation: the recursion is the Arnoldi process (symmetric `A`) -/
 
-/-- SCAFFOLD: lanczos-recurrence-algorithm
-**The three-term recursion is the Arnoldi process**: for symmetric `A`, `q_j = arnoldiBasis A b j`
-for every `j` (below the grade the Gram–Schmidt vectors with positive `β`; from the grade on both
-sides are `0`). Sign convention verified: the recursion has `q_0ᵀ b = ‖b‖ > 0` and
-`q_{j+1}ᵀ A q_j = q_{j+1}ᵀ w_j = ‖w_j‖ ≥ 0` (`lanczosBeta_succ_eq`), the signs of the canonical
-decomposition (`arnoldiBasis_zero_dotProduct_pos`, `arnoldiDecomp_H_subdiag_pos`).
-Source: Trefethen–Bau (1997) [`tb97`], Alg. 36.1 and Lect. 36; Saad (2011) [`saad11`],
-Alg. 6.15 and Prop. 6.14; Golub–Meurant (2010) [`gm10`], Thm 4.2.
-Proof sketch: strong induction on `j`, carrying also `β_j = arnoldiBasis j ⬝ A arnoldiBasis (j−1)`.
-Case `j + 1 < ν` (grade): apply `LanczosDecomp.mulVec_vec_eq` to `D = arnoldiDecomp A b (j + 2)`,
-so `w_j = A q_j − α_j q_j − β_j q_{j−1} = β'_{j+1} q'_{j+1}` with `β'_{j+1} > 0`
-(`beta_arnoldiDecomp_pos`) and `q'_{j+1}` a unit vector; hence `‖w_j‖ = β'_{j+1}` and
-`q_{j+1} = q'_{j+1}`. Case `j + 1 = ν`: `A q_j ∈ K_ν` (`mulVec_mem_krylovSpace_krylovGrade`),
-its coordinates in `arnoldiDecomp A b ν` are those of `α_j q_j + β_j q_{j−1}` (tridiagonality,
-`T_apply_eq_zero_of_one_lt_dist`), so `w_j = 0` (`eq_of_forall_col_dotProduct_eq`) and
-`q_ν = 0 = arnoldiBasis ν` (`arnoldiBasis_eq_zero_of_krylovGrade_le`). Case `j + 1 > ν`: the
-state is `(0, 0, 0)` or `(q_{ν−1}, 0, 0)`, so `w_j = 0`. Base: `q_0 = b/‖b‖ = arnoldiBasis 0`
-(`gramSchmidtNormed` of `b`). Uses atlas `lanczos-recurrence`, `graded-krylov-basis-def`. -/
+/-
+The canonical-state and normalization argument below is adapted from
+NLA-lib/NLAlib, NLAlib/Krylov/Processes/LanczosRecurrence.lean, commit
+6a845a2ec27f37c1a98118c107a06a13ce45273d (Apache-2.0).
+The backend uses the direct coefficient `qᵀ A q`, so the proof works with its
+existing canonical decomposition rather than changing the recursion to Paige's form.
+-/
+
+open LanczosDecomp
+
+/-- At the grade the last three-term relation closes; after the grade it is zero. -/
+private theorem lanczosDecomp_mulVec_vec_eq {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
+    (D : LanczosDecomp A b q) (hA : A.IsHermitian) (hq : krylovGrade A b ≤ q) (j : ℕ) :
+    A *ᵥ D.vec j =
+      D.beta j • D.vec (j - 1) + D.alpha j • D.vec j +
+        D.beta (j + 1) • D.vec (j + 1) := by
+  by_cases hj : j < q
+  · by_cases hj' : j + 1 < q
+    · exact D.mulVec_vec_eq hA hj'
+    have hlast : j + 1 = q := by omega
+    have hmemA : A *ᵥ D.vec j ∈ krylovSpace A b q := by
+      rw [krylovSpace_eq_of_krylovGrade_le A b hq]
+      exact mulVec_mem_krylovSpace_krylovGrade A b
+        (krylovSpace_le_krylovSpace_krylovGrade A b q (D.vec_mem j))
+    have hmemR : D.beta j • D.vec (j - 1) + D.alpha j • D.vec j +
+        D.beta (j + 1) • D.vec (j + 1) ∈ krylovSpace A b q :=
+      Submodule.add_mem _ (Submodule.add_mem _ (Submodule.smul_mem _ _ (D.vec_mem _))
+        (Submodule.smul_mem _ _ (D.vec_mem _))) (Submodule.smul_mem _ _ (D.vec_mem _))
+    have hS : (ArnoldiDecomp.H D).IsSymm := D.isSymm_T hA
+    refine D.eq_of_forall_col_dotProduct_eq hmemA hmemR fun i => ?_
+    rw [D.vec_of_lt hj, ← ArnoldiDecomp.H_apply]
+    simp only [dotProduct_add, dotProduct_smul, smul_eq_mul,
+      ← D.vec_of_lt hj, LanczosDecomp.col_dotProduct_vec,
+      LanczosDecomp.alpha, LanczosDecomp.beta, dif_pos hj,
+      dif_neg (show ¬(0 < j + 1 ∧ j + 1 < q) by omega), zero_mul, add_zero]
+    rcases eq_or_ne (i : ℕ) j with hi | hi
+    · have hif : i = ⟨j, hj⟩ := Fin.ext hi
+      rw [hif]
+      simp only [if_true, mul_one]
+      by_cases hj0 : 0 < j
+      · simp only [dif_pos (show 0 < j ∧ j < q from ⟨hj0, hj⟩), show j ≠ j - 1 by omega, if_false, mul_zero,
+          zero_add]
+      · simp only [dif_neg (show ¬(0 < j ∧ j < q) by omega), zero_mul, zero_add]
+    · simp only [if_neg hi, mul_zero, add_zero]
+      by_cases hprev : (i : ℕ) = j - 1
+      · have hj0 : 0 < j := by have := i.isLt; omega
+        have hif : i = ⟨j - 1, by omega⟩ := Fin.ext hprev
+        rw [hif]
+        simp only [dif_pos (show 0 < j ∧ j < q from ⟨hj0, hj⟩), if_true, mul_one]
+        exact (hS.apply _ _).symm
+      · rw [if_neg hprev, mul_zero]
+        rw [← hS.apply i ⟨j, hj⟩]
+        exact D.H_apply_eq_zero_of_add_one_lt (i := ⟨j, hj⟩) (j := i)
+          (show (i : ℕ) + 1 < j by have := i.isLt; omega)
+  · simp [LanczosDecomp.vec, LanczosDecomp.alpha, LanczosDecomp.beta, hj,
+      show ¬j + 1 < q by omega]
+
+private def lanczosCanonicalPrev {A : Matrix n n ℝ} {b : n → ℝ} {q : ℕ}
+    (D : LanczosDecomp A b q) : ℕ → n → ℝ
+  | 0 => 0
+  | j + 1 => D.vec j
+
+private def lanczosCanonicalState (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) : LanczosState n :=
+  let D : LanczosDecomp A b (krylovGrade A b) :=
+    arnoldiDecomp A b (krylovGrade A b) le_rfl
+  ⟨lanczosCanonicalPrev D j, D.vec j, D.beta j⟩
+
+private theorem lanczosCanonicalState_cur (A : Matrix n n ℝ) (b : n → ℝ) (j : ℕ) :
+    (lanczosCanonicalState A b j).cur = arnoldiBasis A b j := by
+  by_cases hj : j < krylovGrade A b
+  · simp only [lanczosCanonicalState, LanczosDecomp.vec_of_lt _ hj,
+      arnoldiDecomp_Q, arnoldiMatrix_col]
+  · simp [lanczosCanonicalState, LanczosDecomp.vec, hj,
+      arnoldiBasis_eq_zero_of_krylovGrade_le A b (not_lt.mp hj)]
+
+omit [DecidableEq n] in
+/-- Normalizing a nonnegative multiple of a canonical unit or zero vector. -/
+private theorem lanczos_norm_smul_and_inv_smul {c : ℝ} (hc : 0 ≤ c) {v : n → ℝ}
+    (h0 : c = 0 → v = 0) (h1 : c ≠ 0 → ‖WithLp.toLp 2 v‖ = 1) :
+    ‖WithLp.toLp 2 (c • v)‖ = c ∧ ‖WithLp.toLp 2 (c • v)‖⁻¹ • (c • v) = v := by
+  rcases eq_or_ne c 0 with rfl | hc0
+  · rw [h0 rfl]
+    simp
+  · have hn : ‖WithLp.toLp 2 (c • v)‖ = c := by
+      rw [WithLp.toLp_smul, norm_smul, h1 hc0, mul_one, Real.norm_eq_abs,
+        abs_of_nonneg hc]
+    refine ⟨hn, ?_⟩
+    rw [hn, smul_smul, inv_mul_cancel₀ hc0, one_smul]
+
+private theorem lanczosStep_lanczosCanonicalState {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) (b : n → ℝ) (j : ℕ) :
+    lanczosStep A (lanczosCanonicalState A b j) = lanczosCanonicalState A b (j + 1) := by
+  let D : LanczosDecomp A b (krylovGrade A b) :=
+    arnoldiDecomp A b (krylovGrade A b) le_rfl
+  have halpha : D.vec j ⬝ᵥ (A *ᵥ D.vec j) = D.alpha j := by
+    by_cases hj : j < krylovGrade A b
+    · rw [D.vec_of_lt hj, LanczosDecomp.alpha, dif_pos hj, LanczosDecomp.T, ArnoldiDecomp.H_apply]
+    · simp [LanczosDecomp.vec, LanczosDecomp.alpha, hj]
+  have hw : A *ᵥ (lanczosCanonicalState A b j).cur -
+      ((lanczosCanonicalState A b j).cur ⬝ᵥ (A *ᵥ (lanczosCanonicalState A b j).cur)) •
+        (lanczosCanonicalState A b j).cur -
+      (lanczosCanonicalState A b j).beta • (lanczosCanonicalState A b j).prev =
+        D.beta (j + 1) • D.vec (j + 1) := by
+    change A *ᵥ D.vec j - (D.vec j ⬝ᵥ (A *ᵥ D.vec j)) • D.vec j -
+      D.beta j • lanczosCanonicalPrev D j = _
+    rw [halpha, lanczosDecomp_mulVec_vec_eq D hA le_rfl]
+    cases j with
+    | zero => simp [lanczosCanonicalPrev, LanczosDecomp.beta]
+    | succ j => simp only [lanczosCanonicalPrev, Nat.add_sub_cancel]; abel
+  have hc : 0 ≤ D.beta (j + 1) := by
+    by_cases hj : j + 1 < krylovGrade A b
+    · exact (LanczosDecomp.beta_arnoldiDecomp_pos A b le_rfl (by omega) hj).le
+    · simp [LanczosDecomp.beta, hj]
+  have hc0 : D.beta (j + 1) = 0 → D.vec (j + 1) = 0 := by
+    intro h
+    by_cases hj : j + 1 < krylovGrade A b
+    · exact False.elim ((LanczosDecomp.beta_arnoldiDecomp_pos A b le_rfl
+        (by omega) hj).ne' h)
+    · simp [LanczosDecomp.vec, hj]
+  have hc1 : D.beta (j + 1) ≠ 0 → ‖WithLp.toLp 2 (D.vec (j + 1))‖ = 1 := by
+    intro h
+    have hj : j + 1 < krylovGrade A b := by
+      by_contra hj
+      exact h (by simp [LanczosDecomp.beta, hj])
+    rw [norm_toLp_eq_sqrt_dotProduct_self, D.vec_of_lt hj,
+      D.hasOrthonormalCols.col_dotProduct_col, if_pos rfl, Real.sqrt_one]
+  obtain ⟨hn, hv⟩ := lanczos_norm_smul_and_inv_smul hc hc0 hc1
+  unfold lanczosStep
+  rw [hw]
+  dsimp only
+  rw [hv, hn]
+  rfl
+
+private theorem lanczosState_eq_lanczosCanonicalState {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) (b : n → ℝ) (j : ℕ) :
+    lanczosState A b j = lanczosCanonicalState A b j := by
+  induction j with
+  | zero =>
+    have hcur : (lanczosCanonicalState A b 0).cur = ‖WithLp.toLp 2 b‖⁻¹ • b := by
+      rw [lanczosCanonicalState_cur, arnoldiBasis, InnerProductSpace.gramSchmidtNormed]
+      have hg : InnerProductSpace.gramSchmidt ℝ (krylovSeq A b) 0 =
+          WithLp.toLp 2 b := by
+        simpa only [Nat.bot_eq_zero, krylovSeq, pow_zero, Matrix.one_mulVec] using
+          (InnerProductSpace.gramSchmidt_bot ℝ (krylovSeq A b))
+      rw [hg]
+      simp [WithLp.ofLp_smul]
+    change lanczosInit b = lanczosCanonicalState A b 0
+    cases h : lanczosCanonicalState A b 0 with
+    | mk p c beta =>
+      have hp : p = 0 := by simpa [lanczosCanonicalState, lanczosCanonicalPrev] using congrArg LanczosState.prev h.symm
+      have hb : beta = 0 := by
+        simpa [lanczosCanonicalState, LanczosDecomp.beta] using congrArg LanczosState.beta h.symm
+      simp only [h] at hcur
+      simp [lanczosInit, hp, hb, hcur]
+  | succ j ih =>
+    rw [lanczosState_succ, ih, lanczosStep_lanczosCanonicalState hA]
+
+/-- **The three-term recursion is the Arnoldi process**: for symmetric `A`, the actual
+Trefethen–Bau recursion equals the positively normalized canonical Arnoldi basis for every step,
+including breakdown and every later zero vector. The canonical-state proof is adapted from
+NLA-lib/NLAlib commit `6a845a2ec27f37c1a98118c107a06a13ce45273d` (Apache-2.0), preserving this
+library's direct Rayleigh coefficient `qᵀ A q`.
+Source: Trefethen–Bau (1997) [`tb97`], Alg. 36.1; Saad (2011) [`saad11`], Alg. 6.15;
+Golub–Meurant (2010) [`gm10`], Thm 4.2. Atlas: `lanczos-recurrence-algorithm`. -/
 theorem lanczosRecurrence_eq_arnoldiBasis {A : Matrix n n ℝ} (hA : A.IsHermitian) (b : n → ℝ)
     (j : ℕ) : lanczosRecurrence A b j = arnoldiBasis A b j := by
-  sorry
+  rw [lanczosRecurrence, lanczosState_eq_lanczosCanonicalState hA,
+    lanczosCanonicalState_cur]
+
 
 /-- **The recursion's `β` is the subdiagonal of the Arnoldi matrix**: for symmetric `A` and every
 `j`, `β_{j+1} = q_{j+1}ᵀ A q_j` with `q = arnoldiBasis A b`. Proof: `lanczosBeta_succ_eq`,

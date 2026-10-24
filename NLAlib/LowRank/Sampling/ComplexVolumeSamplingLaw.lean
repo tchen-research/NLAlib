@@ -123,21 +123,6 @@ Source: the empty determinant convention in manuscript `sa:volume-theorem`. -/
 @[simp] theorem complexGramElementary_zero (A : Matrix m n ℂ) :
     complexGramElementary A 0 = 1 := by simp [complexGramElementary]
 
-/-- The sum of fixed-order complex Hermitian principal determinants equals
-the elementary sum of the actual eigenvalues. Source: the Hermitian spectral
-theorem and determinant coefficient proof of manuscript `sa:volume-theorem`. -/
-theorem sum_det_principal_minors_eq_sum_prod_of_isHermitian {G : Matrix n n ℂ}
-    (hG : G.IsHermitian) (k : ℕ) :
-    (∑ S ∈ Finset.univ.powersetCard k, (G.submatrix
-      (Subtype.val : S → n) (Subtype.val : S → n)).det) =
-      ∑ S ∈ Finset.univ.powersetCard k, ∏ i ∈ S, (hG.eigenvalues i : ℂ) := by
-  have hd : G = (hG.eigenvectorUnitary : Matrix n n ℂ) *
-      Matrix.diagonal (fun i => (hG.eigenvalues i : ℂ)) *
-      star (hG.eigenvectorUnitary : Matrix n n ℂ) := by
-    simpa [Unitary.conjStarAlgAut_apply, Function.comp_def] using hG.spectral_theorem
-  exact sum_det_principal_minors_eq_sum_prod_of_diagonalization
-    (Unitary.coe_star_mul_self hG.eigenvectorUnitary) hd k
-
 /-- The real complex Gram principal-minor normalizer equals its actual
 elementary spectral sum. Source: manuscript `sa:volume-theorem`.
 atlas: volume-sampling (partial) -/

@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Basic.CoordinateSelector
 import NLAlib.Matrix.Inequalities.Schur
 import NLAlib.Matrix.Subspaces.Stiefel
 import NLAlib.Matrix.Norms.Core
@@ -133,9 +134,6 @@ theorem sum_mul_columnProjectionMass_eq_sum_diagonal {A Q : Matrix n n ℝ}
   simp_rw [columnProjectionMass, Finset.mul_sum, hdiag]
   exact Finset.sum_comm
 
-/-- The coordinate-set selector is its diagonal orthogonal projection. -/
-def coordinateSelector (S : Finset n) : Matrix n n ℝ := Matrix.diagonal (fun i => if i ∈ S then 1 else 0)
-
 /-- A reducing cross-zero coordinate set commutes with the Hermitian matrix. -/
 theorem coordinateSelector_commute_of_cross_eq_zero {A : Matrix n n ℝ} (hA : A.IsHermitian)
     (S : Finset n) (hcross : ∀ i ∈ S, ∀ k ∉ S, A i k = 0) :
@@ -177,14 +175,6 @@ theorem mulVec_normalizedProjectedColumn_eq_smul {A Q : Matrix n n ℝ} (hQ : Ha
   unfold normalizedProjectedColumn
   rw [Matrix.mulVec_smul, mulVec_projectedColumn_eq_smul hQ lam hA S hcomm]
   exact smul_comm _ _ _
-
-/-- Complementary coordinate selectors are exactly the residual projection. -/
-theorem coordinateSelector_compl (S : Finset n) : coordinateSelector Sᶜ = 1 - coordinateSelector S := by
-  ext i j
-  by_cases hij : i = j
-  · subst j
-    by_cases hi : i ∈ S <;> simp [coordinateSelector, hi]
-  · simp [coordinateSelector, hij]
 
 /-- A reducing selector has a reducing complementary selector. -/
 theorem coordinateSelector_compl_commute {A : Matrix n n ℝ} (S : Finset n)

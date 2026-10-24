@@ -13,6 +13,50 @@ open MeasureTheory ProbabilityTheory
 open scoped NNReal ENNReal
 namespace NLAlib
 
+/-- Normalize real finite weights to nonnegative masses. The definition is total;
+its probability-vector theorem assumes nonnegative weights with positive total mass. -/
+def normalizedSamplingProbabilities {ι : Type*} [Fintype ι] (u : ι → ℝ) : ι → ℝ≥0 :=
+  fun i => Real.toNNReal (u i / ∑ j, u j)
+
+/-- Nonnegative finite weights with positive total mass normalize to a probability
+vector. Zero weights remain zero, so empty supports are never assigned a false law. -/
+theorem sum_normalizedSamplingProbabilities {ι : Type*} [Fintype ι]
+    (u : ι → ℝ) (hu : ∀ i, 0 ≤ u i) (ht : 0 < ∑ i, u i) :
+    ∑ i, normalizedSamplingProbabilities u i = 1 := by
+  apply NNReal.coe_injective
+  simp only [NNReal.coe_sum, NNReal.coe_one, normalizedSamplingProbabilities]
+  simp_rw [Real.coe_toNNReal _ (div_nonneg (hu _) ht.le)]
+  rw [← Finset.sum_div, div_self ht.ne']
+
+/-- Each normalized finite mass is the original weight divided by total weight,
+on the intended nonnegative, positive-mass domain. -/
+theorem coe_normalizedSamplingProbabilities {ι : Type*} [Fintype ι]
+    (u : ι → ℝ) (hu : ∀ i, 0 ≤ u i) (ht : 0 < ∑ i, u i) (i : ι) :
+    (normalizedSamplingProbabilities u i : ℝ) = u i / ∑ j, u j :=
+  Real.coe_toNNReal _ (div_nonneg (hu i) ht.le)
+
+/-- The occurrence count of an index in a finite sample list. -/
+def sampleCount {ι : Type*} [DecidableEq ι] {s : ℕ} (ω : Fin s → ι) (i : ι) : ℕ :=
+  (Finset.univ.filter (fun j => ω j = i)).card
+
+/-- Summing over a sample list agrees with grouping its entries by occurrence count.
+This is the deterministic realization bridge between list and count-vector algorithms. -/
+theorem sum_sampleCount_nsmul {ι M : Type*} [Fintype ι] [DecidableEq ι]
+    [AddCommMonoid M] {s : ℕ} (ω : Fin s → ι) (f : ι → M) :
+    (∑ i, sampleCount ω i • f i) = ∑ j, f (ω j) := by
+  simpa only [sampleCount, Finset.sum_const] using
+    Finset.sum_fiberwise' (Finset.univ : Finset (Fin s)) ω f
+
+/-- The number of distinct sampled indices never exceeds the number of draws. -/
+theorem card_sampleCount_support_le {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {s : ℕ} (ω : Fin s → ι) :
+    (Finset.univ.filter (fun i => sampleCount ω i ≠ 0)).card ≤ s := by
+  have he : Finset.univ.filter (fun i => sampleCount ω i ≠ 0) = Finset.univ.image ω := by
+    ext i
+    simp [sampleCount]
+  rw [he]
+  exact Finset.card_image_le.trans (by simp)
+
 /-- The probability mass function specified by a finite nonnegative vector
 summing to one. Source: Drineas–Kannan–Mahoney 2006, §4. -/
 def finiteSamplingPMF {ι : Type*} [Fintype ι] (p : ι → ℝ≥0) (hp : ∑ i, p i = 1) : PMF ι :=

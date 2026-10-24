@@ -1,6 +1,9 @@
 import NLAlib.Sketching.Sampling.Leverage
 import NLAlib.LowRank.RandomizedSVD.OptimalError
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.PosSemidef
+import NLAlib.Matrix.Basic.GeneralizedSchurComplement
+import NLAlib.Matrix.Subspaces.RangeProjector
+import NLAlib.Matrix.Norms.NuclearTruncation
 /-!
 # The Nyström approximation
 
@@ -24,8 +27,9 @@ sharper than the `≤` of the atlas statement). No matrix square root is needed:
 With `Ω` an `n × t` standard Gaussian matrix and `t ≥ k + 2`,
 `E tr(A − A⟨Ω⟩) ≤ (1 + k/(t−k−1)) · OPT_k(F)²` where `OPT_k(F)² = ‖F − ⟦F⟧ₖ‖_F²`
 (`integrable_and_integral_trace_sub_nystrom_le`). For a PSD `A = FᵀF`,
-`OPT_k(F)² = ∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*`; that identification is not formalized here, so the
-right-hand side is stated with `bestRankFrobSq F k`.
+`OPT_k(F)² = ∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*`. The nuclear-tail corollary
+`integrable_and_integral_nuclearNorm_sub_nystrom_le` uses the positive square root and the
+native scalar tail identification, and includes all ranks and empty dimensions.
 
 Sources: Gittens–Mahoney 2016, Lemma 1 and §3; Tropp–Webber 2023, §2 and Thm 5.1 (and the
 references there); Martinsson–Tropp 2020, §14 (eq. (14.4)), §19.2.
@@ -156,6 +160,41 @@ theorem posSemidef_sub_nystrom [DecidableEq n] {A : Matrix n n ℝ} (hA : A.PosS
   obtain ⟨F, hF⟩ := exists_eq_transpose_mul_of_posSemidef hA
   exact posSemidef_sub_nystrom_of_eq_transpose_mul hF Ω
 
+/-- The Nyström residual is the generalized Schur complement of the sketched Gram block
+`Ωᵀ A Ω` in the bordered matrix with off-diagonal block `Ωᵀ A` and bottom-right block `A`.
+No inverse or rank assumption is needed. Gittens–Mahoney 2016, Lemma 1; the selection-matrix
+case is formalized in `NLA-lib/NLAlib`, commit
+`6a845a2ec27f37c1a98118c107a06a13ce45273d`, `Matrix/Factorizations/Nystrom.lean`.
+This native identity covers arbitrary sketches and completes the Schur clause of
+`nystrom-structural`.
+atlas: nystrom-structural (partial) -/
+theorem sub_nystrom_eq_generalizedSchurComplement {A : Matrix n n ℝ}
+    (hA : A.IsHermitian) (Ω : Matrix n t ℝ) :
+    A - nystrom A Ω = generalizedSchurComplement (Ωᵀ * A * Ω) (Ωᵀ * A) A := by
+  have hAt : Aᵀ = A := hA.eq
+  simp only [nystrom, generalizedSchurComplement, Matrix.conjTranspose_eq_transpose_of_trivial,
+    Matrix.transpose_mul, Matrix.transpose_transpose, hAt]
+
+open scoped MatrixOrder in
+/-- The spectral error of PSD Nyström is exactly the squared spectral norm of the
+square-root projection residual. Here the projector is onto `range(A^{1/2} Ω)`; equality
+strengthens the bound in `nystrom-structural`. Gittens–Mahoney 2016, Lemma 1.
+The Gram-factor form is the native `specNorm_sub_nystrom_eq_of_eq_transpose_mul`; the
+square-root specialization follows the Gram correspondence in `NLA-lib/NLAlib`, commit
+`6a845a2ec27f37c1a98118c107a06a13ce45273d`, `Matrix/Functions/AbsoluteValue.lean`.
+atlas: nystrom-structural (partial) -/
+theorem specNorm_sub_nystrom_eq_sqrt_residual [DecidableEq n]
+    {A : Matrix n n ℝ} (hA : A.PosSemidef) (Ω : Matrix n t ℝ) :
+    specNorm (A - nystrom A Ω) =
+      specNorm ((1 - rangeProjector (CFC.sqrt A * Ω)) * CFC.sqrt A) ^ 2 := by
+  have hS : (CFC.sqrt A)ᵀ = CFC.sqrt A := by
+    simpa only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial] using
+      (CFC.sqrt_nonneg A).star_eq
+  have hGram : A = (CFC.sqrt A)ᵀ * CFC.sqrt A := by
+    rw [hS, CFC.sqrt_mul_sqrt_self A hA.nonneg]
+  simpa only [rangeProjector_eq_mul_moorePenroseInverse] using
+    specNorm_sub_nystrom_eq_of_eq_transpose_mul hGram Ω
+
 /-- `(I − Y Y⁺)F` is the residual of `F` with respect to any orthonormal frame `Q` of
 `range Y`: if `QᵀQ = I`, `range Y ⊆ range Q` and `Q` has at most `rank Y` columns, then
 `(I − YY⁺)F = (I − QQᵀ)F`. Atlas `nystrom-randomized` (helper; uses `leverage-scores`'
@@ -183,8 +222,8 @@ the Gaussian range frame `Q` of `FΩ` has `min(rank F, t) = rank(FΩ)` columns, 
 then the Gaussian RSVD bound for `F`
 (`integrable_and_integral_frobSq_residual_gaussianRangeFrame_le_bestRankFrobSq`).
 
-Deviation: the right side is `bestRankFrobSq F k`; for `A = FᵀF` this equals
-`∑_{i>k} λᵢ(A) = ‖A − ⟦A⟧ₖ‖_*` (the atlas form), an identification not formalized here.
+Deviation: the right side retains the factor's optimum `bestRankFrobSq F k`.
+The full nuclear-tail statement is `integrable_and_integral_nuclearNorm_sub_nystrom_le` below.
 Index types are `Fin` (Gaussian law convention). Atlas `nystrom-randomized` (uses
 `nystrom-structural`, `rsvd-expected-error`, `leverage-scores`).
 atlas: nystrom-randomized (partial) -/
@@ -205,6 +244,54 @@ theorem integrable_and_integral_trace_sub_nystrom_le {n r k t : ℕ}
     rw [trace_sub_nystrom_eq_of_eq_transpose_mul hA,
       one_sub_mul_moorePenroseInverse_mul_eq_residual hω hpω (by rw [hrω, Fintype.card_fin]) F]
   exact ⟨hint.congr hae, (integral_congr_ae hae).symm.le.trans hle⟩
+
+open scoped MatrixOrder in
+omit [IsProbabilityMeasure μ] in
+/-- Gaussian Nyström has integrable nuclear error with the exact factor
+`1 + k / (t - k - 1)` times the matrix's best rank-`k` nuclear error. The actual standard
+Gaussian law and Moore–Penrose formula are used, with no rank assumption on the input or
+sketch. This includes repeated eigenvalues, rank deficiency, rank zero and empty matrices.
+Gittens–Mahoney 2016, §3; Martinsson–Tropp 2020, §19.2. The Gram-to-nuclear specialization
+follows frontend commit `6a845a2ec27f37c1a98118c107a06a13ce45273d` (Apache-2.0),
+`LowRank/Gaussian/Nystrom.lean`, using the previously proved native Gaussian expectation.
+This supplies the full displayed bound of `nystrom-randomized`.
+atlas: nystrom-randomized -/
+theorem integrable_and_integral_nuclearNorm_sub_nystrom_le_of_hasLaw {n k t : ℕ}
+    {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.PosSemidef) (hkt : k + 2 ≤ t)
+    (Ω : Ωs → Matrix (Fin n) (Fin t) ℝ)
+    (hΩ : HasLaw Ω (gaussianMatrix (Fin n) (Fin t)) μ) :
+    Integrable (fun ω => nuclearNorm (A - nystrom A (Ω ω))) μ ∧
+      ∫ ω, nuclearNorm (A - nystrom A (Ω ω)) ∂μ ≤
+        (1 + (k : ℝ) / (t - k - 1)) * nuclearNorm (A - truncatedSVD A k) := by
+  have := hΩ.isProbabilityMeasure
+  have hS : (CFC.sqrt A)ᵀ = CFC.sqrt A := by
+    simpa only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial] using
+      (CFC.sqrt_nonneg A).star_eq
+  have hGram : A = (CFC.sqrt A)ᵀ * CFC.sqrt A := by
+    rw [hS, CFC.sqrt_mul_sqrt_self A hA.nonneg]
+  obtain ⟨hint, hbound⟩ := integrable_and_integral_trace_sub_nystrom_le hGram hkt Ω hΩ
+  have hEq : (fun ω => nuclearNorm (A - nystrom A (Ω ω))) =
+      fun ω => (A - nystrom A (Ω ω)).trace :=
+    funext fun ω => nuclearNorm_eq_trace_of_posSemidef (posSemidef_sub_nystrom hA (Ω ω))
+  rw [hEq]
+  rw [bestRankFrobSq_sqrt_eq_nuclearNorm_sub_truncatedSVD hA k] at hbound
+  exact ⟨hint, hbound⟩
+
+/-- Standard Gaussian Nyström has integrable nuclear error bounded by
+`1 + k / (t - k - 1)` times the matrix's nuclear singular-value tail. This primary
+distribution-level statement includes every input rank and empty dimensions.
+Gittens–Mahoney 2016, §3; Martinsson–Tropp 2020, §19.2; native specialization of the
+Gram correspondence audited against frontend commit
+`6a845a2ec27f37c1a98118c107a06a13ce45273d`.
+atlas: nystrom-randomized -/
+theorem integrable_and_integral_nuclearNorm_sub_nystrom_le {n k t : ℕ}
+    {A : Matrix (Fin n) (Fin n) ℝ} (hA : A.PosSemidef) (hkt : k + 2 ≤ t) :
+    Integrable (fun Ω : Matrix (Fin n) (Fin t) ℝ => nuclearNorm (A - nystrom A Ω))
+        (gaussianMatrix (Fin n) (Fin t)) ∧
+      ∫ Ω : Matrix (Fin n) (Fin t) ℝ, nuclearNorm (A - nystrom A Ω)
+          ∂gaussianMatrix (Fin n) (Fin t) ≤
+        (1 + (k : ℝ) / (t - k - 1)) * nuclearNorm (A - truncatedSVD A k) :=
+  integrable_and_integral_nuclearNorm_sub_nystrom_le_of_hasLaw hA hkt id HasLaw.id
 
 end Randomized
 

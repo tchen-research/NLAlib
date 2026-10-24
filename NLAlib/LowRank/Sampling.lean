@@ -2,7 +2,7 @@ import NLAlib.LowRank.Sampling.ComplexVolumeSampling
 import NLAlib.LowRank.Sampling.ComplexVolumeSamplingEndpoints
 import NLAlib.LowRank.Sampling.ComplexVolumeSamplingError
 import NLAlib.LowRank.Sampling.ComplexVolumeSamplingLaw
-import NLAlib.LowRank.Sampling.VolumeCounting
+import NLAlib.LowRank.Sampling.ProjectionPivotingLaw
 import NLAlib.LowRank.Sampling.VolumeSampling
 
 /-! # `LowRank/Sampling`

@@ -234,7 +234,7 @@ private lemma integrable_and_integral_le_of_hasLaw'
   exact hI.comp_aemeasurable hX.aemeasurable
 
 /-- **Tail bound for the spectral norm of the Gaussian pseudoinverse.** For an `r × k`
-standard Gaussian matrix `G` with `2 ≤ r ≤ k` and `t > 0`,
+standard Gaussian matrix `G` with `1 ≤ r ≤ k` and `t > 0`,
 `P[‖G†‖ > t] ≤ (2π(k-r+1))^{-1/2} (e√k/(k-r+1))^{k-r+1} t^{-(k-r+1)}`,
 with `G† = pinvR G`.
 
@@ -243,9 +243,10 @@ HMT 2011, Prop A.3; Chen–Dongarra 2005, Lemma 4.1. Atlas: `pinv-spectral-tail`
 `specNorm_inv_self_mul_transpose_eq`, atlas `pseudoinverse`), the `λ_min` lower tail
 (`gaussianMatrix_sigmaMin_transpose_sq_le_le`, atlas `wishart-lambda-min-tail`, which uses the
 proved operator bound (B.5)) and Stirling's formula. Ported from Prove2me solution
-`GaussianMatrix.pinv_spectral_tail`.
+`GaussianMatrix.pinv_spectral_tail`. The positive-head extension includes `r=1` because
+the native smallest-eigenvalue estimate and Stirling step already cover that endpoint.
 atlas: pinv-spectral-tail -/
-theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r ≤ k) (t : ℝ)
+theorem gaussianMatrix_lt_specNorm_pinvR_le_of_pos {r k : ℕ} (hr : 1 ≤ r) (hrk : r ≤ k) (t : ℝ)
     (ht : 0 < t) :
     (gaussianMatrix (Fin r) (Fin k)).real {G | t < specNorm (pinvR G)}
       ≤ (1 / Real.sqrt (2 * Real.pi * ((k : ℝ) - r + 1)))
@@ -286,7 +287,7 @@ theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r 
     rw [le_div_iff₀ ht2]
     linarith
   refine (measure_mono hsub).trans ?_
-  have hr1 : 1 ≤ r := by omega
+  have hr1 : 1 ≤ r := hr
   rw [← ofReal_measureReal (μ := gaussianMatrix (Fin r) (Fin k))
     (s := {G | singularValues Gᵀ (Fintype.card (Fin r) - 1) ^ 2 ≤ 1 / t ^ 2})]
   apply ENNReal.ofReal_le_ofReal
@@ -299,6 +300,18 @@ theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r 
   have hRK : (r : ℝ) ≤ k := by exact_mod_cast hrk
   have := inv_Gamma_mul_rpow_le (N := N) (by omega) (k : ℝ) (r : ℝ) t hRK (by positivity) ht
   convert this using 3
+
+/-- The original HMT inverse spectral tail for head size at least two, preserved as a
+corollary of the positive-head variant. Source: HMT (2011), Proposition A.3.
+Atlas: `pinv-spectral-tail`.
+atlas: pinv-spectral-tail -/
+theorem gaussianMatrix_lt_specNorm_pinvR_le {r k : ℕ} (hr : 2 ≤ r) (hrk : r ≤ k) (t : ℝ)
+    (ht : 0 < t) :
+    (gaussianMatrix (Fin r) (Fin k)).real {G | t < specNorm (pinvR G)}
+      ≤ (1 / Real.sqrt (2 * Real.pi * ((k : ℝ) - r + 1)))
+          * (Real.exp 1 * Real.sqrt k / ((k : ℝ) - r + 1)) ^ ((k : ℝ) - r + 1)
+          * t ^ (-((k : ℝ) - r + 1)) :=
+  gaussianMatrix_lt_specNorm_pinvR_le_of_pos (by omega) hrk t ht
 
 /-- `gaussianMatrix_lt_specNorm_pinvR_le` for a random matrix `X` with
 `HasLaw X (gaussianMatrix (Fin r) (Fin k)) μ`. Atlas: `pinv-spectral-tail`. -/

@@ -1,0 +1,629 @@
+{
+  "date": "2026-10-26",
+  "repository": "tchen-research/NLAlib",
+  "base": "5414c68678aa20fa534db5121acbcbd1a07d8658",
+  "scope_exclusions": [
+    "crouzeix-palencia",
+    "arnoldi-fa-error",
+    "gmres-bgt",
+    "nystrom-pcg",
+    "gmres-any-convergence-curve",
+    "qr-algorithm-convergence",
+    "christoffel-uvarov-modification",
+    "gaussian-haar-sketch-solve-exact",
+    "chebyshev-spectral-density-query",
+    "normal-matrix-mixed-chebyshev-moments",
+    "normal-spectral-density-query"
+  ],
+  "validation": "All 26 local checks passed, including the complete build, default and complete axiom audits, all 91 reviewed proof endpoints, naming, downstream examples, atlas consistency and site rendering.",
+  "reviewed_cards": [
+    {
+      "id": "two-sided-sketch-centered-error",
+      "clauses": [
+        {
+          "statement": "The deterministic centered identity holds for arbitrary rectangular real input and arbitrary square sketches, including empty dimensions.",
+          "decls": [
+            "NLAlib.twoSidedSketchEstimate_sub_frobSq"
+          ]
+        },
+        {
+          "statement": "Independent random sketches with integrable entries and identity means give an integrable, unbiased estimator.",
+          "decls": [
+            "NLAlib.integrable_and_integral_twoSidedSketchEstimate"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "independent-control-variate-variance",
+      "clauses": [
+        {
+          "statement": "For the actual independent Gaussian probe law and a measurable almost-everywhere symmetric random control with finite residual second moment, the estimator is square integrable, unbiased, has the stated exact variance, and has conditional mean equal to the trace given the control.",
+          "decls": [
+            "NLAlib.gaussianControlVariateEstimate_moments_of_indepFun"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "two-sided-gaussian-frobenius-variance",
+      "clauses": [
+        {
+          "statement": "Independent actual Gaussian sketches of unequal positive widths yield the stated square integrability, mean, exact Frobenius variance, and upper bound for arbitrary rectangular input, including empty or zero input.",
+          "decls": [
+            "NLAlib.twoSidedGaussianFrobEstimate_moments_of_indepFun"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "sketch-and-solve-ls",
+      "clauses": [
+        {
+          "statement": "An embedding of the augmented design gives the stated residual comparison for every sketched least-squares minimizer, including rank-deficient designs.",
+          "decls": [
+            "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_le_of_fromCols"
+          ]
+        },
+        {
+          "statement": "A positive lower embedding and the cross-residual approximate-multiplication estimate give the deterministic 1+epsilon residual factor, with all constants explicit.",
+          "decls": [
+            "NLAlib.IsSubspaceInjection.norm_sub_mulVec_le_one_add_of_cross_residual_le"
+          ]
+        },
+        {
+          "statement": "The actual Gaussian Moore-Penrose estimator has residual factor 1+epsilon with failure at most delta using rank A + 2 + ceil(rank A/(delta epsilon)) rows, hence O((rank A+1)/epsilon) at fixed confidence, including exact-fit and rank-zero inputs.",
+          "decls": [
+            "NLAlib.measureReal_frobNorm_sub_mul_sketchAndSolve_gt_le_of_gaussianSketchSolveDim_le"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "rayleigh-quotient-iteration",
+      "clauses": [
+        {
+          "statement": "For real or complex Hermitian matrices the coordinate tangent is the norm of the orthogonal residual divided by absolute overlap for any unit eigenvector of the selected simple eigenvalue; it is independent of sign or phase.",
+          "decls": [
+            "NLAlib.RayleighQuotientIteration.tangent_eq_norm_sub_div_of_eigenvector"
+          ]
+        },
+        {
+          "statement": "A nonsingular normalized inverse step is a unit vector with nonzero target overlap. Under the explicit neighborhood it has cubic angle convergence, contracts by one half, and preserves the neighborhood.",
+          "decls": [
+            "NLAlib.RayleighQuotientIteration.step_norm_and_coordinates_ne_zero",
+            "NLAlib.RayleighQuotientIteration.tangent_step_le",
+            "NLAlib.RayleighQuotientIteration.tangentSq_step_le_neighborhood"
+          ]
+        },
+        {
+          "statement": "The Rayleigh error is at most M t^2/(1+t^2), and the next error is at most (4 M^3/g^2)t^6.",
+          "decls": [
+            "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_sub_le",
+            "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_step_sub_le"
+          ]
+        },
+        {
+          "statement": "A singular shift at a noneigenvector is breakdown. Infinite valid runs satisfy the explicit geometric and cubic bounds and converge in angle and Rayleigh quotient. Successful finite runs return a unit eigenvector for the target eigenvalue.",
+          "decls": [
+            "NLAlib.RayleighQuotientIteration.advance_eq_breakdown_iff",
+            "NLAlib.RayleighQuotientIteration.run_tangent_le",
+            "NLAlib.RayleighQuotientIteration.tendsto_of_advance_next",
+            "NLAlib.RayleighQuotientIteration.run_success_target"
+          ]
+        },
+        {
+          "statement": "For a smallest or largest eigenvalue, every nonterminal local state has a nonsingular shift and its next Rayleigh error is at most (8 M/g^3) times the cube of the current error.",
+          "decls": [
+            "NLAlib.RayleighQuotientIteration.eigenvalues_ne_rayleighQuotient_of_extremal",
+            "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_step_sub_le_cube_of_extremal"
+          ]
+        },
+        {
+          "statement": "In dimension one every unit vector is already an exact Rayleigh eigenvector.",
+          "decls": [
+            "NLAlib.RayleighQuotientIteration.mulVec_eq_rayleighQuotient_smul_of_unique"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "regular-splitting-inverse-positivity",
+      "clauses": [
+        {
+          "statement": "For M invertible with M inverse and N entrywise nonnegative, inverse positivity of M-N is equivalent to spectral radius of the complexified M inverse N being below one. No Z-matrix assumption is imposed on M-N.",
+          "decls": [
+            "NLAlib.inverse_nonneg_iff_complex_spectralRadius_inv_mul_lt_one"
+          ]
+        },
+        {
+          "statement": "The actual stationary splitting iteration converges to (M-N) inverse times b for every b and initializer; every regular splitting of a nonsingular M-matrix satisfies the criterion.",
+          "decls": [
+            "NLAlib.tendsto_splittingIterate_of_inverse_nonneg",
+            "NLAlib.splittingConverges_of_isNonsingularMMatrix"
+          ]
+        },
+        {
+          "statement": "For nonnegative b and zero start, the actual iterates are nonnegative, increase, and stay below the inverse solution at every step.",
+          "decls": [
+            "NLAlib.splittingIterate_zero_nonneg_mono_le_of_inverse_nonneg"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "gaussian-residual-certificate",
+      "clauses": [
+        {
+          "statement": "Actual independent Gaussian probes give the exact alpha sqrt(2/pi) maximum certificate and failure alpha^(-s), including zero and empty rectangular matrices.",
+          "decls": [
+            "NLAlib.measure_specNorm_gt_gaussianResidualMaximum_le"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "adaptive-gaussian-residual-certification",
+      "clauses": [
+        {
+          "statement": "History-measurable random residuals with fresh product Gaussian probes satisfy the countable simultaneous failure bound and arbitrary finite selected-stage bound under the summable nonnegative budget; no interstage independence or termination assumption is used.",
+          "decls": [
+            "NLAlib.measure_exists_specNorm_gt_freshGaussianResidualMaximum_le"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "row-volume-regression-error",
+      "clauses": [
+        {
+          "statement": "The actual size-width row-volume law for any full-column-rank real or complex design gives the sharp matrix-right-hand-side residual inequality, with equality under general position. The supported pseudoinverse formula is the selected-row inverse solve.",
+          "decls": [
+            "NLAlib.integral_frobSq_sub_mul_rowSubsetPseudoinverse_mul_le",
+            "NLAlib.integral_frobSq_sub_mul_rowSubsetPseudoinverse_mul_eq_of_full_support"
+          ]
+        },
+        {
+          "statement": "The expected adjoint-product error operator satisfies the advertised Loewner inequality and general-position equality.",
+          "decls": [
+            "NLAlib.integral_conjTranspose_mul_rowVolume_error_le",
+            "NLAlib.integral_conjTranspose_mul_rowVolume_error_eq_of_full_support"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "gmres-def",
+      "clauses": [
+        {
+          "statement": "For every real or complex square matrix and every count, the native power-basis pseudoinverse iterate attains GMRES. All minimizers have the same residual, and injectivity makes the iterate unique.",
+          "decls": [
+            "NLAlib.isGMRESIterate_gmresIterate",
+            "NLAlib.IsGMRESIterate.residual_eq",
+            "NLAlib.IsGMRESIterate.eq_of_mulVec_injective"
+          ]
+        },
+        {
+          "statement": "Petrov-Galerkin orthogonality is equivalent to residual minimization over the affine Krylov space over either scalar field.",
+          "decls": [
+            "NLAlib.isGMRESIterate_iff_forall_star_dotProduct_eq_zero"
+          ]
+        },
+        {
+          "statement": "The residual norm is the attained minimum over admissible residual polynomials, is nonincreasing with iteration count, and vanishes at the grade when the matrix is invertible.",
+          "decls": [
+            "NLAlib.IsGMRESIterate.isLeast_norm_aeval",
+            "NLAlib.IsGMRESIterate.norm_le_of_le",
+            "NLAlib.IsGMRESIterate.residual_eq_zero_of_grade_le"
+          ]
+        },
+        {
+          "statement": "An actual spanning Krylov frame with an orthonormal Arnoldi factorization gives the reduced least-squares minimizer and attained residual norm minimum, including deficient reduced matrices and attained dimensions at breakdown.",
+          "decls": [
+            "NLAlib.isGMRESIterate_of_reduced_leastSquares",
+            "NLAlib.IsGMRESIterate.isLeast_norm_reduced"
+          ]
+        },
+        {
+          "statement": "Real data give the same native iterate after complex scalar extension; every real and complex minimizer has the corresponding identical residual.",
+          "decls": [
+            "NLAlib.gmresIterate_map_ofReal",
+            "NLAlib.IsGMRESIterate.residual_map_ofReal"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "matvec-query-model",
+      "clauses": [
+        {
+          "statement": "Bounded interaction trees have exact query budgets and matrix-vector semantics; compiling finite-history adaptive strategies preserves their run.",
+          "decls": [
+            "NLAlib.QueryAlgorithm.run_toProgram"
+          ]
+        },
+        {
+          "statement": "Uniform realization theorems compute the actual Arnoldi and Lanczos recurrences in q queries, including breakdown.",
+          "decls": [
+            "NLAlib.exists_matvecAlg_arnoldiMatrix",
+            "NLAlib.exists_matvecAlg_lanczosState"
+          ]
+        },
+        {
+          "statement": "The actual GMRES and CG iterates use q queries from zero start and q+1 when charging for the initial residual of a general initializer.",
+          "decls": [
+            "NLAlib.exists_matvecAlg_gmresIterate_zero",
+            "NLAlib.exists_matvecAlg_gmresIterate",
+            "NLAlib.exists_matvecAlg_cgRecurrence_zero",
+            "NLAlib.exists_matvecAlg_cgRecurrence"
+          ]
+        },
+        {
+          "statement": "Width-s block subspace iteration uses s*q scalar vector queries, returns the actual A^q Omega range, and includes zero widths and exhausted ranks.",
+          "decls": [
+            "NLAlib.exists_matvecAlg_subspaceIterate"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "chebyshev-moment-simplex-regression",
+      "clauses": [
+        {
+          "statement": "The weighted residual objective has a minimizer on every nonempty probability simplex.",
+          "decls": [
+            "NLAlib.exists_minimizer_weightedChebyshevError_gridMoments"
+          ]
+        },
+        {
+          "statement": "For arbitrary supported probability measures and noisy unnormalized Chebyshev moments, any simplex solution within eta of the minimum residual norm gives the actual finite grid probability law with Wasserstein error at most 36/k+2 Gamma+pi sqrt(k)/(2g)+eta.",
+          "decls": [
+            "NLAlib.wassersteinEDistOne_gridLaw_le_of_weightedChebyshevError_le"
+          ]
+        },
+        {
+          "statement": "The exact ceil(k^(3/2)) grid choice yields (36+pi/2)/k+2 Gamma+eta, with endpoints and atoms handled by measurable angular quantization.",
+          "decls": [
+            "NLAlib.wassersteinEDistOne_gridLaw_le_of_ceil_rpow_three_div_two"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "hutchpp",
+      "clauses": [
+        {
+          "statement": "The native basis-defined estimator with actual independent Gaussian range sketch and residual probes has failure at most delta under explicit rounded widths; all ranks, zero trace and empty dimensions are included.",
+          "decls": [
+            "NLAlib.measureReal_abs_hutchPlusPlusEstimate_sub_trace_gt_le_of_budget"
+          ]
+        },
+        {
+          "statement": "An interaction tree selected before the matrix computes exactly the native estimate in 2s+r scalar matrix-vector queries. It uses AS, A(AS), and the projected residual probes, and remains valid at every rank.",
+          "decls": [
+            "NLAlib.exists_matvecAlg_hutchPlusPlusEstimate"
+          ]
+        },
+        {
+          "statement": "A universal dimension-independent constant bounds the complete rounded query count by C epsilon^(-1)(1+log(1/delta)).",
+          "decls": [
+            "NLAlib.exists_hutchPlusPlusQueryBudget_le"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "lyapunov-projection-residual-certificate",
+      "clauses": [
+        {
+          "statement": "The native Arnoldi relation, represented forcing B=V Bk, and reduced equation give the exact projected residual, without stability assumptions.",
+          "decls": [
+            "NLAlib.projectedLyapunov_residual_eq"
+          ]
+        },
+        {
+          "statement": "For arbitrary real or complex orthonormal frames, the residual has Frobenius norm sqrt(2) times the Frobenius norm of TY, spectral norm equal to that of TY, and rank twice rank(TY), including zero widths and ranks.",
+          "decls": [
+            "NLAlib.projectedLyapunov_residual_norms_and_rank"
+          ]
+        },
+        {
+          "statement": "The native strict dissipativity condition on the half-Hermitian part gives unique full and reduced solutions, and all these solutions are positive semidefinite. Compression stability is derived.",
+          "decls": [
+            "NLAlib.existsUnique_posSemidef_lyapunov",
+            "NLAlib.existsUnique_posSemidef_compressedLyapunov"
+          ]
+        },
+        {
+          "statement": "For the actual full and projected solutions, the Frobenius and spectral forward errors are bounded respectively by sqrt(2)||TY||F/(2a) and ||TY||2/(2a), with reduced Hermiticity and H=V*AV derived from the native hypotheses.",
+          "decls": [
+            "NLAlib.projectedLyapunov_forward_error"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "golub-kahan-bidiagonalization",
+      "clauses": [
+        {
+          "statement": "The actual successful Golub-Kahan recurrence produces the two graded orthonormal Krylov bases and a native bidiagonalization witness.",
+          "decls": [
+            "NLAlib.isGradedKrylovBasis_golubKahanU_V",
+            "NLAlib.golubKahanRecurrenceDecomp_B_diag",
+            "NLAlib.golubKahanRecurrenceDecomp_B_subdiag"
+          ]
+        },
+        {
+          "statement": "The native decomposition satisfies AV=UB, lower bidiagonality, and B*B equal to the Lanczos compression of A*A.",
+          "decls": [
+            "NLAlib.GolubKahanDecomp.mul_V_eq_U_mul_B",
+            "NLAlib.GolubKahanDecomp.B_apply_eq_zero_of_lt",
+            "NLAlib.GolubKahanDecomp.B_apply_eq_zero_of_add_one_lt",
+            "NLAlib.GolubKahanDecomp.transpose_B_mul_B_eq_T"
+          ]
+        },
+        {
+          "statement": "The transpose relation has the actual next right-vector residual in its final column, including the zero-step case.",
+          "decls": [
+            "NLAlib.golubKahanRecurrenceDecomp_transpose_mulVec"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "golub-kahan-recurrence",
+      "clauses": [
+        {
+          "statement": "The actual recursion produces graded orthonormal bases of the two normal-matrix Krylov spaces.",
+          "decls": [
+            "NLAlib.isGradedKrylovBasis_golubKahanU_V"
+          ]
+        },
+        {
+          "statement": "Success through state k is equivalent to both native Krylov grades being at least k+1, including initial and later breakdown.",
+          "decls": [
+            "NLAlib.golubKahanSucceeds_iff"
+          ]
+        },
+        {
+          "statement": "The compression entries equal the actual alpha and beta recurrence coefficients.",
+          "decls": [
+            "NLAlib.dotProduct_golubKahan_eq",
+            "NLAlib.golubKahanRecurrenceDecomp_B_diag",
+            "NLAlib.golubKahanRecurrenceDecomp_B_subdiag"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "tail-averaged-kaczmarz",
+      "clauses": [
+        {
+          "statement": "The estimator is the literal average of consecutive native row-by-row iterates after burn-in, with the actual product row-sampling law.",
+          "decls": [
+            "NLAlib.Kaczmarz.runSum_eq_sum_prefix_run",
+            "NLAlib.Kaczmarz.integral_norm_tailAverage_sub_sq_le"
+          ]
+        },
+        {
+          "statement": "Both advertised mean-square bounds hold with the exact transient and noise constants for arbitrary rank, inconsistent right-hand sides, zero rows, and row-space initializers.",
+          "decls": [
+            "NLAlib.Kaczmarz.integral_norm_tailAverage_sub_moorePenroseInverse_mulVec_sq_le"
+          ]
+        },
+        {
+          "statement": "For each fixed burn-in, the actual mean-square error tends to zero as the number of averaged iterates increases.",
+          "decls": [
+            "NLAlib.Kaczmarz.tendsto_integral_norm_tailAverage_sub_moorePenroseInverse_mulVec_sq"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "saddle-point-schur-preconditioner-spectrum",
+      "clauses": [
+        {
+          "statement": "The native positive Schur complement is positive definite, and inverse-square-root preconditioning of diag(A,Shat) gives the normalized Hermitian saddle matrix; its coupling Gram is exactly the whitened Schur complement.",
+          "decls": [
+            "NLAlib.posDef_saddleSchurComplement",
+            "NLAlib.symmetric_saddle_preconditioning_eq",
+            "NLAlib.saddle_coupling_mul_conjTranspose",
+            "NLAlib.isHermitian_schurSymmetricPreconditioned"
+          ]
+        },
+        {
+          "statement": "The full characteristic-root multiset of the native preconditioned system consists of the paired quadratic roots of every whitened Schur eigenvalue, with multiplicities, and exactly n-m copies of the unit eigenvalue.",
+          "decls": [
+            "NLAlib.roots_charpoly_schurSymmetricPreconditioned",
+            "NLAlib.count_one_roots_schurSymmetricPreconditioned"
+          ]
+        },
+        {
+          "statement": "Native relative Loewner bounds give the advertised positive and negative spectral intervals, with the additional eigenvalue one only when n>m.",
+          "decls": [
+            "NLAlib.schurSymmetricPreconditioned_eigenvalue_intervals"
+          ]
+        },
+        {
+          "statement": "The exact triangular preconditioner leaves a square-zero perturbation of identity, so the native GMRES minimizer terminates by step two for all right-hand sides and initializers.",
+          "decls": [
+            "NLAlib.triangular_saddle_preconditioning_sub_one_sq",
+            "NLAlib.gmres_triangular_schur_terminates"
+          ]
+        },
+        {
+          "statement": "MINRES on the actual Hermitian system symmetrically preconditioned by the exact Schur complement terminates by step three for all right-hand sides and initializers, over real or complex scalars.",
+          "decls": [
+            "NLAlib.minres_symmetric_schur_terminates"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "modified-chebyshev-algorithm",
+      "clauses": [
+        {
+          "statement": "The actual finite row recursion, initialized from the supplied modified moments, recovers the mixed table and canonical monic recurrence coefficients at every requested order, including the source mass convention for beta zero.",
+          "decls": [
+            "NLAlib.modifiedChebyshevState_correct",
+            "NLAlib.modifiedChebyshevCoefficients_eq",
+            "NLAlib.orthogonalMixedMoment_succ"
+          ]
+        },
+        {
+          "statement": "The measure support and finite absolute moments imply positive definiteness of the required finite Hankel matrix and positivity of every denominator used by the algorithm.",
+          "decls": [
+            "NLAlib.posDef_hankelMomentMatrix_finiteMeasureMomentFunctional",
+            "NLAlib.modifiedChebyshevState_diagonal_pos"
+          ]
+        },
+        {
+          "statement": "The canonical finite polynomials satisfy actual measure orthogonality, and the native algorithm fed exactly the first 2n modified moment integrals returns the measure coefficients in integral form. No higher moments or precomputed target coefficients are assumed.",
+          "decls": [
+            "NLAlib.integral_monicOrthogonalPolynomial_finiteMeasure_mul_eq_zero",
+            "NLAlib.modifiedChebyshevCoefficients_integral_formula"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    }
+  ],
+  "scope": "Exactly the 19 reviewed cards listed below; unfinished cards excluded.",
+  "integration_status": "passed",
+  "checked_endpoints": 91,
+  "default_import_audited_declarations": 31068,
+  "sorry_dependent_declarations": 0,
+  "local_checks": [
+    {
+      "name": "build",
+      "exit_code": 0
+    },
+    {
+      "name": "extract-declarations",
+      "exit_code": 0
+    },
+    {
+      "name": "sync-atlas",
+      "exit_code": 0
+    },
+    {
+      "name": "python-tests",
+      "exit_code": 0
+    },
+    {
+      "name": "import-surface",
+      "exit_code": 0
+    },
+    {
+      "name": "trusted-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "linters",
+      "exit_code": 0
+    },
+    {
+      "name": "downstream",
+      "exit_code": 0
+    },
+    {
+      "name": "probability",
+      "exit_code": 0
+    },
+    {
+      "name": "polynomial-approximation",
+      "exit_code": 0
+    },
+    {
+      "name": "khatri-rao-example",
+      "exit_code": 0
+    },
+    {
+      "name": "ritz-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "subspace-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "complete-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "gaussian-inverse-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "new-proofs-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "khatri-rao-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "reviewed-family-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "layers",
+      "exit_code": 0
+    },
+    {
+      "name": "names",
+      "exit_code": 0
+    },
+    {
+      "name": "atlas",
+      "exit_code": 0
+    },
+    {
+      "name": "polynomial-matrix-scope",
+      "exit_code": 0
+    },
+    {
+      "name": "card-audit",
+      "exit_code": 0
+    },
+    {
+      "name": "coverage",
+      "exit_code": 0
+    },
+    {
+      "name": "site-math",
+      "exit_code": 0
+    },
+    {
+      "name": "site-build",
+      "exit_code": 0
+    }
+  ],
+  "scope_verification": {
+    "reviewed_card_count": 19,
+    "source_files": 85,
+    "generated_lean_aggregators": 27,
+    "excluded_partial_source_files": 17,
+    "unfinished_requested_cards_unchanged": 8,
+    "original_explicit_exclusions_unchanged": 3,
+    "status_changes_outside_reviewed_cards": 0
+  }
+}

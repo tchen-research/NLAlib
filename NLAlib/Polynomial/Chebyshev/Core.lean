@@ -4,8 +4,9 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Chebyshev.RootsExtrema
 # Polynomial approximation: definitions
 
 Layer 0 (no matrices). The definitions behind the polynomial facts that Krylov, Lanczos and
-conjugate-gradient arguments cite. Everything is a real polynomial `ℝ[X]`; Chebyshev polynomials
-are Mathlib's `Polynomial.Chebyshev.T ℝ n` and `Polynomial.Chebyshev.U ℝ n`.
+conjugate-gradient arguments cite. The Chebyshev constructions are real polynomials `ℝ[X]`,
+using Mathlib's `Polynomial.Chebyshev.T ℝ n` and `Polynomial.Chebyshev.U ℝ n`.
+The residual-polynomial factorization lemmas apply over any field.
 
 * `chebyshevResidual a b q`: the degree-`q` polynomial
   `T_q((b + a − 2x)/(b − a)) / T_q((b + a)/(b − a))`, equal to `1` at `0` and of smallest maximum
@@ -103,8 +104,8 @@ some `s` with `deg s < q`. This is the algebra behind every residual-polynomial 
 `x₀ + s(A) r₀ ∈ x₀ + K_q` has error `p(A)(x₀ − x⋆)`. Source: Saad (2003) [`saad03`], §6.11
 (the set `P_q^0`); Trefethen–Bau (1997) [`tb97`], Lect. 35. Promoted from the private CG lemma
 `exists_degree_lt_one_sub_eq_X_mul` (atlas `residual-polynomial`, helper). -/
-theorem exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one {p : ℝ[X]} {q : ℕ}
-    (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) : ∃ s : ℝ[X], s.degree < q ∧ 1 - p = X * s := by
+theorem exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one {K : Type*} [Field K] {p : K[X]} {q : ℕ}
+    (hp : p.degree ≤ q) (hp0 : p.eval 0 = 1) : ∃ s : K[X], s.degree < q ∧ 1 - p = X * s := by
   have hdvd : X ∣ 1 - p := by
     rw [X_dvd_iff, coeff_zero_eq_eval_zero, eval_sub, hp0, eval_one, sub_self]
   obtain ⟨s, hs⟩ := hdvd
@@ -121,8 +122,8 @@ theorem exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one {p : ℝ[X]} {q : 
 /-- **Residual polynomials of degree `≤ q`** are exactly the `1 − X s` with `deg s < q`:
 `deg p ≤ q ∧ p(0) = 1 ↔ ∃ s, deg s < q ∧ p = 1 − X s`. Source: Saad (2003) [`saad03`], §6.11
 (atlas `residual-polynomial`, helper). -/
-theorem degree_le_and_eval_zero_eq_one_iff {p : ℝ[X]} {q : ℕ} :
-    p.degree ≤ q ∧ p.eval 0 = 1 ↔ ∃ s : ℝ[X], s.degree < q ∧ p = 1 - X * s := by
+theorem degree_le_and_eval_zero_eq_one_iff {K : Type*} [Field K] {p : K[X]} {q : ℕ} :
+    p.degree ≤ q ∧ p.eval 0 = 1 ↔ ∃ s : K[X], s.degree < q ∧ p = 1 - X * s := by
   constructor
   · rintro ⟨hp, hp0⟩
     obtain ⟨s, hs, h⟩ := exists_degree_lt_one_sub_eq_X_mul_of_eval_zero_eq_one hp hp0

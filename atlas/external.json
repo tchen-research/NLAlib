@@ -681,6 +681,29 @@
   "atlas":
   []},
  {"uses":
+  ["NLAlib.IsLeastSquaresSolution",
+   "NLAlib.IsSubspaceEmbedding"],
+  "sorry":
+  false,
+  "signature":
+  "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_sq_le.{u_1, u_2, u_3, u_4} {k : Type u_1} {m : Type u_2} {n : Type u_3}\n  {d : Type u_4} [Fintype k] [Fintype m] [Fintype n] [Fintype d] {S : Matrix k m ℝ} {A : Matrix m n ℝ}\n  {U : Matrix m d ℝ} {b : m → ℝ} {x : n → ℝ} {ε : ℝ} (h : NLAlib.IsSubspaceEmbedding S U ε) (hε : ε < 1)\n  (hA : A.mulVecLin.range ≤ U.mulVecLin.range) (hb : b ∈ U.mulVecLin.range)\n  (hx : NLAlib.IsLeastSquaresSolution (S * A) (S.mulVec b) x) (y : n → ℝ) :\n  ‖WithLp.toLp 2 (b - A.mulVec x)‖ ^ 2 ≤ (1 + ε) / (1 - ε) * ‖WithLp.toLp 2 (b - A.mulVec y)‖ ^ 2",
+  "name":
+  "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_sq_le",
+  "module":
+  "NLAlib.Solvers.LeastSquares.SketchAndSolve",
+  "line":
+  58,
+  "library":
+  "nlalib-frontend",
+  "kind":
+  "theorem",
+  "doc":
+  "Every sketched least-squares minimizer has squared residual at most\n`(1 + ε) / (1 - ε)` times that of every comparison point, if the embedding spans the data\nand right-hand side and `ε < 1`. No rank assumption is needed.\nSource: Sarlós 2006, Theorem 12; Woodruff 2014, Theorem 2.16, in squared norms.\natlas: sketch-and-solve-ls (partial) ",
+  "atlas_partial":
+  ["sketch-and-solve-ls"],
+  "atlas":
+  ["sketch-and-solve-ls"]},
+ {"uses":
   [],
   "sorry":
   false,

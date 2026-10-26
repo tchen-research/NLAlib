@@ -1,5 +1,15 @@
+import NLAlib.Estimation.Trace.GaussianControlVariate
+import NLAlib.Estimation.Trace.GaussianProbeMoments
+import NLAlib.Estimation.Trace.HutchPlusPlus
+import NLAlib.Estimation.Trace.HutchPlusPlusBlocks
+import NLAlib.Estimation.Trace.HutchPlusPlusBudget
+import NLAlib.Estimation.Trace.HutchPlusPlusQuery
+import NLAlib.Estimation.Trace.HutchPlusPlusRange
+import NLAlib.Estimation.Trace.HutchPlusPlusTail
 import NLAlib.Estimation.Trace.HutchinsonTail
 import NLAlib.Estimation.Trace.Independent
+import NLAlib.Estimation.Trace.TwoSidedGaussian
+import NLAlib.Estimation.Trace.TwoSidedSketch
 import NLAlib.Estimation.Trace.Unbiased
 
 /-! # `Estimation/Trace`

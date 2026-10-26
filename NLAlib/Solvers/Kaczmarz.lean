@@ -2,6 +2,13 @@ import NLAlib.Solvers.Kaczmarz.Core
 import NLAlib.Solvers.Kaczmarz.KaczmarzExtensions
 import NLAlib.Solvers.Kaczmarz.KaczmarzProbability
 import NLAlib.Solvers.Kaczmarz.KaczmarzRowSpace
+import NLAlib.Solvers.Kaczmarz.Mean
+import NLAlib.Solvers.Kaczmarz.MeanContraction
+import NLAlib.Solvers.Kaczmarz.TailAverage
+import NLAlib.Solvers.Kaczmarz.TailBounds
+import NLAlib.Solvers.Kaczmarz.TailMoment
+import NLAlib.Solvers.Kaczmarz.TailSum
+import NLAlib.Solvers.Kaczmarz.TailWeights
 
 /-! # `Solvers/Kaczmarz`
 

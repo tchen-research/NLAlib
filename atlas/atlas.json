@@ -1,6 +1,6 @@
 {
  "schema_version": "0.2",
- "updated_at": "2026-10-24",
+ "updated_at": "2026-10-26",
  "areas": [
   {
    "id": "matrix",
@@ -8456,7 +8456,7 @@
    ],
    "area": "estimation",
    "kind": "application",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$O(1/\\varepsilon)$ matrix-vector products suffice for $(1\\pm\\varepsilon)$ relative trace error on PSD $A$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times n}$ PSD",
@@ -8471,14 +8471,56 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_abs_hutchPlusPlusEstimate_sub_trace_gt_le_of_budget",
+     "module": "NLAlib.Estimation.Trace.HutchPlusPlusBudget",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.hutchPlusPlusQueryBudget_le",
+     "module": "NLAlib.Estimation.Trace.HutchPlusPlusBudget",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_hutchPlusPlusQueryBudget_le",
+     "module": "NLAlib.Estimation.Trace.HutchPlusPlusBudget",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_hutchPlusPlusProgram",
+     "module": "NLAlib.Estimation.Trace.HutchPlusPlusQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_hutchPlusPlusEstimate",
+     "module": "NLAlib.Estimation.Trace.HutchPlusPlusQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_abs_hutchPlusPlusEstimate_sub_trace_gt_le",
+     "module": "NLAlib.Estimation.Trace.HutchPlusPlusTail",
+     "status": "proved",
+     "partial": true
+    },
+    {
      "library": "nlalib-frontend",
      "decl": "NLAlib.exists_forall_measureReal_abs_trace_sub_hutchpp_gt_mul_nuclearNorm_le_of_isSubgaussianVector",
      "module": "NLAlib.Estimation.Trace.HutchPlusPlusTail",
      "url": "https://github.com/NLA-lib/NLAlib/blob/6a845a2ec27f37c1a98118c107a06a13ce45273d/NLAlib/Estimation/Trace/HutchPlusPlusTail.lean#L607",
      "status": "proved",
      "partial": true,
-     "usage": "Actual isotropic-subgaussian Hutch++ relative-error tail with the stated asymptotic query budget; the backend estimator adapter and concentration APIs are not ported.",
-     "note": "Source signature and dependency closure reviewed at pinned revision; revision CI Lean build and axiom audit passed. Backend remains open until all native clauses are covered."
+     "usage": "External isotropic-subgaussian Hutch++ tail reference. The native Gaussian estimator, concentration bound and query budget are proved by the proof family below.",
+     "note": "Historical source attribution at the pinned frontend revision; the native backend proof family supplies its own checked estimator and query realization."
     }
    ],
    "depends_on": [
@@ -8487,7 +8529,19 @@
     "eckart-young",
     "hutchinson-unbiased"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.MatvecAlg",
+    "NLAlib.MatvecAlg.cost",
+    "NLAlib.MatvecAlg.run",
+    "NLAlib.QueryProgram.run",
+    "NLAlib.gaussianMatrix",
+    "NLAlib.hutchPlusPlusBlocks",
+    "NLAlib.hutchPlusPlusEstimate",
+    "NLAlib.hutchPlusPlusProbes",
+    "NLAlib.hutchPlusPlusProgram",
+    "NLAlib.hutchPlusPlusQueryBudget",
+    "NLAlib.hutchPlusPlusRank"
+   ],
    "variants": [
     "hutchinson-tail",
     "xtrace-unbiased"
@@ -8499,7 +8553,30 @@
     "consumer",
     "estimation"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The native basis-defined estimator with actual independent Gaussian range sketch and residual probes has failure at most delta under explicit rounded widths; all ranks, zero trace and empty dimensions are included.",
+      "decls": [
+       "NLAlib.measureReal_abs_hutchPlusPlusEstimate_sub_trace_gt_le_of_budget"
+      ]
+     },
+     {
+      "statement": "An interaction tree selected before the matrix computes exactly the native estimate in 2s+r scalar matrix-vector queries. It uses AS, A(AS), and the projected residual probes, and remains valid at every rank.",
+      "decls": [
+       "NLAlib.exists_matvecAlg_hutchPlusPlusEstimate"
+      ]
+     },
+     {
+      "statement": "A universal dimension-independent constant bounds the complete rounded query count by C epsilon^(-1)(1+log(1/delta)).",
+      "decls": [
+       "NLAlib.exists_hutchPlusPlusQueryBudget_le"
+      ]
+     }
+    ]
+   },
+   "notes": "The native Gaussian estimator is now covered by the reviewed proof family. Its wider single range sketch is partitioned only for the proof: expected Gaussian range error, Markov, derived block independence and range monotonicity give amplification; independent residual probes use the native Hutchinson tail. The scalar estimator is measurable through the canonical range projector. The actual query program uses AS and A(AS), evaluating the range trace by tr((AS)^+ A(AS)), so it avoids a random basis choice. Constants are explicit and nonoptimal."
   },
   {
    "id": "xtrace-unbiased",
@@ -9466,7 +9543,7 @@
    ],
    "area": "solvers",
    "kind": "application",
-   "status": "candidate",
+   "status": "proved",
    "informal": "If $S$ is an $\\varepsilon$-subspace embedding for $[A\\ \\ b]$ then $$\\|A\\tilde{x} - b\\| \\le \\frac{1+\\varepsilon}{1-\\varepsilon}\\min_x\\|Ax - b\\|.$$ With the AMM property the factor is $1+\\varepsilon$ with $k = O(d/\\varepsilon)$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{n\\times d}$ and $b \\in \\mathbb{R}^n$",
@@ -9487,6 +9564,69 @@
    ],
    "formalizations": [
     {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSubspaceInjection.norm_sub_mulVec_sq_le_of_cross_residual_le",
+     "module": "NLAlib.Solvers.LeastSquares.ApproxMultiplication",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSubspaceInjection.norm_sub_mulVec_le_one_add_of_cross_residual_le",
+     "module": "NLAlib.Solvers.LeastSquares.ApproxMultiplication",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_frobSq_sub_mul_sketchAndSolve_gt_le_of_hasLaw_gaussianMatrix",
+     "module": "NLAlib.Solvers.LeastSquares.GaussianBudget",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_frobSq_sub_mul_sketchAndSolve_gt_le_of_gaussianSketchSolveDim_le",
+     "module": "NLAlib.Solvers.LeastSquares.GaussianBudget",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_frobNorm_sub_mul_sketchAndSolve_gt_le_of_gaussianSketchSolveDim_le",
+     "module": "NLAlib.Solvers.LeastSquares.GaussianBudget",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_sq_le",
+     "module": "NLAlib.Solvers.LeastSquares.SketchAndSolve",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_le_sqrt",
+     "module": "NLAlib.Solvers.LeastSquares.SketchAndSolve",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_le",
+     "module": "NLAlib.Solvers.LeastSquares.SketchAndSolve",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_le_of_fromCols",
+     "module": "NLAlib.Solvers.LeastSquares.SketchAndSolve",
+     "status": "proved",
+     "partial": true
+    },
+    {
      "library": "nlalib-frontend",
      "decl": "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_sq_le",
      "module": "NLAlib.Regression.Embedding",
@@ -9502,7 +9642,18 @@
     "amm-ose",
     "pseudoinverse"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.IsLeastSquaresSolution",
+    "NLAlib.IsSubspaceEmbedding",
+    "NLAlib.IsSubspaceInjection",
+    "NLAlib.frobNorm",
+    "NLAlib.frobSq",
+    "NLAlib.gaussianMatrix",
+    "NLAlib.gaussianSketchSolveDim",
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.sketchAndSolve"
+   ],
    "variants": [
     "sketch-and-precondition"
    ],
@@ -9512,7 +9663,29 @@
    "tags": [
     "consumer"
    ],
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "An embedding of the augmented design gives the stated residual comparison for every sketched least-squares minimizer, including rank-deficient designs.",
+      "decls": [
+       "NLAlib.IsSubspaceEmbedding.norm_sub_mulVec_le_of_fromCols"
+      ]
+     },
+     {
+      "statement": "A positive lower embedding and the cross-residual approximate-multiplication estimate give the deterministic 1+epsilon residual factor, with all constants explicit.",
+      "decls": [
+       "NLAlib.IsSubspaceInjection.norm_sub_mulVec_le_one_add_of_cross_residual_le"
+      ]
+     },
+     {
+      "statement": "The actual Gaussian Moore-Penrose estimator has residual factor 1+epsilon with failure at most delta using rank A + 2 + ceil(rank A/(delta epsilon)) rows, hence O((rank A+1)/epsilon) at fixed confidence, including exact-fit and rank-zero inputs.",
+      "decls": [
+       "NLAlib.measureReal_frobNorm_sub_mul_sketchAndSolve_gt_le_of_gaussianSketchSolveDim_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "sketch-and-precondition",
@@ -15535,7 +15708,7 @@
    ],
    "area": "krylov-linear-systems",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "$x_k$ is a GMRES iterate if $x_k \\in x_0 + \\mathcal K_k(A,r_0)$ and $\\|b - Ax_k\\|_2 \\le \\|b - Ax\\|_2$ for all $x \\in x_0 + \\mathcal K_k(A,r_0)$. Characterisations: an iterate exists for every $A$; the residual $r_k$ is unique and $x_k$ is unique if $A$ is invertible; $r_k \\perp A\\mathcal K_k(A,r_0)$ (Petrov–Galerkin); $\\|r_k\\| = \\min_{p\\in\\mathcal P_k^0}\\|p(A)r_0\\|$; $\\|r_{k+1}\\| \\le \\|r_k\\|$; with Arnoldi, $\\|r_k\\| = \\min_y\\|\\,\\|r_0\\|e_1 - \\underline H_k y\\|$; if $A$ is invertible, $r_\\nu = 0$ at the grade $\\nu = \\nu(A,r_0)$. For symmetric $A$ this is MINRES.",
    "hypotheses": [
     "$A \\in \\mathbb R^{n\\times n}$, $b, x_0 \\in \\mathbb R^n$, $r_0 = b - Ax_0$, $k \\in \\mathbb N$ (complex form: $\\mathbb C^{n\\times n}$ with the Hermitian inner product)"
@@ -15590,8 +15763,8 @@
     "definition",
     "gmres"
    ],
-   "notes": "The real variational predicate, existence, residual orthogonality, uniqueness, polynomial characterization, monotonicity and termination at the grade are proved. The real reduced Arnoldi least-squares clause is proved under gmres-arnoldi-form. The complex form remains open, including the bridge identifying real data with the corresponding complex GMRES residual. This entry remains candidate because its full advertised real and complex contract is not yet covered.",
-   "updated_at": "2026-10-12",
+   "notes": "The full real and complex variational contract is covered by the reviewed proof family: attained minimizer, residual uniqueness, Petrov-Galerkin characterization, attained polynomial and reduced Arnoldi minima, monotonicity, grade termination, and real-complex scalar extension. Arbitrary attained frame dimensions and Moore-Penrose least squares include rank deficiency and happy breakdown. The matrix-vector realization is tracked separately under matvec-query-model.",
+   "updated_at": "2026-10-26",
    "formalizations": [
     {
      "library": "nlalib",
@@ -15672,14 +15845,164 @@
      "status": "proved",
      "partial": true,
      "usage": "**Finite termination.** For invertible `A`, a GMRES iterate with `q` at least the grade `ν = krylovGrade A r₀` solves the system: `c − A x = 0`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGMRESIterate_gmresIterate",
+     "module": "NLAlib.Krylov.Solvers.GMRESIterate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.residual_eq_rangeProjector",
+     "module": "NLAlib.Krylov.Solvers.GMRESIterate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.residual_eq",
+     "module": "NLAlib.Krylov.Solvers.GMRESIterate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.eq_of_mulVec_injective",
+     "module": "NLAlib.Krylov.Solvers.GMRESIterate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.norm_le_aeval",
+     "module": "NLAlib.Krylov.Solvers.GMRESIterate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.isLeast_norm_aeval",
+     "module": "NLAlib.Krylov.Solvers.GMRESIterate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.norm_le_of_le",
+     "module": "NLAlib.Krylov.Solvers.GMRESIterate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.residual_eq_zero_of_grade_le",
+     "module": "NLAlib.Krylov.Solvers.GMRESIterate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGMRESIterate_add_mulVec_moorePenroseInverse",
+     "module": "NLAlib.Krylov.Solvers.GMRESLeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGMRESIterate_of_reduced_leastSquares",
+     "module": "NLAlib.Krylov.Solvers.GMRESLeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.isLeast_norm_reduced",
+     "module": "NLAlib.Krylov.Solvers.GMRESLeastSquares",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.star_dotProduct_eq_zero",
+     "module": "NLAlib.Krylov.Solvers.GMRESOrthogonality",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGMRESIterate_iff_forall_star_dotProduct_eq_zero",
+     "module": "NLAlib.Krylov.Solvers.GMRESOrthogonality",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gmresIterate_map_ofReal",
+     "module": "NLAlib.Krylov.Solvers.GMRESScalarExtension",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.residual_map_ofReal",
+     "module": "NLAlib.Krylov.Solvers.GMRESScalarExtension",
+     "status": "proved",
+     "partial": true
     }
    ],
    "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
     "NLAlib.IsGMRESIterate",
+    "NLAlib.gmresIterate",
     "NLAlib.krylovGrade",
-    "NLAlib.krylovSpace"
+    "NLAlib.krylovMatrix",
+    "NLAlib.krylovSpace",
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.rangeProjector"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For every real or complex square matrix and every count, the native power-basis pseudoinverse iterate attains GMRES. All minimizers have the same residual, and injectivity makes the iterate unique.",
+      "decls": [
+       "NLAlib.isGMRESIterate_gmresIterate",
+       "NLAlib.IsGMRESIterate.residual_eq",
+       "NLAlib.IsGMRESIterate.eq_of_mulVec_injective"
+      ]
+     },
+     {
+      "statement": "Petrov-Galerkin orthogonality is equivalent to residual minimization over the affine Krylov space over either scalar field.",
+      "decls": [
+       "NLAlib.isGMRESIterate_iff_forall_star_dotProduct_eq_zero"
+      ]
+     },
+     {
+      "statement": "The residual norm is the attained minimum over admissible residual polynomials, is nonincreasing with iteration count, and vanishes at the grade when the matrix is invertible.",
+      "decls": [
+       "NLAlib.IsGMRESIterate.isLeast_norm_aeval",
+       "NLAlib.IsGMRESIterate.norm_le_of_le",
+       "NLAlib.IsGMRESIterate.residual_eq_zero_of_grade_le"
+      ]
+     },
+     {
+      "statement": "An actual spanning Krylov frame with an orthonormal Arnoldi factorization gives the reduced least-squares minimizer and attained residual norm minimum, including deficient reduced matrices and attained dimensions at breakdown.",
+      "decls": [
+       "NLAlib.isGMRESIterate_of_reduced_leastSquares",
+       "NLAlib.IsGMRESIterate.isLeast_norm_reduced"
+      ]
+     },
+     {
+      "statement": "Real data give the same native iterate after complex scalar extension; every real and complex minimizer has the corresponding identical residual.",
+      "decls": [
+       "NLAlib.gmresIterate_map_ofReal",
+       "NLAlib.IsGMRESIterate.residual_map_ofReal"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "gmres-diagonalizable",
@@ -24406,7 +24729,7 @@
    ],
    "area": "krylov-bases",
    "kind": "definition",
-   "status": "candidate",
+   "status": "proved",
    "informal": "An algorithm with matrix-vector access is an interaction tree: it is either an output, or a query vector $v$ with a continuation that receives $Av$ (adaptively). Its cost is the number of queries; its semantics on $A$ is obtained by answering every query with $Av$. A randomized algorithm is a tree-valued random variable. \"$x_q$ is computable with $q$ matvecs\" means some tree of cost $q$ outputs $x_q$ for every $A$; Gram–Schmidt and other work not touching $A$ is free.",
    "hypotheses": [],
    "conclusion": "A syntax `MatvecAlg n α` with `run A : α` and `cost : ℕ`; realisation theorems `∃ alg, cost alg = q ∧ ∀ A, run A alg = iterate` for Arnoldi/Lanczos, GMRES, CG and subspace iteration",
@@ -24427,10 +24750,192 @@
     "complexity"
    ],
    "notes": "Design (docs/KRYLOV_DEFINITIONS.md §3.10): runtime statements at the level randomized NLA uses them. Upper bounds are realisation theorems; this is also the only setting in which matvec lower bounds (Braverman–Hallman–Musco 2020, Simchowitz–El Alaoui–Recht 2018) can be stated. Arithmetic cost (flops) is deliberately out of scope: recorded as notes on entries, not formalised. Consumers: every Krylov predicate (cg-convergence, gmres-def, arnoldi-def) gets a realisation theorem; lower bounds are future candidates.",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
-   "variants": []
+   "updated_at": "2026-10-26",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_arnoldiQueryAlgorithm",
+     "module": "NLAlib.Krylov.QueryModel.Arnoldi",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_gmresQueryAlgorithm",
+     "module": "NLAlib.Krylov.QueryModel.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_gmresQueryAlgorithm_zero",
+     "module": "NLAlib.Krylov.QueryModel.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_gmresInitializedQueryAlgorithm",
+     "module": "NLAlib.Krylov.QueryModel.GMRES",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.QueryAlgorithm.run_ofState",
+     "module": "NLAlib.Krylov.QueryModel.Iteration",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.QueryAlgorithm.run_toProgram",
+     "module": "NLAlib.Krylov.QueryModel.Program",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_arnoldiMatrix",
+     "module": "NLAlib.Krylov.QueryModel.Realizations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_lanczosState",
+     "module": "NLAlib.Krylov.QueryModel.Realizations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_gmresIterate_zero",
+     "module": "NLAlib.Krylov.QueryModel.Realizations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_gmresIterate",
+     "module": "NLAlib.Krylov.QueryModel.Realizations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_cgRecurrence_zero",
+     "module": "NLAlib.Krylov.QueryModel.Realizations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_cgRecurrence",
+     "module": "NLAlib.Krylov.QueryModel.Realizations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_lanczosQueryAlgorithm",
+     "module": "NLAlib.Krylov.QueryModel.Recurrences",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_cgQueryAlgorithm",
+     "module": "NLAlib.Krylov.QueryModel.Recurrences",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_cgQueryAlgorithm_zero",
+     "module": "NLAlib.Krylov.QueryModel.Recurrences",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_cgInitializedQueryAlgorithm",
+     "module": "NLAlib.Krylov.QueryModel.Recurrences",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_blockPowerProgram",
+     "module": "NLAlib.Krylov.QueryModel.SubspaceIteration",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_subspaceIterate",
+     "module": "NLAlib.Krylov.QueryModel.SubspaceIteration",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.CGState",
+    "NLAlib.LanczosState",
+    "NLAlib.MatvecAlg",
+    "NLAlib.MatvecAlg.cost",
+    "NLAlib.MatvecAlg.run",
+    "NLAlib.QueryAlgorithm",
+    "NLAlib.QueryAlgorithm.ofState",
+    "NLAlib.QueryAlgorithm.run",
+    "NLAlib.QueryAlgorithm.toProgram",
+    "NLAlib.QueryProgram.run",
+    "NLAlib.arnoldiMatrix",
+    "NLAlib.arnoldiQueryAlgorithm",
+    "NLAlib.blockPowerProgram",
+    "NLAlib.cgInitializedQueryAlgorithm",
+    "NLAlib.cgQueryAlgorithm",
+    "NLAlib.cgRecurrence",
+    "NLAlib.gmresInitializedQueryAlgorithm",
+    "NLAlib.gmresIterate",
+    "NLAlib.gmresQueryAlgorithm",
+    "NLAlib.lanczosQueryAlgorithm",
+    "NLAlib.lanczosState",
+    "NLAlib.subspaceIterate"
+   ],
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "Bounded interaction trees have exact query budgets and matrix-vector semantics; compiling finite-history adaptive strategies preserves their run.",
+      "decls": [
+       "NLAlib.QueryAlgorithm.run_toProgram"
+      ]
+     },
+     {
+      "statement": "Uniform realization theorems compute the actual Arnoldi and Lanczos recurrences in q queries, including breakdown.",
+      "decls": [
+       "NLAlib.exists_matvecAlg_arnoldiMatrix",
+       "NLAlib.exists_matvecAlg_lanczosState"
+      ]
+     },
+     {
+      "statement": "The actual GMRES and CG iterates use q queries from zero start and q+1 when charging for the initial residual of a general initializer.",
+      "decls": [
+       "NLAlib.exists_matvecAlg_gmresIterate_zero",
+       "NLAlib.exists_matvecAlg_gmresIterate",
+       "NLAlib.exists_matvecAlg_cgRecurrence_zero",
+       "NLAlib.exists_matvecAlg_cgRecurrence"
+      ]
+     },
+     {
+      "statement": "Width-s block subspace iteration uses s*q scalar vector queries, returns the actual A^q Omega range, and includes zero widths and exhausted ranks.",
+      "decls": [
+       "NLAlib.exists_matvecAlg_subspaceIterate"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "graded-krylov-basis-def",
@@ -27652,7 +28157,7 @@
    ],
    "area": "krylov-bases",
    "kind": "identity",
-   "status": "scaffold",
+   "status": "proved",
    "informal": "Starting from $u_1 = b/\\|b\\|$, the recursion $A^\\top u_k = \\beta_{k-1} v_{k-1} + \\alpha_k v_k$, $A v_k = \\alpha_k u_k + \\beta_k u_{k+1}$ produces orthonormal $U_k, V_k$ and lower bidiagonal $B_k$ with $A V_k = U_{k+1} \\underline{B}_k$ and $A^\\top U_{k+1} = V_k \\underline{B}_k^\\top + \\alpha_{k+1} v_{k+1} e_{k+1}^\\top$; $V_k$ is the Lanczos basis of $(A^\\top A, A^\\top b)$ and $U_k$ that of $(AA^\\top, b)$, with $B_k^\\top B_k$ the Lanczos tridiagonal of $A^\\top A$.",
    "hypotheses": [
     "$A \\in \\mathbb{R}^{m\\times n}$, $b \\ne 0$, $k \\le$ grade"
@@ -27671,80 +28176,95 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.GolubKahanDecomp",
+     "decl": "NLAlib.isGradedKrylovBasis_golubKahanU_V",
      "module": "NLAlib.Krylov.Processes.Bidiagonalization",
+     "status": "proved",
+     "partial": true,
+     "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanDecomp",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
      "status": "proved",
      "usage": "A **Golub–Kahan decomposition** of `(A, b)` of size `k`: `U : m × (k+1)` is a graded orthonormal Krylov basis of `(AAᵀ, b)` and `V : n × k` one of `(AᵀA, Aᵀb)`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.GolubKahanDecomp.B",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
      "status": "proved",
      "usage": "The bidiagonal matrix `B_k = U_{k+1}ᵀ A V_k : (k+1) × k`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.GolubKahanDecomp.mul_V_eq_U_mul_B",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
      "status": "proved",
      "usage": "**The Golub–Kahan relation** `A V_k = U_{k+1} B_k`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.GolubKahanDecomp.B_apply_eq_zero_of_lt",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
      "status": "proved",
      "usage": "`B` is **lower bidiagonal**, upper part: `B_{ij} = 0` for `i < j` (`vⱼ ⟂ K_j(AᵀA, Aᵀb)`, which contains `Aᵀuᵢ`)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.GolubKahanDecomp.B_apply_eq_zero_of_add_one_lt",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
      "status": "proved",
      "usage": "`B` is **lower bidiagonal**, lower part: `B_{ij} = 0` for `j + 1 < i` (`uᵢ ⟂ K_i(AAᵀ, b)`, which contains `Avⱼ ∈ K_{j+2}`)."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.GolubKahanDecomp.transpose_B_mul_B_eq_T",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
      "status": "proved",
      "usage": "**`BᵀB` is the Lanczos matrix of `AᵀA`**: `B_kᵀ B_k = V_kᵀ (AᵀA) V_k = T_k`, the Jacobi matrix of the Lanczos process on `(AᵀA, Aᵀb)`."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.GolubKahanDecomp.transpose_mulVec_U_col_mem_range_V",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
      "status": "proved",
      "usage": "**The second Golub–Kahan relation**, column form: for `j < k`, `Aᵀuⱼ ∈ range V_k`, i.e."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.golubKahanDecomp",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
      "status": "proved",
      "usage": "A Golub–Kahan decomposition exists below the two grades: from `arnoldiDecomp` of `(AAᵀ, b)` (size `k + 1`) and of `(AᵀA, Aᵀb)` (size `k`), the canonical witnesses with positive subdiagonals."
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.isGradedKrylovBasis_golubKahanU_V",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
-     "status": "scaffold",
-     "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+     "decl": "NLAlib.golubKahanRecurrenceDecomp",
+     "module": "NLAlib.Krylov.Processes.GolubKahanRealization",
+     "status": "proved",
+     "partial": true
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.golubKahanSucceeds_iff",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
-     "status": "scaffold",
-     "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+     "decl": "NLAlib.golubKahanRecurrenceDecomp_B_diag",
+     "module": "NLAlib.Krylov.Processes.GolubKahanRealization",
+     "status": "proved",
+     "partial": true
     },
     {
      "library": "nlalib",
-     "decl": "NLAlib.dotProduct_golubKahan_eq",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
-     "status": "scaffold",
-     "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+     "decl": "NLAlib.golubKahanRecurrenceDecomp_B_subdiag",
+     "module": "NLAlib.Krylov.Processes.GolubKahanRealization",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golubKahanRecurrenceDecomp_transpose_mulVec",
+     "module": "NLAlib.Krylov.Processes.GolubKahanRealization",
+     "status": "proved",
+     "partial": true
     }
    ],
    "depends_on": [
@@ -27760,12 +28280,12 @@
     "NLAlib.GolubKahanDecomp.lanczosV",
     "NLAlib.GolubKahanState.alpha",
     "NLAlib.GolubKahanState.beta",
-    "NLAlib.GolubKahanState.u",
     "NLAlib.GolubKahanState.v",
     "NLAlib.GolubKahanSucceeds",
     "NLAlib.IsGradedKrylovBasis",
     "NLAlib.LanczosDecomp.T",
     "NLAlib.golubKahanRecurrence",
+    "NLAlib.golubKahanRecurrenceDecomp",
     "NLAlib.golubKahanU",
     "NLAlib.golubKahanV",
     "NLAlib.krylovGrade"
@@ -27780,7 +28300,34 @@
     "lsqr"
    ],
    "notes": "Links LSQR (CGLS) to the Lanczos layer; the SVD-computation use (T&B Lect. 31) is the motivation.",
-   "updated_at": "2026-10-13"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual successful Golub-Kahan recurrence produces the two graded orthonormal Krylov bases and a native bidiagonalization witness.",
+      "decls": [
+       "NLAlib.isGradedKrylovBasis_golubKahanU_V",
+       "NLAlib.golubKahanRecurrenceDecomp_B_diag",
+       "NLAlib.golubKahanRecurrenceDecomp_B_subdiag"
+      ]
+     },
+     {
+      "statement": "The native decomposition satisfies AV=UB, lower bidiagonality, and B*B equal to the Lanczos compression of A*A.",
+      "decls": [
+       "NLAlib.GolubKahanDecomp.mul_V_eq_U_mul_B",
+       "NLAlib.GolubKahanDecomp.B_apply_eq_zero_of_lt",
+       "NLAlib.GolubKahanDecomp.B_apply_eq_zero_of_add_one_lt",
+       "NLAlib.GolubKahanDecomp.transpose_B_mul_B_eq_T"
+      ]
+     },
+     {
+      "statement": "The transpose relation has the actual next right-vector residual in its final column, including the zero-step case.",
+      "decls": [
+       "NLAlib.golubKahanRecurrenceDecomp_transpose_mulVec"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "cg-recurrence",
@@ -28330,7 +28877,7 @@
    ],
    "area": "krylov-bases",
    "kind": "theorem",
-   "status": "scaffold",
+   "status": "proved",
    "informal": "The recursion ($\\alpha_k = \\|A^\\top u_k - \\beta_{k-1} v_{k-1}\\|$, $v_k$ its normalisation, $\\beta_k = \\|A v_k - \\alpha_k u_k\\|$, $u_{k+1}$ its normalisation) produces the graded bases $U_{k+1}$ of $(AA^\\top, b)$ and $V_k$ of $(A^\\top A, A^\\top b)$, succeeds iff $k+1 \\le$ both grades, and its $\\alpha_k, \\beta_k$ are the entries of $B_k = U^\\top A V$.",
    "hypotheses": [
     "$b \\ne 0$"
@@ -28345,38 +28892,55 @@
    "formalizations": [
     {
      "library": "nlalib",
-     "decl": "NLAlib.golubKahanRecurrence",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
-     "status": "proved",
-     "usage": "**The Golub–Kahan recursion**, zero-indexed: state `j` holds `u_{j+1}, v_{j+1}, α_{j+1}, β_{j+1}` in Golub–Van Loan's one-based notation."
-    },
-    {
-     "library": "nlalib",
-     "decl": "NLAlib.GolubKahanSucceeds",
-     "module": "NLAlib.Krylov.Processes.Bidiagonalization",
-     "status": "proved",
-     "usage": "**Success predicate**: no breakdown in the first `k + 1` states, `α_j ≠ 0` and `β_j ≠ 0`."
-    },
-    {
-     "library": "nlalib",
      "decl": "NLAlib.isGradedKrylovBasis_golubKahanU_V",
      "module": "NLAlib.Krylov.Processes.Bidiagonalization",
-     "status": "scaffold",
+     "status": "proved",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.golubKahanSucceeds_iff",
      "module": "NLAlib.Krylov.Processes.Bidiagonalization",
-     "status": "scaffold",
+     "status": "proved",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
     },
     {
      "library": "nlalib",
      "decl": "NLAlib.dotProduct_golubKahan_eq",
      "module": "NLAlib.Krylov.Processes.Bidiagonalization",
-     "status": "scaffold",
+     "status": "proved",
+     "partial": true,
      "usage": "Use this explicitly catalogued scaffold only where its deferred hypothesis is accepted."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golubKahanRecurrence",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
+     "status": "proved",
+     "usage": "**The Golub–Kahan recursion**, zero-indexed: state `j` holds `u_{j+1}, v_{j+1}, α_{j+1}, β_{j+1}` in Golub–Van Loan's one-based notation."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.GolubKahanSucceeds",
+     "module": "NLAlib.Krylov.Processes.BidiagonalizationBasic",
+     "status": "proved",
+     "usage": "**Success predicate**: no breakdown in the first `k + 1` states, `α_j ≠ 0` and `β_j ≠ 0`."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golubKahanRecurrenceDecomp_B_diag",
+     "module": "NLAlib.Krylov.Processes.GolubKahanRealization",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.golubKahanRecurrenceDecomp_B_subdiag",
+     "module": "NLAlib.Krylov.Processes.GolubKahanRealization",
+     "status": "proved",
+     "partial": true
     }
    ],
    "depends_on": [
@@ -28384,6 +28948,7 @@
     "lanczos-recurrence-algorithm"
    ],
    "uses_defs": [
+    "NLAlib.GolubKahanDecomp.B",
     "NLAlib.GolubKahanState",
     "NLAlib.GolubKahanState.alpha",
     "NLAlib.GolubKahanState.beta",
@@ -28392,6 +28957,7 @@
     "NLAlib.GolubKahanSucceeds",
     "NLAlib.IsGradedKrylovBasis",
     "NLAlib.golubKahanRecurrence",
+    "NLAlib.golubKahanRecurrenceDecomp",
     "NLAlib.golubKahanU",
     "NLAlib.golubKahanV",
     "NLAlib.krylovGrade"
@@ -28406,7 +28972,31 @@
     "realisation"
    ],
    "notes": "Realisation theorem kept separate from the predicate (ALGORITHM_CONVENTIONS §2).",
-   "updated_at": "2026-10-13"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual recursion produces graded orthonormal bases of the two normal-matrix Krylov spaces.",
+      "decls": [
+       "NLAlib.isGradedKrylovBasis_golubKahanU_V"
+      ]
+     },
+     {
+      "statement": "Success through state k is equivalent to both native Krylov grades being at least k+1, including initial and later breakdown.",
+      "decls": [
+       "NLAlib.golubKahanSucceeds_iff"
+      ]
+     },
+     {
+      "statement": "The compression entries equal the actual alpha and beta recurrence coefficients.",
+      "decls": [
+       "NLAlib.dotProduct_golubKahan_eq",
+       "NLAlib.golubKahanRecurrenceDecomp_B_diag",
+       "NLAlib.golubKahanRecurrenceDecomp_B_subdiag"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "qr-algorithm-convergence",
@@ -28451,19 +29041,20 @@
   },
   {
    "id": "rayleigh-quotient-iteration",
-   "title": "Rayleigh quotient iteration converges cubically",
+   "title": "Rayleigh quotient iteration: local cubic eigenvector convergence",
    "aliases": [
     "RQI"
    ],
    "area": "krylov-eigenvalues",
    "kind": "bound",
-   "status": "candidate",
-   "informal": "Inverse iteration with the shift updated to the Rayleigh quotient of the current iterate: for symmetric $A$, once the iterate is close enough to an eigenvector $u_J$ with a simple eigenvalue, $\\tan\\theta(x_{k+1}, u_J) = O(\\tan^3\\theta(x_k, u_J))$ and $|\\rho(x_{k+1}) - \\lambda_J| = O(|\\rho(x_k) - \\lambda_J|^3)$.",
+   "status": "proved",
+   "informal": "For a Hermitian matrix $A$ over $\\mathbb R$ or $\\mathbb C$, a simple eigenvalue $\\lambda$ with unit eigenvector $u$, and a unit vector $x$ with $u^*x\\ne0$, put $\\rho(x)=x^*Ax$ and $t(x)=\\|(I-uu^*)x\\|_2/|u^*x|$. Write $g=\\min_{\\mu\\in\\sigma(A)\\setminus\\{\\lambda\\}}|\\mu-\\lambda|$ and $M=\\max_{\\mu\\in\\sigma(A)\\setminus\\{\\lambda\\}}|\\mu-\\lambda|$. If $t(x)^2\\le g/(4M)$ and $\\rho(x)\\notin\\sigma(A)$, the normalized inverse step $x_+=(A-\\rho(x)I)^{-1}x/\\|(A-\\rho(x)I)^{-1}x\\|_2$ is well-defined, has $u^*x_+\\ne0$, and satisfies $t(x_+)\\le(2M/g)t(x)^3\\le t(x)/2$. The neighborhood is invariant. Moreover, $|\\rho(x)-\\lambda|\\le Mt(x)^2/(1+t(x)^2)$ and $|\\rho(x_+)-\\lambda|\\le(4M^3/g^2)t(x)^6$.",
    "hypotheses": [
-    "$A$ symmetric, $\\lambda_J$ simple, $x_0$ in a neighbourhood of $u_J$",
-    "Every shifted solve used is nonsingular; a shift equal to an eigenvalue needs an explicitly specified stopping/continuation convention."
+    "$\\mathbb K\\in\\{\\mathbb R,\\mathbb C\\}$, $n\\ge2$, $A=A^*\\in\\mathbb K^{n\\times n}$, and $\\lambda$ is simple with unit eigenvector $u$.",
+    "$0<g\\le M$ are the minimum and maximum distances from $\\lambda$ to the other eigenvalues; $x_0$ is unit, $u^*x_0\\ne0$, and $t(x_0)^2\\le g/(4M)$.",
+    "Stop successfully if $Ax_k=\\rho(x_k)x_k$. Otherwise take an inverse step only if $A-\\rho(x_k)I$ is invertible; a singular shift at a noneigenvector is a breakdown."
    ],
-   "conclusion": "cubic local convergence of the angle and of the Rayleigh quotient",
+   "conclusion": "Every infinite run without breakdown has $t(x_{k+1})\\le(2M/g)t(x_k)^3$ and $t(x_k)\\le2^{-k}t(x_0)\\to0$, and $\\rho(x_k)\\to\\lambda$. Any successful finite termination returns an eigenvector for $\\lambda$. Convergence is to the eigenvector line; convergence to a particular unit vector requires sign or phase alignment.",
    "sources": [
     {
      "source": "tb97",
@@ -28474,12 +29065,134 @@
      "label": "§4.6"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.eigenvalues_ne_rayleighQuotient_of_extremal",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientExtremal",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_step_sub_le_cube_of_extremal",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientExtremal",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.tangent_eq_norm_sub_div_of_eigenvector",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientGeometry",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.mulVec_eq_rayleighQuotient_smul_of_unique",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientGeometry",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_sub_le",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientIteration",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.step_norm_and_coordinates_ne_zero",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientIteration",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.tangentSq_step_le",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientIteration",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.tangent_step_le",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientIteration",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.tangentSq_step_le_neighborhood",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientIteration",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_step_sub_le",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientIteration",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.advance_eq_breakdown_iff",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientRuns",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.run_tangent_le",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientRuns",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.tendsto_tangent_run",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientRuns",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.tendsto_rayleighQuotient_run",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientRuns",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.tendsto_of_advance_next",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientRuns",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.RayleighQuotientIteration.run_success_target",
+     "module": "NLAlib.Krylov.Spectral.RayleighQuotientRuns",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "inverse-iteration",
     "power-iteration"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "Matrix.IsHermitian.eigenvectorCoordinates",
+    "NLAlib.RayleighQuotientIteration.Outcome",
+    "NLAlib.RayleighQuotientIteration.advance",
+    "NLAlib.RayleighQuotientIteration.run",
+    "NLAlib.RayleighQuotientIteration.step",
+    "NLAlib.RayleighQuotientIteration.tangent",
+    "NLAlib.RayleighQuotientIteration.tangentSq",
+    "NLAlib.rayleighQuotient"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 4,
@@ -28488,8 +29201,55 @@
     "eigenvalues",
     "rqi"
    ],
-   "notes": "Local statement; needs an explicit neighbourhood and constants to be NLAlib-style.",
-   "updated_at": "2026-10-14"
+   "notes": "The unrestricted scalar cubic claim is removed. If $\\lambda$ is the smallest or largest eigenvalue, every nonterminal iterate in this neighborhood has an invertible shifted matrix, and $|\\rho(x_{k+1})-\\lambda|\\le(8M/g^3)|\\rho(x_k)-\\lambda|^3$. For $n=1$, every unit vector is already an eigenvector. Constants are explicit and nonoptimal; the finite spectral estimate is $t(x_+)\\le |\\rho(x)-\\lambda|t(x)/(g-|\\rho(x)-\\lambda|)$. Standard Hermitian angle formulation: https://www.cs.utexas.edu/~flame/laff/alaff/chapter09-Rayleigh-quotient-iteration.html .",
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For real or complex Hermitian matrices the coordinate tangent is the norm of the orthogonal residual divided by absolute overlap for any unit eigenvector of the selected simple eigenvalue; it is independent of sign or phase.",
+      "decls": [
+       "NLAlib.RayleighQuotientIteration.tangent_eq_norm_sub_div_of_eigenvector"
+      ]
+     },
+     {
+      "statement": "A nonsingular normalized inverse step is a unit vector with nonzero target overlap. Under the explicit neighborhood it has cubic angle convergence, contracts by one half, and preserves the neighborhood.",
+      "decls": [
+       "NLAlib.RayleighQuotientIteration.step_norm_and_coordinates_ne_zero",
+       "NLAlib.RayleighQuotientIteration.tangent_step_le",
+       "NLAlib.RayleighQuotientIteration.tangentSq_step_le_neighborhood"
+      ]
+     },
+     {
+      "statement": "The Rayleigh error is at most M t^2/(1+t^2), and the next error is at most (4 M^3/g^2)t^6.",
+      "decls": [
+       "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_sub_le",
+       "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_step_sub_le"
+      ]
+     },
+     {
+      "statement": "A singular shift at a noneigenvector is breakdown. Infinite valid runs satisfy the explicit geometric and cubic bounds and converge in angle and Rayleigh quotient. Successful finite runs return a unit eigenvector for the target eigenvalue.",
+      "decls": [
+       "NLAlib.RayleighQuotientIteration.advance_eq_breakdown_iff",
+       "NLAlib.RayleighQuotientIteration.run_tangent_le",
+       "NLAlib.RayleighQuotientIteration.tendsto_of_advance_next",
+       "NLAlib.RayleighQuotientIteration.run_success_target"
+      ]
+     },
+     {
+      "statement": "For a smallest or largest eigenvalue, every nonterminal local state has a nonsingular shift and its next Rayleigh error is at most (8 M/g^3) times the cube of the current error.",
+      "decls": [
+       "NLAlib.RayleighQuotientIteration.eigenvalues_ne_rayleighQuotient_of_extremal",
+       "NLAlib.RayleighQuotientIteration.abs_rayleighQuotient_step_sub_le_cube_of_extremal"
+      ]
+     },
+     {
+      "statement": "In dimension one every unit vector is already an exact Rayleigh eigenvector.",
+      "decls": [
+       "NLAlib.RayleighQuotientIteration.mulVec_eq_rayleighQuotient_smul_of_unique"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "orthogonal-polynomials-measure-def",
@@ -33576,11 +34336,12 @@
    ],
    "area": "krylov-orthogonal-polynomials",
    "kind": "algorithm",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Given monic $p_k$ with $p_{k+1}=(t-a_k)p_k-b_kp_{k-1}$ and modified moments $m_k=\\int p_k\\,d\\mu$ ($k<2n$), the mixed moments $\\sigma_{kl}=\\int\\pi_kp_l\\,d\\mu$ satisfy $\\sigma_{-1,l}=0$, $\\sigma_{0,l}=m_l$, $\\sigma_{kl}=\\sigma_{k-1,l+1}-(\\alpha_{k-1}-a_l)\\sigma_{k-1,l}-\\beta_{k-1}\\sigma_{k-2,l}+b_l\\sigma_{k-1,l-1}$, and $\\alpha_0=a_0+m_1/m_0$, $\\alpha_k=a_k-\\sigma_{k-1,k}/\\sigma_{k-1,k-1}+\\sigma_{k,k+1}/\\sigma_{kk}$, $\\beta_k=\\sigma_{kk}/\\sigma_{k-1,k-1}$, $\\beta_0=m_0$.",
    "hypotheses": [
     "$\\mu$ positive with more than $n$ support points",
-    "$p_k$ monic with a known three-term recurrence ($a_k\\in\\mathbb R$, $b_k\\ge0$)"
+    "$p_k$ monic with a known three-term recurrence ($a_k\\in\\mathbb R$, $b_k\\ge0$)",
+    "$\\mu$ has finite absolute moments through degree $2n-1$ (all moments used by the recursion exist as finite integrals)"
    ],
    "conclusion": "the recursion returns exactly $\\alpha_k(\\mu),\\beta_k(\\mu)$ for $k<n$.",
    "sources": [
@@ -33607,10 +34368,114 @@
     "kpm"
    ],
    "notes": "Consumers: KPM-to-Gauss-quadrature spectral density methods (Chebyshev moments from Hutchinson probes, `trace-estimators-def`), comparison of SLQ and KPM. Prove.",
-   "updated_at": "2026-10-11",
-   "formalizations": [],
-   "uses_defs": [],
-   "variants": []
+   "updated_at": "2026-10-26",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posDef_hankelMomentMatrix_finiteMeasureMomentFunctional",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.FiniteMeasureMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_monicOrthogonalPolynomial_finiteMeasure_mul_eq_zero",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.FiniteMeasureMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedChebyshevState_correct",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshev",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedChebyshevState_diagonal_pos",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshev",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedChebyshevCoefficients_eq",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshev",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.orthogonalMixedMoment_succ",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshevIdentities",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.orthogonalRecurrenceAlpha_eq_mixed_ratio",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshevIdentities",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedChebyshevCoefficients_integral_eq",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshevMeasure",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.modifiedChebyshevCoefficients_integral_formula",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshevMeasure",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.ModifiedChebyshevState.alpha",
+    "NLAlib.ModifiedChebyshevState.beta",
+    "NLAlib.ModifiedChebyshevState.prev",
+    "NLAlib.ModifiedChebyshevState.row",
+    "NLAlib.finiteMeasureMomentFunctional",
+    "NLAlib.hankelMomentDet",
+    "NLAlib.hankelMomentMatrix",
+    "NLAlib.modifiedChebyshevCoefficients",
+    "NLAlib.modifiedChebyshevState",
+    "NLAlib.monicOrthogonalPolynomial",
+    "NLAlib.orthogonalMixedMoment",
+    "NLAlib.orthogonalRecurrenceAlpha",
+    "NLAlib.orthogonalRecurrenceBeta"
+   ],
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual finite row recursion, initialized from the supplied modified moments, recovers the mixed table and canonical monic recurrence coefficients at every requested order, including the source mass convention for beta zero.",
+      "decls": [
+       "NLAlib.modifiedChebyshevState_correct",
+       "NLAlib.modifiedChebyshevCoefficients_eq",
+       "NLAlib.orthogonalMixedMoment_succ"
+      ]
+     },
+     {
+      "statement": "The measure support and finite absolute moments imply positive definiteness of the required finite Hankel matrix and positivity of every denominator used by the algorithm.",
+      "decls": [
+       "NLAlib.posDef_hankelMomentMatrix_finiteMeasureMomentFunctional",
+       "NLAlib.modifiedChebyshevState_diagonal_pos"
+      ]
+     },
+     {
+      "statement": "The canonical finite polynomials satisfy actual measure orthogonality, and the native algorithm fed exactly the first 2n modified moment integrals returns the measure coefficients in integral form. No higher moments or precomputed target coefficients are assumed.",
+      "decls": [
+       "NLAlib.integral_monicOrthogonalPolynomial_finiteMeasure_mul_eq_zero",
+       "NLAlib.modifiedChebyshevCoefficients_integral_formula"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "clenshaw-recurrence",
@@ -44016,7 +44881,7 @@
    "title": "Independent Gaussian probes certify the spectral norm",
    "area": "estimation-certification",
    "kind": "bound",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For a fixed real rectangular matrix $R$, $s\\ge1$ independent standard Gaussian test vectors give the upper certificate $U=\\alpha\\sqrt{2/\\pi}\\max_{j\\le s}\\|Rg_j\\|_2$ with $\\mathbb P\\{\\|R\\|_2>U\\}\\le\\alpha^{-s}$.",
    "hypotheses": [
     "$R\\in\\mathbb R^{m\\times n}$ is deterministic, $s\\ge1$, and $\\alpha>1$",
@@ -44029,13 +44894,24 @@
      "label": "§4.3, Lemma 4.1 (a posteriori error estimation)"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_specNorm_gt_gaussianResidualMaximum_le",
+     "module": "NLAlib.Estimation.Residual.GaussianCertificate",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "svd",
     "gaussian-matrix-mulvec-law",
     "scalar-laws-def"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.gaussianResidualMaximum",
+    "NLAlib.gaussianVector",
+    "NLAlib.specNorm"
+   ],
    "variants": [
     "adaptive-gaussian-residual-certification"
    ],
@@ -44052,14 +44928,24 @@
     "source-reviewed"
    ],
    "notes": "Derivation checked: for R nonzero, project each probe onto a top right singular vector. The scalar normal density bound gives P(|Z|<t) <= sqrt(2/pi)*t; at t=sqrt(pi/2)/alpha independence yields alpha^(-s). R=0 and zero-dimensional matrices have empty failure events. The probes must be independent of the residual construction. This is a certificate for any residual operator, not a claim about a particular stopping algorithm. Formalization should use HasLaw and the actual maximum of finitely many probe norms.",
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "Actual independent Gaussian probes give the exact alpha sqrt(2/pi) maximum certificate and failure alpha^(-s), including zero and empty rectangular matrices.",
+      "decls": [
+       "NLAlib.measure_specNorm_gt_gaussianResidualMaximum_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "adaptive-gaussian-residual-certification",
    "title": "Fresh-probe residual certificates remain valid under adaptive stopping",
    "area": "estimation-certification",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "At stage $t$, choose $R_t$ using the history $\\mathcal F_t$, then draw $s_t$ fresh independent standard Gaussian probes. For deterministic $\\alpha_t>1$ with $\\sum_{t\\ge0}\\alpha_t^{-s_t}\\le\\delta$, every finite output stage is simultaneously certified with probability at least $1-\\delta$.",
    "hypotheses": [
     "$R_t$ is $\\mathcal F_t$-measurable for each $t\\ge0$",
@@ -44075,12 +44961,23 @@
      "label": "§§4.3–4.4; fresh-probe extension derived by conditioning and a countable union bound"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_exists_specNorm_gt_freshGaussianResidualMaximum_le",
+     "module": "NLAlib.Estimation.Residual.AdaptiveGaussianCertificate",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "gaussian-residual-certificate",
     "gaussian-conditioning"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.gaussianResidualMaximum",
+    "NLAlib.gaussianVector",
+    "NLAlib.specNorm"
+   ],
    "variants": [
     "gaussian-residual-certificate"
    ],
@@ -44097,7 +44994,17 @@
     "source-reviewed"
    ],
    "notes": "Audited extension, not quoted as a separate HMT theorem: condition on each history, apply the fixed-residual certificate, integrate, then use countable subadditivity. No independence between different stage failures is required. The union event gives a statement stronger than one restricted to stopping times; no termination or expected-work guarantee follows. Predictable random budgets are a further variant, not part of this first target. Reusing training probes is excluded: an orthogonal projection onto range(A*Omega) annihilates its own training residual probes.",
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "History-measurable random residuals with fresh product Gaussian probes satisfy the countable simultaneous failure bound and arbitrary finite selected-stage bound under the summable nonnegative budget; no interstage independence or termination assumption is used.",
+      "decls": [
+       "NLAlib.measure_exists_specNorm_gt_freshGaussianResidualMaximum_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "laplacian-resistance-leverage",
@@ -46991,7 +47898,7 @@
    "title": "Centered error identity for two-sided sketch corrections",
    "area": "estimation",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $A\\in\\mathbb R^{m\\times n}$ and square $L\\in\\mathbb R^{m\\times m}$, $R\\in\\mathbb R^{n\\times n}$, set $T=\\operatorname{tr}(A^\\top AR)+\\operatorname{tr}(A^\\top LA)-\\operatorname{tr}(A^\\top LAR)$. Then $T-\\|A\\|_F^2=-\\operatorname{tr}(A^\\top(L-I)A(R-I))$. Thus independent random $L,R$ with means $I$ and integrable entries give $\\mathbb ET=\\|A\\|_F^2$.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$, $L\\in\\mathbb R^{m\\times m}$ and $R\\in\\mathbb R^{n\\times n}$",
@@ -47004,7 +47911,22 @@
      "label": "Equation (2), Equation (7) and §2; centered reformulation"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.twoSidedSketchEstimate_sub_frobSq",
+     "module": "NLAlib.Estimation.Trace.TwoSidedSketch",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_twoSidedSketchEstimate",
+     "module": "NLAlib.Estimation.Trace.TwoSidedSketch",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "norms-frob-spec"
    ],
@@ -47014,7 +47936,10 @@
     "two-sided control variate",
     "centered Gram product"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.frobSq",
+    "NLAlib.twoSidedSketchEstimate"
+   ],
    "variants": [
     "two-sided-gaussian-frobenius-variance",
     "independent-control-variate-variance"
@@ -47028,14 +47953,30 @@
     "two-sided-sketch"
    ],
    "notes": "Audit: expand the product (L−I)A(R−I) and use trace linearity; this cancels both first-order sketch errors exactly. Independence factors each remaining centered entry product, and entrywise integrability is sufficient for their product integrability on the independent joint law. No Gaussian or PSD assumption is needed for this identity. Substituting L=ΨΨᵀ/s and R=ΩΩᵀ/r gives the Hutch# formula. Independence cannot be dropped merely because both marginals are isotropic.",
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The deterministic centered identity holds for arbitrary rectangular real input and arbitrary square sketches, including empty dimensions.",
+      "decls": [
+       "NLAlib.twoSidedSketchEstimate_sub_frobSq"
+      ]
+     },
+     {
+      "statement": "Independent random sketches with integrable entries and identity means give an integrable, unbiased estimator.",
+      "decls": [
+       "NLAlib.integrable_and_integral_twoSidedSketchEstimate"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "independent-control-variate-variance",
    "title": "Exact variance of independent Gaussian trace control variates",
    "area": "estimation",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Let $M$ be fixed real symmetric and $B$ a random symmetric matrix independent of $r\\ge1$ iid standard Gaussian probes $g_j$, with $\\mathbb E\\|M-B\\|_F^2<\\infty$. For $T=\\operatorname{tr}B+r^{-1}\\sum_{j=1}^r g_j^\\top(M-B)g_j$, one has $\\mathbb E[T\\mid B]=\\operatorname{tr}M$ and $\\operatorname{Var}T=(2/r)\\mathbb E\\|M-B\\|_F^2$.",
    "hypotheses": [
     "$M\\in\\mathbb R^{n\\times n}$ symmetric and deterministic",
@@ -47053,7 +47994,14 @@
      "label": "§3, low-rank control-variate construction"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussianControlVariateEstimate_moments_of_indepFun",
+     "module": "NLAlib.Estimation.Trace.GaussianControlVariate",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "hutchinson-unbiased",
     "hutchinson-variance"
@@ -47063,7 +48011,11 @@
     "conditional Hutchinson variance",
     "law of total variance for trace estimation"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.frobSq",
+    "NLAlib.gaussianControlVariateEstimate",
+    "NLAlib.gaussianMatrix"
+   ],
    "variants": [
     "hutchpp-unbiased",
     "two-sided-gaussian-frobenius-variance"
@@ -47077,14 +48029,24 @@
     "control-variate"
    ],
    "notes": "Audit: condition on B, apply the existing Gaussian quadratic-form mean/variance to M−B, and average r independent terms. The conditional mean is constant, so its variance term vanishes in total variance. The square-integrability assumption makes every step well-defined. Neither positivity nor low rank of B is needed. Current hutchpp-unbiased already proves projection-specific unbiasedness; the new reusable content is arbitrary independent control matrices and the exact variance identity. A product-measure/Fubini proof can avoid a large conditional-expectation API while preserving this meaning.",
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For the actual independent Gaussian probe law and a measurable almost-everywhere symmetric random control with finite residual second moment, the estimator is square integrable, unbiased, has the stated exact variance, and has conditional mean equal to the trace given the control.",
+      "decls": [
+       "NLAlib.gaussianControlVariateEstimate_moments_of_indepFun"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "two-sided-gaussian-frobenius-variance",
    "title": "Exact variance of the two-sided Gaussian Frobenius estimator",
    "area": "estimation",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Let $\\Omega\\in\\mathbb R^{n\\times r}$ and $\\Psi\\in\\mathbb R^{m\\times s}$ be independent standard Gaussian matrices, $r,s\\ge1$. For $$H=\\frac{\\|A\\Omega\\|_F^2}{r}+\\frac{\\|\\Psi^\\top A\\|_F^2}{s}-\\frac{\\|\\Psi^\\top A\\Omega\\|_F^2}{rs},$$ one has $\\mathbb EH=\\|A\\|_F^2$ and $$\\operatorname{Var}H=\\frac2{rs}\\bigl(\\|A^\\top A\\|_F^2+\\|A\\|_F^4\\bigr)\\le\\frac4{rs}\\|A\\|_F^4.$$ The case $r=s$ is Hutch# Theorem 1.1.",
    "hypotheses": [
     "$A\\in\\mathbb R^{m\\times n}$ is deterministic, with no symmetry or rank requirement",
@@ -47098,7 +48060,14 @@
      "label": "Theorem 1.1, Fact 2.2 and §2 proof; unequal sketch-width extension"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.twoSidedGaussianFrobEstimate_moments_of_indepFun",
+     "module": "NLAlib.Estimation.Trace.TwoSidedGaussian",
+     "status": "proved"
+    }
+   ],
    "depends_on": [
     "two-sided-sketch-centered-error",
     "independent-control-variate-variance",
@@ -47110,7 +48079,11 @@
     "nonadaptive Frobenius norm estimation",
     "two-sided Gaussian exact variance"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.frobSq",
+    "NLAlib.gaussianMatrix",
+    "NLAlib.twoSidedGaussianFrobEstimate"
+   ],
    "variants": [
     "gaussian-amm",
     "hutchinson-variance",
@@ -47125,7 +48098,17 @@
     "two-sided-sketch"
    ],
    "notes": "Audit: use the previous control-variate identity with M=AᵀA and B=AᵀΨΨᵀA/s. Existing gaussian-amm gives E||M−B||F²=(||AᵀA||F²+||A||F⁴)/s. Multiplication by 2/r proves the formula, including unequal widths; the source states equal widths. All moments are finite Gaussian polynomial moments. The inequality uses Σσ⁴≤(Σσ²)². A=0 is exact, not an exceptional division case. For A≠0, Chebyshev yields failure ≤4/(rs ε²); constant failure with r=s therefore takes order 1/ε probes per side. This card does not claim the paper’s query lower bound, adaptive weighted variant, or generalized-Nyström/Hutch-flat extension has been audited or formalized.",
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "Independent actual Gaussian sketches of unequal positive widths yield the stated square integrability, mean, exact Frobenius variance, and upper bound for arbitrary rectangular input, including empty or zero input.",
+      "decls": [
+       "NLAlib.twoSidedGaussianFrobEstimate_moments_of_indepFun"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "positive-map-kadison",
@@ -50315,13 +51298,91 @@
   },
   {
    "kind": "theorem",
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.roots_charpoly_schurSymmetricPreconditioned",
+     "module": "NLAlib.Krylov.Solvers.SchurPreconditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isHermitian_schurSymmetricPreconditioned",
+     "module": "NLAlib.Krylov.Solvers.SchurPreconditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.count_one_roots_schurSymmetricPreconditioned",
+     "module": "NLAlib.Krylov.Solvers.SchurPreconditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.schurSymmetricPreconditioned_eigenvalue_intervals",
+     "module": "NLAlib.Krylov.Solvers.SchurPreconditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gmres_triangular_schur_terminates",
+     "module": "NLAlib.Krylov.Solvers.SchurPreconditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.minres_symmetric_schur_terminates",
+     "module": "NLAlib.Krylov.Solvers.SchurPreconditioning",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.posDef_saddleSchurComplement",
+     "module": "NLAlib.Matrix.Structured.SaddlePoint",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.symmetric_saddle_preconditioning_eq",
+     "module": "NLAlib.Matrix.Structured.SaddlePoint",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.saddle_coupling_mul_conjTranspose",
+     "module": "NLAlib.Matrix.Structured.SaddlePoint",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.triangular_saddle_preconditioning_sub_one_sq",
+     "module": "NLAlib.Matrix.Structured.SaddlePoint",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsGMRESIterate",
+    "NLAlib.kktMatrix",
+    "NLAlib.saddleEigenvalueMinus",
+    "NLAlib.saddleEigenvaluePlus",
+    "NLAlib.saddleSchurComplement",
+    "NLAlib.schurSymmetricPreconditioned"
+   ],
    "variants": [],
    "difficulty": 3,
    "priority": "next",
-   "updated_at": "2026-10-14",
+   "updated_at": "2026-10-26",
    "id": "saddle-point-schur-preconditioner-spectrum",
    "title": "Schur preconditioning of saddle-point systems: exact spectra and finite termination",
    "area": "krylov-linear-systems",
@@ -50356,7 +51417,46 @@
     "Krylov",
     "complex"
    ],
-   "notes": "The termination bounds are algebraic exact-arithmetic statements with exact block solves. An approximate A block or inexact inner solves require additional analysis. MINRES is applied to the Hermitian symmetrically preconditioned matrix (equivalently the standard SPD preconditioned formulation), not directly to a generally non-Hermitian Euclidean left-preconditioned matrix."
+   "notes": "The termination bounds are algebraic exact-arithmetic statements with exact block solves. An approximate A block or inexact inner solves require additional analysis. MINRES is applied to the Hermitian symmetrically preconditioned matrix (equivalently the standard SPD preconditioned formulation), not directly to a generally non-Hermitian Euclidean left-preconditioned matrix.",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The native positive Schur complement is positive definite, and inverse-square-root preconditioning of diag(A,Shat) gives the normalized Hermitian saddle matrix; its coupling Gram is exactly the whitened Schur complement.",
+      "decls": [
+       "NLAlib.posDef_saddleSchurComplement",
+       "NLAlib.symmetric_saddle_preconditioning_eq",
+       "NLAlib.saddle_coupling_mul_conjTranspose",
+       "NLAlib.isHermitian_schurSymmetricPreconditioned"
+      ]
+     },
+     {
+      "statement": "The full characteristic-root multiset of the native preconditioned system consists of the paired quadratic roots of every whitened Schur eigenvalue, with multiplicities, and exactly n-m copies of the unit eigenvalue.",
+      "decls": [
+       "NLAlib.roots_charpoly_schurSymmetricPreconditioned",
+       "NLAlib.count_one_roots_schurSymmetricPreconditioned"
+      ]
+     },
+     {
+      "statement": "Native relative Loewner bounds give the advertised positive and negative spectral intervals, with the additional eigenvalue one only when n>m.",
+      "decls": [
+       "NLAlib.schurSymmetricPreconditioned_eigenvalue_intervals"
+      ]
+     },
+     {
+      "statement": "The exact triangular preconditioner leaves a square-zero perturbation of identity, so the native GMRES minimizer terminates by step two for all right-hand sides and initializers.",
+      "decls": [
+       "NLAlib.triangular_saddle_preconditioning_sub_one_sq",
+       "NLAlib.gmres_triangular_schur_terminates"
+      ]
+     },
+     {
+      "statement": "MINRES on the actual Hermitian system symmetrically preconditioned by the exact Schur complement terminates by step three for all right-hand sides and initializers, over real or complex scalars.",
+      "decls": [
+       "NLAlib.minres_symmetric_schur_terminates"
+      ]
+     }
+    ]
+   }
   },
   {
    "kind": "theorem",
@@ -50854,13 +51954,53 @@
   },
   {
    "kind": "theorem",
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_posSemidef_lyapunov",
+     "module": "NLAlib.Krylov.MatrixEquations.LyapunovProjection",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.existsUnique_posSemidef_compressedLyapunov",
+     "module": "NLAlib.Krylov.MatrixEquations.LyapunovProjection",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.projectedLyapunov_forward_error",
+     "module": "NLAlib.Krylov.MatrixEquations.LyapunovProjection",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.projectedLyapunov_residual_eq",
+     "module": "NLAlib.Krylov.MatrixEquations.LyapunovProjectionIdentity",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.projectedLyapunov_residual_norms_and_rank",
+     "module": "NLAlib.Krylov.MatrixEquations.LyapunovProjectionIdentity",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.frobNorm",
+    "NLAlib.specNorm"
+   ],
    "variants": [],
    "difficulty": 3,
    "priority": "next",
-   "updated_at": "2026-10-14",
+   "updated_at": "2026-10-26",
    "id": "lyapunov-projection-residual-certificate",
    "title": "Projected Lyapunov equations: small residual norms and certified error bounds",
    "area": "krylov-matrix-equations",
@@ -50894,7 +52034,36 @@
     "Krylov",
     "residual certificate"
    ],
-   "notes": "Hurwitz stability of A alone does not ensure Hurwitz stability of H=V*AV. Either reduced stability must be assumed separately to obtain Y, or strict dissipativity as above supplies it. If B is not contained in range V, additional residual terms appear and the small-norm formulas do not apply unchanged. This is distinct from SPD-operator Galerkin energy optimality."
+   "notes": "Hurwitz stability of A alone does not ensure Hurwitz stability of H=V*AV. Either reduced stability must be assumed separately to obtain Y, or strict dissipativity as above supplies it. If B is not contained in range V, additional residual terms appear and the small-norm formulas do not apply unchanged. This is distinct from SPD-operator Galerkin energy optimality.",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The native Arnoldi relation, represented forcing B=V Bk, and reduced equation give the exact projected residual, without stability assumptions.",
+      "decls": [
+       "NLAlib.projectedLyapunov_residual_eq"
+      ]
+     },
+     {
+      "statement": "For arbitrary real or complex orthonormal frames, the residual has Frobenius norm sqrt(2) times the Frobenius norm of TY, spectral norm equal to that of TY, and rank twice rank(TY), including zero widths and ranks.",
+      "decls": [
+       "NLAlib.projectedLyapunov_residual_norms_and_rank"
+      ]
+     },
+     {
+      "statement": "The native strict dissipativity condition on the half-Hermitian part gives unique full and reduced solutions, and all these solutions are positive semidefinite. Compression stability is derived.",
+      "decls": [
+       "NLAlib.existsUnique_posSemidef_lyapunov",
+       "NLAlib.existsUnique_posSemidef_compressedLyapunov"
+      ]
+     },
+     {
+      "statement": "For the actual full and projected solutions, the Frobenius and spectral forward errors are bounded respectively by sqrt(2)||TY||F/(2a) and ||TY||2/(2a), with reduced Hermiticity and H=V*AV derived from the native hypotheses.",
+      "decls": [
+       "NLAlib.projectedLyapunov_forward_error"
+      ]
+     }
+    ]
+   }
   },
   {
    "kind": "theorem",
@@ -51910,14 +53079,68 @@
    "tags": [
     "foundation"
    ],
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_frobSq_sub_mul_rowSubsetPseudoinverse_mul_le",
+     "module": "NLAlib.Solvers.LeastSquares.RowVolume",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_frobSq_sub_mul_rowSubsetPseudoinverse_mul_eq_of_full_support",
+     "module": "NLAlib.Solvers.LeastSquares.RowVolume",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_conjTranspose_mul_rowVolume_error_le",
+     "module": "NLAlib.Solvers.LeastSquares.RowVolume",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_conjTranspose_mul_rowVolume_error_eq_of_full_support",
+     "module": "NLAlib.Solvers.LeastSquares.RowVolume",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.frobSq",
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.rowSubsetGram",
+    "NLAlib.rowSubsetPseudoinverse",
+    "NLAlib.rowSubsetVolume",
+    "NLAlib.rowVolumeLaw"
+   ],
    "variants": [
     "adaptive-pivoting-projection-dpp"
    ],
    "mathlib_prereqs": [],
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual size-width row-volume law for any full-column-rank real or complex design gives the sharp matrix-right-hand-side residual inequality, with equality under general position. The supported pseudoinverse formula is the selected-row inverse solve.",
+      "decls": [
+       "NLAlib.integral_frobSq_sub_mul_rowSubsetPseudoinverse_mul_le",
+       "NLAlib.integral_frobSq_sub_mul_rowSubsetPseudoinverse_mul_eq_of_full_support"
+      ]
+     },
+     {
+      "statement": "The expected adjoint-product error operator satisfies the advertised Loewner inequality and general-position equality.",
+      "decls": [
+       "NLAlib.integral_conjTranspose_mul_rowVolume_error_le",
+       "NLAlib.integral_conjTranspose_mul_rowVolume_error_eq_of_full_support"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "adaptive-pivoting-projection-dpp",
@@ -52307,12 +53530,75 @@
    "tags": [
     "foundation"
    ],
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.integral_norm_tailAverage_sub_sq_le",
+     "module": "NLAlib.Solvers.Kaczmarz.TailAverage",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.integral_norm_tailAverage_sub_moorePenroseInverse_mulVec_sq_le",
+     "module": "NLAlib.Solvers.Kaczmarz.TailBounds",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.tendsto_integral_norm_tailAverage_sub_moorePenroseInverse_mulVec_sq",
+     "module": "NLAlib.Solvers.Kaczmarz.TailBounds",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.Kaczmarz.runSum_eq_sum_prefix_run",
+     "module": "NLAlib.Solvers.Kaczmarz.TailSum",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsLeastSquaresSolution",
+    "NLAlib.Kaczmarz.run",
+    "NLAlib.Kaczmarz.runSum",
+    "NLAlib.Kaczmarz.tailAverage",
+    "NLAlib.Kaczmarz.tailInitialWeight",
+    "NLAlib.frobConditionNumber",
+    "NLAlib.frobSq",
+    "NLAlib.kaczmarzRowPathPMF",
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.specNorm"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The estimator is the literal average of consecutive native row-by-row iterates after burn-in, with the actual product row-sampling law.",
+      "decls": [
+       "NLAlib.Kaczmarz.runSum_eq_sum_prefix_run",
+       "NLAlib.Kaczmarz.integral_norm_tailAverage_sub_sq_le"
+      ]
+     },
+     {
+      "statement": "Both advertised mean-square bounds hold with the exact transient and noise constants for arbitrary rank, inconsistent right-hand sides, zero rows, and row-space initializers.",
+      "decls": [
+       "NLAlib.Kaczmarz.integral_norm_tailAverage_sub_moorePenroseInverse_mulVec_sq_le"
+      ]
+     },
+     {
+      "statement": "For each fixed burn-in, the actual mean-square error tends to zero as the number of averaged iterates increases.",
+      "decls": [
+       "NLAlib.Kaczmarz.tendsto_integral_norm_tailAverage_sub_moorePenroseInverse_mulVec_sq"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "rpcholesky-factorial-trace-tail",
@@ -55163,7 +56449,7 @@
    "title": "Regular splittings: inverse positivity is equivalent to convergence",
    "area": "krylov-linear-systems",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "A regular splitting converts inverse positivity into a spectral-radius convergence certificate. Consequently every regular splitting of a nonsingular M-matrix converges, and nonnegative data give a monotone iteration from zero.",
    "hypotheses": [
     "$A=M-N\\in\\mathbb R^{n\\times n}$, $n\\ge1$, $M$ invertible, $M^{-1}\\ge0$ and $N\\ge0$ entrywise",
@@ -55180,8 +56466,55 @@
     "nonsingular-m-matrix-characterizations",
     "stationary-splitting-convergence"
    ],
-   "formalizations": [],
-   "uses_defs": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.complex_spectralRadius_inv_mul_lt_one_of_inverse_nonneg",
+     "module": "NLAlib.Krylov.Solvers.RegularSplitting",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inverse_nonneg_of_complex_spectralRadius_inv_mul_lt_one",
+     "module": "NLAlib.Krylov.Solvers.RegularSplitting",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.inverse_nonneg_iff_complex_spectralRadius_inv_mul_lt_one",
+     "module": "NLAlib.Krylov.Solvers.RegularSplitting",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_splittingIterate_of_inverse_nonneg",
+     "module": "NLAlib.Krylov.Solvers.RegularSplitting",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.splittingIterate_zero_nonneg_mono_le_of_inverse_nonneg",
+     "module": "NLAlib.Krylov.Solvers.RegularSplitting",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.splittingConverges_of_isNonsingularMMatrix",
+     "module": "NLAlib.Krylov.Solvers.RegularSplitting",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "Matrix.IsNonsingularMMatrix",
+    "NLAlib.SplittingConverges",
+    "NLAlib.splittingIterate"
+   ],
    "aliases": [
     "regular splitting",
     "inverse-positive iteration",
@@ -55191,12 +56524,35 @@
    "notes": "The printed (4.11.24) statement omits N≥0, although its proof uses it. Both M^-1≥0 and N≥0 are required here. No Z-matrix assumption on A is needed for the equivalence itself; M-matrix structure is one sufficient certificate of inverse positivity.",
    "difficulty": 3,
    "priority": "next",
-   "updated_at": "2026-10-15",
+   "updated_at": "2026-10-26",
    "tags": [
     "regular splitting",
     "inverse-positive iteration",
     "monotone stationary solve"
-   ]
+   ],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For M invertible with M inverse and N entrywise nonnegative, inverse positivity of M-N is equivalent to spectral radius of the complexified M inverse N being below one. No Z-matrix assumption is imposed on M-N.",
+      "decls": [
+       "NLAlib.inverse_nonneg_iff_complex_spectralRadius_inv_mul_lt_one"
+      ]
+     },
+     {
+      "statement": "The actual stationary splitting iteration converges to (M-N) inverse times b for every b and initializer; every regular splitting of a nonsingular M-matrix satisfies the criterion.",
+      "decls": [
+       "NLAlib.tendsto_splittingIterate_of_inverse_nonneg",
+       "NLAlib.splittingConverges_of_isNonsingularMMatrix"
+      ]
+     },
+     {
+      "statement": "For nonnegative b and zero start, the actual iterates are nonnegative, increase, and stay below the inverse solution at every step.",
+      "decls": [
+       "NLAlib.splittingIterate_zero_nonneg_mono_le_of_inverse_nonneg"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "circulant-fourier-diagonalization",
@@ -56860,10 +58216,10 @@
    "title": "Simplex regression reconstructs a measure from noisy moments",
    "area": "estimation-spectral-density",
    "kind": "algorithm",
-   "status": "candidate",
+   "status": "proved",
    "informal": "A finite weighted least-squares problem on Chebyshev nodes turns moment estimates into a nonnegative probability measure, with an explicit optimization-tolerance allowance.",
    "hypotheses": [
-    "$\\mu$ is supported on $[-1,1]$, $k,g\\ge1$, $x_i=\\cos((2i-1)\\pi/(2g))$ for $1\\le i\\le g$, and $\\|v\\|_{w,k}^2=\\sum_{j=1}^k v_j^2/j^2$",
+    "$\\mu$ is a probability measure supported on $[-1,1]$, $k,g\\ge1$, $x_i=\\cos((2i-1)\\pi/(2g))$ for $1\\le i\\le g$, and $\\|v\\|_{w,k}^2=\\sum_{j=1}^k v_j^2/j^2$",
     "$\\widehat m\\in\\mathbb R^k$, $\\|\\widehat m-(\\int T_j\\,d\\mu)_{j=1}^k\\|_{w,k}\\le\\Gamma$, and $z$ lies in the probability simplex",
     "The weighted residual of $z$ is at most the minimum residual over the simplex plus $\\eta\\ge0$; set $\\nu=\\sum_{i=1}^g z_i\\delta_{x_i}$"
    ],
@@ -56874,11 +58230,39 @@
      "label": "Corollary 2; Algorithm 1; Appendix C, Lemma 44 and proof of Corollary 2; explicit standard-basis/tolerance derivation"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_minimizer_weightedChebyshevError_gridMoments",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevRegression",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.wassersteinEDistOne_gridLaw_le_of_weightedChebyshevError_le",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevRegression",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.wassersteinEDistOne_gridLaw_le_of_ceil_rpow_three_div_two",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevRegression",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "chebyshev-moment-wasserstein"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.chebyshevGridLaw",
+    "NLAlib.chebyshevGridMoments",
+    "NLAlib.chebyshevMoments",
+    "NLAlib.wassersteinEDistOne",
+    "NLAlib.weightedChebyshevError"
+   ],
    "variants": [],
    "aliases": [
     "Chebyshev moment regression",
@@ -56892,7 +58276,29 @@
     "source-reviewed"
    ],
    "notes": "All moments here use T_j, consistently with the univariate moment bound. The source appendix switches to normalized polynomials; its constants must not be copied unchanged. The source return line has an inconsistent upper index; the output has exactly g atoms. The card certifies a specified optimization residual, not exact finite-time convergence or a bit-complexity bound for a numerical QP solver.",
-   "updated_at": "2026-10-15"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The weighted residual objective has a minimizer on every nonempty probability simplex.",
+      "decls": [
+       "NLAlib.exists_minimizer_weightedChebyshevError_gridMoments"
+      ]
+     },
+     {
+      "statement": "For arbitrary supported probability measures and noisy unnormalized Chebyshev moments, any simplex solution within eta of the minimum residual norm gives the actual finite grid probability law with Wasserstein error at most 36/k+2 Gamma+pi sqrt(k)/(2g)+eta.",
+      "decls": [
+       "NLAlib.wassersteinEDistOne_gridLaw_le_of_weightedChebyshevError_le"
+      ]
+     },
+     {
+      "statement": "The exact ceil(k^(3/2)) grid choice yields (36+pi/2)/k+2 Gamma+eta, with endpoints and atoms handled by measurable angular quantization.",
+      "decls": [
+       "NLAlib.wassersteinEDistOne_gridLaw_le_of_ceil_rpow_three_div_two"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "chebyshev-spectral-density-query",

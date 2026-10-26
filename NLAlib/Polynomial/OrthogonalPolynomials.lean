@@ -11,6 +11,7 @@ import NLAlib.Polynomial.OrthogonalPolynomials.ChristoffelKernel
 import NLAlib.Polynomial.OrthogonalPolynomials.CoefficientBounds
 import NLAlib.Polynomial.OrthogonalPolynomials.CoefficientIdentities
 import NLAlib.Polynomial.OrthogonalPolynomials.DerivativeResolventIntegral
+import NLAlib.Polynomial.OrthogonalPolynomials.FiniteMeasureMoments
 import NLAlib.Polynomial.OrthogonalPolynomials.FiniteMomentSystem
 import NLAlib.Polynomial.OrthogonalPolynomials.HankelDeterminants
 import NLAlib.Polynomial.OrthogonalPolynomials.HankelNorms
@@ -29,6 +30,9 @@ import NLAlib.Polynomial.OrthogonalPolynomials.LaguerreRecurrence
 import NLAlib.Polynomial.OrthogonalPolynomials.MeasureContinuity
 import NLAlib.Polynomial.OrthogonalPolynomials.MeasureMoments
 import NLAlib.Polynomial.OrthogonalPolynomials.MeasureOrthogonality
+import NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshev
+import NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshevIdentities
+import NLAlib.Polynomial.OrthogonalPolynomials.ModifiedChebyshevMeasure
 import NLAlib.Polynomial.OrthogonalPolynomials.MomentBasis
 import NLAlib.Polynomial.OrthogonalPolynomials.MomentBasisData
 import NLAlib.Polynomial.OrthogonalPolynomials.MomentBasisSensitivity

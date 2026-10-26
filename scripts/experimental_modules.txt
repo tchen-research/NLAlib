@@ -1,4 +1,3 @@
 # Modules containing unfinished proofs. Their import dependants are excluded from
 # `import NLAlib`; `import NLAlib.Experimental` exposes the complete development.
 # Remove an entry once its proofs are complete and the strict audit passes.
-NLAlib.Krylov.Processes.Bidiagonalization

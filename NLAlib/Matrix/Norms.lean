@@ -40,7 +40,9 @@ import NLAlib.Matrix.Norms.NuclearGram
 import NLAlib.Matrix.Norms.NuclearHermitian
 import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Norms.NuclearPSD
+import NLAlib.Matrix.Norms.NuclearTail
 import NLAlib.Matrix.Norms.NuclearTruncation
+import NLAlib.Matrix.Norms.OrthogonalOffDiagonal
 import NLAlib.Matrix.Norms.PositiveImaginaryTrace
 import NLAlib.Matrix.Norms.QuadraticSeries
 import NLAlib.Matrix.Norms.RankNorm

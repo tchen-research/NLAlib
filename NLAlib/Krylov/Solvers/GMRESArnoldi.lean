@@ -132,7 +132,7 @@ theorem isGMRESIterate_add_mulVec_iff (D : ArnoldiDecomp A (c - A *ᵥ x₀) (q 
         (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y) ⬝ᵥ (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y) ≤
           (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y') ⬝ᵥ (D.Qᵀ *ᵥ (c - A *ᵥ x₀) - D.Hbar *ᵥ y') := by
   rw [IsGMRESIterate, IsAffineMinimizer, add_sub_cancel_left]
-  simp only [D.restrict_Q_mulVec_mem y, true_and]
+  simp only [D.restrict_Q_mulVec_mem y, true_and, star_trivial, RCLike.re_to_real]
   constructor
   · intro h y'
     have := h _ (D.restrict_Q_mulVec_mem y')

@@ -8,6 +8,10 @@ import NLAlib.Polynomial.FunctionApproximation.Approximation
 `IsGMRESIterate A c x₀ q x` says that `x ∈ x₀ + K_q(A, r₀)`, `r₀ = c − A x₀`, minimises the
 residual `‖c − A y‖²` over `x₀ + K_q(A, r₀)` (an instance of `IsAffineMinimizer`,
 `docs/KRYLOV_DEFINITIONS.md` §3.3). MINRES is the same predicate for symmetric `A`.
+The predicate accepts real or complex scalars. This file retains the real dot-product
+API; the generic construction, Hermitian orthogonality, reduced least squares and
+scalar-extension bridge are in `GMRESIterate`, `GMRESOrthogonality`,
+`GMRESLeastSquares` and `GMRESScalarExtension`.
 
 ## Main results
 
@@ -51,8 +55,10 @@ Arnoldi realisation is `NLAlib.Krylov.Solvers.GMRESArnoldi`. The system is `A x 
 Source: Saad–Schultz (1986) [`ss86`], §2; Saad (2003) [`saad03`], §6.5;
 KRYLOV_DEFINITIONS §3.3.
 atlas: gmres-def (partial) -/
-def IsGMRESIterate (A : Matrix n n ℝ) (c x₀ : n → ℝ) (q : ℕ) (x : n → ℝ) : Prop :=
-  IsAffineMinimizer (fun y => (c - A *ᵥ y) ⬝ᵥ (c - A *ᵥ y)) x₀ (krylovSpace A (c - A *ᵥ x₀) q) x
+def IsGMRESIterate {𝕜 : Type*} [RCLike 𝕜] (A : Matrix n n 𝕜)
+    (c x₀ : n → 𝕜) (q : ℕ) (x : n → 𝕜) : Prop :=
+  IsAffineMinimizer (fun y => RCLike.re (star (c - A *ᵥ y) ⬝ᵥ (c - A *ᵥ y)))
+    x₀ (krylovSpace A (c - A *ᵥ x₀) q) x
 
 variable {A : Matrix n n ℝ} {c x₀ x : n → ℝ} {q : ℕ}
 
@@ -82,7 +88,7 @@ theorem isGMRESIterate_iff_forall_dotProduct_eq_zero :
       simp only [sub_dotProduct, dotProduct_sub, smul_dotProduct, dotProduct_smul, smul_eq_mul,
         α, β, dotProduct_comm (c - A *ᵥ x) (A *ᵥ z)]
       ring
-    simp only [hr, hexp] at h
+    simp only [star_trivial, RCLike.re_to_real, hr, hexp] at h
     have h1 : 0 ≤ (β + 1) ^ 2 * (t ^ 2 * β - 2 * t * α) :=
       mul_nonneg (sq_nonneg _) (by linarith)
     have h2 : (β + 1) ^ 2 * (t ^ 2 * β - 2 * t * α) = -(α ^ 2 * (β + 2)) := by
@@ -264,7 +270,7 @@ theorem isGMRESIterate_iff_isAffineMinimizer (hA : A.IsHermitian) {xs : n → �
     rw [hr, neg_dotProduct, dotProduct_neg, neg_neg, quadForm_def, star_trivial, map_pow, aeval_X,
       sq, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hAs,
       dotProduct_comm]
-  rw [IsGMRESIterate, hE]
+  simp only [IsGMRESIterate, star_trivial, RCLike.re_to_real, hE]
 
 /-! ### Real diagonalisable `A` -/
 

@@ -1,6 +1,8 @@
+import NLAlib.Krylov.MatrixEquations
 import NLAlib.Krylov.MatrixFunctions
 import NLAlib.Krylov.Processes
 import NLAlib.Krylov.Quadrature
+import NLAlib.Krylov.QueryModel
 import NLAlib.Krylov.Solvers
 import NLAlib.Krylov.Spaces
 import NLAlib.Krylov.Spectral

@@ -55,6 +55,7 @@ import NLAlib.Matrix.Subspaces.ProjectorCapture
 import NLAlib.Matrix.Subspaces.ProjectorTrace
 import NLAlib.Matrix.Subspaces.RangeIsometry
 import NLAlib.Matrix.Subspaces.RangeProjector
+import NLAlib.Matrix.Subspaces.RangeProjectorMinimality
 import NLAlib.Matrix.Subspaces.RectangularGramIsometry
 import NLAlib.Matrix.Subspaces.SingularDirectionProjector
 import NLAlib.Matrix.Subspaces.Stiefel

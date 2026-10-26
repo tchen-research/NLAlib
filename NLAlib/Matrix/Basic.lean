@@ -29,6 +29,7 @@ import NLAlib.Matrix.Basic.LeastSquares
 import NLAlib.Matrix.Basic.MoorePenrose
 import NLAlib.Matrix.Basic.MoorePenroseProjector
 import NLAlib.Matrix.Basic.MoorePenroseRank
+import NLAlib.Matrix.Basic.MoorePenroseScalarExtension
 import NLAlib.Matrix.Basic.MoorePenroseTransformations
 import NLAlib.Matrix.Basic.NormalizedTrace
 import NLAlib.Matrix.Basic.OrderedPrincipalMinors

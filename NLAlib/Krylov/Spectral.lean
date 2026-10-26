@@ -2,6 +2,12 @@ import NLAlib.Krylov.Spectral.CharacteristicPolynomial
 import NLAlib.Krylov.Spectral.MeasurableRitz
 import NLAlib.Krylov.Spectral.PowerMethod
 import NLAlib.Krylov.Spectral.QRAlgorithm
+import NLAlib.Krylov.Spectral.RayleighQuotientBounds
+import NLAlib.Krylov.Spectral.RayleighQuotientExtremal
+import NLAlib.Krylov.Spectral.RayleighQuotientGeometry
+import NLAlib.Krylov.Spectral.RayleighQuotientIteration
+import NLAlib.Krylov.Spectral.RayleighQuotientRuns
+import NLAlib.Krylov.Spectral.RayleighQuotientWeights
 import NLAlib.Krylov.Spectral.Ritz
 import NLAlib.Krylov.Spectral.SubspaceIteration
 

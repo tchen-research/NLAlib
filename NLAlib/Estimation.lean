@@ -1,6 +1,8 @@
 import NLAlib.Estimation.Diagonal
 import NLAlib.Estimation.QuadraticForms
 import NLAlib.Estimation.Quadrature
+import NLAlib.Estimation.Reconstruction
+import NLAlib.Estimation.Residual
 import NLAlib.Estimation.Spectral
 import NLAlib.Estimation.Trace
 

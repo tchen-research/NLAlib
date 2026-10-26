@@ -57,14 +57,14 @@ theorem isCompact_numericalRange (A : Matrix n n ℂ) : IsCompact (numericalRang
 /-- The modulus of the quadratic form is bounded by the spectral norm times
 the vector's squared Euclidean norm. Cauchy–Schwarz gives the full complex
 modulus, rather than only its real part. -/
-theorem norm_quadForm_le_specNorm (A : Matrix n n ℂ) (x : n → ℂ) :
+theorem norm_quadForm_le_specNorm {𝕜 : Type*} [RCLike 𝕜] (A : Matrix n n 𝕜) (x : n → 𝕜) :
     ‖quadForm A x‖ ≤ specNorm A * ‖WithLp.toLp 2 x‖ ^ 2 := by
-  have hi : inner ℂ (WithLp.toLp 2 x : EuclideanSpace ℂ n)
-      (WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace ℂ n) = quadForm A x := by
+  have hi : inner 𝕜 (WithLp.toLp 2 x : EuclideanSpace 𝕜 n)
+      (WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace 𝕜 n) = quadForm A x := by
     rw [EuclideanSpace.inner_toLp_toLp, dotProduct_comm]
     rfl
-  have hh := norm_inner_le_norm (𝕜 := ℂ) (WithLp.toLp 2 x : EuclideanSpace ℂ n)
-    (WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace ℂ n)
+  have hh := norm_inner_le_norm (𝕜 := 𝕜) (WithLp.toLp 2 x : EuclideanSpace 𝕜 n)
+    (WithLp.toLp 2 (A *ᵥ x) : EuclideanSpace 𝕜 n)
   rw [hi] at hh
   calc
     _ ≤ _ := hh

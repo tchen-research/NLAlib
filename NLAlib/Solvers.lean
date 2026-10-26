@@ -1,4 +1,5 @@
 import NLAlib.Solvers.Kaczmarz
+import NLAlib.Solvers.LeastSquares
 import NLAlib.Solvers.SketchAndProject
 
 /-! # `Solvers`

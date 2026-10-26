@@ -1,4 +1,6 @@
 import NLAlib.Matrix.Equations.EnergyProjection
+import NLAlib.Matrix.Equations.LyapunovCoercivity
+import NLAlib.Matrix.Equations.LyapunovDissipative
 import NLAlib.Matrix.Equations.SylvesterNormal
 import NLAlib.Matrix.Equations.SylvesterPerturbation
 import NLAlib.Matrix.Equations.SylvesterReal

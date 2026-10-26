@@ -1,4 +1,5 @@
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.Adjugate
+import NLAlib.ForMathlib.LinearAlgebra.Matrix.Block
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.ColumnLaplacian
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.ColumnLaplacianKernel
 import NLAlib.ForMathlib.LinearAlgebra.Matrix.ContinuousEquiv

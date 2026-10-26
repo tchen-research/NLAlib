@@ -27,6 +27,7 @@ import NLAlib.Matrix.Spectral.Eigenframes
 import NLAlib.Matrix.Spectral.EigenvalueEquality
 import NLAlib.Matrix.Spectral.EigenvalueOrder
 import NLAlib.Matrix.Spectral.EigenvalueSimplicity
+import NLAlib.Matrix.Spectral.EigenvectorCoordinates
 import NLAlib.Matrix.Spectral.EigenvectorDeflation
 import NLAlib.Matrix.Spectral.EigenvectorDeflationBlocks
 import NLAlib.Matrix.Spectral.EigenvectorDeflationConverse
@@ -126,6 +127,8 @@ import NLAlib.Matrix.Spectral.RestrictedInvertibilityScalar
 import NLAlib.Matrix.Spectral.RestrictedInvertibilitySelection
 import NLAlib.Matrix.Spectral.RestrictedInvertibilityStep
 import NLAlib.Matrix.Spectral.SVD
+import NLAlib.Matrix.Spectral.SaddlePointPolynomial
+import NLAlib.Matrix.Spectral.SaddlePointSpectrum
 import NLAlib.Matrix.Spectral.SchurDensity
 import NLAlib.Matrix.Spectral.SchurFrobenius
 import NLAlib.Matrix.Spectral.SchurTriangularization

@@ -89,6 +89,8 @@ import NLAlib.Matrix.Structured.RankOneCovariance
 import NLAlib.Matrix.Structured.Realification
 import NLAlib.Matrix.Structured.RectangularCoefficientBlocks
 import NLAlib.Matrix.Structured.RectangularDilationBounds
+import NLAlib.Matrix.Structured.SaddlePoint
+import NLAlib.Matrix.Structured.SchurWhitening
 import NLAlib.Matrix.Structured.StructuredMatrices
 import NLAlib.Matrix.Structured.SylvesterADI
 import NLAlib.Matrix.Structured.ToeplitzCirculant

@@ -15,11 +15,11 @@ open scoped Matrix
 namespace NLAlib
 /-- A rectangular block diagonal matrix has rank equal to the sum of its
 two block ranks. Horn–Johnson §0.4; Schur-rank helper. -/
-theorem rank_fromBlocks_zero_zero_eq {m n p q : Type*}
+theorem rank_fromBlocks_zero_zero_eq {K m n p q : Type*} [Field K]
     [Fintype m] [Fintype n] [Fintype p] [Fintype q]
-    (A : Matrix m p ℝ) (D : Matrix n q ℝ) :
+    (A : Matrix m p K) (D : Matrix n q K) :
     (Matrix.fromBlocks A 0 0 D).rank = A.rank + D.rank := by
-  let e : LinearMap.ker (Matrix.fromBlocks A 0 0 D).mulVecLin ≃ₗ[ℝ]
+  let e : LinearMap.ker (Matrix.fromBlocks A 0 0 D).mulVecLin ≃ₗ[K]
       (LinearMap.ker A.mulVecLin × LinearMap.ker D.mulVecLin) :=
     { toFun := fun x =>
         (⟨fun j => x.val (Sum.inl j), by

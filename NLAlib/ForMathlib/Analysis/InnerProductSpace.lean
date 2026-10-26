@@ -1,6 +1,7 @@
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.BlockCauchySchwarz
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.CoerciveInverse
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.GramSchmidt
+import NLAlib.ForMathlib.Analysis.InnerProductSpace.GramSchmidtCongruence
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.L2Embedding
 import NLAlib.ForMathlib.Analysis.InnerProductSpace.ResolventVectorLowerBound
 

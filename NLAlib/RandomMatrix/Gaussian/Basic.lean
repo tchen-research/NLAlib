@@ -3,12 +3,24 @@ import NLAlib.RandomMatrix.Gaussian.Basic.GUECoefficientMatrices
 import NLAlib.RandomMatrix.Gaussian.Basic.GUECoefficientParameters
 import NLAlib.RandomMatrix.Gaussian.Basic.GUECovarianceAction
 import NLAlib.RandomMatrix.Gaussian.Basic.GaussianMatrix
+import NLAlib.RandomMatrix.Gaussian.Basic.HeadTailSplit
 import NLAlib.RandomMatrix.Gaussian.Basic.LinearForms
 import NLAlib.RandomMatrix.Gaussian.Basic.Lipschitz
 import NLAlib.RandomMatrix.Gaussian.Basic.LipschitzConcentration
+import NLAlib.RandomMatrix.Gaussian.Basic.MeanDeviation
 import NLAlib.RandomMatrix.Gaussian.Basic.PolynomialGrowth
+import NLAlib.RandomMatrix.Gaussian.Basic.ProfileMasks
+import NLAlib.RandomMatrix.Gaussian.Basic.RowMixedNorm
+import NLAlib.RandomMatrix.Gaussian.Basic.RowMixedNormReindex
 import NLAlib.RandomMatrix.Gaussian.Basic.RowSplitting
+import NLAlib.RandomMatrix.Gaussian.Basic.RowTailLower
 import NLAlib.RandomMatrix.Gaussian.Basic.SandwichDeviation
+import NLAlib.RandomMatrix.Gaussian.Basic.SchattenConcentration
+import NLAlib.RandomMatrix.Gaussian.Basic.SymmetricProfile
+import NLAlib.RandomMatrix.Gaussian.Basic.SymmetricProfileLipschitz
+import NLAlib.RandomMatrix.Gaussian.Basic.SymmetricProfileReindex
+import NLAlib.RandomMatrix.Gaussian.Basic.SymmetricQuadraticForms
+import NLAlib.RandomMatrix.Gaussian.Basic.SymmetricSum
 
 /-! # `RandomMatrix/Gaussian/Basic`
 

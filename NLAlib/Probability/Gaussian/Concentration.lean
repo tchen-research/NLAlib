@@ -3,6 +3,8 @@ import NLAlib.Probability.Gaussian.Concentration.LogSobolev
 import NLAlib.Probability.Gaussian.Concentration.LogSobolevCoverage
 import NLAlib.Probability.Gaussian.Concentration.LogSobolevHerbst
 import NLAlib.Probability.Gaussian.Concentration.LogSobolevOneDim
+import NLAlib.Probability.Gaussian.Concentration.LowerTail
+import NLAlib.Probability.Gaussian.Concentration.MeanDeviation
 import NLAlib.Probability.Gaussian.Concentration.MedianMean
 
 /-! # `Probability/Gaussian/Concentration`

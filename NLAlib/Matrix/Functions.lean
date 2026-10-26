@@ -17,6 +17,9 @@ import NLAlib.Matrix.Functions.CoordinatePinching
 import NLAlib.Matrix.Functions.CopyDirectionSquareMass
 import NLAlib.Matrix.Functions.CyclicTraceWords
 import NLAlib.Matrix.Functions.DaleckiiKrein
+import NLAlib.Matrix.Functions.DeterminantBalance
+import NLAlib.Matrix.Functions.DeterminantRatio
+import NLAlib.Matrix.Functions.DeterminantTraceVariational
 import NLAlib.Matrix.Functions.DiagonalCalculus
 import NLAlib.Matrix.Functions.DiagonalFilter
 import NLAlib.Matrix.Functions.DilationIdentities
@@ -155,6 +158,15 @@ import NLAlib.Matrix.Functions.MultivariateGoldenThompson
 import NLAlib.Matrix.Functions.NearestPSD
 import NLAlib.Matrix.Functions.NuclearProximal
 import NLAlib.Matrix.Functions.OddPolarIteration
+import NLAlib.Matrix.Functions.OperatorCapacity
+import NLAlib.Matrix.Functions.OperatorCapacityAdjoint
+import NLAlib.Matrix.Functions.OperatorCapacityCertificate
+import NLAlib.Matrix.Functions.OperatorCapacityNearBalanced
+import NLAlib.Matrix.Functions.OperatorCapacityNormalization
+import NLAlib.Matrix.Functions.OperatorCapacityRankCertificate
+import NLAlib.Matrix.Functions.OperatorCapacitySpectral
+import NLAlib.Matrix.Functions.OperatorCapacityTensor
+import NLAlib.Matrix.Functions.OperatorCapacityUnitalCertificate
 import NLAlib.Matrix.Functions.OperatorJensen
 import NLAlib.Matrix.Functions.OperatorMonotoneSchattenTransfer
 import NLAlib.Matrix.Functions.OrderedComplexPowers
@@ -227,6 +239,8 @@ import NLAlib.Matrix.Functions.RidgeSpectral
 import NLAlib.Matrix.Functions.RidgeWhitening
 import NLAlib.Matrix.Functions.SchattenDualTest
 import NLAlib.Matrix.Functions.SchattenDualTestMatrix
+import NLAlib.Matrix.Functions.SchattenFiniteInterpolation
+import NLAlib.Matrix.Functions.SchattenFiniteMeasureInterpolation
 import NLAlib.Matrix.Functions.SchattenInterpolation
 import NLAlib.Matrix.Functions.SignCharacterization
 import NLAlib.Matrix.Functions.SignExistence
@@ -237,6 +251,7 @@ import NLAlib.Matrix.Functions.SignProjectors
 import NLAlib.Matrix.Functions.SignSylvester
 import NLAlib.Matrix.Functions.SingularValueTransform
 import NLAlib.Matrix.Functions.SparseFrameCompactness
+import NLAlib.Matrix.Functions.SpectralAbsoluteFactor
 import NLAlib.Matrix.Functions.SpectralProjectors
 import NLAlib.Matrix.Functions.SpectralTruncation
 import NLAlib.Matrix.Functions.SteinConvergence
@@ -247,6 +262,8 @@ import NLAlib.Matrix.Functions.SteinPartialSums
 import NLAlib.Matrix.Functions.SteinReal
 import NLAlib.Matrix.Functions.StieltjesTraceSupport
 import NLAlib.Matrix.Functions.SylvesterADICalculus
+import NLAlib.Matrix.Functions.SymmetricProfileInterpolationFamily
+import NLAlib.Matrix.Functions.SymmetricProfilePowerFactors
 import NLAlib.Matrix.Functions.TraceEvenHolder
 import NLAlib.Matrix.Functions.TraceEvenSmoothness
 import NLAlib.Matrix.Functions.TraceExpBounds
@@ -273,6 +290,7 @@ import NLAlib.Matrix.Functions.TracePowerDerivatives
 import NLAlib.Matrix.Functions.TracePowers
 import NLAlib.Matrix.Functions.TraceYoung
 import NLAlib.Matrix.Functions.UnitaryCalculus
+import NLAlib.Matrix.Functions.VarianceProfileGeometry
 import NLAlib.Matrix.Functions.VariationalTrace
 import NLAlib.Matrix.Functions.VariationalTraceExp
 import NLAlib.Matrix.Functions.WeightedInverseRay

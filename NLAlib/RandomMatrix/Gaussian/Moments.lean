@@ -1,10 +1,29 @@
 import NLAlib.RandomMatrix.Gaussian.Moments.ApproxMultiplication
 import NLAlib.RandomMatrix.Gaussian.Moments.BlockDeviation
 import NLAlib.RandomMatrix.Gaussian.Moments.Conditioning
+import NLAlib.RandomMatrix.Gaussian.Moments.FiniteSupportOperatorMean
 import NLAlib.RandomMatrix.Gaussian.Moments.FourthMoment
+import NLAlib.RandomMatrix.Gaussian.Moments.LinearFormPairings
 import NLAlib.RandomMatrix.Gaussian.Moments.LogOverlap
 import NLAlib.RandomMatrix.Gaussian.Moments.LogOverlapMoments
+import NLAlib.RandomMatrix.Gaussian.Moments.ProfileBlockMaximum
+import NLAlib.RandomMatrix.Gaussian.Moments.ProfileBlockOperatorMeans
+import NLAlib.RandomMatrix.Gaussian.Moments.ProfileHeadTailUpper
 import NLAlib.RandomMatrix.Gaussian.Moments.SecondMoment
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricComplexProfile
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileComparison
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileDiagrams
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileInterpolation
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileLowerMoments
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileMoments
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileRealUpper
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileUpperMoments
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricRowCapLower
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricRowEnergyLower
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricRowMeanComparison
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricSelectedEntriesLower
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricSumNormMoments
+import NLAlib.RandomMatrix.Gaussian.Moments.SymmetricSumPairings
 
 /-! # `RandomMatrix/Gaussian/Moments`
 

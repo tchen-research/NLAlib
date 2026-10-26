@@ -3,16 +3,25 @@ import NLAlib.ForMathlib.Combinatorics.BipartiteLeafSum
 import NLAlib.ForMathlib.Combinatorics.BipartitePartitionBound
 import NLAlib.ForMathlib.Combinatorics.BipartiteSpanningTree
 import NLAlib.ForMathlib.Combinatorics.BipartiteTreeSum
+import NLAlib.ForMathlib.Combinatorics.CanonicalPairSelection
 import NLAlib.ForMathlib.Combinatorics.ColoringAverage
 import NLAlib.ForMathlib.Combinatorics.CoordinatePartitions
 import NLAlib.ForMathlib.Combinatorics.ElementarySymmetricBounds
+import NLAlib.ForMathlib.Combinatorics.EndpointPairingQuotient
 import NLAlib.ForMathlib.Combinatorics.Enumerative
+import NLAlib.ForMathlib.Combinatorics.FiniteFlagEnumeration
+import NLAlib.ForMathlib.Combinatorics.Hall
+import NLAlib.ForMathlib.Combinatorics.HeavySetFlags
+import NLAlib.ForMathlib.Combinatorics.LeafTreeSpanningTree
 import NLAlib.ForMathlib.Combinatorics.OrderedSubsetSums
 import NLAlib.ForMathlib.Combinatorics.PairingQuotientBound
 import NLAlib.ForMathlib.Combinatorics.PairingQuotientGraph
+import NLAlib.ForMathlib.Combinatorics.StationaryTree
 import NLAlib.ForMathlib.Combinatorics.SubsetDeletionProduct
 import NLAlib.ForMathlib.Combinatorics.SubsetInsertionCount
 import NLAlib.ForMathlib.Combinatorics.SubsetSums
+import NLAlib.ForMathlib.Combinatorics.TreePartitionHolder
+import NLAlib.ForMathlib.Combinatorics.WeightedGraphPartition
 
 /-! # `ForMathlib/Combinatorics`
 

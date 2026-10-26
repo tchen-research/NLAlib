@@ -6,6 +6,8 @@ import NLAlib.Probability.Gaussian.Moments.HermiteExpansion
 import NLAlib.Probability.Gaussian.Moments.HermiteRecurrence
 import NLAlib.Probability.Gaussian.Moments.Isserlis
 import NLAlib.Probability.Gaussian.Moments.Khintchine
+import NLAlib.Probability.Gaussian.Moments.LowerMoments
+import NLAlib.Probability.Gaussian.Moments.MaximumLower
 import NLAlib.Probability.Gaussian.Moments.NaturalMoments
 import NLAlib.Probability.Gaussian.Moments.PolynomialLinearMoments
 import NLAlib.Probability.Gaussian.Moments.PositiveMoments
@@ -19,6 +21,9 @@ import NLAlib.Probability.Gaussian.Moments.SeriesNormMoments
 import NLAlib.Probability.Gaussian.Moments.SeriesPartialTranspose
 import NLAlib.Probability.Gaussian.Moments.SeriesPolynomialMoments
 import NLAlib.Probability.Gaussian.Moments.SeriesSecondMoment
+import NLAlib.Probability.Gaussian.Moments.VarianceProfileCorrection
+import NLAlib.Probability.Gaussian.Moments.VarianceProfileRadii
+import NLAlib.Probability.Gaussian.Moments.WickMonotonicity
 import NLAlib.Probability.Gaussian.Moments.WickPairingEdges
 import NLAlib.Probability.Gaussian.Moments.WickPairings
 

@@ -8,6 +8,9 @@ import NLAlib.Probability.SubGaussian.GaussianSeries
 import NLAlib.Probability.SubGaussian.LpMoments
 import NLAlib.Probability.SubGaussian.Moments
 import NLAlib.Probability.SubGaussian.OrliczMGF
+import NLAlib.Probability.SubGaussian.RealLpMoments
+import NLAlib.Probability.SubGaussian.SortedMaximum
+import NLAlib.Probability.SubGaussian.TailComparison
 
 /-! # `Probability/SubGaussian`
 

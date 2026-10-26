@@ -60141,7 +60141,7 @@
    "title": "Stable-rank restricted invertibility for an identity decomposition",
    "area": "matrix-spectral-selection",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "An isotropic frame contains a quantitatively independent subset after applying a linear map, with size governed by its stable rank.",
    "hypotheses": [
     "$\\sum_{i=1}^m v_iv_i^\\top=I_n$, $v_i\\in\\mathbb R^n$, $m,n\\ge1$, $L\\in\\mathbb R^{n\\times n}\\setminus\\{0\\}$, $0<\\varepsilon<1$."
@@ -60153,9 +60153,25 @@
      "label": "Theorem 2, p. 2"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_embedding_norm_sum_sq_gt_of_isotropic_frame",
+     "module": "NLAlib.Matrix.Spectral.StableRankRestrictedInvertibility",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_finset_card_eq_and_norm_sum_sq_gt_of_isotropic_frame",
+     "module": "NLAlib.Matrix.Spectral.StableRankRestrictedInvertibility",
+     "status": "proved"
+    }
+   ],
    "depends_on": [],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.frobSq",
+    "NLAlib.specNorm"
+   ],
    "variants": [],
    "aliases": [
     "restricted invertibility",
@@ -60169,14 +60185,14 @@
     "source-reviewed"
    ],
    "notes": "The quadratic form is equivalent to the source eigenvalue on the selected span and handles the empty selection vacuously. Source is constructive; this card claims existence.",
-   "updated_at": "2026-10-16"
+   "updated_at": "2026-10-26"
   },
   {
    "id": "singular-tail-restricted-invertibility",
    "title": "Restricted invertibility controlled by singular-value tails",
    "area": "matrix-spectral-selection",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Tail singular-value energy controls the inverse norm of a selected injective column submatrix.",
    "hypotheses": [
     "$A:\\mathbb R^m\\to\\mathbb R^n$, $1\\le k<\\operatorname{rank}A$; $\\sigma_i(A)$ are decreasing and zero-padded, with one-based indices."
@@ -60188,9 +60204,25 @@
      "label": "Theorem 6, p. 4"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_finset_card_eq_and_norm_inverseOnRange_le_singularTail",
+     "module": "NLAlib.Matrix.Spectral.SingularTailRestrictedInvertibility",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_finset_card_eq_and_norm_inverseOnRange_le_min_singularTail",
+     "module": "NLAlib.Matrix.Spectral.SingularTailRestrictedInvertibility",
+     "status": "proved"
+    }
+   ],
    "depends_on": [],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.RestrictedInvertibility.singularTailInverseScale",
+    "NLAlib.inverseOnRange"
+   ],
    "variants": [
     "stable-rank-restricted-invertibility"
    ],
@@ -60205,14 +60237,14 @@
     "source-reviewed"
    ],
    "notes": "The minimum is over integers. Inversion is on the selected range; no square invertibility or column normalization is required.",
-   "updated_at": "2026-10-16"
+   "updated_at": "2026-10-26"
   },
   {
    "id": "operator-capacity-scaling-identities",
    "title": "Operator capacity under invertible scaling and tensor products",
    "area": "matrix-functions",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Operator capacity has exact transformation laws under invertible left and right scaling and under tensor products.",
    "hypotheses": [
     "$T(X)=\\sum_iA_iXA_i^*$ on $M_n(\\mathbb C)$, $n\\ge1$, and $\\operatorname{cap}(T):=\\inf_{X\\succ0,\\det X=1}\\det T(X)$.",
@@ -60225,9 +60257,34 @@
      "label": "Definition 2.6, Proposition 2.7, Theorem 3.11, PDF pp. 20 and 33"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.operatorCapacity_congruence_scaling",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacity",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.operatorCapacity_krausMap_kronecker_le",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityTensor",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.operatorCapacity_krausMap_kronecker",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityTensor",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.krausMap",
+    "NLAlib.operatorCapacity"
+   ],
    "variants": [],
    "aliases": [
     "operator scaling capacity"
@@ -60240,14 +60297,30 @@
     "source-reviewed"
    ],
    "notes": "Capacity is an infimum; no optimizer or exact doubly stochastic scaling is assumed.",
-   "updated_at": "2026-10-16"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "Exact invertible congruence scaling of the determinant-one capacity, including zero capacity and without an attaining minimizer.",
+      "decls": [
+       "NLAlib.operatorCapacity_congruence_scaling"
+      ]
+     },
+     {
+      "statement": "Tensor-product capacity equals cap(T1)^n2 cap(T2)^n1 for all positive finite dimensions and all finite Kraus families, including either factor of zero capacity.",
+      "decls": [
+       "NLAlib.operatorCapacity_krausMap_kronecker"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "operator-capacity-near-balanced-certificate",
    "title": "Near doubly stochasticity certifies rank and capacity",
    "area": "matrix-functions",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "A normalized completely positive map has quantitative equivalences between capacity and approximate double stochasticity.",
    "hypotheses": [
     "$T(X)=\\sum_iA_iXA_i^*$ on $M_n(\\mathbb C)$, $n\\ge1$, and $\\operatorname{cap}(T):=\\inf_{X\\succ0,\\det X=1}\\det T(X)$.",
@@ -60260,11 +60333,72 @@
      "label": "Theorem 2.12 and Lemmas 3.4, 3.6, pp. 22–23 and 28–31"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_krausMap_defect_le_of_exp_neg_le_operatorCapacity",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityCertificate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.operatorCapacity_krausMap_le_one_of_unital",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityCertificate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.operatorCapacity_krausMap_le_one_of_adjoint_normalized",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityCertificate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_adjoint_normalized",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityNearBalanced",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_unital",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityNearBalanced",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rank_le_rank_krausMap_of_adjoint_normalized",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityRankCertificate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rank_le_rank_krausMap_of_unital",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityRankCertificate",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobSq_krausMap_unital_defect_le_of_exp_neg_le_operatorCapacity",
+     "module": "NLAlib.Matrix.Functions.OperatorCapacityUnitalCertificate",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "operator-capacity-scaling-identities"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.frobSq",
+    "NLAlib.krausMap",
+    "NLAlib.operatorCapacity"
+   ],
    "variants": [],
    "aliases": [
     "approximate double stochasticity"
@@ -60277,7 +60411,39 @@
     "source-reviewed"
    ],
    "notes": "These normalized capacity certificates do not identify approximate scalability with existence of an exact scaling.",
-   "updated_at": "2026-10-16"
+   "updated_at": "2026-10-26",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "For each normalization T(I)=I or T*(I)=I, squared normalization defect at most epsilon <= 1/(n+1) implies rank(T(X)) >= rank(X) for every PSD input X. The normalized defect is the remaining Frobenius-square term.",
+      "decls": [
+       "NLAlib.rank_le_rank_krausMap_of_adjoint_normalized",
+       "NLAlib.rank_le_rank_krausMap_of_unital"
+      ]
+     },
+     {
+      "statement": "For each normalization the exact lower capacity bound is (1-sqrt(n*epsilon))^n, with the same epsilon range and without capacity attainment.",
+      "decls": [
+       "NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_adjoint_normalized",
+       "NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_unital"
+      ]
+     },
+     {
+      "statement": "For positive matrix dimension, either normalization gives cap(T) <= 1.",
+      "decls": [
+       "NLAlib.operatorCapacity_krausMap_le_one_of_adjoint_normalized",
+       "NLAlib.operatorCapacity_krausMap_le_one_of_unital"
+      ]
+     },
+     {
+      "statement": "Under either normalization, cap(T) >= exp(-delta), 0 <= delta <= 1/6, bounds the sum of the two Frobenius-square defects by 6*delta.",
+      "decls": [
+       "NLAlib.frobSq_krausMap_defect_le_of_exp_neg_le_operatorCapacity",
+       "NLAlib.frobSq_krausMap_unital_defect_le_of_exp_neg_le_operatorCapacity"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "permutation-polynomial-norm-comparison",
@@ -60873,7 +61039,7 @@
    "title": "Gaussian Schatten norms are controlled by Euclidean row lengths",
    "area": "gaussian-extreme",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For a symmetric Gaussian matrix, the Schatten norm and the corresponding norm of its row lengths have comparable tails and expectations.",
    "hypotheses": [
     "$X$ is real symmetric, $X_{ij}=b_{ij}g_{ij}$ for $i\\ge j$, with independent standard real Gaussians and symmetric $b_{ij}\\ge0$.",
@@ -60886,9 +61052,22 @@
      "label": "Corollary 1.4, p. 4"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.gaussian_schatten_row_comparison",
+     "module": "NLAlib.RandomMatrix.Gaussian.Comparison.SymmetricRowComparison",
+     "status": "proved"
+    }
+   ],
    "depends_on": [],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.gaussianMatrix",
+    "NLAlib.gaussianSchattenRowComparisonConstant",
+    "NLAlib.rowMixedNorm",
+    "NLAlib.schattenNorm",
+    "NLAlib.symmetricGaussianMatrix"
+   ],
    "variants": [],
    "aliases": [
     "dimension-free Gaussian row geometry"
@@ -60901,14 +61080,14 @@
     "source-reviewed"
    ],
    "notes": "Gaussian structure matters; no arbitrary subgaussian two-sided comparison is claimed.",
-   "updated_at": "2026-10-16"
+   "updated_at": "2026-10-26"
   },
   {
    "id": "heterogeneous-gaussian-schatten-moments",
    "title": "Sharp Schatten moments for heterogeneous Gaussian entries",
    "area": "gaussian-extreme",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "The row variances and maximal row entries determine the Schatten moments of a symmetric Gaussian matrix up to universal constants.",
    "hypotheses": [
     "$X$ is real symmetric, $X_{ij}=b_{ij}g_{ij}$ for $i\\ge j$, with independent standard real Gaussians and symmetric $b_{ij}\\ge0$.",
@@ -60921,9 +61100,49 @@
      "label": "Theorem 1.1, first estimate, pp. 2–3"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.row_profile_le_integral_schattenNorm_symmetricGaussianMatrix_rpow_root",
+     "module": "NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileLowerMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_schattenNorm_symmetricGaussianMatrix_rpow_root_bounds",
+     "module": "NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileMoments",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_schattenNorm_symmetricGaussianMatrix_rpow_root_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileRealUpper",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_schattenNormReal_symmetricGaussianMatrix_pow_two_mul_root_le",
+     "module": "NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileUpperMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_schattenNorm_symmetricGaussianMatrix_rpow_root_le_even",
+     "module": "NLAlib.RandomMatrix.Gaussian.Moments.SymmetricProfileUpperMoments",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.gaussianMatrix",
+    "NLAlib.schattenNorm",
+    "NLAlib.schattenNormReal",
+    "NLAlib.symmetricGaussianMatrix"
+   ],
    "variants": [],
    "aliases": [
     "variance-profile Schatten moments"
@@ -60936,7 +61155,7 @@
     "source-reviewed"
    ],
    "notes": "Unnormalized Schatten norm. Constants are uniform in dimension, p and all variance profiles.",
-   "updated_at": "2026-10-16"
+   "updated_at": "2026-10-26"
   },
   {
    "id": "independent-entry-gaussian-extremum",

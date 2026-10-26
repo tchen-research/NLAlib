@@ -16,6 +16,7 @@ import NLAlib.Matrix.Basic.Gram
 import NLAlib.Matrix.Basic.GramAdjugate
 import NLAlib.Matrix.Basic.GramCentering
 import NLAlib.Matrix.Basic.GramVanishing
+import NLAlib.Matrix.Basic.InverseOnRange
 import NLAlib.Matrix.Basic.JacobiBlockMinor
 import NLAlib.Matrix.Basic.JacobiMinor
 import NLAlib.Matrix.Basic.KKT

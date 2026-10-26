@@ -31,11 +31,14 @@ import NLAlib.ForMathlib.Analysis.EquispacedProducts
 import NLAlib.ForMathlib.Analysis.EvenConvex
 import NLAlib.ForMathlib.Analysis.EvenGeometricSeries
 import NLAlib.ForMathlib.Analysis.ExpBounds
+import NLAlib.ForMathlib.Analysis.ExponentialHeadCutoff
 import NLAlib.ForMathlib.Analysis.FactorialMomentBounds
 import NLAlib.ForMathlib.Analysis.FejerKernel
 import NLAlib.ForMathlib.Analysis.FejerModulation
 import NLAlib.ForMathlib.Analysis.FiniteCoordinateDerivative
 import NLAlib.ForMathlib.Analysis.FiniteGeometricSeries
+import NLAlib.ForMathlib.Analysis.FiniteHeavySets
+import NLAlib.ForMathlib.Analysis.FiniteLatticeFactorization
 import NLAlib.ForMathlib.Analysis.FiniteMomentMeans
 import NLAlib.ForMathlib.Analysis.FiniteMomentRecurrence
 import NLAlib.ForMathlib.Analysis.FinitePairNorm

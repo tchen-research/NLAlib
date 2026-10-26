@@ -6,6 +6,7 @@ import NLAlib.Matrix.Norms.BlockDiagonalBounds
 import NLAlib.Matrix.Norms.BlockNormBounds
 import NLAlib.Matrix.Norms.ColumnNorms
 import NLAlib.Matrix.Norms.ComplexSchattenDuality
+import NLAlib.Matrix.Norms.ComplexSchattenNorms
 import NLAlib.Matrix.Norms.ComplexSchattenProducts
 import NLAlib.Matrix.Norms.Complexification
 import NLAlib.Matrix.Norms.Continuity
@@ -15,8 +16,10 @@ import NLAlib.Matrix.Norms.DeflatedTraceBounds
 import NLAlib.Matrix.Norms.DependentBlockDiagonal
 import NLAlib.Matrix.Norms.Dilation
 import NLAlib.Matrix.Norms.EntryBounds
+import NLAlib.Matrix.Norms.EntryRowProfileBounds
 import NLAlib.Matrix.Norms.EuclideanOperatorBounds
 import NLAlib.Matrix.Norms.FanDominance
+import NLAlib.Matrix.Norms.FiniteBlockSupport
 import NLAlib.Matrix.Norms.Frobenius
 import NLAlib.Matrix.Norms.FrobeniusProducts
 import NLAlib.Matrix.Norms.GramDilationWeakParameter
@@ -48,13 +51,18 @@ import NLAlib.Matrix.Norms.RectangularDiagonal
 import NLAlib.Matrix.Norms.RectangularDiagonalPermutation
 import NLAlib.Matrix.Norms.Reindex
 import NLAlib.Matrix.Norms.RestrictedMinimum
+import NLAlib.Matrix.Norms.RowMixedNorm
+import NLAlib.Matrix.Norms.RowMixedNormMeasurable
+import NLAlib.Matrix.Norms.RowSchattenBounds
 import NLAlib.Matrix.Norms.Schatten
+import NLAlib.Matrix.Norms.SchattenBlockDiagonal
 import NLAlib.Matrix.Norms.SchattenComparison
 import NLAlib.Matrix.Norms.SchattenContinuity
 import NLAlib.Matrix.Norms.SchattenDiagonal
 import NLAlib.Matrix.Norms.SchattenDuality
 import NLAlib.Matrix.Norms.SchattenEndpoints
 import NLAlib.Matrix.Norms.SchattenEvenMoments
+import NLAlib.Matrix.Norms.SchattenFinitePartition
 import NLAlib.Matrix.Norms.SchattenFrames
 import NLAlib.Matrix.Norms.SchattenInvariant
 import NLAlib.Matrix.Norms.SchattenMixedPowers
@@ -75,6 +83,7 @@ import NLAlib.Matrix.Norms.TraceImaginary
 import NLAlib.Matrix.Norms.TraceNuclear
 import NLAlib.Matrix.Norms.TraceSpectral
 import NLAlib.Matrix.Norms.UnitaryInvariance
+import NLAlib.Matrix.Norms.WithComplexSchatten
 
 /-! # `Matrix/Norms`
 

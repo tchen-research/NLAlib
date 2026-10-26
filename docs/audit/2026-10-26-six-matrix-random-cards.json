@@ -1,0 +1,557 @@
+{
+  "date": "2026-10-26",
+  "backend_base": "cda03385b906c4b33fed871d5fce3a10e31e0c42",
+  "scope": "Exactly six completed Matrix/RandomMatrix atlas cards and their required proof dependencies.",
+  "selected_count": 6,
+  "completed_count": 6,
+  "total_cards": 513,
+  "exact_promotions": [
+    "heterogeneous-gaussian-schatten-moments",
+    "heterogeneous-gaussian-schatten-row-comparison",
+    "operator-capacity-near-balanced-certificate",
+    "operator-capacity-scaling-identities",
+    "singular-tail-restricted-invertibility",
+    "stable-rank-restricted-invertibility"
+  ],
+  "baseline_status_counts": {
+    "proved": 456,
+    "candidate": 54,
+    "assumed": 1,
+    "scaffold": 2
+  },
+  "native_status_counts": {
+    "proved": 462,
+    "candidate": 48,
+    "assumed": 1,
+    "scaffold": 2
+  },
+  "records": [
+    {
+      "id": "heterogeneous-gaussian-schatten-moments",
+      "status": "proved",
+      "hypotheses": [
+        "$X$ is real symmetric, $X_{ij}=b_{ij}g_{ij}$ for $i\\ge j$, with independent standard real Gaussians and symmetric $b_{ij}\\ge0$.",
+        "$2\\le p<\\infty$; $F_p(b):=(\\sum_i(\\sum_jb_{ij}^2)^{p/2})^{1/p}+\\sqrt p(\\sum_i\\max_jb_{ij}^p)^{1/p}$."
+      ],
+      "conclusion": "$cF_p(b)\\le(\\mathbb E\\|X\\|_{S_p}^p)^{1/p}\\le CF_p(b)$ for universal $0<c\\le C<\\infty$.",
+      "sources": [
+        {
+          "source": "lvhy17-nonhomogeneous",
+          "label": "Theorem 1.1, first estimate, pp. 2–3"
+        }
+      ],
+      "readback": "The genuine symmetric independent lower-triangular Gaussian construction satisfies the two-sided unnormalized Schatten moment estimate for every real p>=2. The row-square-sum and row-maximum profiles match the card, with dimension/profile/exponent independent constants 1/100 and 512. Zero profiles and empty dimensions are covered; no moment bound is assumed.",
+      "reviewed_proof_family": null,
+      "native_evidence": [
+        "NLAlib.row_profile_le_integral_schattenNorm_symmetricGaussianMatrix_rpow_root",
+        "NLAlib.integral_schattenNorm_symmetricGaussianMatrix_rpow_root_bounds",
+        "NLAlib.integral_schattenNorm_symmetricGaussianMatrix_rpow_root_le",
+        "NLAlib.integral_schattenNormReal_symmetricGaussianMatrix_pow_two_mul_root_le",
+        "NLAlib.integral_schattenNorm_symmetricGaussianMatrix_rpow_root_le_even"
+      ]
+    },
+    {
+      "id": "heterogeneous-gaussian-schatten-row-comparison",
+      "status": "proved",
+      "hypotheses": [
+        "$X$ is real symmetric, $X_{ij}=b_{ij}g_{ij}$ for $i\\ge j$, with independent standard real Gaussians and symmetric $b_{ij}\\ge0$.",
+        "$2\\le p\\le\\infty$; $R_p(X):=\\|((\\sum_jX_{ij}^2)^{1/2})_i\\|_{\\ell_p}$."
+      ],
+      "conclusion": "There is universal $C\\ge1$ with $\\mathbb P\\{R_p(X)\\ge t\\}\\le\\mathbb P\\{\\|X\\|_{S_p}\\ge t\\}\\le C\\mathbb P\\{R_p(X)\\ge t/C\\}$ for $t\\ge0$. In particular $\\mathbb E R_p(X)\\le\\mathbb E\\|X\\|_{S_p}\\le C\\mathbb E R_p(X)$.",
+      "sources": [
+        {
+          "source": "lvhy17-nonhomogeneous",
+          "label": "Corollary 1.4, p. 4"
+        }
+      ],
+      "readback": "The same genuine Gaussian construction satisfies both expectation inequalities and both upper-tail comparisons, for every t>=0 and every native extended exponent p>=2, including infinity. One explicit constant independent of profile, dimension and exponent serves both conclusions. No upper expectation comparison is assumed.",
+      "reviewed_proof_family": null,
+      "native_evidence": [
+        "NLAlib.gaussian_schatten_row_comparison"
+      ]
+    },
+    {
+      "id": "operator-capacity-near-balanced-certificate",
+      "status": "proved",
+      "hypotheses": [
+        "$T(X)=\\sum_iA_iXA_i^*$ on $M_n(\\mathbb C)$, $n\\ge1$, and $\\operatorname{cap}(T):=\\inf_{X\\succ0,\\det X=1}\\det T(X)$.",
+        "$T(I)=I$ or $T^*(I)=I$; $\\operatorname{ds}(T):=\\|T(I)-I\\|_F^2+\\|T^*(I)-I\\|_F^2$."
+      ],
+      "conclusion": "If $\\operatorname{ds}(T)\\le\\varepsilon\\le1/(n+1)$, then $\\operatorname{rank}T(X)\\ge\\operatorname{rank}X$ for every $X\\succeq0$ and $(1-\\sqrt{n\\varepsilon})^n\\le\\operatorname{cap}(T)\\le1$. Conversely, $\\operatorname{cap}(T)\\ge e^{-\\delta}$, $0\\le\\delta\\le1/6$, implies $\\operatorname{ds}(T)\\le6\\delta$.",
+      "sources": [
+        {
+          "source": "ggow15-scaling",
+          "label": "Theorem 2.12 and Lemmas 3.4, 3.6, pp. 22–23 and 28–31"
+        }
+      ],
+      "readback": "Under either T(I)=I or T*(I)=I, the remaining Frobenius-square defect equals ds(T). The original epsilon<=1/(n+1) range gives rank nondecrease for every PSD input and (1-sqrt(n*epsilon))^n<=cap(T)<=1. Both normalized converses give ds(T)<=6*delta on 0<=delta<=1/6. Four reviewed clauses cover both branches.",
+      "reviewed_proof_family": {
+        "clauses": [
+          {
+            "statement": "For each normalization T(I)=I or T*(I)=I, squared normalization defect at most epsilon <= 1/(n+1) implies rank(T(X)) >= rank(X) for every PSD input X. The normalized defect is the remaining Frobenius-square term.",
+            "decls": [
+              "NLAlib.rank_le_rank_krausMap_of_adjoint_normalized",
+              "NLAlib.rank_le_rank_krausMap_of_unital"
+            ]
+          },
+          {
+            "statement": "For each normalization the exact lower capacity bound is (1-sqrt(n*epsilon))^n, with the same epsilon range and without capacity attainment.",
+            "decls": [
+              "NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_adjoint_normalized",
+              "NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_unital"
+            ]
+          },
+          {
+            "statement": "For positive matrix dimension, either normalization gives cap(T) <= 1.",
+            "decls": [
+              "NLAlib.operatorCapacity_krausMap_le_one_of_adjoint_normalized",
+              "NLAlib.operatorCapacity_krausMap_le_one_of_unital"
+            ]
+          },
+          {
+            "statement": "Under either normalization, cap(T) >= exp(-delta), 0 <= delta <= 1/6, bounds the sum of the two Frobenius-square defects by 6*delta.",
+            "decls": [
+              "NLAlib.frobSq_krausMap_defect_le_of_exp_neg_le_operatorCapacity",
+              "NLAlib.frobSq_krausMap_unital_defect_le_of_exp_neg_le_operatorCapacity"
+            ]
+          }
+        ]
+      },
+      "native_evidence": [
+        "NLAlib.frobSq_krausMap_defect_le_of_exp_neg_le_operatorCapacity",
+        "NLAlib.operatorCapacity_krausMap_le_one_of_unital",
+        "NLAlib.operatorCapacity_krausMap_le_one_of_adjoint_normalized",
+        "NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_adjoint_normalized",
+        "NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_unital",
+        "NLAlib.rank_le_rank_krausMap_of_adjoint_normalized",
+        "NLAlib.rank_le_rank_krausMap_of_unital",
+        "NLAlib.frobSq_krausMap_unital_defect_le_of_exp_neg_le_operatorCapacity"
+      ]
+    },
+    {
+      "id": "operator-capacity-scaling-identities",
+      "status": "proved",
+      "hypotheses": [
+        "$T(X)=\\sum_iA_iXA_i^*$ on $M_n(\\mathbb C)$, $n\\ge1$, and $\\operatorname{cap}(T):=\\inf_{X\\succ0,\\det X=1}\\det T(X)$.",
+        "$B,C$ invertible; $T_{B,C}(X)=BT(CXC^*)B^*$; $T_j$ acts on $M_{n_j}(\\mathbb C)$."
+      ],
+      "conclusion": "$\\operatorname{cap}(T_{B,C})=|\\det B|^2|\\det C|^2\\operatorname{cap}(T)$ and $\\operatorname{cap}(T_1\\otimes T_2)=\\operatorname{cap}(T_1)^{n_2}\\operatorname{cap}(T_2)^{n_1}$.",
+      "sources": [
+        {
+          "source": "ggow15-scaling",
+          "label": "Definition 2.6, Proposition 2.7, Theorem 3.11, PDF pp. 20 and 33"
+        }
+      ],
+      "readback": "Invertible left/right congruence gives the exact squared determinant factors. Tensor-product capacity has the original dimension exponents, including either factor of zero capacity. Infimum arguments do not assume an attaining minimizer. The two reviewed clauses cover the entire original card.",
+      "reviewed_proof_family": {
+        "clauses": [
+          {
+            "statement": "Exact invertible congruence scaling of the determinant-one capacity, including zero capacity and without an attaining minimizer.",
+            "decls": [
+              "NLAlib.operatorCapacity_congruence_scaling"
+            ]
+          },
+          {
+            "statement": "Tensor-product capacity equals cap(T1)^n2 cap(T2)^n1 for all positive finite dimensions and all finite Kraus families, including either factor of zero capacity.",
+            "decls": [
+              "NLAlib.operatorCapacity_krausMap_kronecker"
+            ]
+          }
+        ]
+      },
+      "native_evidence": [
+        "NLAlib.operatorCapacity_congruence_scaling",
+        "NLAlib.operatorCapacity_krausMap_kronecker_le",
+        "NLAlib.operatorCapacity_krausMap_kronecker"
+      ]
+    },
+    {
+      "id": "singular-tail-restricted-invertibility",
+      "status": "proved",
+      "hypotheses": [
+        "$A:\\mathbb R^m\\to\\mathbb R^n$, $1\\le k<\\operatorname{rank}A$; $\\sigma_i(A)$ are decreasing and zero-padded, with one-based indices."
+      ],
+      "conclusion": "There is a universal $C>0$ and $\\sigma\\subseteq[m]$, $|\\sigma|=k$, such that $AJ_\\sigma$ is injective and $\\|(AJ_\\sigma)^{-1}:A(\\mathbb R^\\sigma)\\to\\mathbb R^\\sigma\\|_2\\le C\\min_{k<r\\le\\operatorname{rank}A}\\sqrt{\\frac{mr}{(r-k)\\sum_{i=r}^m\\sigma_i(A)^2}}$.",
+      "sources": [
+        {
+          "source": "ny16-restricted",
+          "label": "Theorem 6, p. 4"
+        }
+      ],
+      "readback": "For every 1<=k<rank(A), an exact k-column subset is injective and its actual Euclidean inverse on its range satisfies the literal finite-minimum bound with universal C=2. The index set is Icc(k+1,rank(A)), including the rank endpoint. The zero-based tail at r-1 is the one-based source tail starting at r. A stronger simultaneous all-r statement is also exported.",
+      "reviewed_proof_family": null,
+      "native_evidence": [
+        "NLAlib.exists_finset_card_eq_and_norm_inverseOnRange_le_singularTail",
+        "NLAlib.exists_finset_card_eq_and_norm_inverseOnRange_le_min_singularTail"
+      ]
+    },
+    {
+      "id": "stable-rank-restricted-invertibility",
+      "status": "proved",
+      "hypotheses": [
+        "$\\sum_{i=1}^m v_iv_i^\\top=I_n$, $v_i\\in\\mathbb R^n$, $m,n\\ge1$, $L\\in\\mathbb R^{n\\times n}\\setminus\\{0\\}$, $0<\\varepsilon<1$."
+      ],
+      "conclusion": "Some $\\sigma\\subseteq[m]$ has $|\\sigma|\\ge\\lfloor\\varepsilon^2\\|L\\|_F^2/\\|L\\|_2^2\\rfloor$, independent columns $(Lv_i)_{i\\in\\sigma}$, and $\\|\\sum_{i\\in\\sigma}a_iLv_i\\|_2^2>(1-\\varepsilon)^2\\|L\\|_F^2\\|a\\|_2^2/m$ for every nonzero $a\\in\\mathbb R^\\sigma$.",
+      "sources": [
+        {
+          "source": "ss09-restricted",
+          "label": "Theorem 2, p. 2"
+        }
+      ],
+      "readback": "An actual isotropic finite frame and arbitrary nonzero real square L give a subset of exactly floor(epsilon^2*frobSq(L)/specNorm(L)^2) indices. The selected transformed columns are linearly independent. Every nonzero Euclidean coefficient vector satisfies the strict original (1-epsilon)^2 bound, including the vacuous empty selection case.",
+      "reviewed_proof_family": null,
+      "native_evidence": [
+        "NLAlib.exists_embedding_norm_sum_sq_gt_of_isotropic_frame",
+        "NLAlib.exists_finset_card_eq_and_norm_sum_sq_gt_of_isotropic_frame"
+      ]
+    }
+  ],
+  "source_scope": {
+    "changed_content_files": [
+      "NLAlib/ForMathlib/Analysis/Convex/StochasticProducts.lean",
+      "NLAlib/ForMathlib/Analysis/ExponentialHeadCutoff.lean",
+      "NLAlib/ForMathlib/Analysis/FiniteHeavySets.lean",
+      "NLAlib/ForMathlib/Analysis/FiniteLatticeFactorization.lean",
+      "NLAlib/ForMathlib/Analysis/FiniteWeightedHolder.lean",
+      "NLAlib/ForMathlib/Analysis/SpecialFunctions/LogDefect.lean",
+      "NLAlib/ForMathlib/Analysis/SpecialFunctions/LogDefectSum.lean",
+      "NLAlib/ForMathlib/Combinatorics/CanonicalPairSelection.lean",
+      "NLAlib/ForMathlib/Combinatorics/EndpointPairingQuotient.lean",
+      "NLAlib/ForMathlib/Combinatorics/FiniteFlagEnumeration.lean",
+      "NLAlib/ForMathlib/Combinatorics/Hall/WeightedDecomposition.lean",
+      "NLAlib/ForMathlib/Combinatorics/Hall/WeightedMatrix.lean",
+      "NLAlib/ForMathlib/Combinatorics/HeavySetFlags.lean",
+      "NLAlib/ForMathlib/Combinatorics/LeafTreeSpanningTree.lean",
+      "NLAlib/ForMathlib/Combinatorics/StationaryTree.lean",
+      "NLAlib/ForMathlib/Combinatorics/TreePartitionHolder.lean",
+      "NLAlib/ForMathlib/Combinatorics/WeightedGraphPartition.lean",
+      "NLAlib/ForMathlib/MeasureTheory/FiniteConditioningLp.lean",
+      "NLAlib/ForMathlib/MeasureTheory/FiniteMaximumMean.lean",
+      "NLAlib/ForMathlib/MeasureTheory/FinitePartitionConditionalExpectation.lean",
+      "NLAlib/Matrix/Basic/InverseOnRange.lean",
+      "NLAlib/Matrix/Functions/DeterminantBalance.lean",
+      "NLAlib/Matrix/Functions/DeterminantRatio.lean",
+      "NLAlib/Matrix/Functions/DeterminantTraceVariational.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacity.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacityAdjoint.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacityCertificate.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacityNearBalanced.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacityNormalization.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacityRankCertificate.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacitySpectral.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacityTensor.lean",
+      "NLAlib/Matrix/Functions/OperatorCapacityUnitalCertificate.lean",
+      "NLAlib/Matrix/Functions/SchattenFiniteInterpolation.lean",
+      "NLAlib/Matrix/Functions/SchattenFiniteMeasureInterpolation.lean",
+      "NLAlib/Matrix/Functions/SpectralAbsoluteFactor.lean",
+      "NLAlib/Matrix/Functions/SymmetricProfileInterpolationFamily.lean",
+      "NLAlib/Matrix/Functions/SymmetricProfilePowerFactors.lean",
+      "NLAlib/Matrix/Functions/VarianceProfileGeometry.lean",
+      "NLAlib/Matrix/Norms/ComplexSchattenNorms.lean",
+      "NLAlib/Matrix/Norms/EntryRowProfileBounds.lean",
+      "NLAlib/Matrix/Norms/FiniteBlockSupport.lean",
+      "NLAlib/Matrix/Norms/RowMixedNorm.lean",
+      "NLAlib/Matrix/Norms/RowMixedNormMeasurable.lean",
+      "NLAlib/Matrix/Norms/RowSchattenBounds.lean",
+      "NLAlib/Matrix/Norms/SchattenBlockDiagonal.lean",
+      "NLAlib/Matrix/Norms/SchattenFinitePartition.lean",
+      "NLAlib/Matrix/Norms/WithComplexSchatten.lean",
+      "NLAlib/Matrix/Spectral/PrincipalDeletionResolvent.lean",
+      "NLAlib/Matrix/Spectral/PrincipalDeletionSelection.lean",
+      "NLAlib/Matrix/Spectral/RankOneInertia.lean",
+      "NLAlib/Matrix/Spectral/RestrictedInvertibilityGram.lean",
+      "NLAlib/Matrix/Spectral/RestrictedInvertibilityIteration.lean",
+      "NLAlib/Matrix/Spectral/RestrictedInvertibilityParameters.lean",
+      "NLAlib/Matrix/Spectral/RestrictedInvertibilityScalar.lean",
+      "NLAlib/Matrix/Spectral/RestrictedInvertibilitySelection.lean",
+      "NLAlib/Matrix/Spectral/RestrictedInvertibilityStep.lean",
+      "NLAlib/Matrix/Spectral/SingularTailInverseTrace.lean",
+      "NLAlib/Matrix/Spectral/SingularTailRestrictedInvertibility.lean",
+      "NLAlib/Matrix/Spectral/StableRankRestrictedInvertibility.lean",
+      "NLAlib/Matrix/Spectral/WeightedResolvent.lean",
+      "NLAlib/Matrix/Structured/HeadTailSplit.lean",
+      "NLAlib/Matrix/Structured/ProfileBlockBounds.lean",
+      "NLAlib/Matrix/Structured/ProfileBlockNorms.lean",
+      "NLAlib/Matrix/Structured/ProfileBlockScaleBounds.lean",
+      "NLAlib/Matrix/Structured/ProfileMaskBounds.lean",
+      "NLAlib/Matrix/Structured/ProfileMasks.lean",
+      "NLAlib/Matrix/Structured/ProfileRearrangement.lean",
+      "NLAlib/Matrix/Structured/ProfileRearrangementEnvelope.lean",
+      "NLAlib/Matrix/Structured/ProfileRearrangementScalarBounds.lean",
+      "NLAlib/Matrix/Structured/ProfileRearrangementScales.lean",
+      "NLAlib/Probability/Gaussian/Concentration/LowerTail.lean",
+      "NLAlib/Probability/Gaussian/Concentration/MeanDeviation.lean",
+      "NLAlib/Probability/Gaussian/Moments/LowerMoments.lean",
+      "NLAlib/Probability/Gaussian/Moments/MaximumLower.lean",
+      "NLAlib/Probability/Gaussian/Moments/VarianceProfileCorrection.lean",
+      "NLAlib/Probability/Gaussian/Moments/VarianceProfileRadii.lean",
+      "NLAlib/Probability/Gaussian/Moments/WickMonotonicity.lean",
+      "NLAlib/Probability/SubGaussian/RealLpMoments.lean",
+      "NLAlib/Probability/SubGaussian/SortedMaximum.lean",
+      "NLAlib/Probability/SubGaussian/TailComparison.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/HeadTailSplit.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/MeanDeviation.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/ProfileMasks.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/RowMixedNorm.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/RowMixedNormReindex.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/RowTailLower.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/SchattenConcentration.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/SymmetricProfile.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/SymmetricProfileLipschitz.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/SymmetricProfileReindex.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/SymmetricQuadraticForms.lean",
+      "NLAlib/RandomMatrix/Gaussian/Basic/SymmetricSum.lean",
+      "NLAlib/RandomMatrix/Gaussian/Comparison/SymmetricRowComparison.lean",
+      "NLAlib/RandomMatrix/Gaussian/Comparison/SymmetricRowTailComparison.lean",
+      "NLAlib/RandomMatrix/Gaussian/Comparison/VarianceProfileProcess.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/FiniteSupportOperatorMean.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/LinearFormPairings.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/ProfileBlockMaximum.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/ProfileBlockOperatorMeans.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/ProfileHeadTailUpper.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricComplexProfile.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricProfileComparison.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricProfileDiagrams.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricProfileInterpolation.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricProfileLowerMoments.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricProfileMoments.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricProfileRealUpper.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricProfileUpperMoments.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricRowCapLower.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricRowEnergyLower.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricRowMeanComparison.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricSelectedEntriesLower.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricSumNormMoments.lean",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricSumPairings.lean",
+      "NLAlib/RandomMatrix/Gaussian/Spectral/ProfileMaskOperatorMeans.lean",
+      "NLAlib/RandomMatrix/Gaussian/Spectral/SymmetricProfileOperatorMean.lean",
+      "NLAlib/RandomMatrix/Gaussian/Spectral/SymmetricRowOperatorComparison.lean",
+      "NLAlib/RandomMatrix/Gaussian/Spectral/VarianceProfileProcessBound.lean",
+      "NLAlib/RandomMatrix/Gaussian/Spectral/VarianceProfileWeakBound.lean"
+    ],
+    "shared_existing_extension": "NLAlib/ForMathlib/Analysis/FiniteWeightedHolder.lean",
+    "unchanged_human_statements": true,
+    "unchanged_other_cards": true,
+    "excluded": "Unfinished QR, Wishart, interlacing, free-polynomial and Haar work is excluded."
+  },
+  "naming_audit": {
+    "filename_case": "All 120 content source paths use UpperCamelCase components.",
+    "file_sizes": "All selected content files are at most 500 lines.",
+    "declaration_names": "scripts/check_names.py passes on the regenerated public index.",
+    "placement_adjustment": {
+      "old_module": "NLAlib/Matrix/Functions/OperatorCapacityFiniteMatrix.lean",
+      "new_module": "NLAlib/ForMathlib/Analysis/Convex/StochasticProducts.lean",
+      "reason": "General doubly stochastic Matrix inequalities belong in the owning Mathlib topic."
+    },
+    "selected_source_public_declarations": 579,
+    "public_statement_review": "Named matrix norms and Euclidean vector norms; finite index types where appropriate; published source labels are in docstrings."
+  },
+  "checks": [
+    {
+      "check": "full-default-and-experimental-build",
+      "exit_code": 0,
+      "jobs": 7039
+    },
+    {
+      "check": "script-unit-tests",
+      "exit_code": 0
+    },
+    {
+      "check": "import-surface",
+      "exit_code": 0
+    },
+    {
+      "check": "trusted-axioms",
+      "exit_code": 0
+    },
+    {
+      "check": "standard-linters",
+      "exit_code": 0
+    },
+    {
+      "check": "experimental-axioms",
+      "exit_code": 0
+    },
+    {
+      "check": "downstream-example",
+      "exit_code": 0
+    },
+    {
+      "check": "probability-example",
+      "exit_code": 0
+    },
+    {
+      "check": "polynomial-example",
+      "exit_code": 0
+    },
+    {
+      "check": "khatri-rao-example",
+      "exit_code": 0
+    },
+    {
+      "check": "ritz-audit",
+      "exit_code": 0
+    },
+    {
+      "check": "subspace-audit",
+      "exit_code": 0
+    },
+    {
+      "check": "gaussian-inverse-audit",
+      "exit_code": 0
+    },
+    {
+      "check": "new-proofs-audit",
+      "exit_code": 0
+    },
+    {
+      "check": "khatri-rao-audit",
+      "exit_code": 0
+    },
+    {
+      "check": "extract-declarations",
+      "exit_code": 0
+    },
+    {
+      "check": "sync-atlas",
+      "exit_code": 0
+    },
+    {
+      "check": "import-layers",
+      "exit_code": 0
+    },
+    {
+      "check": "declaration-names",
+      "exit_code": 0
+    },
+    {
+      "check": "atlas-consistency",
+      "exit_code": 0
+    },
+    {
+      "check": "polynomial-matrix-scope",
+      "exit_code": 0
+    },
+    {
+      "check": "card-audit",
+      "exit_code": 0
+    },
+    {
+      "check": "book-coverage",
+      "exit_code": 0
+    },
+    {
+      "check": "site-math",
+      "exit_code": 0
+    },
+    {
+      "check": "site-build",
+      "exit_code": 0
+    },
+    {
+      "check": "operator-capacity-example",
+      "exit_code": 0
+    },
+    {
+      "check": "six-card-axioms",
+      "exit_code": 0
+    }
+  ],
+  "supplemental_norm_review": {
+    "repository_wide_heuristic_scan_exit_code": 1,
+    "initial_repository_hits": 294,
+    "unchanged_baseline_hits": 279,
+    "new_file_level_scope_violations_fixed": 4,
+    "final_selected_source_heuristic_hits": 11,
+    "selected_source_scan_hits": [
+      "NLAlib/Matrix/Norms/RowMixedNorm.lean:215: `‖·‖` on a matrix in a signature",
+      "NLAlib/Matrix/Norms/WithComplexSchatten.lean:93: `‖·‖` on a matrix in a signature",
+      "NLAlib/Matrix/Structured/ProfileRearrangementEnvelope.lean:60: `‖·‖` on a matrix in a signature",
+      "NLAlib/RandomMatrix/Gaussian/Basic/HeadTailSplit.lean:67: `‖·‖` on a matrix in a signature",
+      "NLAlib/RandomMatrix/Gaussian/Basic/HeadTailSplit.lean:86: `‖·‖` on a matrix in a signature",
+      "NLAlib/RandomMatrix/Gaussian/Moments/ProfileHeadTailUpper.lean:32: `‖·‖` on a matrix in a signature",
+      "NLAlib/RandomMatrix/Gaussian/Moments/ProfileHeadTailUpper.lean:137: `‖·‖` on a matrix in a signature",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricProfileLowerMoments.lean:32: `‖·‖` on a matrix in a signature",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricRowEnergyLower.lean:50: `‖·‖` on a matrix in a signature",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricRowEnergyLower.lean:66: `‖·‖` on a matrix in a signature",
+      "NLAlib/RandomMatrix/Gaussian/Moments/SymmetricRowMeanComparison.lean:59: `‖·‖` on a matrix in a signature"
+    ],
+    "manual_readbacks": [
+      {
+        "declaration": "norm_entry_le_rowMixedNorm",
+        "subject": "Scalar entry norm, not a matrix norm."
+      },
+      {
+        "declaration": "WithComplexSchatten.norm_eq_schattenNormReal",
+        "subject": "Norm of the documented Schatten normed type adapter, not an unscoped Matrix norm."
+      },
+      {
+        "declaration": "entry_mul_sqrt_log_le_profileLogRowMaximum",
+        "subject": "Infinity norm of a row function, used as its maximum coefficient."
+      },
+      {
+        "declaration": "principalTailPart_sq_le_entryBound_sq",
+        "subject": "Infinity norm of a row function."
+      },
+      {
+        "declaration": "sqrt_mul_principalTailEntryBound_ceil_exp_le",
+        "subject": "Infinity norm of a row function."
+      },
+      {
+        "declaration": "norm_principalTailPart_row_le",
+        "subject": "Infinity norms of row functions in a private helper."
+      },
+      {
+        "declaration": "integral_schattenNormReal_symmetricGaussianMatrix_le_head_tail_profiles",
+        "subject": "Infinity norm of a coefficient row function, the profile maximum."
+      },
+      {
+        "declaration": "norm_toLp_entries_eq_frobNorm",
+        "subject": "An explicitly typed EuclideanSpace vector of flattened entries."
+      },
+      {
+        "declaration": "rowMixedNorm_eq_norm_row_lengths",
+        "subject": "An explicitly typed PiLp vector of Euclidean row lengths."
+      },
+      {
+        "declaration": "norm_toLp_mono_of_nonneg",
+        "subject": "Explicitly typed PiLp vectors."
+      },
+      {
+        "declaration": "finite_sorted_mean_bound",
+        "subject": "Infinity norms of coefficient row functions in a private helper."
+      }
+    ],
+    "review": "All eleven remaining selected-source hits are false positives from the syntactic capital-letter heuristic: scalar entries, row function infinity norms, explicitly typed Euclidean/PiLp vectors, or the documented WithComplexSchatten normed adapter. None is a raw matrix norm. No file-level matrix norm scope remains in the selected sources outside exempt Matrix/Functions files. The norm-spelling scanner is supplementary and is not part of the GitHub CI workflow."
+  },
+  "axiom_review": "The full default-import audit and all fourteen selected public endpoints use only propext, Classical.choice and Quot.sound. Existing experimental scaffolds are unchanged.",
+  "post_report_checks": [
+    {
+      "check": "generated-index-current",
+      "exit_code": 0
+    },
+    {
+      "check": "exact-six-card-scope",
+      "exit_code": 0
+    },
+    {
+      "check": "staged-whitespace",
+      "exit_code": 0
+    },
+    {
+      "check": "working-whitespace",
+      "exit_code": 0
+    },
+    {
+      "check": "public-docstrings-excluding-generated-eliminators",
+      "exit_code": 0
+    },
+    {
+      "check": "latest-main-base",
+      "exit_code": 0
+    }
+  ],
+  "trusted_import_audit": "audited 29982 declarations reachable through import NLAlib",
+  "experimental_axiom_inventory": "audited 30046 declarations (14831 public theorems) in [NLAlib]; 3 theorems depend on sorry: [NLAlib.dotProduct_golubKahan_eq,\n NLAlib.golubKahanSucceeds_iff,\n NLAlib.isGradedKrylovBasis_golubKahanU_V]\nOK: no axioms beyond propext / Classical.choice / Quot.sound (and sorryAx in scaffolds)",
+  "selected_endpoint_axioms": "'NLAlib.operatorCapacity_congruence_scaling' depends on axioms: [propext, Classical.choice, Quot.sound]\n'NLAlib.operatorCapacity_krausMap_kronecker' depends on axioms: [propext, Classical.choice, Quot.sound]\n'NLAlib.rank_le_rank_krausMap_of_adjoint_normalized' depends on axioms: [propext, Classical.choice, Quot.sound]\n'NLAlib.rank_le_rank_krausMap_of_unital' depends on axioms: [propext, Classical.choice, Quot.sound]\n'NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_adjoint_normalized' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'NLAlib.pow_one_sub_sqrt_le_operatorCapacity_krausMap_of_unital' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'NLAlib.operatorCapacity_krausMap_le_one_of_adjoint_normalized' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'NLAlib.operatorCapacity_krausMap_le_one_of_unital' depends on axioms: [propext, Classical.choice, Quot.sound]\n'NLAlib.frobSq_krausMap_defect_le_of_exp_neg_le_operatorCapacity' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'NLAlib.frobSq_krausMap_unital_defect_le_of_exp_neg_le_operatorCapacity' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'NLAlib.exists_finset_card_eq_and_norm_sum_sq_gt_of_isotropic_frame' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'NLAlib.exists_finset_card_eq_and_norm_inverseOnRange_le_min_singularTail' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'NLAlib.integral_schattenNorm_symmetricGaussianMatrix_rpow_root_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'NLAlib.gaussian_schatten_row_comparison' depends on axioms: [propext, Classical.choice, Quot.sound]"
+}

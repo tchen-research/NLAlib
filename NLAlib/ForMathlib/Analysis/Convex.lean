@@ -1,5 +1,6 @@
 import NLAlib.ForMathlib.Analysis.Convex.Integral
 import NLAlib.ForMathlib.Analysis.Convex.SphereImage
+import NLAlib.ForMathlib.Analysis.Convex.StochasticProducts
 
 /-! # `ForMathlib/Analysis/Convex`
 

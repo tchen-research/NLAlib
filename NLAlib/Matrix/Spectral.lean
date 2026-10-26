@@ -88,6 +88,8 @@ import NLAlib.Matrix.Spectral.PositiveTraceNorm
 import NLAlib.Matrix.Spectral.PowerBoundedOrbits
 import NLAlib.Matrix.Spectral.PowerRayleigh
 import NLAlib.Matrix.Spectral.PrimaryTriangularization
+import NLAlib.Matrix.Spectral.PrincipalDeletionResolvent
+import NLAlib.Matrix.Spectral.PrincipalDeletionSelection
 import NLAlib.Matrix.Spectral.PrincipalMinorPSD
 import NLAlib.Matrix.Spectral.PrincipalMinors
 import NLAlib.Matrix.Spectral.ProductSingularValues
@@ -97,6 +99,7 @@ import NLAlib.Matrix.Spectral.QuadraticProbe
 import NLAlib.Matrix.Spectral.QuasiPencilBasis
 import NLAlib.Matrix.Spectral.QuasiTriangular
 import NLAlib.Matrix.Spectral.RankOneEigenvalue
+import NLAlib.Matrix.Spectral.RankOneInertia
 import NLAlib.Matrix.Spectral.RealDilation
 import NLAlib.Matrix.Spectral.RealDilationSpectrum
 import NLAlib.Matrix.Spectral.RealInvariantPlane
@@ -116,6 +119,12 @@ import NLAlib.Matrix.Spectral.RealSimilarityDescent
 import NLAlib.Matrix.Spectral.RealSpectrumSchur
 import NLAlib.Matrix.Spectral.ResolventSpectralInclusion
 import NLAlib.Matrix.Spectral.ResolventSpectralNet
+import NLAlib.Matrix.Spectral.RestrictedInvertibilityGram
+import NLAlib.Matrix.Spectral.RestrictedInvertibilityIteration
+import NLAlib.Matrix.Spectral.RestrictedInvertibilityParameters
+import NLAlib.Matrix.Spectral.RestrictedInvertibilityScalar
+import NLAlib.Matrix.Spectral.RestrictedInvertibilitySelection
+import NLAlib.Matrix.Spectral.RestrictedInvertibilityStep
 import NLAlib.Matrix.Spectral.SVD
 import NLAlib.Matrix.Spectral.SchurDensity
 import NLAlib.Matrix.Spectral.SchurFrobenius
@@ -129,6 +138,8 @@ import NLAlib.Matrix.Spectral.SimultaneousTriangularBasis
 import NLAlib.Matrix.Spectral.SimultaneousTriangularization
 import NLAlib.Matrix.Spectral.SingularInterlacing
 import NLAlib.Matrix.Spectral.SingularInterlacingToolkit
+import NLAlib.Matrix.Spectral.SingularTailInverseTrace
+import NLAlib.Matrix.Spectral.SingularTailRestrictedInvertibility
 import NLAlib.Matrix.Spectral.SingularValueInvariance
 import NLAlib.Matrix.Spectral.SingularValueScaling
 import NLAlib.Matrix.Spectral.SingularValueSpectrum
@@ -141,6 +152,7 @@ import NLAlib.Matrix.Spectral.SpectrumCount
 import NLAlib.Matrix.Spectral.SpectrumCountContinuity
 import NLAlib.Matrix.Spectral.SquareSingularBasis
 import NLAlib.Matrix.Spectral.SquareSmallestSingularValue
+import NLAlib.Matrix.Spectral.StableRankRestrictedInvertibility
 import NLAlib.Matrix.Spectral.SvdBlocks
 import NLAlib.Matrix.Spectral.SvdPowers
 import NLAlib.Matrix.Spectral.SylvesterBlocks
@@ -151,6 +163,7 @@ import NLAlib.Matrix.Spectral.TensorExtremeEigenvalues
 import NLAlib.Matrix.Spectral.ThinSVD
 import NLAlib.Matrix.Spectral.ThinSingularFunctions
 import NLAlib.Matrix.Spectral.TraceEigenvalues
+import NLAlib.Matrix.Spectral.WeightedResolvent
 import NLAlib.Matrix.Spectral.Weyl
 
 /-! # `Matrix/Spectral`

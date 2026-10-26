@@ -1,4 +1,6 @@
 import NLAlib.ForMathlib.Analysis.SpecialFunctions.Gamma
+import NLAlib.ForMathlib.Analysis.SpecialFunctions.LogDefect
+import NLAlib.ForMathlib.Analysis.SpecialFunctions.LogDefectSum
 import NLAlib.ForMathlib.Analysis.SpecialFunctions.ReciprocalBarrier
 
 /-! # `ForMathlib/Analysis/SpecialFunctions`

@@ -37,6 +37,9 @@ import NLAlib.ForMathlib.MeasureTheory.ExponentialAtomic
 import NLAlib.ForMathlib.MeasureTheory.ExtendedLogIntegral
 import NLAlib.ForMathlib.MeasureTheory.FaithfulSpectralSupport
 import NLAlib.ForMathlib.MeasureTheory.FiniteBessel
+import NLAlib.ForMathlib.MeasureTheory.FiniteConditioningLp
+import NLAlib.ForMathlib.MeasureTheory.FiniteMaximumMean
+import NLAlib.ForMathlib.MeasureTheory.FinitePartitionConditionalExpectation
 import NLAlib.ForMathlib.MeasureTheory.FinitePolynomialMoments
 import NLAlib.ForMathlib.MeasureTheory.FiniteUniformIntegral
 import NLAlib.ForMathlib.MeasureTheory.FractionalHolder

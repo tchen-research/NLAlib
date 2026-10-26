@@ -1,12 +1,94 @@
 import Mathlib.Analysis.MeanInequalities
+import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Tactic.FieldSimp
+import Mathlib.Tactic.Positivity
 
-/-! # Finite weighted Hölder inequality
+/-!
+# Finite weighted Hölder inequalities
 
-The weights need not sum to one and may vanish. This is ordinary finite
-Hölder after distributing the weight between the two factors.
+The finite generalized Hölder inequality is expressed using nonnegative real
+weights and natural powers. The proof normalizes each moment and applies
+weighted arithmetic-geometric means pointwise. The conjugate-real-exponent
+version also remains available for trace inequalities. No independence is needed.
 -/
 
 noncomputable section
+
+open scoped BigOperators
+
+namespace Real
+
+/-- Generalized finite Hölder: if each nonnegative function has `N`-th
+moment at most `C i ^ N`, then a product with natural exponents summing to
+`N` has integral at most the corresponding product of powers of `C`.
+The weight may be any nonnegative finite measure and need not sum to one. -/
+theorem sum_mul_prod_pow_le_prod_pow
+    {Ω ι : Type*} [Fintype Ω] [Fintype ι]
+    (ρ : Ω → ℝ) (hρ : ∀ ω, 0 ≤ ρ ω)
+    (f : ι → Ω → ℝ) (hf : ∀ i ω, 0 ≤ f i ω)
+    (e : ι → ℕ) (N : ℕ) (hN : 0 < N) (he : ∑ i, e i = N)
+    (C : ι → ℝ) (hC : ∀ i, 0 < C i)
+    (hmoment : ∀ i, (∑ ω, ρ ω * f i ω ^ N) ≤ C i ^ N) :
+    (∑ ω, ρ ω * ∏ i, f i ω ^ e i) ≤ ∏ i, C i ^ e i := by
+  classical
+  have hNR : (0 : ℝ) < N := Nat.cast_pos.mpr hN
+  let a : ι → ℝ := fun i => (e i : ℝ) / N
+  let g : ι → Ω → ℝ := fun i ω => f i ω / C i
+  have ha (i : ι) : 0 ≤ a i := div_nonneg (Nat.cast_nonneg _) hNR.le
+  have hasum : ∑ i, a i = 1 := by
+    simp only [a, ← Finset.sum_div, ← Nat.cast_sum, he, div_self hNR.ne']
+  have hg (i : ι) (ω : Ω) : 0 ≤ g i ω := div_nonneg (hf i ω) (hC i).le
+  have hnorm (i : ι) : (∑ ω, ρ ω * g i ω ^ N) ≤ 1 := by
+    have hcN : 0 < C i ^ N := pow_pos (hC i) N
+    calc
+      (∑ ω, ρ ω * g i ω ^ N) = (∑ ω, ρ ω * f i ω ^ N) / C i ^ N := by
+        simp only [g, div_pow, mul_div_assoc, Finset.sum_div]
+      _ ≤ 1 := (div_le_one hcN).mpr (hmoment i)
+  have hpoint (ω : Ω) :
+      (∏ i, g i ω ^ e i) ≤ ∑ i, a i * g i ω ^ N := by
+    have hh := Real.geom_mean_le_arith_mean_weighted Finset.univ a
+      (fun i => g i ω ^ N) (fun i _ => ha i) hasum
+      (fun i _ => pow_nonneg (hg i ω) N)
+    convert hh using 1
+    apply Finset.prod_congr rfl
+    intro i _
+    rw [← Real.rpow_natCast (g i ω) (e i), ← Real.rpow_natCast (g i ω) N,
+      ← Real.rpow_mul (hg i ω)]
+    congr 1
+    dsimp [a]
+    field_simp
+  have hnormprod : (∑ ω, ρ ω * ∏ i, g i ω ^ e i) ≤ 1 := by
+    calc
+      (∑ ω, ρ ω * ∏ i, g i ω ^ e i) ≤
+          ∑ ω, ρ ω * ∑ i, a i * g i ω ^ N :=
+        Finset.sum_le_sum fun ω _ => mul_le_mul_of_nonneg_left (hpoint ω) (hρ ω)
+      _ = ∑ i, a i * ∑ ω, ρ ω * g i ω ^ N := by
+        simp_rw [Finset.mul_sum]
+        rw [Finset.sum_comm]
+        apply Finset.sum_congr rfl
+        intro i _
+        apply Finset.sum_congr rfl
+        intro ω _
+        ring
+      _ ≤ ∑ i, a i := Finset.sum_le_sum fun i _ => by
+        simpa only [mul_one] using mul_le_mul_of_nonneg_left (hnorm i) (ha i)
+      _ = 1 := hasum
+  have hfactor (i : ι) (ω : Ω) : f i ω = C i * g i ω := by
+    dsimp [g]
+    exact (mul_div_cancel₀ _ (hC i).ne').symm
+  calc
+    (∑ ω, ρ ω * ∏ i, f i ω ^ e i) =
+        (∏ i, C i ^ e i) * ∑ ω, ρ ω * ∏ i, g i ω ^ e i := by
+      simp_rw [hfactor, mul_pow, Finset.prod_mul_distrib, Finset.mul_sum]
+      apply Finset.sum_congr rfl
+      intro ω _
+      ring
+    _ ≤ (∏ i, C i ^ e i) * 1 := mul_le_mul_of_nonneg_left hnormprod
+      (Finset.prod_nonneg fun i _ => pow_nonneg (hC i).le _)
+    _ = _ := mul_one _
+
+end Real
+
 namespace NLAlib
 
 /-- Finite weighted Hölder, with arbitrary nonnegative weights. -/

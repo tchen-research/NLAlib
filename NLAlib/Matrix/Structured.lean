@@ -40,6 +40,7 @@ import NLAlib.Matrix.Structured.HSSClusterRanges
 import NLAlib.Matrix.Structured.HSSConstruction
 import NLAlib.Matrix.Structured.HSSCutRanks
 import NLAlib.Matrix.Structured.HankelRealization
+import NLAlib.Matrix.Structured.HeadTailSplit
 import NLAlib.Matrix.Structured.HermiteCompression
 import NLAlib.Matrix.Structured.HermiteIndices
 import NLAlib.Matrix.Structured.HermiteLadders
@@ -69,6 +70,15 @@ import NLAlib.Matrix.Structured.LobattoSchurBorder
 import NLAlib.Matrix.Structured.NormalizedPartialTrace
 import NLAlib.Matrix.Structured.PolynomialDisplacement
 import NLAlib.Matrix.Structured.PositiveGramRow
+import NLAlib.Matrix.Structured.ProfileBlockBounds
+import NLAlib.Matrix.Structured.ProfileBlockNorms
+import NLAlib.Matrix.Structured.ProfileBlockScaleBounds
+import NLAlib.Matrix.Structured.ProfileMaskBounds
+import NLAlib.Matrix.Structured.ProfileMasks
+import NLAlib.Matrix.Structured.ProfileRearrangement
+import NLAlib.Matrix.Structured.ProfileRearrangementEnvelope
+import NLAlib.Matrix.Structured.ProfileRearrangementScalarBounds
+import NLAlib.Matrix.Structured.ProfileRearrangementScales
 import NLAlib.Matrix.Structured.RadauCornerFormula
 import NLAlib.Matrix.Structured.RadauSchurBorders
 import NLAlib.Matrix.Structured.RadixTwoDFT

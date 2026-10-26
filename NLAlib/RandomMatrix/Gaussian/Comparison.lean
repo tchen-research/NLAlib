@@ -61,6 +61,9 @@ import NLAlib.RandomMatrix.Gaussian.Comparison.SpectralScale
 import NLAlib.RandomMatrix.Gaussian.Comparison.SpectrumUniversality
 import NLAlib.RandomMatrix.Gaussian.Comparison.SpectrumUniversalityHasLaw
 import NLAlib.RandomMatrix.Gaussian.Comparison.SpectrumUniversalityIntrinsic
+import NLAlib.RandomMatrix.Gaussian.Comparison.SymmetricRowComparison
+import NLAlib.RandomMatrix.Gaussian.Comparison.SymmetricRowTailComparison
+import NLAlib.RandomMatrix.Gaussian.Comparison.VarianceProfileProcess
 
 /-! # `RandomMatrix/Gaussian/Comparison`
 

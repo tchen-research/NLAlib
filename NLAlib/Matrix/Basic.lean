@@ -15,7 +15,9 @@ import NLAlib.Matrix.Basic.GeneralizedSchurComplement
 import NLAlib.Matrix.Basic.Gram
 import NLAlib.Matrix.Basic.GramAdjugate
 import NLAlib.Matrix.Basic.GramCentering
+import NLAlib.Matrix.Basic.GramSchurDiagonal
 import NLAlib.Matrix.Basic.GramVanishing
+import NLAlib.Matrix.Basic.InverseGramConjugation
 import NLAlib.Matrix.Basic.InverseOnRange
 import NLAlib.Matrix.Basic.JacobiBlockMinor
 import NLAlib.Matrix.Basic.JacobiMinor
@@ -42,6 +44,7 @@ import NLAlib.Matrix.Basic.PosSemidefTrace
 import NLAlib.Matrix.Basic.PositiveDefiniteClosure
 import NLAlib.Matrix.Basic.PositiveSemidefiniteSeries
 import NLAlib.Matrix.Basic.Pseudoinverse
+import NLAlib.Matrix.Basic.PseudoinverseBlockGram
 import NLAlib.Matrix.Basic.QuadForm
 import NLAlib.Matrix.Basic.QuadraticFunctional
 import NLAlib.Matrix.Basic.QuadraticMinimization

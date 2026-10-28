@@ -18,6 +18,7 @@ import NLAlib.Probability.Moments.ResolventRemainder
 import NLAlib.Probability.Moments.Schatten
 import NLAlib.Probability.Moments.SquareMass
 import NLAlib.Probability.Moments.ThirdCopySquareMass
+import NLAlib.Probability.Moments.UnitaryIsotropy
 
 /-! # `Probability/Moments`
 

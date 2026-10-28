@@ -1,5 +1,16 @@
+import NLAlib.RandomMatrix.Haar.ComplexGaussianQR
+import NLAlib.RandomMatrix.Haar.GaussianBlockMoments
+import NLAlib.RandomMatrix.Haar.GaussianContraction
+import NLAlib.RandomMatrix.Haar.GaussianInverseContraction
 import NLAlib.RandomMatrix.Haar.HaarFrameMeasure
 import NLAlib.RandomMatrix.Haar.HaarQR
+import NLAlib.RandomMatrix.Haar.QRLeadingGram
+import NLAlib.RandomMatrix.Haar.RealGaussianQR
+import NLAlib.RandomMatrix.Haar.TopGramMoments
+import NLAlib.RandomMatrix.Haar.TopGramTransfer
+import NLAlib.RandomMatrix.Haar.UnitaryFrameMeasure
+import NLAlib.RandomMatrix.Haar.UnitaryFrameTransform
+import NLAlib.RandomMatrix.Haar.UnitaryQR
 
 /-! # `RandomMatrix/Haar`
 

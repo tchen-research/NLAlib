@@ -25,6 +25,7 @@ import NLAlib.ForMathlib.MeasureTheory.CompactSupportContinuity
 import NLAlib.ForMathlib.MeasureTheory.CompactSupportDifferentiation
 import NLAlib.ForMathlib.MeasureTheory.CompactSupportWeakConvergence
 import NLAlib.ForMathlib.MeasureTheory.CompactTransportDuality
+import NLAlib.ForMathlib.MeasureTheory.CompactWassersteinTriangle
 import NLAlib.ForMathlib.MeasureTheory.ConditionalComparison
 import NLAlib.ForMathlib.MeasureTheory.ConditionalJensen
 import NLAlib.ForMathlib.MeasureTheory.ConditionalParameterJensen
@@ -67,12 +68,14 @@ import NLAlib.ForMathlib.MeasureTheory.MatrixEntriesIntegral
 import NLAlib.ForMathlib.MeasureTheory.MatrixIntegral
 import NLAlib.ForMathlib.MeasureTheory.MatrixInverse
 import NLAlib.ForMathlib.MeasureTheory.MatrixMeasurePolarization
+import NLAlib.ForMathlib.MeasureTheory.MatrixMultiplicationIntegral
 import NLAlib.ForMathlib.MeasureTheory.MatrixStieltjesAssembly
 import NLAlib.ForMathlib.MeasureTheory.MeasureSupportHomeomorph
 import NLAlib.ForMathlib.MeasureTheory.MomentInterpolation
 import NLAlib.ForMathlib.MeasureTheory.PiSliceIntegral
 import NLAlib.ForMathlib.MeasureTheory.PolynomialIntegrability
 import NLAlib.ForMathlib.MeasureTheory.PolynomialZeroSets
+import NLAlib.ForMathlib.MeasureTheory.PolynomialZeroSetsField
 import NLAlib.ForMathlib.MeasureTheory.PositiveMatrixMeasure
 import NLAlib.ForMathlib.MeasureTheory.PositiveMatrixMeasureStieltjes
 import NLAlib.ForMathlib.MeasureTheory.PositiveMatrixMeasureUniqueness
@@ -94,6 +97,7 @@ import NLAlib.ForMathlib.MeasureTheory.SupportMap
 import NLAlib.ForMathlib.MeasureTheory.TailComparison
 import NLAlib.ForMathlib.MeasureTheory.TailOrder
 import NLAlib.ForMathlib.MeasureTheory.TracialGramMoments
+import NLAlib.ForMathlib.MeasureTheory.WassersteinMap
 import NLAlib.ForMathlib.MeasureTheory.WassersteinOne
 import NLAlib.ForMathlib.MeasureTheory.WeightedCauchySchwarz
 

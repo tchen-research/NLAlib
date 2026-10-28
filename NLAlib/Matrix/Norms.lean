@@ -42,12 +42,14 @@ import NLAlib.Matrix.Norms.NuclearNorm
 import NLAlib.Matrix.Norms.NuclearPSD
 import NLAlib.Matrix.Norms.NuclearTail
 import NLAlib.Matrix.Norms.NuclearTruncation
+import NLAlib.Matrix.Norms.OrthogonalConjugation
 import NLAlib.Matrix.Norms.OrthogonalOffDiagonal
 import NLAlib.Matrix.Norms.PositiveImaginaryTrace
 import NLAlib.Matrix.Norms.QuadraticSeries
 import NLAlib.Matrix.Norms.RankNorm
 import NLAlib.Matrix.Norms.RankOneDifferences
 import NLAlib.Matrix.Norms.RayleighNorm
+import NLAlib.Matrix.Norms.RealScaling
 import NLAlib.Matrix.Norms.Realification
 import NLAlib.Matrix.Norms.RectangularDiagonal
 import NLAlib.Matrix.Norms.RectangularDiagonalPermutation

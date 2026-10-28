@@ -1083,6 +1083,9 @@
   "NLAlib.Sketching.Sparse.SparseFock.UniformExactSFiniteLaw": "NLAlib.Sketching.Sparse.FiniteLaw.Uniform",
   "NLAlib.Sketching.Sparse.SparseFock.UniformExactSModel": "NLAlib.Sketching.Sparse.UniformSparse",
   "NLAlib.Sketching.Sparse.SparseFock.VacuumMoment": "NLAlib.Sketching.Sparse.FockModel.VacuumMoment",
-  "NLAlib.Sketching.Sparse.SparseFock.WeightedBasis": "NLAlib.Sketching.Sparse.FockModel.WeightedBasis"
+  "NLAlib.Sketching.Sparse.SparseFock.WeightedBasis": "NLAlib.Sketching.Sparse.FockModel.WeightedBasis",
+  "NLAlib.Solvers.Nystrom.EffectiveDimension": "NLAlib.Matrix.Spectral.EffectiveDimension",
+  "NLAlib.Solvers.Nystrom.GaussianBlockMoment": "NLAlib.LowRank.RangeFinding.GaussianBlockMoment",
+  "NLAlib.Solvers.Nystrom.GaussianResidual": "NLAlib.LowRank.Nystrom.GaussianResidual"
  }
 }

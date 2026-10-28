@@ -5,8 +5,13 @@ import NLAlib.Krylov.Solvers.ChristoffelDirections
 import NLAlib.Krylov.Solvers.FOM
 import NLAlib.Krylov.Solvers.FlexibleGMRES
 import NLAlib.Krylov.Solvers.GMRES
+import NLAlib.Krylov.Solvers.GMRESAnyConvergenceCurve
 import NLAlib.Krylov.Solvers.GMRESArnoldi
 import NLAlib.Krylov.Solvers.GMRESComplexDiagonal
+import NLAlib.Krylov.Solvers.GMRESCurveBasis
+import NLAlib.Krylov.Solvers.GMRESCurveCompanion
+import NLAlib.Krylov.Solvers.GMRESCurveCoordinates
+import NLAlib.Krylov.Solvers.GMRESCurveGeometry
 import NLAlib.Krylov.Solvers.GMRESIterate
 import NLAlib.Krylov.Solvers.GMRESLeastSquares
 import NLAlib.Krylov.Solvers.GMRESOrthogonality

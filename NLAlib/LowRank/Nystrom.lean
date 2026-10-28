@@ -1,4 +1,5 @@
 import NLAlib.LowRank.Nystrom.GaussianNystrom
+import NLAlib.LowRank.Nystrom.GaussianResidual
 import NLAlib.LowRank.Nystrom.GeneralizedNystrom
 import NLAlib.LowRank.Nystrom.RawGaussianNystrom
 import NLAlib.LowRank.Nystrom.RawNystromBridge

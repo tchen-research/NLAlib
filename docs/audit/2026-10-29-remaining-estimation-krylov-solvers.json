@@ -1,0 +1,344 @@
+{
+  "date": "2026-10-29",
+  "base": "44919c8f97ca59ffd951d2edc404fef28baf58ac",
+  "validation": "All 26 local repository checks passed after integration, including the default and experimental builds, full axiom audits, declaration export, examples, naming and layer checks, atlas/coverage validation, and the site math/build checks. No new source warnings, sorry proofs, native_decide, or nonstandard axioms were added.",
+  "scope_exclusions": [
+    "crouzeix-palencia",
+    "arnoldi-fa-error",
+    "gmres-bgt"
+  ],
+  "reviewed_cards": [
+    {
+      "id": "qr-algorithm-convergence",
+      "clauses": [
+        {
+          "statement": "The exact maximum consecutive eigenvalue modulus ratio is below one under strict absolute ordering; zero or one dimensions use ratio zero.",
+          "decls": [
+            "NLAlib.maxAdjacentAbsRatio_lt_one"
+          ]
+        },
+        {
+          "statement": "Native QR accumulated frames and matrix iterates obey explicit geometric Frobenius bounds at that exact ratio, using only the displayed nonsingular leading eigenvector overlaps, and permitting the last eigenvalue zero.",
+          "decls": [
+            "NLAlib.exists_signs_frobNorm_qrAlgorithm_le"
+          ]
+        },
+        {
+          "statement": "The actual matrix iterates converge to the ordered eigenvalue diagonal and the accumulated factors converge to the given eigenvectors after right column-sign alignment, in the matrix topology.",
+          "decls": [
+            "NLAlib.tendsto_qrAlgorithm_and_alignedQ"
+          ]
+        },
+        {
+          "statement": "The rank-unrestricted native Householder routine provides an actual process satisfying these convergence conclusions, including singular inputs.",
+          "decls": [
+            "NLAlib.tendsto_qrAlgorithm_householder_and_alignedQ"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "gaussian-haar-sketch-solve-exact",
+      "clauses": [
+        {
+          "statement": "The actual minimum-norm real Gaussian estimator is integrable and unbiased, and its native squared residual has exact factor 1+r/(ell-r-1), at arbitrary matrix rank under the finite-moment threshold.",
+          "decls": [
+            "NLAlib.integrable_and_integral_sketchAndSolve_of_hasLaw_gaussianMatrix",
+            "NLAlib.integrable_and_integral_frobSq_sub_mul_sketchAndSolve_of_hasLaw_gaussianMatrix"
+          ]
+        },
+        {
+          "statement": "The actual standard complex Gaussian law uses (g+i*h)/sqrt(2); native estimator mean and residual moment are integrable and exact with denominator ell-r, for arbitrary nonreal data.",
+          "decls": [
+            "NLAlib.integrable_and_integral_sketchAndSolve_of_hasLaw_complexGaussianMatrix",
+            "NLAlib.integrable_and_integral_frobSq_sub_mul_sketchAndSolve_of_hasLaw_complexGaussianMatrix"
+          ]
+        },
+        {
+          "statement": "Actual real and complex compact unitary Haar/Stiefel laws have almost-sure full top rank and the exact integrable inverse top-Gram trace mean. Native Gaussian QR and independent source blocks prove these identities, without assuming a matrix-Beta law or the target expectation.",
+          "decls": [
+            "NLAlib.integrable_and_integral_re_trace_inv_topGram_haar_real",
+            "NLAlib.integrable_and_integral_re_trace_inv_topGram_haar_complex"
+          ]
+        },
+        {
+          "statement": "For actual real and complex Haar sketches, the native Moore-Penrose estimator is integrable and unbiased and the residual moment has precisely the finite-dimension correction (n-ell)/(n-r) times r/(ell-r-alpha). All right-hand-side shapes, deficient input ranks and ell=n are retained.",
+          "decls": [
+            "NLAlib.integrable_and_integral_sketchAndSolve_haar_real",
+            "NLAlib.integrable_and_integral_sketchAndSolve_haar_complex",
+            "NLAlib.integrable_and_integral_frobSq_residual_sketchAndSolve_haar_real",
+            "NLAlib.integrable_and_integral_frobSq_residual_sketchAndSolve_haar_complex"
+          ]
+        },
+        {
+          "statement": "A square orthonormal sketch recovers the exact original minimum-norm solution pointwise. At rank zero the actual estimator is zero and its squared residual is frobSq B for every sketch and width, without moment assumptions.",
+          "decls": [
+            "NLAlib.sketchAndSolve_eq_of_square_orthonormal_sketch",
+            "NLAlib.sketchAndSolve_eq_zero_and_residual_of_rank_eq_zero"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "normal-spectral-density-query",
+      "clauses": [
+        {
+          "statement": "The actual single-probe, two-sided query strategy constructs the exact finite tensor Jackson density from its native observed cross-Gram table, yields a probability law, and has the stated exact physical-scale failure bound S*(84/M+pi*R*sqrt(5+(pi/2)log M)) under the actual normalized complex-Gaussian sphere law.",
+          "decls": [
+            "NLAlib.normalMomentDensityLaw_run_eq_kernelLaw",
+            "NLAlib.isProbabilityMeasure_run_normalScaledSpectralDensityProgram",
+            "NLAlib.measureReal_wassersteinEDistOne_normalScaledSpectralDensityProgram_gt_le"
+          ]
+        },
+        {
+          "statement": "The same actual native strategy obeys the derived O(S*(M^-1+sqrt(log(M/delta)log M/n))) error with a proved universal constant 128, for the complete source parameter range.",
+          "decls": [
+            "NLAlib.measureReal_wassersteinEDistOne_normalScaledSpectralDensityProgram_asymptotic_gt_le"
+          ]
+        },
+        {
+          "statement": "Known-scale response adaptation preserves the exact 4M primitive matrix/adjoint query budget. Literal scalar programs on the actual histories take at most 18*n*(M+1)^2 operations, and the retained finite vector/moment arrays and working vectors have O(nM+M^2) scalar slots.",
+          "decls": [
+            "NLAlib.normalSpectralDensityProgram_queryCount",
+            "NLAlib.normalScaledSpectralDensityScalarWork_le",
+            "NLAlib.card_normalMixedStorageIndex_le"
+          ]
+        },
+        {
+          "statement": "The actual tensor Gauss-Chebyshev density readout gives a positive probability measure supported on at most (M+1)^2 complex atoms. Physical scaling adds at most the stated 72*S/M error relative to the continuous output. Its two separable transforms take at most 9*(M+1)^3 scalar operations.",
+          "decls": [
+            "NLAlib.isProbabilityMeasure_run_normalScaledSpectralQuadratureProgram",
+            "NLAlib.exists_finite_support_run_normalScaledSpectralQuadratureProgram",
+            "NLAlib.wassersteinEDistOne_normalScaledSpectralQuadratureProgram_le",
+            "NLAlib.normalMomentQuadratureScalarWork_le"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "gmres-any-convergence-curve",
+      "clauses": [
+        {
+          "statement": "The explicit companion similarity has precisely the prescribed complex characteristic polynomial, permits repeated eigenvalues, and is invertible whenever the requested eigenvalues are nonzero.",
+          "decls": [
+            "NLAlib.charpoly_gmresCurveMatrix",
+            "NLAlib.exists_matrix_gmres_any_convergence_curve"
+          ]
+        },
+        {
+          "statement": "Every native GMRES minimizer from zero, as well as the concrete pseudoinverse-based gmresIterate, has the exact prescribed positive nonincreasing residual curve at every requested degree. Plateaus and dimension one are included.",
+          "decls": [
+            "NLAlib.exists_matrix_gmres_any_convergence_curve",
+            "NLAlib.exists_matrix_gmresIterate_any_convergence_curve"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "normal-matrix-mixed-chebyshev-moments",
+      "clauses": [
+        {
+          "statement": "The actual finite weighted spectral law is a probability law for a unit start and is independent of the unitary eigenbasis, including repeated eigenvalues; its isometric coordinate pushforward is the stated two-dimensional law.",
+          "decls": [
+            "NLAlib.diagonalSpectralLaw_eq_of_diagonalizations",
+            "NLAlib.isProbabilityMeasure_normalSpectralLaw",
+            "NLAlib.ae_mem_chebyshevCube_normalCoordinateSpectralLaw"
+          ]
+        },
+        {
+          "statement": "Every arbitrary complex polynomial mixed moment in the actual coordinate law is the native cross inner product for the commuting Hermitian real and imaginary parts. The normalized Chebyshev mode matrix equals the actual cross-Gram, with the stated zero-mode normalization.",
+          "decls": [
+            "NLAlib.integral_normalCoordinateSpectralLaw_star_poly_mul_poly",
+            "NLAlib.run_normalMixedMomentProgram_eq_coordinate_integral"
+          ]
+        },
+        {
+          "statement": "A matrix-independent strategy computes the entire native moment matrix using exactly 4M primitive queries to the matrix and its adjoint. Its shared recurrence includes the special degree-one step.",
+          "decls": [
+            "NLAlib.run_normalMixedVectorProgram",
+            "NLAlib.normalMixedMomentProgram_queryCount"
+          ]
+        },
+        {
+          "statement": "Each native component combination, shared recurrence update, normalization and cross-Gram entry has a literal unit-cost scalar expression. On the actual oracle-response histories their total scalar work is at most 13*n*(M+1)^2.",
+          "decls": [
+            "NLAlib.normalMixedProgramScalarWork_le"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "nystrom-pcg",
+      "clauses": [
+        {
+          "statement": "The exact Gaussian sketch width is 2 ceil(3 d_eff/2)+1, at most 3 d_eff+3; the native FTU spectral-floor preconditioner has expected finite condition number strictly below 28, including zero input and sketches wider than the ambient dimension.",
+          "decls": [
+            "NLAlib.nystromSketchWidth_le",
+            "NLAlib.integrable_and_integral_conditionNumber_nystrom_rounded_lt_28"
+          ]
+        },
+        {
+          "statement": "The native condition-number event at threshold 56 has probability greater than one half. A measurable native residual event of probability greater than one half yields the same universal convergence factor for every right-hand side and initial vector.",
+          "decls": [
+            "NLAlib.measureReal_conditionNumber_nystrom_rounded_le_56_gt_half",
+            "NLAlib.measureReal_nystrom_rounded_residual_le_gt_half"
+          ]
+        },
+        {
+          "statement": "Every native PCG iterate on the proved residual event satisfies the explicit geometric energy bound and the rounded logarithmic iteration budget gives the prescribed relative tolerance, independently of the original condition number.",
+          "decls": [
+            "NLAlib.quadForm_sub_le_of_isPCGIterate_nystrom_rounded",
+            "NLAlib.quadForm_sub_le_sq_mul_of_isPCGIterate_nystrom_rounded"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "christoffel-uvarov-modification",
+      "clauses": [
+        {
+          "statement": "Actual positive compact measure specialization derives finite original and modified Hankel nondegeneracy from support cardinality at least n+degree u. The coefficient/remainder determinant is valid for arbitrary denominator degree, including repeated roots and common factors.",
+          "decls": [
+            "NLAlib.monicOrthogonalPolynomial_rationalPolynomialModifiedMeasure_eq_det_div"
+          ]
+        },
+        {
+          "statement": "For complete simple-root lists over the complex numbers, the actual root/Cauchy first-row source determinant has a proved nonzero normalization for both denominator-degree ranges. Nonmonic polynomials and nonreal conjugate-pair roots are included; denominator rows are actual complex Cauchy integrals.",
+          "decls": [
+            "NLAlib.exists_det_rootFirstRow_eq_rationalPolynomialModifiedMeasure",
+            "NLAlib.exists_det_auxiliaryFirstRow_eq_rationalPolynomialModifiedMeasure"
+          ]
+        },
+        {
+          "statement": "The finite inverse-moment divisor algorithm has a nonsingular computed system of size min(n,degree v), and returns the actual canonical modified polynomial. The one- and two-coefficient specializations include the smaller initial systems.",
+          "decls": [
+            "NLAlib.det_divisorModificationMatrix_ne_zero",
+            "NLAlib.monicOrthogonalPolynomial_eq_divisorModification",
+            "NLAlib.monicOrthogonalPolynomial_eq_linearDivisor",
+            "NLAlib.monicOrthogonalPolynomial_eq_quadraticDivisor"
+          ]
+        },
+        {
+          "statement": "The previously checked linear factor formulas and their composition give the native monic recurrence coefficients and finite Jacobi factor reversal, including its exact boundary term.",
+          "decls": [
+            "NLAlib.orthogonalRecurrenceAlpha_polynomialWeightedFunctional_X_sub_C",
+            "NLAlib.orthogonalRecurrenceBeta_polynomialWeightedFunctional_X_sub_C",
+            "NLAlib.monicJacobiMatrix_christoffel_eq_reversed_factors_add_boundary_of_finite"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    },
+    {
+      "id": "chebyshev-spectral-density-query",
+      "clauses": [
+        {
+          "statement": "The native program charges one scalar vector query per active prefix column; a matrix-independent branch selects exact coordinate recovery when cheaper, yielding precisely the minimum of the prescribed active-prefix cost and the dimension.",
+          "decls": [
+            "NLAlib.cost_cappedChebyshevDensityAlg",
+            "NLAlib.cost_cappedChebyshevDensityAlg_le"
+          ]
+        },
+        {
+          "statement": "Every probe array returns an actual probability law, and the native shared Rademacher law gives failure at most delta at the exact error (38+pi/2)S/k, with finite-dimensional empirical law and native simplex reconstruction.",
+          "decls": [
+            "NLAlib.isProbabilityMeasure_run_cappedChebyshevDensityAlg",
+            "NLAlib.measureReal_wassersteinEDistOne_cappedChebyshevDensityAlg_gt_le"
+          ]
+        },
+        {
+          "statement": "The stated rounded epsilon-degree choice gives error epsilon*S under the same actual law and native capped query algorithm.",
+          "decls": [
+            "NLAlib.measureReal_wassersteinEDistOne_cappedChebyshevDensityAlg_epsilon_gt_le"
+          ]
+        }
+      ],
+      "remaining_card_clauses": []
+    }
+  ],
+  "validation_evidence": {
+    "checks": [
+      "build",
+      "extract-declarations",
+      "sync-atlas",
+      "python-tests",
+      "import-surface",
+      "trusted-audit",
+      "linters",
+      "downstream",
+      "probability",
+      "polynomial-approximation",
+      "khatri-rao-example",
+      "ritz-audit",
+      "subspace-audit",
+      "complete-audit",
+      "gaussian-inverse-audit",
+      "new-proofs-audit",
+      "khatri-rao-audit",
+      "reviewed-family-audit",
+      "layers",
+      "names",
+      "atlas",
+      "polynomial-matrix-scope",
+      "card-audit",
+      "coverage",
+      "site-math",
+      "site-build"
+    ],
+    "library_declarations_audited": 32470,
+    "public_theorems_audited": 15984,
+    "sorry_theorems": 0,
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "reviewed_27_card_endpoint_audit": 154,
+    "current_card_clauses": 29,
+    "current_card_theorems": 59,
+    "audit_commands": [
+      "lake env lean scripts/AuditTrusted.lean",
+      "lake env lean scripts/Audit.lean",
+      "lake env lean -DautoImplicit=false scripts/AuditNewProofs.lean"
+    ],
+    "independent_scope_review": "All 29 clauses cover the eight human card statements. The other 505 cards and all non-card top-level atlas fields are unchanged.",
+    "check_log_sha256": {
+      "build": "4b83c56173083cf92aab704315a9e346e155e234c89e59317419377525142b9c",
+      "extract-declarations": "229d3ebf39faeecbbbc36468fd3a58e5a79b4bd3d7ac404700de5b9cc823ab7a",
+      "sync-atlas": "0329e728989e48cdcfe056934178a05723c7777c7ab60a6dfbd5830196e2f673",
+      "python-tests": "8976b70342fb59b44b060f73ecc11814b99371b60f68e4b80dc7dde054546f11",
+      "import-surface": "5c3b030f56fe17b950dfe67f56284418b5199dc9ac407047dc3decc3e7034626",
+      "trusted-audit": "fe6b2446be017b5a5fa9fa86bc72085f8ee74ff48ca3b94db5e4cd3865166894",
+      "linters": "3e319dbe9dc49accaa59b2a6272848662b69d47614091d6569cdd745d27ab251",
+      "downstream": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "probability": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "polynomial-approximation": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "khatri-rao-example": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "ritz-audit": "2ae91f50f02d6035c50e19b4851269f19392321e007730ed5ec46e7d2833ef57",
+      "subspace-audit": "17a1ee26b66d990cbe21de0391c97c3f9843f52556e1d7a3986be62bdda6c36a",
+      "complete-audit": "769c6d0ee5d8f8fc91bb7b521a1fbfd10f5e2219b4298b47002f9b95aec4d665",
+      "gaussian-inverse-audit": "5c6b899c68f15992b19c9401807a3ff6a72972cc0fc0c4fae3664fcf402252d1",
+      "new-proofs-audit": "4efdc4d6a4446b1ce1cc419fa36cda52b367b90302097bd3a630ecaffb2c9902",
+      "khatri-rao-audit": "e114c9045e4ba74dc3f91fbac7db233a8d423d2dfe1a608c432fde410a154d6e",
+      "reviewed-family-audit": "8ca9e089c7590537e25c3e15ddcb2edf2e08342d05cdcae4e81a304a14cdcfeb",
+      "layers": "097d76e80ddc0a74c74a13df622c0410fec146e20788ca0f5c4029ee6f874295",
+      "names": "69a1338fc93d70229fe86b420bf147dbdd7514303eecf0cdad31795cfa4073a5",
+      "atlas": "327bea9ab8b2ff860e6b4ceacd19b6828809573777c8927ed6421fd2c950efe7",
+      "polynomial-matrix-scope": "6e80ff43b6a7746a730327468094d1b30fad25035e65ddcd28d910cf005d8cbc",
+      "card-audit": "5094774957789fa47782fe61ae6cedb14b869cc6151a87b6be92897b1d301a0f",
+      "coverage": "2e7ba4499f576e0b575af25c97051e03c19f81c89bc1f132de88b9ef677b0d8d",
+      "site-math": "b3f906a99ffdb0d126d2e6579df3c8d5ba1141e945729d1ce579c7723b26555a",
+      "site-build": "084b27b94357bec2fda2d4c7be8ca528fbb99c4b89a7dd1ffcd7b88946cc39f4"
+    }
+  },
+  "statement_corrections": [
+    "Christoffel-Uvarov: make the finite support condition support.encard >= n + degree u explicit, deriving the needed finite Hankel nondegeneracy instead of assuming it.",
+    "Nystrom PCG: state the actual FTU real Gaussian sketch width 2*ceil(3*d_eff/2)+1 and native spectral-floor preconditioner; retain E[kappa] < 28."
+  ]
+}

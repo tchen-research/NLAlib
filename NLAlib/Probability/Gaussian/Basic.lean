@@ -1,4 +1,6 @@
 import NLAlib.Probability.Gaussian.Basic.CircularComplex
+import NLAlib.Probability.Gaussian.Basic.ComplexConjugation
+import NLAlib.Probability.Gaussian.Basic.ComplexSphere
 import NLAlib.Probability.Gaussian.Basic.ComplexUnitary
 import NLAlib.Probability.Gaussian.Basic.CoordinateSymmetries
 import NLAlib.Probability.Gaussian.Basic.CovarianceProxy

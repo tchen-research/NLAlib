@@ -9,6 +9,7 @@ import NLAlib.Polynomial.FunctionApproximation.BernsteinConverse
 import NLAlib.Polynomial.FunctionApproximation.BernsteinEllipse
 import NLAlib.Polynomial.FunctionApproximation.BernsteinWalsh
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevBoundedVariation
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevBounds
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevCoefficientBounds
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevCoefficients
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevCube
@@ -17,6 +18,7 @@ import NLAlib.Polynomial.FunctionApproximation.ChebyshevEnergy
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevFourier
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevIntegrationByParts
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevLipschitz
+import NLAlib.Polynomial.FunctionApproximation.ChebyshevPolynomial
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevPrimitive
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevProjection
 import NLAlib.Polynomial.FunctionApproximation.ChebyshevSeries
@@ -29,6 +31,7 @@ import NLAlib.Polynomial.FunctionApproximation.EllipseImaginary
 import NLAlib.Polynomial.FunctionApproximation.Exponential
 import NLAlib.Polynomial.FunctionApproximation.ExponentialChebyshevSeries
 import NLAlib.Polynomial.FunctionApproximation.FejerChebyshev
+import NLAlib.Polynomial.FunctionApproximation.GaussChebyshevQuadrature
 import NLAlib.Polynomial.FunctionApproximation.HalfPlane
 import NLAlib.Polynomial.FunctionApproximation.JacksonApproximation
 import NLAlib.Polynomial.FunctionApproximation.JacksonDamping

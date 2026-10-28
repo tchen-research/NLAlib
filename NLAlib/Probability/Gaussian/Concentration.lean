@@ -1,3 +1,4 @@
+import NLAlib.Probability.Gaussian.Concentration.ComplexSphereDiagonal
 import NLAlib.Probability.Gaussian.Concentration.LipschitzConcentration
 import NLAlib.Probability.Gaussian.Concentration.LogSobolev
 import NLAlib.Probability.Gaussian.Concentration.LogSobolevCoverage

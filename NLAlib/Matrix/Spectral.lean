@@ -22,6 +22,7 @@ import NLAlib.Matrix.Spectral.Diagonalizable
 import NLAlib.Matrix.Spectral.DiagonalizableBlocks
 import NLAlib.Matrix.Spectral.DiagonalizablePrincipal
 import NLAlib.Matrix.Spectral.EckartYoung
+import NLAlib.Matrix.Spectral.EffectiveDimension
 import NLAlib.Matrix.Spectral.EigenframeDecomposition
 import NLAlib.Matrix.Spectral.Eigenframes
 import NLAlib.Matrix.Spectral.EigenvalueEquality
@@ -73,6 +74,7 @@ import NLAlib.Matrix.Spectral.NormalBlocks
 import NLAlib.Matrix.Spectral.NormalCharacterizations
 import NLAlib.Matrix.Spectral.NormalIntertwining
 import NLAlib.Matrix.Spectral.NormalRectangularIntertwining
+import NLAlib.Matrix.Spectral.NormalScaling
 import NLAlib.Matrix.Spectral.NormalSimilarity
 import NLAlib.Matrix.Spectral.NormalSpectral
 import NLAlib.Matrix.Spectral.NormalizedPSDPair
@@ -81,6 +83,7 @@ import NLAlib.Matrix.Spectral.NumericalRangeConvex
 import NLAlib.Matrix.Spectral.NumericalRangeHermitian
 import NLAlib.Matrix.Spectral.NumericalRangeNormal
 import NLAlib.Matrix.Spectral.NumericalRangeTwo
+import NLAlib.Matrix.Spectral.OrderedRatios
 import NLAlib.Matrix.Spectral.OrderedSchur
 import NLAlib.Matrix.Spectral.OrderedSimultaneousTriangularization
 import NLAlib.Matrix.Spectral.OrderedSymmetricDiagonalization

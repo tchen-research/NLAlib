@@ -1,3 +1,4 @@
+import NLAlib.Matrix.Measurability.FunctionalCalculus
 import NLAlib.Matrix.Measurability.GramPseudoinverse
 import NLAlib.Matrix.Measurability.Measurable
 import NLAlib.Matrix.Measurability.SpectralMeasurable

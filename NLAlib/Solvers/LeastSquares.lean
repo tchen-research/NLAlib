@@ -1,6 +1,17 @@
 import NLAlib.Solvers.LeastSquares.ApproxMultiplication
+import NLAlib.Solvers.LeastSquares.ComplexGaussianMoments
+import NLAlib.Solvers.LeastSquares.ComplexGaussianNormalization
+import NLAlib.Solvers.LeastSquares.FrameDecomposition
 import NLAlib.Solvers.LeastSquares.GaussianBudget
+import NLAlib.Solvers.LeastSquares.GaussianMean
 import NLAlib.Solvers.LeastSquares.GaussianMoments
+import NLAlib.Solvers.LeastSquares.HaarBlockMoments
+import NLAlib.Solvers.LeastSquares.HaarBoundaries
+import NLAlib.Solvers.LeastSquares.HaarExpectations
+import NLAlib.Solvers.LeastSquares.HaarExpectationsHasLaw
+import NLAlib.Solvers.LeastSquares.HaarFrameConsumer
+import NLAlib.Solvers.LeastSquares.HaarLawTransport
+import NLAlib.Solvers.LeastSquares.Measurability
 import NLAlib.Solvers.LeastSquares.RowVolume
 import NLAlib.Solvers.LeastSquares.SketchAndSolve
 

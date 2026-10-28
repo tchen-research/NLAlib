@@ -9937,26 +9937,149 @@
    ],
    "area": "solvers",
    "kind": "application",
-   "status": "candidate",
+   "status": "proved",
    "informal": "The condition number of the Nyström-preconditioned system is $O(1)$ once the rank exceeds the effective dimension.",
    "hypotheses": [
-    "$A$ PSD and a regularization $\\mu > 0$",
-    "a randomized Nyström approximation $P$ of rank exceeding the effective dimension $d_{\\mathrm{eff}}(\\mu)$"
+    "$A\\in\\mathbb R^{n\\times n}$ is PSD, $n\\ge1$, and $\\mu>0$.",
+    "Use a standard Gaussian Nyström sketch of width $\\ell=2\\lceil 1.5d_{\\mathrm{eff}}(\\mu)\\rceil+1$, and let $P$ be the FTU spectral-floor preconditioner constructed from the approximation, as in Frangella–Tropp–Udell (2023), equation (5.3)."
    ],
-   "conclusion": "$\\kappa\\big(P^{-1/2}(A + \\mu I)P^{-1/2}\\big) = O(1)$, so preconditioned CG converges at a rate independent of $\\kappa(A + \\mu I)$",
+   "conclusion": "$\\mathbb E\\kappa_2(P^{-1/2}(A+\\mu I)P^{-1/2})<28$. With probability greater than $1/2$ the condition number is at most $56$; native PCG has a universal geometric energy-error bound on a measurable event of probability greater than $1/2$, hence $O(\\log(1/\\epsilon))$ iterations independent of $\\kappa_2(A+\\mu I)$. The width is at most $3d_{\\mathrm{eff}}(\\mu)+3$; zero input and widths exceeding $n$ are included.",
    "sources": [
     {
      "source": "mt20",
      "label": "§17"
+    },
+    {
+     "source": "ftu23",
+     "label": "Theorem 5.1, Corollary 5.2; equation (5.3)"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_nystromPreconditionedMatrix_toReal_le",
+     "module": "NLAlib.Solvers.Nystrom.Condition",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_conditionNumber_nystrom_rounded_le_56_gt_half",
+     "module": "NLAlib.Solvers.Nystrom.Convergence",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_sub_le_of_isPCGIterate_nystrom_rounded",
+     "module": "NLAlib.Solvers.Nystrom.Convergence",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_nystrom_rounded_residual_le_gt_half",
+     "module": "NLAlib.Solvers.Nystrom.Convergence",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_conditionNumber_nystromPreconditionedMatrix_lt_28",
+     "module": "NLAlib.Solvers.Nystrom.ExpectedCondition",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ae_nystrom_eq_of_dim_le",
+     "module": "NLAlib.Solvers.Nystrom.FullCapture",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.nystromPreconditionedMatrix_self_eq_smul_one",
+     "module": "NLAlib.Solvers.Nystrom.FullCapture",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ae_conditionNumber_nystromPreconditionedMatrix_eq_one_of_dim_le",
+     "module": "NLAlib.Solvers.Nystrom.FullCapture",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.conditionNumber_nystromPreconditionedMatrix_zero_eq_one",
+     "module": "NLAlib.Solvers.Nystrom.FullCapture",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_sub_nystrom_le_of_effectiveDimension",
+     "module": "NLAlib.Solvers.Nystrom.GaussianBudget",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.quadForm_sub_le_sq_mul_of_isPCGIterate_nystrom_rounded",
+     "module": "NLAlib.Solvers.Nystrom.IterationBudget",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.nystromPreconditioner_sandwich",
+     "module": "NLAlib.Solvers.Nystrom.Preconditioner",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.nystromSketchWidth_le",
+     "module": "NLAlib.Solvers.Nystrom.RoundedBudget",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_conditionNumber_nystrom_rounded_lt_28",
+     "module": "NLAlib.Solvers.Nystrom.RoundedExpectation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_specNorm_sub_nystrom_rounded_le",
+     "module": "NLAlib.Solvers.Nystrom.RoundedExpectation",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "nystrom-randomized",
     "cg-convergence",
     "preconditioned-cg"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.IsPCGIterate",
+    "NLAlib.conditionNumber",
+    "NLAlib.gaussianMatrix",
+    "NLAlib.nystrom",
+    "NLAlib.nystromEffectiveDimension",
+    "NLAlib.nystromFloor",
+    "NLAlib.nystromPCGIterations",
+    "NLAlib.nystromPCGRate",
+    "NLAlib.nystromPreconditionedMatrix",
+    "NLAlib.nystromPreconditioner",
+    "NLAlib.nystromSketchWidth",
+    "NLAlib.quadForm",
+    "NLAlib.specNorm"
+   ],
    "variants": [
     "cg-convergence",
     "sketch-and-precondition"
@@ -9967,7 +10090,33 @@
    "tags": [
     "consumer"
    ],
-   "updated_at": "2026-10-10"
+   "updated_at": "2026-10-29",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The exact Gaussian sketch width is 2 ceil(3 d_eff/2)+1, at most 3 d_eff+3; the native FTU spectral-floor preconditioner has expected finite condition number strictly below 28, including zero input and sketches wider than the ambient dimension.",
+      "decls": [
+       "NLAlib.nystromSketchWidth_le",
+       "NLAlib.integrable_and_integral_conditionNumber_nystrom_rounded_lt_28"
+      ]
+     },
+     {
+      "statement": "The native condition-number event at threshold 56 has probability greater than one half. A measurable native residual event of probability greater than one half yields the same universal convergence factor for every right-hand side and initial vector.",
+      "decls": [
+       "NLAlib.measureReal_conditionNumber_nystrom_rounded_le_56_gt_half",
+       "NLAlib.measureReal_nystrom_rounded_residual_le_gt_half"
+      ]
+     },
+     {
+      "statement": "Every native PCG iterate on the proved residual event satisfies the explicit geometric energy bound and the rounded logarithmic iteration budget gives the prescribed relative tolerance, independently of the original condition number.",
+      "decls": [
+       "NLAlib.quadForm_sub_le_of_isPCGIterate_nystrom_rounded",
+       "NLAlib.quadForm_sub_le_sq_mul_of_isPCGIterate_nystrom_rounded"
+      ]
+     }
+    ]
+   },
+   "notes": "P denotes the FTU preconditioner, not the low-rank approximation itself. The Gaussian law and exact rounded width make the original constant-condition-number claim precise. The floor is zero-padded at widths above dimension; Gaussian full capture then gives condition number one almost surely."
   },
   {
    "id": "gaussian-conditioning",
@@ -17701,7 +17850,7 @@
    ],
    "area": "krylov-nonnormal",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Given $f(0) \\ge f(1) \\ge \\dots \\ge f(n-1) > 0$ and any nonzero $\\lambda_1,\\dots,\\lambda_n \\in \\mathbb C$, there are $A \\in \\mathbb C^{n\\times n}$ with eigenvalues $\\lambda_1,\\dots,\\lambda_n$ and $b$ such that GMRES from $x_0 = 0$ has $\\|r_k\\| = f(k)$ for $k = 0,\\dots,n-1$. Eigenvalues alone say nothing about GMRES for non-normal $A$.",
    "hypotheses": [
     "$n \\ge 1$, $f : \\{0,\\dots,n-1\\} \\to (0,\\infty)$ nonincreasing, $\\lambda \\in (\\mathbb C\\setminus\\{0\\})^n$"
@@ -17729,7 +17878,7 @@
     {
      "decl": "Matrix.companion",
      "present": false,
-     "note": "No companion-matrix API; the construction uses A = W C W⁻¹ with C a companion matrix and W built from an orthonormal basis."
+     "note": "Mathlib target absent; the checked native NLAlib.companionMatrix and charpoly_companionMatrix now supply the construction."
     }
    ],
    "difficulty": 3,
@@ -17741,11 +17890,100 @@
     "caution",
     "complex"
    ],
-   "notes": "A caution, not a tool: it explains why gmres-diagonalizable needs κ(V) and why field-of-values bounds exist. The construction is explicit (Arioli–Pták–Strakoš 1998 parametrisation), so it is provable at difficulty 3 once complex GMRES exists. No downstream consumers; include for the record. Prove (later).",
-   "updated_at": "2026-10-10",
-   "formalizations": [],
-   "uses_defs": [],
-   "variants": []
+   "notes": "The explicit companion similarity proves that prescribed eigenvalues, including arbitrary multiplicities, permit every positive nonincreasing finite native GMRES residual curve. It explains why eigenvalue-only convergence bounds need additional eigenvector or nonnormality control. The construction retains plateaus and includes dimension one.",
+   "updated_at": "2026-10-29",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matrix_gmres_any_convergence_curve",
+     "module": "NLAlib.Krylov.Solvers.GMRESAnyConvergenceCurve",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matrix_gmresIterate_any_convergence_curve",
+     "module": "NLAlib.Krylov.Solvers.GMRESAnyConvergenceCurve",
+     "status": "proved"
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isUnit_gmresCurveBasis",
+     "module": "NLAlib.Krylov.Solvers.GMRESCurveBasis",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.charpoly_gmresCurveCompanion",
+     "module": "NLAlib.Krylov.Solvers.GMRESCurveCompanion",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.charpoly_gmresCurveMatrix",
+     "module": "NLAlib.Krylov.Solvers.GMRESCurveCompanion",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.pow_succ_gmresCurveMatrix_mulVec",
+     "module": "NLAlib.Krylov.Solvers.GMRESCurveCompanion",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.norm_gmresCurveVector_tail",
+     "module": "NLAlib.Krylov.Solvers.GMRESCurveCoordinates",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isGMRESIterate_gmresCurveCorrection",
+     "module": "NLAlib.Krylov.Solvers.GMRESCurveGeometry",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.IsGMRESIterate.residual_eq_coordinate_tail",
+     "module": "NLAlib.Krylov.Solvers.GMRESCurveGeometry",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.IsGMRESIterate",
+    "NLAlib.coordinateHead",
+    "NLAlib.gmresCurveBasis",
+    "NLAlib.gmresCurveCompanion",
+    "NLAlib.gmresCurveCorrection",
+    "NLAlib.gmresCurveMatrix",
+    "NLAlib.gmresCurveVector",
+    "NLAlib.gmresIterate"
+   ],
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The explicit companion similarity has precisely the prescribed complex characteristic polynomial, permits repeated eigenvalues, and is invertible whenever the requested eigenvalues are nonzero.",
+      "decls": [
+       "NLAlib.charpoly_gmresCurveMatrix",
+       "NLAlib.exists_matrix_gmres_any_convergence_curve"
+      ]
+     },
+     {
+      "statement": "Every native GMRES minimizer from zero, as well as the concrete pseudoinverse-based gmresIterate, has the exact prescribed positive nonincreasing residual curve at every requested degree. Plateaus and dimension one are included.",
+      "decls": [
+       "NLAlib.exists_matrix_gmres_any_convergence_curve",
+       "NLAlib.exists_matrix_gmresIterate_any_convergence_curve"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "lanczos-fa-error",
@@ -29006,7 +29244,7 @@
    ],
    "area": "krylov-eigenvalues",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For symmetric $A$ with $|\\lambda_1| > |\\lambda_2| > \\dots > |\\lambda_n|$ and eigenvector matrix $Q$ whose leading principal submatrices $Q^\\top_{1..j,1..j}$ are all nonsingular, the QR iterates $A_k$ converge linearly to $\\operatorname{diag}(\\lambda_i)$ and $\\underline{Q}^{(k)}$ to $Q$ (up to signs), with rate $\\max_j |\\lambda_{j+1}/\\lambda_j|$.",
    "hypotheses": [
     "$A$ symmetric, strict gaps in $|\\lambda_i|$, nonsingular leading submatrices of $Q^\\top$"
@@ -29022,12 +29260,75 @@
      "label": "Thm 7.3.1"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.frobNorm_head_projector_qrAlgorithm_le",
+     "module": "NLAlib.Krylov.Spectral.QRConvergence",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_signs_frobNorm_qrAlgorithm_le",
+     "module": "NLAlib.Krylov.Spectral.QRConvergence",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_frobNorm_qrAlgorithm_and_alignedQ",
+     "module": "NLAlib.Krylov.Spectral.QRConvergence",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_qrAlgorithm_and_alignedQ",
+     "module": "NLAlib.Krylov.Spectral.QRConvergenceRealization",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.tendsto_qrAlgorithm_householder_and_alignedQ",
+     "module": "NLAlib.Krylov.Spectral.QRConvergenceRealization",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.overlapTangentNorm_qrAlgorithm_head_le",
+     "module": "NLAlib.Krylov.Spectral.QRFlags",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.maxAdjacentAbsRatio_lt_one",
+     "module": "NLAlib.Matrix.Spectral.OrderedRatios",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "qr-algorithm-simultaneous-iteration",
     "subspace-iteration-convergence"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.QRAlgorithmSucceeds",
+    "NLAlib.frobNorm",
+    "NLAlib.headColumns",
+    "NLAlib.householderQ",
+    "NLAlib.householderR",
+    "NLAlib.maxAdjacentAbsRatio",
+    "NLAlib.overlapTangentNorm",
+    "NLAlib.qrAlgorithm",
+    "NLAlib.qrAlgorithmQ",
+    "NLAlib.qrFlagConstant",
+    "NLAlib.specNorm"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
    "difficulty": 4,
@@ -29037,7 +29338,35 @@
     "qr-algorithm"
    ],
    "notes": "Consumes subspace-iteration-convergence applied to every leading block simultaneously.",
-   "updated_at": "2026-10-11"
+   "updated_at": "2026-10-29",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The exact maximum consecutive eigenvalue modulus ratio is below one under strict absolute ordering; zero or one dimensions use ratio zero.",
+      "decls": [
+       "NLAlib.maxAdjacentAbsRatio_lt_one"
+      ]
+     },
+     {
+      "statement": "Native QR accumulated frames and matrix iterates obey explicit geometric Frobenius bounds at that exact ratio, using only the displayed nonsingular leading eigenvector overlaps, and permitting the last eigenvalue zero.",
+      "decls": [
+       "NLAlib.exists_signs_frobNorm_qrAlgorithm_le"
+      ]
+     },
+     {
+      "statement": "The actual matrix iterates converge to the ordered eigenvalue diagonal and the accumulated factors converge to the given eigenvectors after right column-sign alignment, in the matrix topology.",
+      "decls": [
+       "NLAlib.tendsto_qrAlgorithm_and_alignedQ"
+      ]
+     },
+     {
+      "statement": "The rank-unrestricted native Householder routine provides an actual process satisfying these convergence conclusions, including singular inputs.",
+      "decls": [
+       "NLAlib.tendsto_qrAlgorithm_householder_and_alignedQ"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "rayleigh-quotient-iteration",
@@ -34559,12 +34888,13 @@
    ],
    "area": "krylov-orthogonal-polynomials",
    "kind": "theorem",
-   "status": "candidate",
+   "status": "proved",
    "informal": "For $d\\hat\\mu=(u/v)\\,d\\mu$ with $u,v$ coprime real polynomials with simple zeros, not vanishing on the support, $u\\hat\\pi_n$ is (up to a constant) the determinant with first row $\\pi_{n-m},\\dots,\\pi_{n+\\ell}$ ($\\ell=\\deg u$, $m=\\deg v\\le n$), rows of values $\\pi_j(u_i)$ at the zeros of $u$ and rows of Cauchy integrals $\\rho_j(v_i)$ at the zeros of $v$; a bordered variant holds for $m>n$. Special cases give the linear/quadratic factor and divisor algorithms, e.g. $\\hat\\pi_n=\\pi_n+s_n\\pi_{n-1}+t_n\\pi_{n-2}$ for a quadratic divisor.",
    "hypotheses": [
     "The measure specialization uses a finite positive real measure $\\mu$ supported in $[a,b]$, so compact support and a pole-free denominator give the required divided polynomial moments. Compact support alone does not imply finite mass.",
     "In the measure specialization $u,v$ are nonzero real polynomials, $v$ has no zero on $[a,b]$, and $u/v>0$ there. The traditional root presentation assumes coprime polynomials with simple exterior roots; the coefficient/remainder construction also permits repeated roots and common factors.",
-    "The generic coefficient/determinant branch uses a polynomial functional over a scalar field and the actual finite nonsingular modified Hankel system at the requested order; it does not require a finite measure or positivity. The compressed original-basis formulas additionally require the finite original orthogonality systems actually used."
+    "The generic coefficient/determinant branch uses a polynomial functional over a scalar field and the actual finite nonsingular modified Hankel system at the requested order; it does not require a finite measure or positivity. The compressed original-basis formulas additionally require the finite original orthogonality systems actually used.",
+    "For the native positive-measure formula of order $n$, require $\\#\\operatorname{supp}\\mu\\ge n+\\deg u$ (infinite support is allowed). This ensures every displayed original monic polynomial exists and has the finite nondegeneracy actually needed; strict positivity of $u/v$ preserves support and supplies modified order-$n$ nondegeneracy. Equality is sufficient."
    ],
    "conclusion": "determinantal formulas for $u\\,\\pi_n(\\cdot;\\hat\\mu)$; recurrence coefficients of $\\hat\\mu$ computable from those of $\\mu$ and $\\rho_k$.",
    "sources": [
@@ -34620,8 +34950,8 @@
     "orthogonal-polynomials",
     "modification"
    ],
-   "notes": "Consumers: spectral measures modified by resolvents ($(t-z)^{-1}d\\mu_b$: shifted systems, rational Krylov), Gauss rules for $f(t)/(t-z)$. Assume or prove the linear cases first.",
-   "updated_at": "2026-10-14",
+   "notes": "Consumers: spectral measures modified by resolvents ($(t-z)^{-1}d\\mu_b$: shifted systems, rational Krylov), Gauss rules for $f(t)/(t-z)$. Assume or prove the linear cases first. The support condition is necessary for well-definedness: a positive point mass with u=v=1 cannot define a unique degree-two monic orthogonal polynomial or a nonzero order-two Hankel normalization. The root presentations permit complete simple-root lists over the complex numbers; the coefficient formula also retains repeated roots and common factors.",
+   "updated_at": "2026-10-29",
    "formalizations": [
     {
      "library": "nlalib",
@@ -34721,6 +35051,111 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.smul_complexDividedPolynomialIntegral_rootCofactor_eq_cauchy",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ComplexCauchyRows",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.complexDividedPolynomialIntegral_rootCofactor_eq_cauchy",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ComplexDividedMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.complexPolynomialIntegral_rationalPolynomialModifiedMeasure_eq",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.ComplexDividedMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.monicOrthogonalPolynomial_eq_linearDivisor",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.DivisorAlgorithms",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.monicOrthogonalPolynomial_eq_quadraticDivisor",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.DivisorAlgorithms",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_divisorModificationMatrix_ne_zero",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.DivisorModification",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.divisorModificationMatrix_mulVec_coefficients",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.DivisorModification",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.monicOrthogonalPolynomial_eq_divisorModification",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.DivisorModification",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_rationalModificationAuxiliaryBorderMatrix_eq",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationAuxiliaryDeterminant",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_rationalModificationAuxiliaryFirstRowMatrix_eq",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationAuxiliaryDeterminant",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_rationalModificationAuxiliaryFirstRowMatrix_nonmonic",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationAuxiliaryNormalization",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_det_auxiliaryFirstRow_eq_rationalPolynomialModifiedMeasure",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationAuxiliaryPositive",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.moments_eq_zero_of_rootCofactor_eq_low_polynomial",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationAuxiliaryRows",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rationalModificationConstraint_of_auxiliary_rows",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationAuxiliaryRows",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_rationalModificationAuxiliaryMatrix_ne_zero",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationAuxiliarySystem",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.orthogonalRecurrenceAlpha_weightedDivided_eq_sub_nextCoeff",
      "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationCoefficients",
      "status": "proved",
@@ -34734,6 +35169,13 @@
      "status": "proved",
      "partial": true,
      "usage": "Apply `NLAlib.orthogonalRecurrenceBeta_weightedDivided_eq_integral_ratio` with its displayed hypotheses: Every positive-order modified monic subdiagonal is exactly the ratio of its original-measure rationally weighted squared norms."
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_det_rootFirstRow_eq_rationalPolynomialModifiedMeasure",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationComplexPositive",
+     "status": "proved",
+     "partial": true
     },
     {
      "library": "nlalib",
@@ -34785,6 +35227,55 @@
     },
     {
      "library": "nlalib",
+     "decl": "NLAlib.hankelMomentDet_rationalPolynomialModifiedMeasure_ne_zero",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationPositive",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.monicOrthogonalPolynomial_rationalPolynomialModifiedMeasure_eq_det_div",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationPositive",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.rationalModification_root_constraints_iff",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationRootConstraints",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_rationalModificationRootBorderMatrix_eq",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationRootDeterminant",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_rationalModificationRootFirstRowMatrix_eq_mul_monicOrthogonalPolynomial",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationRootDeterminant",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_rationalModificationRootFirstRowMatrix_nonmonic",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationRootNormalization",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.det_rationalModificationRootMatrix_ne_zero",
+     "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationRootSystem",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
      "decl": "NLAlib.coeff_det_rationalModificationSmallFirstRowMatrix_self_ne_zero",
      "module": "NLAlib.Polynomial.OrthogonalPolynomials.RationalModificationSmallDeterminant",
      "status": "proved",
@@ -34825,16 +35316,25 @@
     }
    ],
    "uses_defs": [
+    "NLAlib.HasComplexDividedPolynomialMoments",
     "NLAlib.HasDividedPolynomialMoments",
+    "NLAlib.HasPolynomialMoments",
     "NLAlib.IsMonicOrthogonalPolynomial",
     "NLAlib.QuasiDefinitePolynomialFunctional",
+    "NLAlib.RationalModificationAuxiliaryIndex",
     "NLAlib.christoffelElimination",
     "NLAlib.christoffelPolynomial",
     "NLAlib.christoffelQuotient",
+    "NLAlib.complexDividedPolynomialIntegral",
+    "NLAlib.complexPolynomialIntegral",
     "NLAlib.darbouxLowerMatrix",
     "NLAlib.darbouxUpperMatrix",
     "NLAlib.dividedPolynomialIntegral",
+    "NLAlib.divisorModificationCoefficients",
+    "NLAlib.divisorModificationMatrix",
+    "NLAlib.divisorModificationMoments",
     "NLAlib.hankelMomentDet",
+    "NLAlib.linearDivisorCoefficient",
     "NLAlib.monicJacobiMatrix",
     "NLAlib.monicOrthogonalPolynomial",
     "NLAlib.orthogonalPolynomialNorm",
@@ -34842,17 +35342,61 @@
     "NLAlib.orthogonalRecurrenceBeta",
     "NLAlib.polynomialIntegral",
     "NLAlib.polynomialWeightedFunctional",
+    "NLAlib.quadraticDivisorCoefficients",
+    "NLAlib.rationalModificationAuxiliaryBorderMatrix",
+    "NLAlib.rationalModificationAuxiliaryFirstRowMatrix",
+    "NLAlib.rationalModificationAuxiliaryMatrix",
+    "NLAlib.rationalModificationAuxiliaryRow",
+    "NLAlib.rationalModificationConstraint",
     "NLAlib.rationalModificationConstraintMatrix",
     "NLAlib.rationalModificationFirstRowMatrix",
     "NLAlib.rationalModificationNumerator",
+    "NLAlib.rationalModificationRootBorderMatrix",
+    "NLAlib.rationalModificationRootFirstRowMatrix",
+    "NLAlib.rationalModificationRootMatrix",
     "NLAlib.rationalModificationSmallBorderMatrix",
     "NLAlib.rationalModificationSmallFirstRowMatrix",
     "NLAlib.rationalModificationSmallLeadingConstraints",
     "NLAlib.rationalModificationSmallMatrix",
     "NLAlib.rationalPolynomialModifiedMeasure",
+    "NLAlib.rootCofactor",
     "NLAlib.terminalCoordinateMatrix"
    ],
-   "variants": []
+   "variants": [],
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "Actual positive compact measure specialization derives finite original and modified Hankel nondegeneracy from support cardinality at least n+degree u. The coefficient/remainder determinant is valid for arbitrary denominator degree, including repeated roots and common factors.",
+      "decls": [
+       "NLAlib.monicOrthogonalPolynomial_rationalPolynomialModifiedMeasure_eq_det_div"
+      ]
+     },
+     {
+      "statement": "For complete simple-root lists over the complex numbers, the actual root/Cauchy first-row source determinant has a proved nonzero normalization for both denominator-degree ranges. Nonmonic polynomials and nonreal conjugate-pair roots are included; denominator rows are actual complex Cauchy integrals.",
+      "decls": [
+       "NLAlib.exists_det_rootFirstRow_eq_rationalPolynomialModifiedMeasure",
+       "NLAlib.exists_det_auxiliaryFirstRow_eq_rationalPolynomialModifiedMeasure"
+      ]
+     },
+     {
+      "statement": "The finite inverse-moment divisor algorithm has a nonsingular computed system of size min(n,degree v), and returns the actual canonical modified polynomial. The one- and two-coefficient specializations include the smaller initial systems.",
+      "decls": [
+       "NLAlib.det_divisorModificationMatrix_ne_zero",
+       "NLAlib.monicOrthogonalPolynomial_eq_divisorModification",
+       "NLAlib.monicOrthogonalPolynomial_eq_linearDivisor",
+       "NLAlib.monicOrthogonalPolynomial_eq_quadraticDivisor"
+      ]
+     },
+     {
+      "statement": "The previously checked linear factor formulas and their composition give the native monic recurrence coefficients and finite Jacobi factor reversal, including its exact boundary term.",
+      "decls": [
+       "NLAlib.orthogonalRecurrenceAlpha_polynomialWeightedFunctional_X_sub_C",
+       "NLAlib.orthogonalRecurrenceBeta_polynomialWeightedFunctional_X_sub_C",
+       "NLAlib.monicJacobiMatrix_christoffel_eq_reversed_factors_add_boundary_of_finite"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "discrete-measure-jacobi-matrix",
@@ -53478,7 +54022,7 @@
     "random orthonormal embedding regression",
     "unbiased Gaussian sketched regression"
    ],
-   "notes": "Full local derivation audited: factor A=QR with Q orthonormal and R full row rank; rotate Ω into blocks Ω_1,Ω_2. The solution error is R^+(Ω_1*)^+Ω_2*Q_perp*B, and squared residual is optimum plus ||(Ω_1*)^+Ω_2*Q_perp*B||_F². Gaussian independence plus the inverse-Wishart mean gives r/(ℓ−r−α). For Haar sketches, bottom-block rotational invariance makes the residual covariance scalar; its trace is E tr((Ω_1Ω_1*)^−1)−r. The top Gram has the matrix-Beta representation (W_1+W_2)^−1/2 W_1(W_1+W_2)^−1/2, with independent Wisharts of degrees ℓ and n−ℓ. Cyclic trace and independence give E inverse=[1+(n−ℓ)/(ℓ−r−α)]I. Sign/phase symmetry gives zero mean, with integrability from the finite second moment. This requires a Haar/Stiefel-law and Beta-to-Wishart bridge before formalization. ℓ=n yields exact Haar recovery. No universality extension to sparse/sign sketches is claimed.",
+   "notes": "The checked native proof factors A through an actual orthonormal range frame and uses the general Moore-Penrose estimator. Actual independent Gaussian blocks and inverse-Wishart moments give the two Gaussian formulas. Normalized compact unitary Haar probability, its Gaussian QR pushforward, Haar inversion, and the exact inverse top-Gram trace give the Haar correction. Bottom-block unitary invariance yields the full fixed-matrix Frobenius moment and sign symmetry gives the integrable zero mean. No matrix-Beta law or desired expectation is assumed. Standard complex Gaussian is (g+i*h)/sqrt(2). The full-width Haar solution is exact pointwise, and rank-zero input is exact for every sketch and width. No universality extension to sparse or sign sketches is claimed.",
    "difficulty": 5,
    "priority": "later",
    "tags": [
@@ -53486,12 +54030,238 @@
     "randomized-solver",
     "exact-moments"
    ],
-   "status": "candidate",
-   "formalizations": [],
-   "uses_defs": [],
+   "status": "proved",
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.trace_inv_gram_of_mul_right_eq",
+     "module": "NLAlib.Matrix.Basic.InverseGramConjugation",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.circularComplexGaussianMatrix_map_unitaryQRFrame",
+     "module": "NLAlib.RandomMatrix.Haar.ComplexGaussianQR",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_complexGaussian_mul_pinvR_adjoint_prod",
+     "module": "NLAlib.RandomMatrix.Haar.GaussianInverseContraction",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_re_trace_inv_topGram_haar_real",
+     "module": "NLAlib.RandomMatrix.Haar.TopGramMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_re_trace_inv_topGram_haar_complex",
+     "module": "NLAlib.RandomMatrix.Haar.TopGramMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_re_trace_inv_topGram_haar_real_of_hasLaw",
+     "module": "NLAlib.RandomMatrix.Haar.TopGramMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_re_trace_inv_topGram_haar_complex_of_hasLaw",
+     "module": "NLAlib.RandomMatrix.Haar.TopGramMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measure_eq_unitaryHaarFrameLaw_of_invariant",
+     "module": "NLAlib.RandomMatrix.Haar.UnitaryFrameMeasure",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.unitaryHaarFrameLaw_map_topGram_eq",
+     "module": "NLAlib.RandomMatrix.Haar.UnitaryFrameTransform",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.map_unitaryQRFrame_eq_unitaryHaarFrameLaw",
+     "module": "NLAlib.RandomMatrix.Haar.UnitaryQR",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_sketchAndSolve_of_hasLaw_complexGaussianMatrix",
+     "module": "NLAlib.Solvers.LeastSquares.ComplexGaussianNormalization",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_sub_mul_sketchAndSolve_of_hasLaw_complexGaussianMatrix",
+     "module": "NLAlib.Solvers.LeastSquares.ComplexGaussianNormalization",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_sketchAndSolve_of_hasLaw_gaussianMatrix",
+     "module": "NLAlib.Solvers.LeastSquares.GaussianMean",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_sub_mul_sketchAndSolve_of_hasLaw_gaussianMatrix",
+     "module": "NLAlib.Solvers.LeastSquares.GaussianMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sketchAndSolve_eq_of_square_orthonormal_sketch",
+     "module": "NLAlib.Solvers.LeastSquares.HaarBoundaries",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.sketchAndSolve_eq_zero_and_residual_of_rank_eq_zero",
+     "module": "NLAlib.Solvers.LeastSquares.HaarBoundaries",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_sketchAndSolve_haar_real",
+     "module": "NLAlib.Solvers.LeastSquares.HaarExpectations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_sketchAndSolve_haar_complex",
+     "module": "NLAlib.Solvers.LeastSquares.HaarExpectations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_residual_sketchAndSolve_haar_real",
+     "module": "NLAlib.Solvers.LeastSquares.HaarExpectations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_residual_sketchAndSolve_haar_complex",
+     "module": "NLAlib.Solvers.LeastSquares.HaarExpectations",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_sketchAndSolve_haar_real_of_hasLaw",
+     "module": "NLAlib.Solvers.LeastSquares.HaarExpectationsHasLaw",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_sketchAndSolve_haar_complex_of_hasLaw",
+     "module": "NLAlib.Solvers.LeastSquares.HaarExpectationsHasLaw",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_residual_sketchAndSolve_haar_real_of_hasLaw",
+     "module": "NLAlib.Solvers.LeastSquares.HaarExpectationsHasLaw",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integrable_and_integral_frobSq_residual_sketchAndSolve_haar_complex_of_hasLaw",
+     "module": "NLAlib.Solvers.LeastSquares.HaarExpectationsHasLaw",
+     "status": "proved",
+     "partial": true
+    }
+   ],
+   "uses_defs": [
+    "NLAlib.HasOrthonormalCols",
+    "NLAlib.UnitaryStiefel",
+    "NLAlib.circularComplexGaussianMatrix",
+    "NLAlib.complexGaussianMatrix",
+    "NLAlib.frobSq",
+    "NLAlib.gaussianMatrix",
+    "NLAlib.moorePenroseInverse",
+    "NLAlib.pinvR",
+    "NLAlib.sketchAndSolve",
+    "NLAlib.unitaryFrameLeadingGram",
+    "NLAlib.unitaryFrameTopGram",
+    "NLAlib.unitaryHaarFrameLaw",
+    "NLAlib.unitaryHaarFrameMatrixLaw",
+    "NLAlib.unitaryQRColumnFamily",
+    "NLAlib.unitaryQRFrame"
+   ],
    "variants": [],
    "mathlib_prereqs": [],
-   "updated_at": "2026-10-14"
+   "updated_at": "2026-10-29",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual minimum-norm real Gaussian estimator is integrable and unbiased, and its native squared residual has exact factor 1+r/(ell-r-1), at arbitrary matrix rank under the finite-moment threshold.",
+      "decls": [
+       "NLAlib.integrable_and_integral_sketchAndSolve_of_hasLaw_gaussianMatrix",
+       "NLAlib.integrable_and_integral_frobSq_sub_mul_sketchAndSolve_of_hasLaw_gaussianMatrix"
+      ]
+     },
+     {
+      "statement": "The actual standard complex Gaussian law uses (g+i*h)/sqrt(2); native estimator mean and residual moment are integrable and exact with denominator ell-r, for arbitrary nonreal data.",
+      "decls": [
+       "NLAlib.integrable_and_integral_sketchAndSolve_of_hasLaw_complexGaussianMatrix",
+       "NLAlib.integrable_and_integral_frobSq_sub_mul_sketchAndSolve_of_hasLaw_complexGaussianMatrix"
+      ]
+     },
+     {
+      "statement": "Actual real and complex compact unitary Haar/Stiefel laws have almost-sure full top rank and the exact integrable inverse top-Gram trace mean. Native Gaussian QR and independent source blocks prove these identities, without assuming a matrix-Beta law or the target expectation.",
+      "decls": [
+       "NLAlib.integrable_and_integral_re_trace_inv_topGram_haar_real",
+       "NLAlib.integrable_and_integral_re_trace_inv_topGram_haar_complex"
+      ]
+     },
+     {
+      "statement": "For actual real and complex Haar sketches, the native Moore-Penrose estimator is integrable and unbiased and the residual moment has precisely the finite-dimension correction (n-ell)/(n-r) times r/(ell-r-alpha). All right-hand-side shapes, deficient input ranks and ell=n are retained.",
+      "decls": [
+       "NLAlib.integrable_and_integral_sketchAndSolve_haar_real",
+       "NLAlib.integrable_and_integral_sketchAndSolve_haar_complex",
+       "NLAlib.integrable_and_integral_frobSq_residual_sketchAndSolve_haar_real",
+       "NLAlib.integrable_and_integral_frobSq_residual_sketchAndSolve_haar_complex"
+      ]
+     },
+     {
+      "statement": "A square orthonormal sketch recovers the exact original minimum-norm solution pointwise. At rank zero the actual estimator is zero and its squared residual is frobSq B for every sketch and width, without moment assumptions.",
+      "decls": [
+       "NLAlib.sketchAndSolve_eq_of_square_orthonormal_sketch",
+       "NLAlib.sketchAndSolve_eq_zero_and_residual_of_rank_eq_zero"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "tail-averaged-kaczmarz",
@@ -58305,7 +59075,7 @@
    "title": "Adaptive probe counts reduce Hermitian spectral-density queries",
    "area": "estimation-spectral-density",
    "kind": "algorithm",
-   "status": "candidate",
+   "status": "proved",
    "informal": "Reuse random probes across Chebyshev recurrences and decrease their number for higher moments; weighted moment recovery then estimates the entire eigenvalue distribution.",
    "hypotheses": [
     "$A\\in\\mathbb R^{n\\times n}$ is symmetric, $n\\ge1$, $S>0$, $\\|A\\|_2\\le S$, and $B=A/S$; only products with $A$ are queried",
@@ -58319,13 +59089,93 @@
      "label": "§5, Lemma 18 and Theorem 19; recurrence reuse and explicit recovery constant reconstructed"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.cost_cappedChebyshevDensityAlg",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevCappedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.cost_cappedChebyshevDensityAlg_le",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevCappedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isProbabilityMeasure_run_cappedChebyshevDensityAlg",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevCappedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_wassersteinEDistOne_cappedChebyshevDensityAlg_gt_le",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevCappedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_wassersteinEDistOne_cappedChebyshevDensityAlg_epsilon_gt_le",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevCappedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_chebyshevDensityProgram",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevQueryProgram",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_matvecAlg_chebyshevSpectralDensityEstimate",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevQueryProgram",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_wassersteinEDistOne_empiricalSpectralLaw_gt_le",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevSpectralDensity",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_wassersteinEDistOne_empiricalSpectralLaw_scaled_gt_le",
+     "module": "NLAlib.Estimation.Reconstruction.ChebyshevSpectralDensity",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "chebyshev-moment-simplex-regression",
     "hutchinson-tail",
     "polynomial-spectral-bound"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.MatvecAlg",
+    "NLAlib.MatvecAlg.cost",
+    "NLAlib.MatvecAlg.run",
+    "NLAlib.QueryProgram.run",
+    "NLAlib.cappedChebyshevDensityAlg",
+    "NLAlib.chebyshevDensityProgram",
+    "NLAlib.chebyshevProbeBudget",
+    "NLAlib.chebyshevProbeConstant",
+    "NLAlib.chebyshevProbeCount",
+    "NLAlib.chebyshevQueryCount",
+    "NLAlib.chebyshevSpectralDensityEstimate",
+    "NLAlib.empiricalSpectralLaw",
+    "NLAlib.rademacherVector",
+    "NLAlib.specNorm",
+    "NLAlib.wassersteinEDistOne"
+   ],
    "variants": [],
    "aliases": [
     "Hermitian spectral density estimation",
@@ -58339,7 +59189,31 @@
     "source-reviewed"
    ],
    "notes": "The global constant C is existential as in the source. Symmetry is essential: the printed Lemma 18 relies on the standing symmetric-matrix setting, since norm(A)<=1 alone does not bound T_j(A). Dependence between different estimated moments is harmless because the proof uses a union bound. The cap counts oracle queries only: reconstructing the matrix and diagonalizing it has substantial additional cost. Scale estimation and finite precision are outside this contract.",
-   "updated_at": "2026-10-15"
+   "updated_at": "2026-10-29",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The native program charges one scalar vector query per active prefix column; a matrix-independent branch selects exact coordinate recovery when cheaper, yielding precisely the minimum of the prescribed active-prefix cost and the dimension.",
+      "decls": [
+       "NLAlib.cost_cappedChebyshevDensityAlg",
+       "NLAlib.cost_cappedChebyshevDensityAlg_le"
+      ]
+     },
+     {
+      "statement": "Every probe array returns an actual probability law, and the native shared Rademacher law gives failure at most delta at the exact error (38+pi/2)S/k, with finite-dimensional empirical law and native simplex reconstruction.",
+      "decls": [
+       "NLAlib.isProbabilityMeasure_run_cappedChebyshevDensityAlg",
+       "NLAlib.measureReal_wassersteinEDistOne_cappedChebyshevDensityAlg_gt_le"
+      ]
+     },
+     {
+      "statement": "The stated rounded epsilon-degree choice gives error epsilon*S under the same actual law and native capped query algorithm.",
+      "decls": [
+       "NLAlib.measureReal_wassersteinEDistOne_cappedChebyshevDensityAlg_epsilon_gt_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "odd-polynomial-sign-minimax",
@@ -58620,7 +59494,7 @@
    "title": "Mixed spectral moments of a normal matrix form a cross-Gram matrix",
    "area": "estimation-spectral-density",
    "kind": "identity",
-   "status": "candidate",
+   "status": "proved",
    "informal": "The commuting Hermitian real and imaginary parts of a normal matrix turn complex-plane spectral moments into two one-dimensional polynomial recurrences.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$ is normal, $n\\ge1$, $\\|A\\|_2\\le1$, $\\|b\\|_2=1$, $H=(A+A^*)/2$, and $K=(A-A^*)/(2i)$",
@@ -58634,12 +59508,128 @@
      "label": "§2.1, Lemma 2.1, equation (2.5), Algorithm 1; §2.4 cost accounting"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_normalSpectralLaw_star_poly_re_mul_poly_im",
+     "module": "NLAlib.Estimation.Reconstruction.NormalMixedMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_normalSpectralLaw_normalizedChebyshev_eq_crossGram",
+     "module": "NLAlib.Estimation.Reconstruction.NormalMixedMoments",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_normalCoordinateSpectralLaw_star_poly_mul_poly",
+     "module": "NLAlib.Estimation.Reconstruction.NormalMixedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_normalMixedMomentProgram_eq_integral",
+     "module": "NLAlib.Estimation.Reconstruction.NormalMixedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_normalMixedMomentProgram_eq_coordinate_integral",
+     "module": "NLAlib.Estimation.Reconstruction.NormalMixedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalMixedScalarWork_le",
+     "module": "NLAlib.Estimation.Reconstruction.NormalMixedQuery",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.ae_mem_chebyshevCube_normalCoordinateSpectralLaw",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralCoordinates",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.integral_diagonalSpectralLaw_eq_quadForm_cfc",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralLaw",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.diagonalSpectralLaw_eq_of_diagonalizations",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralLaw",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isProbabilityMeasure_normalSpectralLaw",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralLaw",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.run_normalMixedVectorProgram",
+     "module": "NLAlib.Krylov.QueryModel.AdjointChebyshev",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalMixedProgramScalarWork_le",
+     "module": "NLAlib.Krylov.QueryModel.AdjointChebyshev",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalMixedMomentProgram_queryCount",
+     "module": "NLAlib.Krylov.QueryModel.AdjointChebyshev",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalMixedArithmeticBudget_le",
+     "module": "NLAlib.Krylov.QueryModel.ChebyshevArithmetic",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "chebyshev-coefficients-def",
     "normal-matrices"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.QueryProgram.run",
+    "NLAlib.chebyshevCube",
+    "NLAlib.diagonalSpectralLaw",
+    "NLAlib.hermitianPartChebyshevCost",
+    "NLAlib.matrixAdjointOracle",
+    "NLAlib.normalCoordinateSpectralLaw",
+    "NLAlib.normalMixedArithmeticBudget",
+    "NLAlib.normalMixedMomentProgram",
+    "NLAlib.normalMixedProgramScalarWork",
+    "NLAlib.normalMixedScalarWork",
+    "NLAlib.normalMixedVectorProgram",
+    "NLAlib.normalSpectralLaw",
+    "NLAlib.normalizedChebyshev",
+    "NLAlib.normalizedChebyshevVectorMatrix",
+    "NLAlib.quadForm",
+    "NLAlib.specNorm"
+   ],
    "variants": [],
    "aliases": [
     "normal matrix mixed moments",
@@ -58653,7 +59643,39 @@
     "source-reviewed"
    ],
    "notes": "Normality gives simultaneous unitary diagonalization of H and K; the identity is not asserted for arbitrary matrices. Multiplicity weights are spectral-projector weights, so the measure is independent of the chosen eigenbasis. Storage is O(nM+M^2) when the moment matrix is retained; the paper's O(nM) summary presumes M=O(n) or streamed output. The initial normalized recurrence has a special second step.",
-   "updated_at": "2026-10-15"
+   "updated_at": "2026-10-29",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual finite weighted spectral law is a probability law for a unit start and is independent of the unitary eigenbasis, including repeated eigenvalues; its isometric coordinate pushforward is the stated two-dimensional law.",
+      "decls": [
+       "NLAlib.diagonalSpectralLaw_eq_of_diagonalizations",
+       "NLAlib.isProbabilityMeasure_normalSpectralLaw",
+       "NLAlib.ae_mem_chebyshevCube_normalCoordinateSpectralLaw"
+      ]
+     },
+     {
+      "statement": "Every arbitrary complex polynomial mixed moment in the actual coordinate law is the native cross inner product for the commuting Hermitian real and imaginary parts. The normalized Chebyshev mode matrix equals the actual cross-Gram, with the stated zero-mode normalization.",
+      "decls": [
+       "NLAlib.integral_normalCoordinateSpectralLaw_star_poly_mul_poly",
+       "NLAlib.run_normalMixedMomentProgram_eq_coordinate_integral"
+      ]
+     },
+     {
+      "statement": "A matrix-independent strategy computes the entire native moment matrix using exactly 4M primitive queries to the matrix and its adjoint. Its shared recurrence includes the special degree-one step.",
+      "decls": [
+       "NLAlib.run_normalMixedVectorProgram",
+       "NLAlib.normalMixedMomentProgram_queryCount"
+      ]
+     },
+     {
+      "statement": "Each native component combination, shared recurrence update, normalization and cross-Gram entry has a literal unit-cost scalar expression. On the actual oracle-response histories their total scalar work is at most 13*n*(M+1)^2.",
+      "decls": [
+       "NLAlib.normalMixedProgramScalarWork_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "tensor-chebyshev-kernel-measure",
@@ -58807,7 +59829,7 @@
    "title": "A random start estimates the spectral density of a normal matrix",
    "area": "estimation-spectral-density",
    "kind": "algorithm",
-   "status": "candidate",
+   "status": "proved",
    "informal": "One complex-sphere probe, two Chebyshev recurrences, and positive kernel reconstruction approximate a normal matrix's eigenvalue distribution in the complex plane.",
    "hypotheses": [
     "$A\\in\\mathbb C^{n\\times n}$ is normal, $n\\ge1$, with a supplied $S>0$ satisfying $\\|A\\|_2\\le S$; products with both $A$ and $A^*$ are available",
@@ -58821,13 +59843,124 @@
      "label": "Theorem 1.1, Algorithms 1–3; §2.3 Proposition 2.8 and Lemmas 2.9–2.10; §2.4; conservative explicit constants from the audited MMRS bound"
     }
    ],
-   "formalizations": [],
+   "formalizations": [
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_wassersteinEDistOne_normalScaledSpectralDensityProgram_asymptotic_gt_le",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralAsymptotics",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isProbabilityMeasure_run_normalSpectralDensityProgram",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralDensity",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_wassersteinEDistOne_normalSpectralDensityProgram_gt_le",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralDensity",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalSpectralDensityProgram_queryCount",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralDensity",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalMomentQuadratureScalarWork_le",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralQuadrature",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalMomentDensityLaw_run_eq_kernelLaw",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralReconstruction",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.normalScaledSpectralDensityScalarWork_le",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralResources",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.card_normalMixedStorageIndex_le",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralResources",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isProbabilityMeasure_run_normalScaledSpectralQuadratureProgram",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralScaledQuadrature",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.wassersteinEDistOne_normalScaledSpectralQuadratureProgram_le",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralScaledQuadrature",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.exists_finite_support_run_normalScaledSpectralQuadratureProgram",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralScaledQuadrature",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.isProbabilityMeasure_run_normalScaledSpectralDensityProgram",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralScaling",
+     "status": "proved",
+     "partial": true
+    },
+    {
+     "library": "nlalib",
+     "decl": "NLAlib.measureReal_wassersteinEDistOne_normalScaledSpectralDensityProgram_gt_le",
+     "module": "NLAlib.Estimation.Reconstruction.NormalSpectralScaling",
+     "status": "proved",
+     "partial": true
+    }
+   ],
    "depends_on": [
     "normal-matrix-mixed-chebyshev-moments",
     "tensor-chebyshev-kernel-measure",
     "chebyshev-moment-wasserstein"
    ],
-   "uses_defs": [],
+   "uses_defs": [
+    "NLAlib.NormalMixedStorageIndex",
+    "NLAlib.QueryProgram.run",
+    "NLAlib.complexSphereVector",
+    "NLAlib.hermitianPartChebyshevCost",
+    "NLAlib.matrixAdjointOracle",
+    "NLAlib.normalEmpiricalSpectralLaw",
+    "NLAlib.normalMixedMomentProgram",
+    "NLAlib.normalMomentDensityLaw",
+    "NLAlib.normalMomentTable",
+    "NLAlib.normalScaledSpectralDensityProgram",
+    "NLAlib.normalScaledSpectralDensityScalarWork",
+    "NLAlib.normalScaledSpectralQuadratureProgram",
+    "NLAlib.normalSpectralDensityKernelLaw",
+    "NLAlib.normalSpectralDensityProgram",
+    "NLAlib.normalTensorMomentRadius",
+    "NLAlib.specNorm",
+    "NLAlib.tensorChebyshevQuadratureScalarWork",
+    "NLAlib.wassersteinEDistOne"
+   ],
    "variants": [],
    "aliases": [
     "normal matrix spectral density",
@@ -58841,7 +59974,42 @@
     "source-reviewed"
    ],
    "notes": "The explicit leading constant 84 is 72 from the reviewed tensor moment bound plus 12 from the kernel error. The source uses a sharper Jackson constant for the same asymptotic theorem. Both A and A* queries and the supplied scale are essential. With a single probe, the stochastic term persists as M increases. The O(nM) storage simplification applies when M=O(n); scale estimation and roundoff are not counted.",
-   "updated_at": "2026-10-15"
+   "updated_at": "2026-10-29",
+   "proof_family": {
+    "clauses": [
+     {
+      "statement": "The actual single-probe, two-sided query strategy constructs the exact finite tensor Jackson density from its native observed cross-Gram table, yields a probability law, and has the stated exact physical-scale failure bound S*(84/M+pi*R*sqrt(5+(pi/2)log M)) under the actual normalized complex-Gaussian sphere law.",
+      "decls": [
+       "NLAlib.normalMomentDensityLaw_run_eq_kernelLaw",
+       "NLAlib.isProbabilityMeasure_run_normalScaledSpectralDensityProgram",
+       "NLAlib.measureReal_wassersteinEDistOne_normalScaledSpectralDensityProgram_gt_le"
+      ]
+     },
+     {
+      "statement": "The same actual native strategy obeys the derived O(S*(M^-1+sqrt(log(M/delta)log M/n))) error with a proved universal constant 128, for the complete source parameter range.",
+      "decls": [
+       "NLAlib.measureReal_wassersteinEDistOne_normalScaledSpectralDensityProgram_asymptotic_gt_le"
+      ]
+     },
+     {
+      "statement": "Known-scale response adaptation preserves the exact 4M primitive matrix/adjoint query budget. Literal scalar programs on the actual histories take at most 18*n*(M+1)^2 operations, and the retained finite vector/moment arrays and working vectors have O(nM+M^2) scalar slots.",
+      "decls": [
+       "NLAlib.normalSpectralDensityProgram_queryCount",
+       "NLAlib.normalScaledSpectralDensityScalarWork_le",
+       "NLAlib.card_normalMixedStorageIndex_le"
+      ]
+     },
+     {
+      "statement": "The actual tensor Gauss-Chebyshev density readout gives a positive probability measure supported on at most (M+1)^2 complex atoms. Physical scaling adds at most the stated 72*S/M error relative to the continuous output. Its two separable transforms take at most 9*(M+1)^3 scalar operations.",
+      "decls": [
+       "NLAlib.isProbabilityMeasure_run_normalScaledSpectralQuadratureProgram",
+       "NLAlib.exists_finite_support_run_normalScaledSpectralQuadratureProgram",
+       "NLAlib.wassersteinEDistOne_normalScaledSpectralQuadratureProgram_le",
+       "NLAlib.normalMomentQuadratureScalarWork_le"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "gaussian-free-spectrum-two-sided",

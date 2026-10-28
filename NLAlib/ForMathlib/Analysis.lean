@@ -1,4 +1,5 @@
 import NLAlib.ForMathlib.Analysis.BernsteinParameter
+import NLAlib.ForMathlib.Analysis.BinaryLog
 import NLAlib.ForMathlib.Analysis.BinomialRootComparison
 import NLAlib.ForMathlib.Analysis.Bisection
 import NLAlib.ForMathlib.Analysis.BoundedVariationIntegral
@@ -63,6 +64,7 @@ import NLAlib.ForMathlib.Analysis.Lipschitz
 import NLAlib.ForMathlib.Analysis.LipschitzApprox
 import NLAlib.ForMathlib.Analysis.LobattoKernel
 import NLAlib.ForMathlib.Analysis.LobattoKernelSum
+import NLAlib.ForMathlib.Analysis.LogAffineMean
 import NLAlib.ForMathlib.Analysis.LogDimensionBudget
 import NLAlib.ForMathlib.Analysis.LogPowerMean
 import NLAlib.ForMathlib.Analysis.LogRationalBound

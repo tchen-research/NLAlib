@@ -1,3 +1,6 @@
+import NLAlib.Probability.Gaussian.Moments.ComplexExponentialSquare
+import NLAlib.Probability.Gaussian.Moments.ComplexInverseSquare
+import NLAlib.Probability.Gaussian.Moments.ComplexLinear
 import NLAlib.Probability.Gaussian.Moments.ComplexLinearMoments
 import NLAlib.Probability.Gaussian.Moments.ExpectationNormDiff
 import NLAlib.Probability.Gaussian.Moments.Hermite

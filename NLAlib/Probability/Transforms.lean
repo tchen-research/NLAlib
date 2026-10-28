@@ -1,3 +1,4 @@
+import NLAlib.Probability.Transforms.ChebyshevCubeSmoothing
 import NLAlib.Probability.Transforms.ChebyshevKernelMeasure
 import NLAlib.Probability.Transforms.ChebyshevMomentWasserstein
 import NLAlib.Probability.Transforms.DTransform
@@ -7,7 +8,10 @@ import NLAlib.Probability.Transforms.ResolventMoments
 import NLAlib.Probability.Transforms.ResolventNormMoments
 import NLAlib.Probability.Transforms.ResolventSpectralGrid
 import NLAlib.Probability.Transforms.ResolventSpectralHausdorffGrid
+import NLAlib.Probability.Transforms.TensorChebyshevLattice
 import NLAlib.Probability.Transforms.TensorChebyshevMomentWasserstein
+import NLAlib.Probability.Transforms.TensorChebyshevQuadrature
+import NLAlib.Probability.Transforms.TensorChebyshevQuadratureArithmetic
 
 /-! # `Probability/Transforms`
 

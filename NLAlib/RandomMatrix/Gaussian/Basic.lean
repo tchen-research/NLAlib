@@ -1,4 +1,8 @@
 import NLAlib.RandomMatrix.Gaussian.Basic.ColumnBlocks
+import NLAlib.RandomMatrix.Gaussian.Basic.ComplexBlocks
+import NLAlib.RandomMatrix.Gaussian.Basic.ComplexFullRank
+import NLAlib.RandomMatrix.Gaussian.Basic.ComplexGaussianMatrix
+import NLAlib.RandomMatrix.Gaussian.Basic.ComplexTranspose
 import NLAlib.RandomMatrix.Gaussian.Basic.GUE
 import NLAlib.RandomMatrix.Gaussian.Basic.GUECoefficientMatrices
 import NLAlib.RandomMatrix.Gaussian.Basic.GUECoefficientParameters

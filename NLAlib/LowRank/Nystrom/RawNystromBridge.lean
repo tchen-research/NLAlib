@@ -19,9 +19,10 @@ namespace NLAlib
 factor. This includes empty intermediate spaces. The proof checks the four
 Penrose identities and uses uniqueness. Atlas: `pseudoinverse`, `gn-expected-error`. -/
 theorem moorePenroseInverse_mul_eq_pinvR_mul_pinvL
+    {𝕜 : Type*} [RCLike 𝕜]
     {m q p : Type*} [Fintype m] [Fintype q] [Fintype p] [DecidableEq q]
-    (M : Matrix m q ℝ) (R : Matrix q p ℝ)
-    (hM : IsUnit (Mᵀ * M)) (hR : IsUnit (R * Rᵀ)) :
+    (M : Matrix m q 𝕜) (R : Matrix q p 𝕜)
+    (hM : IsUnit (Mᴴ * M)) (hR : IsUnit (R * Rᴴ)) :
     moorePenroseInverse (M * R) = pinvR R * pinvL M := by
   classical
   have hML := pinvL_mul (G := M) hM
@@ -54,20 +55,18 @@ theorem moorePenroseInverse_mul_eq_pinvR_mul_pinvL
 the coordinate matrix has invertible row Gram matrix.
 Source: rank invariance under a left inverse; atlas `gn-expected-error`. -/
 theorem isUnit_rowGram_of_frame_factorization
+    {𝕜 : Type*} [RCLike 𝕜]
     {m q t : Type*} [Fintype m] [Fintype q] [Fintype t] [DecidableEq q]
-    (Q : Matrix m q ℝ) (Y : Matrix m t ℝ)
-    (hY : Q * (Qᵀ * Y) = Y) (hRank : Y.rank = Fintype.card q) :
-    IsUnit ((Qᵀ * Y) * (Qᵀ * Y)ᵀ) := by
+    (Q : Matrix m q 𝕜) (Y : Matrix m t 𝕜)
+    (hY : Q * (Qᴴ * Y) = Y) (hRank : Y.rank = Fintype.card q) :
+    IsUnit ((Qᴴ * Y) * (Qᴴ * Y)ᴴ) := by
   classical
-  have hRankR : (Qᵀ * Y).rank = Y.rank := by
-    apply le_antisymm (Matrix.rank_mul_le_right Qᵀ Y)
+  have hRankR : (Qᴴ * Y).rank = Y.rank := by
+    apply le_antisymm (Matrix.rank_mul_le_right Qᴴ Y)
     calc
-      Y.rank = (Q * (Qᵀ * Y)).rank := congrArg Matrix.rank hY.symm
-      _ ≤ (Qᵀ * Y).rank := Matrix.rank_mul_le_right Q (Qᵀ * Y)
-  apply (Matrix.isUnit_iff_isUnit_det _).2
-  apply isUnit_iff_ne_zero.2
-  apply det_ne_zero_of_rank_eq
-  rw [Matrix.rank_self_mul_transpose, hRankR, hRank]
+      Y.rank = (Q * (Qᴴ * Y)).rank := congrArg Matrix.rank hY.symm
+      _ ≤ (Qᴴ * Y).rank := Matrix.rank_mul_le_right Q (Qᴴ * Y)
+  exact isUnit_mul_conjTranspose_of_rank_eq_card _ (hRankR.trans hRank)
 
 /-- The actual raw generalized Nyström estimator, using a general
 Moore–Penrose inverse. Rank-deficient sketches are included.

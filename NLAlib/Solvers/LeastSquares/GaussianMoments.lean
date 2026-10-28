@@ -41,7 +41,8 @@ For `s ≥ rank A + 2`, the expected squared Frobenius residual of the minimum-n
 solution is `1 + rank A / (s - rank A - 1)` times the optimal squared residual.
 The sketch has independent standard real Gaussian entries, expressed by its actual law.
 Source: Epperly–Webber 2026, Theorem 2.1, real Gaussian case.
-Helper for the Gaussian sketch-and-solve budget. -/
+Helper for the Gaussian sketch-and-solve budget.
+atlas: gaussian-haar-sketch-solve-exact (partial) -/
 theorem integrable_and_integral_frobSq_sub_mul_sketchAndSolve_of_hasLaw_gaussianMatrix
     {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {m n s : ℕ}
     {p : Type*} [Fintype p] [DecidableEq p]

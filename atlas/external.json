@@ -8100,6 +8100,28 @@
   "sorry":
   false,
   "signature":
+  "hasSum_one_div_nat_pow_mul_fourier {k : ℕ} (hk : 2 ≤ k) {x : ℝ} (hx : x ∈ Set.Icc 0 1) :\n  HasSum (fun n => 1 / ↑n ^ k * ((fourier ↑n) ↑x + (-1) ^ k * (fourier (-↑n)) ↑x))\n    (-(2 * ↑Real.pi * Complex.I) ^ k / ↑k.factorial * ↑(bernoulliFun k x))",
+  "name":
+  "hasSum_one_div_nat_pow_mul_fourier",
+  "module":
+  "Mathlib.NumberTheory.ZetaValues",
+  "line":
+  339,
+  "library":
+  "mathlib",
+  "kind":
+  "theorem",
+  "doc":
+  "",
+  "atlas_partial":
+  [],
+  "atlas":
+  []},
+ {"uses":
+  [],
+  "sorry":
+  false,
+  "signature":
   "RatFunc.{u} (K : Type u) [CommRing K] : Type u",
   "name":
   "RatFunc",

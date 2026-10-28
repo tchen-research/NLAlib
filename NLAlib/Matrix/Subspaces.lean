@@ -1,8 +1,10 @@
+import NLAlib.Matrix.Subspaces.BlockUnitaryAction
 import NLAlib.Matrix.Subspaces.CSDecomposition
 import NLAlib.Matrix.Subspaces.CSRank
 import NLAlib.Matrix.Subspaces.CSToolkit
 import NLAlib.Matrix.Subspaces.CanonicalCS
 import NLAlib.Matrix.Subspaces.CanonicalQR
+import NLAlib.Matrix.Subspaces.ColumnAlignment
 import NLAlib.Matrix.Subspaces.ComplexCSDecomposition
 import NLAlib.Matrix.Subspaces.ComplexCSRank
 import NLAlib.Matrix.Subspaces.ComplexCSToolkit
@@ -33,8 +35,10 @@ import NLAlib.Matrix.Subspaces.ObliqueProjectionCanonical
 import NLAlib.Matrix.Subspaces.ObliqueProjectionNorms
 import NLAlib.Matrix.Subspaces.ObliqueProjectionSecant
 import NLAlib.Matrix.Subspaces.ObliqueProjectionSpectrum
+import NLAlib.Matrix.Subspaces.OrderedFrames
 import NLAlib.Matrix.Subspaces.OrthogonalBasisChange
 import NLAlib.Matrix.Subspaces.OrthogonalBlockCompletion
+import NLAlib.Matrix.Subspaces.OrthogonalComplement
 import NLAlib.Matrix.Subspaces.OrthogonalProducts
 import NLAlib.Matrix.Subspaces.OrthogonalSumCompletion
 import NLAlib.Matrix.Subspaces.OrthonormalBasisMatrix
@@ -61,6 +65,8 @@ import NLAlib.Matrix.Subspaces.SingularDirectionProjector
 import NLAlib.Matrix.Subspaces.Stiefel
 import NLAlib.Matrix.Subspaces.SvdTailCapture
 import NLAlib.Matrix.Subspaces.UnitaryBlockCompletion
+import NLAlib.Matrix.Subspaces.UnitaryCanonicalQR
+import NLAlib.Matrix.Subspaces.UnitaryStiefel
 
 /-! # `Matrix/Subspaces`
 

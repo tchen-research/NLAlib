@@ -1,5 +1,7 @@
 import NLAlib.RandomMatrix.Gaussian.Moments.ApproxMultiplication
 import NLAlib.RandomMatrix.Gaussian.Moments.BlockDeviation
+import NLAlib.RandomMatrix.Gaussian.Moments.ComplexConditioning
+import NLAlib.RandomMatrix.Gaussian.Moments.ComplexSecondMoment
 import NLAlib.RandomMatrix.Gaussian.Moments.Conditioning
 import NLAlib.RandomMatrix.Gaussian.Moments.FiniteSupportOperatorMean
 import NLAlib.RandomMatrix.Gaussian.Moments.FourthMoment

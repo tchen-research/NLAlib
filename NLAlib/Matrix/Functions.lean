@@ -190,6 +190,7 @@ import NLAlib.Matrix.Functions.PolynomialIntertwining
 import NLAlib.Matrix.Functions.PolynomialLoewnerDerivative
 import NLAlib.Matrix.Functions.PolynomialSeries
 import NLAlib.Matrix.Functions.PolynomialSimilarity
+import NLAlib.Matrix.Functions.PolynomialVectors
 import NLAlib.Matrix.Functions.PositiveBlockNorm
 import NLAlib.Matrix.Functions.PositiveConeEigenvector
 import NLAlib.Matrix.Functions.PositiveConeNeumann
